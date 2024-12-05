@@ -1,0 +1,14 @@
+{% comment %} Announcement Bar Assets {% endcomment %}
+<link rel="preload" href="{{ 'section-announcement-bar.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'section-announcement-bar.css' | asset_url }}"></noscript>
+<script src='{{ 'announcement-bar.js' | asset_url }}' defer></script>
+
+<div class="announcement-bar wrapper" id="announcement-bar" role="region" {{ block.shopify_attributes }}>
+  <ul class="marquee-track" id="marquee-track">
+    {% for block in section.blocks %}
+      {% if block.type == 'announcement_bar_content' %}
+        <li class="marquee-content">{{ block.settings.announcement_text }}</li>
+      {% endif %}
+    {% endfor %}
+	</ul>
+</div>

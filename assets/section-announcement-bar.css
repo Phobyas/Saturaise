@@ -1,0 +1,37 @@
+.announcement-bar.wrapper { 
+  width: 100%;
+  background-color: var(--announcement-bg);
+  padding: 0 10px;
+  overflow: hidden;
+  position: relative;
+  height: 40px;
+  color: white;
+}
+
+.announcement-bar .marquee-track {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  margin-left: 0;
+}
+
+.announcement-bar .marquee-content {
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 10px;
+  text-align: center;
+  width: 20%;
+}
+
+@media (max-width: 767px){
+  .announcement-bar.wrapper {
+    position: absolute;
+    top: 0px;
+  }
+  .announcement-bar .marquee-content {
+    width: 50%;
+  }
+}

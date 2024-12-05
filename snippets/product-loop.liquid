@@ -1,0 +1,328 @@
+<style>
+.product-loop__img-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  background: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-loop__img-wrapper img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
+.image-wrapper-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Updated hover image styling */
+.hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #eeeeee;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 2;
+}
+
+.hover-image img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Hover states */
+.product-loop__img-wrapper:hover .hover-image {
+  opacity: 1;
+  visibility: visible;
+}
+
+.product-loop__img-wrapper:hover .main-image {
+  opacity: 0;
+}
+
+.main-image {
+  transition: opacity 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.product-image {
+  position: relative;
+  background: #eeeeee;
+}
+
+/* Ensure proper handling in carousel */
+.flickity-slider .product-loop__img-wrapper .hover-image {
+  pointer-events: none;
+}
+
+/* Placeholder styling */
+.demo-1.box-ratio {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+  .product-loop__badge-icon {
+  z-index: 10;  /* Higher number to ensure it's always on top */
+}
+</style>
+
+{%- liquid
+  assign icon_type = ''
+  assign icon_text = ''
+
+  assign date_range = settings.date_range
+
+  if product.template_suffix == 'set'
+    assign icon_type = 'new'
+    assign icon_text =  'products.general.set' | t
+  elsif product.available
+    assign product_created_at = product.created_at | date: '%s'
+    assign time_ago = 'now' | date: '%s' | minus: product_created_at | divided_by: 86400
+    if time_ago <= date_range
+      assign icon_type = 'new'
+      assign icon_text =  'products.general.new' | t
+    endif
+    if product.price < product.compare_at_price
+      assign icon_type = 'sale-item'
+      assign icon_text =  'products.general.sale' | t
+    endif
+    if product.price_min < product.compare_at_price_min or product.price_max < product.compare_at_price_max
+      assign icon_type = 'sale-item'
+      assign icon_text =  'products.general.sale' | t
+    endif
+    if product.template_suffix == 'pre-order'
+      assign icon_type = 'pre-order'
+      assign icon_text = 'products.product.pre_order' | t
+    endif
+  else
+    assign icon_type = 'sold-out'
+    assign icon_text =  'products.general.sold' | t
+  endif
+
+  if varying_grid == true and index == 3 or index == 4 or index == 13 or index == 14 or index == 23 or index == 24
+    assign items_per_row = 'span-6 r-span-2 auto'
+  elsif varying_grid == true
+    assign items_per_row = 'span-3 r-span-1 auto'
+  endif
+
+  assign product_info_mobile_grid_left = 'sm-span-12'
+
+  if varying_grid == true and index == 3 or index == 6 or index == 9 or index == 12 or index == 15 or index == 18
+    assign items_per_row_mobile = 'sm-span-12 auto'
+    assign product_info_mobile_grid_left = 'sm-span-9 a-left'
+    assign product_info_mobile_grid_right = 'sm-span-3 a-right'
+  elsif varying_grid == true
+    assign items_per_row_mobile = 'sm-span-6 auto'
+    assign product_info_mobile_grid_left = 'sm-span-12 a-left'
+    assign product_info_mobile_grid_right = 'sm-span-12 a-right sm-a-left'
+  endif
+-%}
+
+<article class="product-loop__item {{ carousel_slide }} {% unless carousel %}{{ items_per_row }} {{ items_per_row_mobile }}{% endunless %} relative product-loop__item--{{ settings.image_ratio }}"
+  data-alpha="{{ product.title }}"
+  data-price="{{ product.price }}">
+
+  <div class="product-image relative">
+    {% unless icon_type == '' %}
+      <div class="product-loop__badge-icon icon-type--{{ icon_type }} icn">{{ icon_text }}</div>
+    {% endunless %}
+    {% unless product.compare_at_price_varies %}
+      {%- if section.settings.show_savings and icon_type == 'sale-item' -%}
+        <div class="product-loop__badge-icon icon-type--savings icn">
+          {% assign savings = product.compare_at_price | minus: product.price %}
+          <span class="product-loop__price--savings savings">
+            ({{ 'collections.general.save' | t }} {{ savings | money }})
+          </span>
+        </div>
+      {%- endif -%}
+    {% endunless %}
+
+    <div class="product-loop__img-wrapper relative">
+      <a href="{{ product.url | within: collection }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">
+        {%- if product.media.size < 1 -%}
+           <div class="demo-1 box-ratio" style="padding-bottom: 100%;">
+             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+           </div>
+        {%- else -%}
+          {%- liquid
+            assign sm_render = 'calc(100vw / 2)'
+            assign md_render = 'calc(100vw / ' | append: grid_items | append: ')'
+            assign lg_render = 'calc(1600px / ' | append: grid_items | append: ')'
+          -%}
+
+          {%- if settings.product_grid_video -%}
+            {% render 'product-loop-video',
+              product: product %}
+          {%- endif -%}
+
+          {% render 'helper-image',
+             type: product.featured_media.preview_image,
+             sm_render: sm_render,
+             md_render: md_render,
+             lg_render: lg_render,
+             img_width: '100%',
+             img_height: '100%',
+             additional_classes: 'product-image--contain main-image',
+             loading: loading,
+             fetchpriority: fetchpriority %}
+
+          {% if product.media.size > 1 and product.media[1].media_type == 'image' %}
+            <div class="hover-image">
+              {% render 'helper-image',
+                type: product.media[1],
+                sm_render: sm_render,
+                md_render: md_render,
+                lg_render: lg_render,
+                img_width: '100%',
+                img_height: '100%',
+                additional_classes: 'product-image--contain' %}
+            </div>
+          {% elsif product.media.size > 1 %}
+            <div class="hover-image">
+              {% render 'helper-image',
+                type: product.media[1].preview_image,
+                sm_render: sm_render,
+                md_render: md_render,
+                lg_render: lg_render,
+                img_width: '100%',
+                img_height: '100%',
+                additional_classes: 'product-image--contain' %}
+            </div>
+          {% endif %}
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- liquid
+      if routes.root_url == '/'
+        assign product_url = '/products/' | append: product.handle | append: '?section_id=quickshop'
+      else
+        assign product_url = routes.root_url | append: '/products/' | append: product.handle | append: '?section_id=quickshop'
+      endif
+
+      assign has_model = false
+      assign has_video = false
+      for media in product.media
+        if media.media_type == "video" or media.media_type == "external_video"
+          assign has_video = true
+          continue
+        endif
+        if media.media_type == "model"
+          assign has_model = true
+          continue
+        endif
+      endfor
+    -%}
+
+    {% comment %} Quick Add Button {% endcomment %}
+    {% comment %} 
+    Quick Add Button section remains commented out as in original
+    {% endcomment %}
+  </div>
+
+  <div class="grid__wrapper edge pt2 cg0 sm-cg0 rg0">
+    <div class="product-loop__info-wrapper span-12 {{ product_info_mobile_grid_left }} auto">
+      {% if settings.product_grid_vendor %}
+        <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
+      {% endif %}
+        <p class="product-loop__title"><a href="{{ product.url | within: collection }}">{{ product.title }}</a></p>
+    </div>
+
+    {%- if product.template_suffix == 'set' -%}
+      <div class="product-loop__price span-4 {{ product_info_mobile_grid_right }} auto">
+        {{ 'products.product.price_varies' | t }}
+      </div>
+    {%- else -%}
+      <div class="product-loop__price {{ product_info_mobile_grid_right }}">
+        {% if product.price < product.compare_at_price %}
+          Starts at 
+          <span class="product-loop__price--sale onsale inline-block">
+            {{ product.price | money }}
+          </span>
+          <span class="product-loop__price--compare was inline-block ml1">
+            {{ product.compare_at_price | money }}
+          </span>
+          {% assign savings = product.compare_at_price | minus: product.price %}
+          <span class="product-loop__price--savings savings hide">
+            ({{ 'collections.general.save' | t }} {{ savings | money }})
+          </span>
+        {% else %}
+          {% if product.price_varies %}
+            {{ 'products.general.from' | t }} {{ product.price_min | money }} - {{ product.price_max | money }}
+          {% else %}
+            {% assign min_price = null %}
+            {% for variant in product.variants %}
+              {% if min_price == null or variant.price < min_price %}
+                {% assign min_price = variant.price %}
+              {% endif %}
+            {% endfor %}
+
+            {% if min_price %}
+              Starts at {{ min_price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+
+        {%- render 'product-unit-price', variant: product.selected_or_first_available_variant -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {% if settings.show_collection_swatches %}
+    <div class="product-loop__color-swatches">
+      {% render 'snip-product-loop-swatches',
+        product: product,
+        color_swatch_style: settings.color_swatch_style %}
+    </div>
+  {% endif %}
+
+  {% if settings.show_collection_sizes %}
+    <div class="product-loop__sizes">
+      {% render 'snip-product-loop-sizes',
+        product: product %}
+    </div>
+  {% endif %}
+
+</article>
