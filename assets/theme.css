@@ -759,7 +759,7 @@ h1, h1 a, .h1, .h1 a, h2, h2 a, .h2, .h2 a, h3, h3 a, .h3, .h3 a, h4, h4 a, .h4,
   font-style: var(--heading-style);
   font-weight: var(--heading-weight);
   letter-spacing: var(--heading-spacing);
-  margin-bottom: var(--space-4);
+  /* margin-bottom: var(--space-4); */
   text-decoration: none
 }
 
