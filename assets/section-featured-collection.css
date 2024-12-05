@@ -1,5 +1,5 @@
 /* Before JS or No Js Styles */
-.section-featured-collection__outer-wrapper{
+.section-featured-collection__outer-wrapper {
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
@@ -7,15 +7,16 @@
   flex-direction: column;
   gap: 20px;
 }
-.section-featured-collection__outer-wrapper .featured-collection__text-wrapper{
+.section-featured-collection__outer-wrapper .featured-collection__text-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  align-content: center;
+  align-items: end;
+  align-content: end;
   width: 100%;
-  padding: 0rem 1rem;
+  /* padding: 0rem 1rem; */
 }
-.section-featured-collection__outer-wrapper .section-featured-collection__wrapper--carousel {
+.section-featured-collection__outer-wrapper
+  .section-featured-collection__wrapper--carousel {
   width: 100%;
 }
 .section-featured-collection[data-section-loaded="false"] .product-loop__item {
@@ -39,7 +40,8 @@
   left: unset;
 }
 
-.section-featured-collection__wrapper--carousel .flickity-viewport, .section-featured-collection__wrapper--carousel .flickity-enabled.is-draggable {
+.section-featured-collection__wrapper--carousel .flickity-viewport,
+.section-featured-collection__wrapper--carousel .flickity-enabled.is-draggable {
   outline: none !important;
   outline-offset: none !important;
 }
@@ -75,14 +77,16 @@
     align-self: start;
   }
 }
- .featured-collection__wrapper--loop {
-    padding-bottom: var(--space-5);
- }
- .featured-collection__wrapper--loop .flickity-page-dots {
-    bottom: 10px!important;
-    display: none !important;
- }
- .featured-collection__wrapper--loop .flickity-page-dots .dot { margin-bottom: 5px !important; }
+.featured-collection__wrapper--loop {
+  padding-bottom: var(--space-5);
+}
+.featured-collection__wrapper--loop .flickity-page-dots {
+  bottom: 10px !important;
+  display: none !important;
+}
+.featured-collection__wrapper--loop .flickity-page-dots .dot {
+  margin-bottom: 5px !important;
+}
 
 .featured-collection__wrapper--loop.is-hidden {
   display: none;
@@ -98,13 +102,13 @@
   opacity: 1;
 }
 
-.more-button{
+.more-button {
   position: relative;
-  padding-bottom: 8px; 
+  padding-bottom: 8px;
 }
 
-.more-button::after{
-  content: '';
+.more-button::after {
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;

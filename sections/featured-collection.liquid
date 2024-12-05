@@ -116,7 +116,7 @@
   data-items-per-page="{{ section.settings.items_per_page }}">
 
 {%- capture text_section -%}
-  <div class="featured-collection__text-wrapper mb-2 flex align-bottom span-3 auto v-center featured--collection__type-{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
+  <div class="featured-collection__text-wrappermb-2 span-3 auto v-center featured--collection__type-{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
     {%- if section.settings.title != blank -%}
       <h2 class="section-featured-collection__section-heading heading-title ">{{ section.settings.title }}</h2>
     {%- endif -%}
@@ -125,7 +125,7 @@
     {%- endif -%}
     {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
       <a class="inline-block mt4 mb0 sm-mb2" href="{{ section.settings.link_url }}">
-        <span class="more-button">{{ section.settings.link_text }}</span>
+        <span class="text-sm font-semibold underline">{{ section.settings.link_text }}</span>
       </a>
     {%- endif -%}
   </div>
