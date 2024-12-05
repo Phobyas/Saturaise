@@ -1,1 +1,273 @@
-{"sections":{"7773d85e-29d5-49cb-80bc-bf840c5e1664":{"type":"slideshow","blocks":{"template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/SATURAISE_-_BANNE_2_AUTENTYCZNOSC_NO_TEXT.jpg","mobile_image":"shopify:\/\/shop_images\/SATURAISE_-_BANNE_2_AUTENTYCZNOSC_kopia_1.jpg","heading":"","subheading":"","link":"shopify:\/\/collections\/bestsellery","button_text":"","second_link":"","second_button_text":"","overlay_color":"#000000","overlay_opacity":0,"slide_text_color":"#000000","caption_background":"#000000","hide_caption_background":false,"caption_horizontal":10,"caption_vertical":50,"text_align":"left"}},"image_Xq6gGW":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/SATURAISE_-_BANNER_3_ADIDAS_KOLEKCJA_NO_TEXT.jpg","mobile_image":"shopify:\/\/shop_images\/SATURAISE_-_BANNER_MOBILE_3_NO_TEXT.jpg","heading":"","subheading":"","link":"shopify:\/\/collections\/new-balance","button_text":"","second_link":"","second_button_text":"","overlay_color":"#000000","overlay_opacity":0,"slide_text_color":"#ffffff","caption_background":"#010101","hide_caption_background":false,"caption_horizontal":95,"caption_vertical":50,"text_align":"center"}},"image_3DF64Q":{"type":"image","settings":{"image":"shopify:\/\/shop_images\/SATURAISE_-_BANNER_1_AJ4_MIL_BLUE_NO_TEXT.jpg","mobile_image":"shopify:\/\/shop_images\/SATURAISE_-_BANNER_MOBILE_1_kopia.jpg","heading":"","subheading":"","link":"shopify:\/\/collections\/adidas","button_text":"","second_link":"","second_button_text":"","overlay_color":"#000000","overlay_opacity":0,"slide_text_color":"#000000","caption_background":"#efefef","hide_caption_background":false,"caption_horizontal":65,"caption_vertical":54,"text_align":"center"}}},"block_order":["template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0","image_Xq6gGW","image_3DF64Q"],"settings":{"full_width":true,"enable_autoplay":true,"slider_speed":5,"pager":"dots","slideshow_size":"natural","desktop_height":600,"mobile_height":400,"caption_below":false,"slide_heading_size":32,"subheading_size":18,"section_padding":"bottom"}},"featured_collection_jRewn3":{"type":"featured-collection","custom_css":[],"settings":{"title":"Air Jordan 4","subheading":"","link_text":"Zobacz więcej","link_url":"shopify:\/\/collections\/bestsellery","text_position":"left","collection":"air-jordan-4","display_type":"carousel","items_per_row":4,"items_per_page":8,"section_padding":"both"}},"featured_collection_nkPKrR":{"type":"featured-collection","disabled":true,"custom_css":[],"settings":{"title":"Nike","subheading":"","link_text":"Zobacz więcej","link_url":"shopify:\/\/collections\/nike","text_position":"left","collection":"nike","display_type":"carousel","items_per_row":4,"items_per_page":8,"section_padding":"both"}},"featured_collection_j8VXQ6":{"type":"featured-collection","custom_css":[],"settings":{"title":"Ubrania","subheading":"","link_text":"SHOP THE COLLECTION","link_url":"","text_position":"left","collection":"air-jordan-4","display_type":"carousel","items_per_row":5,"items_per_page":8,"section_padding":"both"}},"3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1":{"type":"collection-list","blocks":{"template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0":{"type":"featured_collection","settings":{"collection":"adidas","product_image":false}},"template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1":{"type":"featured_collection","settings":{"collection":"bestsellery","product_image":false}},"template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2":{"type":"featured_collection","settings":{"collection":"new-balance","product_image":false}},"featured_collection_fxrFWK":{"type":"featured_collection","settings":{"collection":"nike","product_image":false}}},"block_order":["template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0","template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1","template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2","featured_collection_fxrFWK"],"settings":{"title":"Odkrywaj Marki","items_per_row":4,"section_padding":"both"}},"1642520461c9848fcf":{"type":"text-with-icons","blocks":{"9e893234-1f35-4234-b109-6fb9c7856a3e":{"type":"text_block","settings":{"icon":"return","link":"","title":"Darmowa Dostawa","subheading":"<p>Do zamówień powyżej 300zł<\/p>"}},"16425204605bb47af2-1":{"type":"text_block","settings":{"icon":"globe","link":"","title":"14 Dniowy Zwrot","subheading":"<p>Dni na zwrot towaru<\/p>"}},"40f2ec0c-4c6f-4492-aa5c-6c17db35147e":{"type":"text_block","settings":{"icon":"heart","link":"","title":"Oryginalne Produkty","subheading":"<p>Licencjonowani dystrybutorzy<\/p>"}},"16425204605bb47af2-2":{"type":"text_block","settings":{"icon":"chat","link":"","title":"Pomoc Online","subheading":"<p>Jesteśmy do dyspozycji 24\/7<\/p>"}}},"block_order":["9e893234-1f35-4234-b109-6fb9c7856a3e","16425204605bb47af2-1","40f2ec0c-4c6f-4492-aa5c-6c17db35147e","16425204605bb47af2-2"],"custom_css":[],"settings":{"title":"","icon_size":45,"color_scheme":"2","section_padding":"both"}},"featured_collection_ka7QDt":{"type":"featured-collection","settings":{"title":"","subheading":"","link_text":"","link_url":"","text_position":"left","collection":"adidas","display_type":"carousel","items_per_row":4,"items_per_page":8,"section_padding":"both"}}},"order":["7773d85e-29d5-49cb-80bc-bf840c5e1664","featured_collection_jRewn3","featured_collection_nkPKrR","featured_collection_j8VXQ6","3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1","1642520461c9848fcf","featured_collection_ka7QDt"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
+      "type": "slideshow",
+      "blocks": {
+        "template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/SATURAISE_-_BANNE_2_AUTENTYCZNOSC_NO_TEXT.jpg",
+            "mobile_image": "shopify://shop_images/SATURAISE_-_BANNE_2_AUTENTYCZNOSC_kopia_1.jpg",
+            "heading": "",
+            "subheading": "",
+            "link": "shopify://collections/bestsellery",
+            "button_text": "",
+            "second_link": "",
+            "second_button_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "slide_text_color": "#000000",
+            "caption_background": "#000000",
+            "hide_caption_background": false,
+            "caption_horizontal": 10,
+            "caption_vertical": 50,
+            "text_align": "left"
+          }
+        },
+        "image_Xq6gGW": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/SATURAISE_-_BANNER_3_ADIDAS_KOLEKCJA_NO_TEXT.jpg",
+            "mobile_image": "shopify://shop_images/SATURAISE_-_BANNER_MOBILE_3_NO_TEXT.jpg",
+            "heading": "",
+            "subheading": "",
+            "link": "shopify://collections/new-balance",
+            "button_text": "",
+            "second_link": "",
+            "second_button_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "slide_text_color": "#ffffff",
+            "caption_background": "#010101",
+            "hide_caption_background": false,
+            "caption_horizontal": 95,
+            "caption_vertical": 50,
+            "text_align": "center"
+          }
+        },
+        "image_3DF64Q": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/SATURAISE_-_BANNER_1_AJ4_MIL_BLUE_NO_TEXT.jpg",
+            "mobile_image": "shopify://shop_images/SATURAISE_-_BANNER_MOBILE_1_kopia.jpg",
+            "heading": "",
+            "subheading": "",
+            "link": "shopify://collections/adidas",
+            "button_text": "",
+            "second_link": "",
+            "second_button_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "slide_text_color": "#000000",
+            "caption_background": "#efefef",
+            "hide_caption_background": false,
+            "caption_horizontal": 65,
+            "caption_vertical": 54,
+            "text_align": "center"
+          }
+        }
+      },
+      "block_order": [
+        "template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0",
+        "image_Xq6gGW",
+        "image_3DF64Q"
+      ],
+      "settings": {
+        "full_width": true,
+        "enable_autoplay": true,
+        "slider_speed": 5,
+        "pager": "dots",
+        "slideshow_size": "natural",
+        "desktop_height": 600,
+        "mobile_height": 400,
+        "caption_below": false,
+        "slide_heading_size": 32,
+        "subheading_size": 18,
+        "section_padding": "bottom"
+      }
+    },
+    "featured_collection_jRewn3": {
+      "type": "featured-collection",
+      "custom_css": [],
+      "settings": {
+        "title": "Air Jordan 4",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/bestsellery",
+        "text_position": "left",
+        "collection": "air-jordan-4",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    },
+    "featured_collection_nkPKrR": {
+      "type": "featured-collection",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "title": "Nike",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/nike",
+        "text_position": "left",
+        "collection": "nike",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    },
+    "featured_collection_j8VXQ6": {
+      "type": "featured-collection",
+      "custom_css": [],
+      "settings": {
+        "title": "Ubrania",
+        "subheading": "",
+        "link_text": "SHOP THE COLLECTION",
+        "link_url": "",
+        "text_position": "left",
+        "collection": "air-jordan-4",
+        "display_type": "carousel",
+        "items_per_row": 5,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    },
+    "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1": {
+      "type": "collection-list",
+      "blocks": {
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "adidas",
+            "product_image": false
+          }
+        },
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "bestsellery",
+            "product_image": false
+          }
+        },
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "new-balance",
+            "product_image": false
+          }
+        },
+        "featured_collection_fxrFWK": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "nike",
+            "product_image": false
+          }
+        }
+      },
+      "block_order": [
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0",
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1",
+        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2",
+        "featured_collection_fxrFWK"
+      ],
+      "settings": {
+        "title": "Odkrywaj Marki",
+        "items_per_row": 4,
+        "section_padding": "both"
+      }
+    },
+    "1642520461c9848fcf": {
+      "type": "text-with-icons",
+      "blocks": {
+        "9e893234-1f35-4234-b109-6fb9c7856a3e": {
+          "type": "text_block",
+          "settings": {
+            "icon": "return",
+            "image": "shopify://shop_images/PersonIcon.svg",
+            "link": "",
+            "title": "Darmowa Dostawa",
+            "subheading": "<p>Do zamówień powyżej 300zł</p>"
+          }
+        },
+        "16425204605bb47af2-1": {
+          "type": "text_block",
+          "settings": {
+            "icon": "globe",
+            "link": "",
+            "title": "14 Dniowy Zwrot",
+            "subheading": "<p>Dni na zwrot towaru</p>"
+          }
+        },
+        "40f2ec0c-4c6f-4492-aa5c-6c17db35147e": {
+          "type": "text_block",
+          "settings": {
+            "icon": "heart",
+            "link": "",
+            "title": "Oryginalne Produkty",
+            "subheading": "<p>Licencjonowani dystrybutorzy</p>"
+          }
+        },
+        "16425204605bb47af2-2": {
+          "type": "text_block",
+          "settings": {
+            "icon": "chat",
+            "link": "",
+            "title": "Pomoc Online",
+            "subheading": "<p>Jesteśmy do dyspozycji 24/7</p>"
+          }
+        }
+      },
+      "block_order": [
+        "9e893234-1f35-4234-b109-6fb9c7856a3e",
+        "16425204605bb47af2-1",
+        "40f2ec0c-4c6f-4492-aa5c-6c17db35147e",
+        "16425204605bb47af2-2"
+      ],
+      "custom_css": [
+        "div {background-color: }"
+      ],
+      "settings": {
+        "title": "",
+        "icon_size": 45,
+        "color_scheme": "2",
+        "section_padding": "both"
+      }
+    },
+    "featured_collection_ka7QDt": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "",
+        "subheading": "",
+        "link_text": "",
+        "link_url": "",
+        "text_position": "left",
+        "collection": "adidas",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    }
+  },
+  "order": [
+    "7773d85e-29d5-49cb-80bc-bf840c5e1664",
+    "featured_collection_jRewn3",
+    "featured_collection_nkPKrR",
+    "featured_collection_j8VXQ6",
+    "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1",
+    "1642520461c9848fcf",
+    "featured_collection_ka7QDt"
+  ]
+}
