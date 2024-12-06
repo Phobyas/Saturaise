@@ -9,6 +9,11 @@
     <link rel="canonical" href="{{ canonical_url }}">
   {%- endif -%}
 
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   {%- unless settings.main_font.system? and settings.heading_font.system? and settings.nav_font.system? -%}
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
@@ -46,6 +51,9 @@
   {% render 'css-variables' %}
 
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+{{ 'swiper-bundle.min.js' | asset_url | script_tag }}
 
   {%- unless settings.main_font.system? -%}
     <link rel="preload" as="font" href="{{ settings.main_font | font_url }}" type="font/woff2" crossorigin>
@@ -137,6 +145,8 @@
   {%- render 'snip-photoswipe' -%}
 
   <aside class="slideout slideout__drawer-right" data-wau-slideout="store-availability" id="slideout-store-availability"></aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 </body>
 </html>
