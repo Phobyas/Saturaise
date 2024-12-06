@@ -1,0 +1,83 @@
+{% schema %}
+{
+  "name": "Collection Categories",
+  "tag": "section",
+  "class": "collection-badges-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category name"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Categories",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+    
+    <div class="w-full flex px-3 py-5 overflow-x-auto scrollbar-hide md:justify-center">
+      <div class="flex gap-3 md:gap-6 md:px-6 justify-center max-w-5xl">
+        {% for block in section.blocks %}
+          {% if block.settings.title != blank and block.settings.link != blank %}
+            <a 
+              href="{{ block.settings.link }}" 
+              class="flex items-center gap-3 px-3 py-2 bg-[#EFEFEF] rounded-full shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
+              {{ block.shopify_attributes }}
+            >
+              {% if block.settings.image %}
+                <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
+                    {{ block.settings.image | image_url: width: 96 | image_tag: 
+                      class: 'w-full h-full object-contain',
+                      loading: 'lazy',
+                      alt: block.settings.title
+                    }}
+                  </div>
+              {% endif %}
+              <span class="text-base font-semibold">{{ block.settings.title }}</span>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <style>
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>

@@ -7,8 +7,23 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{
+ {
   "sections": {
+"collections-badges": {
+  "type": "collections-badges",
+  "blocks": {
+    "block_1": {
+      "type": "category",
+      "settings": {
+        "title": "",
+        "link": "",
+        "image": ""
+      }
+    }
+  },
+  "block_order": ["block_1"],
+  "settings": {}
+},
     "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
       "type": "slideshow",
       "blocks": {
@@ -148,28 +163,28 @@
       "type": "collection-list",
       "blocks": {
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0": {
-          "type": "featured_collection",
+          "type": "collection",
           "settings": {
             "collection": "adidas",
             "product_image": false
           }
         },
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1": {
-          "type": "featured_collection",
+          "type": "collection",
           "settings": {
             "collection": "bestsellery",
             "product_image": false
           }
         },
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2": {
-          "type": "featured_collection",
+          "type": "collection",
           "settings": {
             "collection": "new-balance",
             "product_image": false
           }
         },
         "featured_collection_fxrFWK": {
-          "type": "featured_collection",
+          "type": "collection",
           "settings": {
             "collection": "nike",
             "product_image": false
@@ -265,12 +280,13 @@
     }
   },
   "order": [
+    "collections-badges",
     "7773d85e-29d5-49cb-80bc-bf840c5e1664",
-    "featured_collection_jRewn3",
+    "featured_collection_jRewn3", 
     "featured_collection_nkPKrR",
     "featured_collection_j8VXQ6",
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1",
     "1642520461c9848fcf",
     "featured_collection_ka7QDt"
   ]
-}
+ }
