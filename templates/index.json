@@ -186,22 +186,6 @@
         "section_padding": "both"
       }
     },
-    "featured_collection_j8VXQ6": {
-      "type": "featured-collection",
-      "custom_css": [],
-      "settings": {
-        "title": "Ubrania",
-        "subheading": "",
-        "link_text": "SHOP THE COLLECTION",
-        "link_url": "",
-        "text_position": "left",
-        "collection": "air-jordan-4",
-        "display_type": "carousel",
-        "items_per_row": 5,
-        "items_per_page": 8,
-        "section_padding": "both"
-      }
-    },
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1": {
       "type": "collection-list",
       "blocks": {
@@ -239,6 +223,22 @@
       "settings": {
         "title": "Odkrywaj Marki",
         "items_per_row": 4
+      }
+    },
+    "featured_collection_j8VXQ6": {
+      "type": "featured-collection",
+      "custom_css": [],
+      "settings": {
+        "title": "Ubrania",
+        "subheading": "",
+        "link_text": "SHOP THE COLLECTION",
+        "link_url": "",
+        "text_position": "left",
+        "collection": "air-jordan-4",
+        "display_type": "carousel",
+        "items_per_row": 5,
+        "items_per_page": 8,
+        "section_padding": "both"
       }
     },
     "1642520461c9848fcf": {
@@ -296,7 +296,7 @@
       ],
       "settings": {
         "title": "",
-        "icon_size": 45,
+        "icon_size": 40,
         "color_scheme": "2",
         "section_padding": "both"
       }
@@ -323,8 +323,8 @@
     "featured_collection_jRewn3",
     "featured_collection_qEQC7t",
     "featured_collection_nkPKrR",
-    "featured_collection_j8VXQ6",
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1",
+    "featured_collection_j8VXQ6",
     "1642520461c9848fcf",
     "featured_collection_ka7QDt"
   ]
