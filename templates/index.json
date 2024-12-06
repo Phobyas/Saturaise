@@ -165,42 +165,37 @@
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0": {
           "type": "collection",
           "settings": {
-            "collection": "adidas",
-            "product_image": false
+            "collection": "new-balance"
           }
         },
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1": {
           "type": "collection",
           "settings": {
-            "collection": "bestsellery",
-            "product_image": false
+            "collection": "adidas"
           }
         },
         "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2": {
           "type": "collection",
           "settings": {
-            "collection": "new-balance",
-            "product_image": false
+            "collection": "nike"
           }
         },
         "featured_collection_fxrFWK": {
           "type": "collection",
           "settings": {
-            "collection": "nike",
-            "product_image": false
+            "collection": "bestsellery"
           }
         }
       },
       "block_order": [
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0",
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1",
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2",
-        "featured_collection_fxrFWK"
+        "collection_QraqfB",
+        "collection_MaC6AB",
+        "collection_i9pPtN",
+        "collection_XgjPVh"
       ],
       "settings": {
         "title": "Odkrywaj Marki",
-        "items_per_row": 4,
-        "section_padding": "both"
+        "items_per_row": 4
       }
     },
     "1642520461c9848fcf": {
