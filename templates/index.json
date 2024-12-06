@@ -204,6 +204,38 @@
     },
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1": {
       "type": "collection-list",
+      "blocks": {
+        "collection_gn6jxm": {
+          "type": "collection",
+          "settings": {
+            "collection": "adidas"
+          }
+        },
+        "collection_4QViLA": {
+          "type": "collection",
+          "settings": {
+            "collection": "new-balance"
+          }
+        },
+        "collection_KAK9q3": {
+          "type": "collection",
+          "settings": {
+            "collection": "nike"
+          }
+        },
+        "collection_bG6CPA": {
+          "type": "collection",
+          "settings": {
+            "collection": "bestsellery"
+          }
+        }
+      },
+      "block_order": [
+        "collection_gn6jxm",
+        "collection_4QViLA",
+        "collection_KAK9q3",
+        "collection_bG6CPA"
+      ],
       "settings": {
         "title": "Odkrywaj Marki",
         "items_per_row": 4
