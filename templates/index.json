@@ -7,23 +7,8 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
-"collections-badges": {
-  "type": "collections-badges",
-  "blocks": {
-    "block_1": {
-      "type": "category",
-      "settings": {
-        "title": "",
-        "link": "",
-        "image": ""
-      }
-    }
-  },
-  "block_order": ["block_1"],
-  "settings": {}
-},
     "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
       "type": "slideshow",
       "blocks": {
@@ -110,6 +95,49 @@
         "section_padding": "bottom"
       }
     },
+    "collections_badges_pWqmae": {
+      "type": "collections-badges",
+      "blocks": {
+        "category_3hwmX6": {
+          "type": "category",
+          "settings": {
+            "title": "",
+            "link": ""
+          }
+        },
+        "category_yRyGai": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 4",
+            "link": "shopify://products/a-line-jacket-in-black",
+            "image": "shopify://shop_images/air-jordan-4-sail-metallic-gold3.webp"
+          }
+        },
+        "category_MRKK9a": {
+          "type": "category",
+          "settings": {
+            "title": "Dunk Low",
+            "link": "shopify://collections/frontpage",
+            "image": "shopify://shop_images/Air-Jordan-4-Retro-Bred-Reimagined.webp"
+          }
+        },
+        "category_kcDV4c": {
+          "type": "category",
+          "settings": {
+            "title": "Air Force 1",
+            "link": "shopify://products/5-pocket-jean",
+            "image": "shopify://shop_images/nike-sb-air-jordan-4-pine-green-1.webp"
+          }
+        }
+      },
+      "block_order": [
+        "category_3hwmX6",
+        "category_yRyGai",
+        "category_MRKK9a",
+        "category_kcDV4c"
+      ],
+      "settings": {}
+    },
     "featured_collection_jRewn3": {
       "type": "featured-collection",
       "custom_css": [],
@@ -161,38 +189,6 @@
     },
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1": {
       "type": "collection-list",
-      "blocks": {
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-0": {
-          "type": "collection",
-          "settings": {
-            "collection": "new-balance"
-          }
-        },
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-1": {
-          "type": "collection",
-          "settings": {
-            "collection": "adidas"
-          }
-        },
-        "template--15986753863850__3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1-16675738044f900b1c-2": {
-          "type": "collection",
-          "settings": {
-            "collection": "nike"
-          }
-        },
-        "featured_collection_fxrFWK": {
-          "type": "collection",
-          "settings": {
-            "collection": "bestsellery"
-          }
-        }
-      },
-      "block_order": [
-        "collection_QraqfB",
-        "collection_MaC6AB",
-        "collection_i9pPtN",
-        "collection_XgjPVh"
-      ],
       "settings": {
         "title": "Odkrywaj Marki",
         "items_per_row": 4
@@ -275,13 +271,13 @@
     }
   },
   "order": [
-    "collections-badges",
     "7773d85e-29d5-49cb-80bc-bf840c5e1664",
-    "featured_collection_jRewn3", 
+    "collections_badges_pWqmae",
+    "featured_collection_jRewn3",
     "featured_collection_nkPKrR",
     "featured_collection_j8VXQ6",
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1",
     "1642520461c9848fcf",
     "featured_collection_ka7QDt"
   ]
- }
+}
