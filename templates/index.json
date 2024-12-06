@@ -195,37 +195,40 @@
           "type": "text_block",
           "settings": {
             "icon": "return",
-            "image": "shopify://shop_images/PersonIcon.svg",
+            "image": "shopify://shop_images/shipping-fast-solid-svgrepo-com.svg",
             "link": "",
-            "title": "Darmowa Dostawa",
-            "subheading": "<p>Do zamówień powyżej 300zł</p>"
+            "title": "Szybka i darmowa dostawa",
+            "subheading": ""
           }
         },
         "16425204605bb47af2-1": {
           "type": "text_block",
           "settings": {
             "icon": "globe",
+            "image": "shopify://shop_images/verified-check-svgrepo-com_f524942c-1fae-47e7-b68d-fca20b61e66b.svg",
             "link": "",
-            "title": "14 Dniowy Zwrot",
-            "subheading": "<p>Dni na zwrot towaru</p>"
+            "title": "Oryginalne produkty sprawdzone przez specjalistów",
+            "subheading": ""
           }
         },
         "40f2ec0c-4c6f-4492-aa5c-6c17db35147e": {
           "type": "text_block",
           "settings": {
             "icon": "heart",
+            "image": "shopify://shop_images/chat-line-svgrepo-com_692af779-28fc-4c45-998e-915db6c552d2.svg",
             "link": "",
-            "title": "Oryginalne Produkty",
-            "subheading": "<p>Licencjonowani dystrybutorzy</p>"
+            "title": "Obsługa klienta",
+            "subheading": ""
           }
         },
         "16425204605bb47af2-2": {
           "type": "text_block",
           "settings": {
             "icon": "chat",
+            "image": "shopify://shop_images/refund-svgrepo-com_1.svg",
             "link": "",
-            "title": "Pomoc Online",
-            "subheading": "<p>Jesteśmy do dyspozycji 24/7</p>"
+            "title": "Łatwe zwroty produktów",
+            "subheading": ""
           }
         }
       },
@@ -236,7 +239,7 @@
         "16425204605bb47af2-2"
       ],
       "custom_css": [
-        "div {background-color: }"
+        "div {background-color: ;}"
       ],
       "settings": {
         "title": "",
