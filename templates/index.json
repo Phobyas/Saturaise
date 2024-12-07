@@ -95,6 +95,18 @@
         "section_padding": "bottom"
       }
     },
+  "about_us_section": { 
+    "type": "section-about-us",
+    "settings": {
+      "logo": "",
+      "heading": "About Our Company",
+      "content": "<p>Share your story and connect with customers. Describe what makes your business unique.</p>",
+      "text_position": "right",
+      "section_padding": "both",
+      "heading_size": "medium",
+      "content_size": "medium"
+    }
+  },
     "collections_badges_pWqmae": {
       "type": "collections-badges",
       "blocks": {
@@ -320,6 +332,7 @@
   "order": [
     "7773d85e-29d5-49cb-80bc-bf840c5e1664",
     "collections_badges_pWqmae",
+    "about_us_section",
     "featured_collection_jRewn3",
     "featured_collection_qEQC7t",
     "featured_collection_nkPKrR",

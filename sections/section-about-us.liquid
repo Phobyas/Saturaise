@@ -1,0 +1,187 @@
+{% schema %}
+    {
+      "name": "About Us",
+      "tag": "section",
+      "class": "spaced-section",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About Our Company"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading Size",
+          "options": [
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Share your story and connect with customers. Describe what makes your business unique.</p>"
+        },
+        {
+          "type": "select",
+          "id": "content_size",
+          "label": "Content Text Size",
+          "options": [
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            },
+            {
+              "value": "xlarge",
+              "label": "Extra Large"
+            }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "select",
+          "id": "section_padding",
+          "label": "Section Padding",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "both",
+              "label": "Both"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "both"
+        }
+      ],
+      "presets": [
+        {
+          "name": "About Us",
+          "category": "Content"
+        }
+      ]
+    }
+    {% endschema %}
+    
+    {% style %}
+    #shopify-section-{{ section.id }} .about-us-custom-heading * {
+      {% case section.settings.heading_size %}
+        {% when 'small' %}
+          font-size: 1.5rem !important;
+        {% when 'medium' %}
+          font-size: 1.875rem !important;
+        {% when 'large' %}
+          font-size: 2.25rem !important;
+      {% endcase %}
+    }
+    
+    #shopify-section-{{ section.id }} .about-us-custom-content * {
+      {% case section.settings.content_size %}
+        {% when 'small' %}
+          font-size: 0.875rem !important;
+        {% when 'medium' %}
+          font-size: 1rem !important;
+        {% when 'large' %}
+          font-size: 1.125rem !important;
+        {% when 'xlarge' %}
+          font-size: 1.25rem !important;
+      {% endcase %}
+    }
+    
+    @media screen and (min-width: 768px) {
+      #shopify-section-{{ section.id }} .about-us-custom-heading * {
+        {% case section.settings.heading_size %}
+          {% when 'small' %}
+            font-size: 1.875rem !important;
+          {% when 'medium' %}
+            font-size: 2.25rem !important;
+          {% when 'large' %}
+            font-size: 3rem !important;
+        {% endcase %}
+      }
+    }
+    {% endstyle %}
+    
+    <section class="py-16 px-4 {% if section.settings.section_padding contains 'both' %}py-16{% elsif section.settings.section_padding contains 'top' %}pt-16{% elsif section.settings.section_padding contains 'bottom' %}pb-16{% endif %}">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col {% if section.settings.text_position == 'left' %}md:flex-row{% else %}md:flex-row-reverse{% endif %} items-center gap-8 md:gap-10">
+          {%- if section.settings.logo -%}
+            <div class="w-full md:w-2/5">
+              {{ section.settings.logo | image_url: width: 400 | image_tag: 
+                class: 'w-full max-w-sm mx-auto h-auto object-contain',
+                loading: 'lazy',
+                alt: shop.name
+              }}
+            </div>
+          {%- endif -%}
+    
+          <div class="w-full md:w-3/5 text-center md:text-left">
+            {%- if section.settings.heading != blank -%}
+              <div class="about-us-custom-heading">
+                <h2 class="font-bold mb-6">
+                  {{ section.settings.heading }}
+                </h2>
+              </div>
+            {%- endif -%}
+    
+            {%- if section.settings.content != blank -%}
+              <div class="about-us-custom-content prose max-w-none">
+                {{ section.settings.content }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </section>
