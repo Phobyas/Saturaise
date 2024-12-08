@@ -31,7 +31,7 @@
 
 <div class="section-collection-carousel max-w-[1600px] mx-auto" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
   {% if section.settings.title != blank %}
-    <h2 class="text-center text-4xl font-light uppercase tracking-wider mb-12">{{ section.settings.title }}</h2>
+    <h2 class=" text-[25.5px] md:text-3xl font-bold mb-6 px-3 md:px-0">{{ section.settings.title }}</h2>
   {% endif %}
 
   <div class="swiper mySwiper swiper-collection-carousel">
@@ -62,7 +62,7 @@
             </div>
             
             <div class="mt-4 text-center">
-              <h3 class="text-xl font-light uppercase tracking-wider">{{ collection.title }}</h3>
+              <h3 class="absolute top-[85%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] text-xl font-bold tracking-wider uppercase">{{ collection.title }}</h3>
             </div>
           </a>
         </div>

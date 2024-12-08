@@ -154,7 +154,7 @@
     }
     {% endstyle %}
     
-    <section class="py-16 px-4 {% if section.settings.section_padding contains 'both' %}py-16{% elsif section.settings.section_padding contains 'top' %}pt-16{% elsif section.settings.section_padding contains 'bottom' %}pb-16{% endif %}">
+    <section class="py-16 px-3 {% if section.settings.section_padding contains 'both' %}py-16{% elsif section.settings.section_padding contains 'top' %}pt-16{% elsif section.settings.section_padding contains 'bottom' %}pb-16{% endif %}">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col {% if section.settings.text_position == 'left' %}md:flex-row{% else %}md:flex-row-reverse{% endif %} items-center gap-8 md:gap-10">
           {%- if section.settings.logo -%}
