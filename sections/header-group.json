@@ -43,6 +43,36 @@
           "settings": {
             "announcement_text": "Wsparcie klienta"
           }
+        },
+        "announcement_bar_content_yrR7mf": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "💳 Bezpieczne płatności"
+          }
+        },
+        "announcement_bar_content_Mq38Jt": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "Oryginalne produkty"
+          }
+        },
+        "announcement_bar_content_zicBFm": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "14 dni na zwrot"
+          }
+        },
+        "announcement_bar_content_rcYXzi": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "Certyfikat autentyczności"
+          }
+        },
+        "announcement_bar_content_ReKyqn": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "Wsparcie klienta"
+          }
         }
       },
       "block_order": [
@@ -50,7 +80,12 @@
         "announcement_bar_content_eRLqKk",
         "announcement_bar_content_FTBTAF",
         "announcement_bar_content_XEPkUC",
-        "announcement_bar_content_JM3dHA"
+        "announcement_bar_content_JM3dHA",
+        "announcement_bar_content_yrR7mf",
+        "announcement_bar_content_Mq38Jt",
+        "announcement_bar_content_zicBFm",
+        "announcement_bar_content_rcYXzi",
+        "announcement_bar_content_ReKyqn"
       ],
       "settings": {
         "announcement_text": "<p>Share a shop announcement or message</p>",
