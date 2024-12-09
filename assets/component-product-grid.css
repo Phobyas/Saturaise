@@ -304,7 +304,16 @@
   letter-spacing: normal;
   /* font-size: var(--font-size); */
   line-height: normal;
-  margin-left: var(--space-1);
+  margin-left: var(--space-0);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .product-loop__price .product-loop__price--sale {
+    margin-left: var(--space-1);
+    font-size: 16px;
+  }
 }
 
 .product-loop__price .product-loop__price--compare {
@@ -312,12 +321,29 @@
   letter-spacing: normal;
   /* font-size: var(--font-size); */
   line-height: normal;
+  margin-left: var(--space-0);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .product-loop__price .product-loop__price--compare {
+    margin-left: var(--space-1);
+    font-size: 16px;
+  }
 }
 
 .product-loop__title,
 .product-loop__title a {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .product-loop__title,
+  .product-loop__title a {
+    font-size: 18px;
+  }
 }
 
 .product-loop__badge-icon {

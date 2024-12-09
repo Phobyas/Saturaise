@@ -116,7 +116,7 @@
   data-items-per-page="{{ section.settings.items_per_page }}">
 
 {%- capture text_section -%}
-  <div class="featured-collection__text-wrappermb-2 flex items-end px-3 md:px-0 justify-between span-3 auto v-center featured--collection__type-{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
+  <div class="featured-collection__text-wrapper mb-2 flex items-end px-3 md:px-0 md:mb-0 justify-between span-3 auto v-center featured--collection__type-{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
     {%- if section.settings.title != blank -%}
       <h2 class="section-featured-collection__section-heading heading-title ">{{ section.settings.title }}</h2>
     {%- endif -%}

@@ -265,7 +265,7 @@
       {% if settings.product_grid_vendor %}
         <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
       {% endif %}
-        <p class="product-loop__title"><a class="text-[1.125rem]" href="{{ product.url | within: collection }}">{{ product.title }}</a></p>
+        <p class="product-loop__title"><a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a></p>
     </div>
 
     {%- if product.template_suffix == 'set' -%}
@@ -276,10 +276,10 @@
       <div class="product-loop__price text-base font-bold {{ product_info_mobile_grid_right }}">
         {% if product.price < product.compare_at_price %}
           Od
-          <span class="product-loop__price--sale onsale inline-block text-base font-bold">
+          <span class="product-loop__price--sale onsale inline-block text-sm font-bold ">
             {{ product.price | money }}
           </span>
-          <span class="product-loop__price--compare was inline-block ml1 text-base font-bold">
+          <span class="product-loop__price--compare was inline-block ml1 text-sm font-bold ">
             {{ product.compare_at_price | money }}
           </span>
           {% assign savings = product.compare_at_price | minus: product.price %}
