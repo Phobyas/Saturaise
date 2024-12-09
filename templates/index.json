@@ -105,6 +105,14 @@
             "link": ""
           }
         },
+        "category_Fag8nq": {
+          "type": "category",
+          "settings": {
+            "title": "Dunk Low",
+            "link": "shopify://collections/dunk-low",
+            "image": "shopify://shop_images/nike-dunk-low-court-purple-2021-DD1391-104-wethenew.webp"
+          }
+        },
         "category_yRyGai": {
           "type": "category",
           "settings": {
@@ -128,13 +136,50 @@
             "link": "shopify://products/5-pocket-jean",
             "image": "shopify://shop_images/nike-sb-air-jordan-4-pine-green-1.webp"
           }
+        },
+        "category_JimxB9": {
+          "type": "category",
+          "settings": {
+            "title": "Dunk Low",
+            "link": "shopify://collections/dunk-low",
+            "image": "shopify://shop_images/SBDunkLowSkakeLikeAGirlBordeaux.webp"
+          }
+        },
+        "category_LwUUKV": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 3",
+            "link": "shopify://collections/air-jordan-4",
+            "image": "shopify://shop_images/dunk-low-off-white-lot-32-249812.webp"
+          }
+        },
+        "category_7gnDcc": {
+          "type": "category",
+          "settings": {
+            "title": "Dunk Low",
+            "link": "shopify://collections/dunk-low",
+            "image": "shopify://shop_images/nike-dunk-low-world-champ.webp"
+          }
+        },
+        "category_nLQmAP": {
+          "type": "category",
+          "settings": {
+            "title": "Air jordan 4",
+            "link": "shopify://collections/air-jordan-4",
+            "image": "shopify://shop_images/Air-Jordan-4-Retro-Bred-Reimagined.webp"
+          }
         }
       },
       "block_order": [
         "category_3hwmX6",
+        "category_Fag8nq",
         "category_yRyGai",
         "category_MRKK9a",
-        "category_kcDV4c"
+        "category_kcDV4c",
+        "category_JimxB9",
+        "category_LwUUKV",
+        "category_7gnDcc",
+        "category_nLQmAP"
       ],
       "settings": {}
     },
@@ -248,7 +293,7 @@
         "heading": "O nas",
         "heading_size": "medium",
         "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
-        "content_size": "medium",
+        "content_size": "large",
         "text_position": "left",
         "section_padding": "both"
       }
