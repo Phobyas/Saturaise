@@ -125,9 +125,9 @@
       ],
       "settings": {
         "full_width": false,
-        "gallery_style": "scroll_gallery",
+        "gallery_style": "thumbnail_gallery",
         "gallery_grid_size": "normal",
-        "thumbnail_position": "right",
+        "thumbnail_position": "bottom",
         "click_to_enlarge": true,
         "enable_video_looping": false,
         "show_tax_info": false
