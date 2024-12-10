@@ -125,7 +125,7 @@
       ],
       "settings": {
         "full_width": false,
-        "gallery_style": "scroll_gallery",
+        "gallery_style": "thumbnail_gallery",
         "gallery_grid_size": "normal",
         "thumbnail_position": "right",
         "click_to_enlarge": true,
