@@ -38,26 +38,8 @@
         "35d7ec12-af12-4b47-9421-dd981a44a735": {
           "type": "metafield_popup",
           "settings": {
-            "popup_label": "SIZE GUIDE",
+            "popup_label": "Tabela Rozmiarów",
             "show_border_label": true,
-            "popup_metafield_content": "<p>Add content which will be shown in a popup across all product pages</p>",
-            "page": ""
-          }
-        },
-        "2d587658-77a6-434d-9116-80bb5399a066": {
-          "type": "metafield_popup",
-          "settings": {
-            "popup_label": "PRODUCTION",
-            "show_border_label": true,
-            "popup_metafield_content": "<p>Add content which will be shown in a popup across all product pages</p>",
-            "page": ""
-          }
-        },
-        "5d34f80f-d27f-4c9d-bd22-8e76fd870741": {
-          "type": "metafield_popup",
-          "settings": {
-            "popup_label": "RETURNS",
-            "show_border_label": false,
             "popup_metafield_content": "<p>Add content which will be shown in a popup across all product pages</p>",
             "page": ""
           }
@@ -78,10 +60,6 @@
         },
         "1623dfe7-5ea9-47ab-a679-594538b7e404": {
           "type": "product_description",
-          "settings": {}
-        },
-        "fa93d867-94af-47af-999d-e5cf78771b56": {
-          "type": "social_share",
           "settings": {}
         },
         "accordion_htTf93": {
@@ -113,12 +91,9 @@
         "e6875fb5-148a-4e09-8072-5d5b4b2a1765",
         "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84",
         "35d7ec12-af12-4b47-9421-dd981a44a735",
-        "2d587658-77a6-434d-9116-80bb5399a066",
-        "5d34f80f-d27f-4c9d-bd22-8e76fd870741",
         "ab17f510-012b-488a-97e2-a6ebf60e7732",
         "6de531da-e00e-4bb6-bda9-87b7d806e825",
         "1623dfe7-5ea9-47ab-a679-594538b7e404",
-        "fa93d867-94af-47af-999d-e5cf78771b56",
         "accordion_htTf93",
         "accordion_7GidaU",
         "accordion_fYy6Be"
