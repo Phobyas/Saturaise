@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{ 
+{
   "sections": {
     "main": {
       "type": "main-product",
@@ -125,7 +125,7 @@
       ],
       "settings": {
         "full_width": false,
-        "gallery_style": "thumbnail_gallery",
+        "gallery_style": "scroll_gallery",
         "gallery_grid_size": "normal",
         "thumbnail_position": "bottom",
         "click_to_enlarge": true,
