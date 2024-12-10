@@ -31,7 +31,7 @@
         "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84": {
           "type": "product_buttons",
           "settings": {
-            "show_quantity": true,
+            "show_quantity": false,
             "show_gift_card_recipient": false
           }
         },
