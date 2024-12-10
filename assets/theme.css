@@ -1023,7 +1023,7 @@ button.btn-secondary,
 [type="submit"].btn-secondary,
 a.button.btn-secondary,
 .shopify-challenge__button {
-  font-size: var(--font-size);
+  font-size: 16px;
   font-family: var(--main-family);
   font-weight: var(--main-weight);
   font-style: var(--main-style);

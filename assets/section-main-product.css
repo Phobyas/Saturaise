@@ -838,7 +838,6 @@
 .ajax-submit,
 .product-additional-buttons,
 .product-additional-buttons .shopify-payment-button__button--unbranded {
-  max-width: 310px;
   display: block;
 }
 @media screen and (max-width: 768px) {
@@ -851,7 +850,7 @@
 }
 .btn-secondary.ajax-submit,
 .shopify-payment-button__button--unbranded {
-  height: var(--space-8) !important;
+  height: 60px !important;
   line-height: var(--space-8) !important;
 }
 .shopify-payment-button__button--hidden {
@@ -1324,7 +1323,6 @@
 
 /* Custom */
 .accordion {
-  border: 1px solid #ccc;
   border-radius: 4px;
 }
 

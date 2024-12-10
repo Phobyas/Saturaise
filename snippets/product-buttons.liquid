@@ -85,7 +85,7 @@
     <input class="formQty" type="hidden" name="quantity" value="1">
   {% endif %}
   <div
-    class="product-form__buttons product__add-container mt4 animate--text delay--{{ index }}"
+    class="product-form__buttons product__add-container mt4 w-full animate--text delay--{{ index }}"
     {{ block.shopify_attributes }}
   >
 
@@ -101,14 +101,14 @@
       {{ 'products.product.or' | t }}
       <a class="underline" href="{{ routes.all_products_collection_url }}">{{ 'products.product.continue' | t }}</a>.
     </div>
-    <div class="note note-error js-error-msg a-center mb4" style="display: none">
+    <div class="note note-error js-error-msg a-center mb4 h-[60px]" style="display: none">
       <b>{{ 'cart.general.cart_error' | t }}</b>&nbsp;&nbsp;&nbsp;{{ 'cart.general.update_qty_error' | t }}
     </div>
     <input
         type="submit"
         name="button"
         data-variant-id="{{ current_variant.id }}"
-        class="button ajax-submit js-ajax-submit add-item add w100 inline-block {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-secondary{% endif %}"
+        class="button ajax-submit js-ajax-submit add-item add w100 inline-block w-full text-xl {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-secondary{% endif %}"
         value="{{ call_to_action }}"
         {% unless current_variant.available %}
           disabled

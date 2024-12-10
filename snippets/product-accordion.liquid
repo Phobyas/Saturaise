@@ -1,14 +1,141 @@
-<div class="accordion-item">
-    <div class="accordion-header" id="heading">
-        <h2>
-            <button class="accordion-button" type="button">
+{%- style -%}
+    .accordion-item {
+        border-top: 1px solid #e5e5e5;
+    }
+    
+    .accordion-item:last-child {
+        border-bottom: 1px solid #e5e5e5;
+    }
+    
+    .accordion-header {
+        width: 100%;
+    }
+    
+    .accordion-button {
+        width: 100%;
+        padding: 24px 0;
+        background: none;
+        border: none;
+        text-align: left;
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 15px;
+        font-weight: 500;
+        color: #111;
+    }
+    
+    .accordion-button:hover {
+        opacity: 0.75;
+    }
+    
+    .accordion-icon {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+    }
+    
+    .accordion-icon::before,
+    .accordion-icon::after {
+        content: '';
+        position: absolute;
+        background-color: currentColor;
+        transition: transform 0.3s ease;
+    }
+    
+    .accordion-icon::before {
+        top: 7px;
+        left: 0;
+        width: 16px;
+        height: 2px;
+    }
+    
+    .accordion-icon::after {
+        left: 7px;
+        top: 0;
+        height: 16px;
+        width: 2px;
+    }
+    
+    .accordion-button.active .accordion-icon::after {
+        transform: rotate(90deg);
+    }
+    
+    .accordion-collapse {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    
+    .accordion-body {
+        padding: 0 0 24px;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .accordion-body p {
+        margin: 0;
+    }
+    {%- endstyle -%}
+    
+    <div class="accordion-item" data-accordion>
+        <div class="accordion-header" id="heading-{{ block.id }}">
+            <button 
+                class="accordion-button" 
+                type="button" 
+                aria-expanded="false" 
+                aria-controls="collapse-{{ block.id }}"
+            >
                 {{ block.settings.label }}
+                <span class="accordion-icon"></span>
             </button>
-        </h2>
-    </div>
-    <div class="accordion-collapse">
-        <div class="accordion-body">
-            {{ block.settings.content }}
+        </div>
+        <div 
+            id="collapse-{{ block.id }}" 
+            class="accordion-collapse" 
+            aria-labelledby="heading-{{ block.id }}"
+        >
+            <div class="accordion-body">
+                {{ block.settings.content }}
+            </div>
         </div>
     </div>
-</div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accordions = document.querySelectorAll('[data-accordion]');
+        
+        accordions.forEach(accordion => {
+            const button = accordion.querySelector('.accordion-button');
+            const content = accordion.querySelector('.accordion-collapse');
+            
+            button.addEventListener('click', () => {
+                const isExpanded = button.classList.contains('active');
+                
+                // Close all other accordions
+                document.querySelectorAll('.accordion-button').forEach(otherButton => {
+                    if (otherButton !== button && otherButton.classList.contains('active')) {
+                        otherButton.classList.remove('active');
+                        otherButton.setAttribute('aria-expanded', false);
+                        otherButton.closest('[data-accordion]').querySelector('.accordion-collapse').style.maxHeight = null;
+                    }
+                });
+                
+                // Toggle active class
+                button.classList.toggle('active');
+                button.setAttribute('aria-expanded', !isExpanded);
+                
+                // Toggle content visibility
+                if (!isExpanded) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    content.style.maxHeight = null;
+                }
+            });
+        });
+    });
+    </script>
