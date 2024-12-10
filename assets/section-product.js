@@ -38,7 +38,7 @@ function loadAssets(container) {
 
         loader.load([jsAssets.product]).finally(() => {});
       }
-
+ 
     });
 }
 document.querySelectorAll('[data-section-type="product"].product-page').forEach(function(container){

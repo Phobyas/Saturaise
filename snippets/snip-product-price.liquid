@@ -68,14 +68,16 @@
         </span>
       </dd>
     </dl>
-    <div class="price__badges lh0">
-      <span class="price__badge price__badge--sale" aria-hidden="true">
-        <span>{{ 'products.general.sale' | t }}</span>
-      </span>
-      <span class="price__badge price__badge--sold-out">
-        <span>{{ 'products.product.sold_out' | t }}</span>
-      </span>
-    </div>
+    {% comment %}
+      <div class="price__badges lh0">
+        <span class="price__badge price__badge--sale" aria-hidden="true">
+          <span>{{ 'products.general.sale' | t }}</span>
+        </span> 
+        <span class="price__badge price__badge--sold-out">
+          <span>{{ 'products.product.sold_out' | t }}</span>
+        </span>
+      </div>
+    {% endcomment %}
   </div>
   <dl class="price__unit lh0">
     <dt>
