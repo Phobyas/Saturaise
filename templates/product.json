@@ -66,21 +66,21 @@
           "type": "accordion",
           "settings": {
             "label": "Szczegoly produktu",
-            "content": "<p>You'll need to ensure the data is in the correct format and then pass it as a string. Liquid doesn't allow passing complex objects directly through the render tag, so we'll convert the captured content to a JSON string.</p>"
+            "content": "<p>This is a content</p>"
           }
         },
         "accordion_7GidaU": {
           "type": "accordion",
           "settings": {
             "label": "Szczegoly produktu",
-            "content": "<p>You'll need to ensure the data is in the correct format and then pass it as a string. Liquid doesn't allow passing complex objects directly through the render tag, so we'll convert the captured content to a JSON string.</p>"
+            "content": "<p>This is a content</p>"
           }
         },
         "accordion_fYy6Be": {
           "type": "accordion",
           "settings": {
             "label": "Szczegoly produktu",
-            "content": "<p>You'll need to ensure the data is in the correct format and then pass it as a string. Liquid doesn't allow passing complex objects directly through the render tag, so we'll convert the captured content to a JSON string.</p>"
+            "content": "<p>This is a content</p>"
           }
         }
       },
