@@ -160,10 +160,37 @@
         "5f5b2366-2c2d-4f21-993f-edcc396ef367",
         "2dabc49f-deb1-47c0-a5e6-121e913d4e16"
       ],
+      "disabled": true,
       "settings": {
         "outer_border": true,
         "container_width": "66",
         "color_scheme": "2",
+        "section_padding": "both"
+      }
+    },
+    "section_about_us_iTXNV9": {
+      "type": "section-about-us",
+      "settings": {
+        "heading": "About Our Company",
+        "heading_size": "medium",
+        "content": "<p>Share your story and connect with customers. Describe what makes your business unique.</p>",
+        "content_size": "medium",
+        "text_position": "right",
+        "section_padding": "both"
+      }
+    },
+    "featured_collection_YMFETD": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Featured collection",
+        "subheading": "<p>Zobacz więcej</p>",
+        "link_text": "SHOP THE COLLECTION",
+        "link_url": "",
+        "text_position": "left",
+        "collection": "dunk-low",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 7,
         "section_padding": "both"
       }
     },
@@ -179,27 +206,13 @@
         "text_position": "left",
         "section_padding": "both"
       }
-    },
-    "featured_collection_YMFETD": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured collection",
-        "subheading": "<p>Use this text to share information about your brand with your customers. Describe a collection, share announcements, or welcome customers to your store.</p>",
-        "link_text": "SHOP THE COLLECTION",
-        "link_url": "",
-        "text_position": "left",
-        "collection": "dunk-low",
-        "display_type": "carousel",
-        "items_per_row": 4,
-        "items_per_page": 7,
-        "section_padding": "both"
-      }
     }
   },
   "order": [
     "main",
     "product-details",
-    "product-recommendations",
-    "featured_collection_YMFETD"
+    "section_about_us_iTXNV9",
+    "featured_collection_YMFETD",
+    "product-recommendations"
   ]
 }
