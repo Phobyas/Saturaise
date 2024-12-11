@@ -1,10 +1,25 @@
+{%- assign label = block.settings.label | default: '' -%}
+{%- assign content = block.settings.content | default: '' -%}
+{%- assign block_id = block.id | default: 'default-accordion' -%}
+
+Here's the complete corrected code for your product-accordion.liquid file:
+liquidCopy{%- assign label = block.settings.label | default: '' -%}
+{%- assign content = block.settings.content | default: '' -%}
+{%- assign block_id = block.id | default: 'default-accordion' -%}
+
 {%- style -%}
     .accordion-item {
+        position: relative;
         border-top: 1px solid #e5e5e5;
     }
     
     .accordion-item:last-child {
         border-bottom: 1px solid #e5e5e5;
+    }
+    
+    /* Remove the top border when accordion is active */
+    .accordion-item .accordion-button.active + .accordion-collapse {
+        margin-top: -1px; /* This will negate the border */
     }
     
     .accordion-header {
@@ -15,7 +30,7 @@
         width: 100%;
         padding: 24px 0;
         background: none;
-        border: none;
+        border: none;  /* Make sure no border here */
         text-align: left;
         position: relative;
         cursor: pointer;
@@ -80,62 +95,62 @@
     .accordion-body p {
         margin: 0;
     }
-    {%- endstyle -%}
+{%- endstyle -%}
     
-    <div class="accordion-item" data-accordion>
-        <div class="accordion-header" id="heading-{{ block.id }}">
-            <button 
-                class="accordion-button" 
-                type="button" 
-                aria-expanded="false" 
-                aria-controls="collapse-{{ block.id }}"
-            >
-                {{ block.settings.label }}
-                <span class="accordion-icon"></span>
-            </button>
-        </div>
-        <div 
-            id="collapse-{{ block.id }}" 
-            class="accordion-collapse" 
-            aria-labelledby="heading-{{ block.id }}"
+<div class="accordion-item" data-accordion>
+    <div class="accordion-header" id="heading-{{ block_id }}">
+        <button 
+            class="accordion-button" 
+            type="button" 
+            aria-expanded="false" 
+            aria-controls="collapse-{{ block_id }}"
         >
-            <div class="accordion-body">
-                {{ block.settings.content }}
-            </div>
+            {{ label }}
+            <span class="accordion-icon"></span>
+        </button>
+    </div>
+    <div 
+        id="collapse-{{ block_id }}" 
+        class="accordion-collapse" 
+        aria-labelledby="heading-{{ block_id }}"
+    >
+        <div class="accordion-body">
+            {{ content }}
         </div>
     </div>
+</div>
     
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const accordions = document.querySelectorAll('[data-accordion]');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const accordions = document.querySelectorAll('[data-accordion]');
+    
+    accordions.forEach(accordion => {
+        const button = accordion.querySelector('.accordion-button');
+        const content = accordion.querySelector('.accordion-collapse');
         
-        accordions.forEach(accordion => {
-            const button = accordion.querySelector('.accordion-button');
-            const content = accordion.querySelector('.accordion-collapse');
+        button.addEventListener('click', () => {
+            const isExpanded = button.classList.contains('active');
             
-            button.addEventListener('click', () => {
-                const isExpanded = button.classList.contains('active');
-                
-                // Close all other accordions
-                document.querySelectorAll('.accordion-button').forEach(otherButton => {
-                    if (otherButton !== button && otherButton.classList.contains('active')) {
-                        otherButton.classList.remove('active');
-                        otherButton.setAttribute('aria-expanded', false);
-                        otherButton.closest('[data-accordion]').querySelector('.accordion-collapse').style.maxHeight = null;
-                    }
-                });
-                
-                // Toggle active class
-                button.classList.toggle('active');
-                button.setAttribute('aria-expanded', !isExpanded);
-                
-                // Toggle content visibility
-                if (!isExpanded) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                } else {
-                    content.style.maxHeight = null;
+            // Close all other accordions
+            document.querySelectorAll('.accordion-button').forEach(otherButton => {
+                if (otherButton !== button && otherButton.classList.contains('active')) {
+                    otherButton.classList.remove('active');
+                    otherButton.setAttribute('aria-expanded', false);
+                    otherButton.closest('[data-accordion]').querySelector('.accordion-collapse').style.maxHeight = null;
                 }
             });
+            
+            // Toggle active class
+            button.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isExpanded);
+            
+            // Toggle content visibility
+            if (!isExpanded) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } else {
+                content.style.maxHeight = null;
+            }
         });
     });
-    </script>
+});
+</script>

@@ -915,7 +915,7 @@ button,
   font-family: var(--main-family);
   font-size: var(--font-size);
   font-weight: var(--main-weight);
-  text-transform: var(--buttons-transform);
+  /* text-transform: var(--buttons-transform); */
   letter-spacing: var(--buttons-spacing);
   text-decoration: none;
   cursor: pointer;

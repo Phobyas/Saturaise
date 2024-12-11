@@ -802,6 +802,7 @@
 
 .product__section--main .product__section-right p {
   color: var(--text-color);
+  font-size: 16px !important;
 }
 
 .product__section--main .product-single__view-in-space {
@@ -863,8 +864,9 @@
   letter-spacing: 1px;
 }
 #product-description .product-form__popup button {
-  font-size: var(--font-size-sm);
-  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: underline;
   color: var(--swatch-accent) !important;
 }
 #product-description .product-form__popup button:hover {
@@ -1337,7 +1339,7 @@
 
 .accordion-button {
   border: none;
-  font-size: 1.25em;
+  font-size: 16px !important;
   text-align: left;
   width: 100%;
 }
