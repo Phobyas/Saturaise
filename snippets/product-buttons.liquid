@@ -1,5 +1,4 @@
 {%- liquid
-
   if product.template_suffix == 'pre-order'
     assign call_to_action = 'products.product.pre_order' | t
   else
@@ -28,7 +27,6 @@
   class: classes,
   data-product-id: product.id
 %}
-
 
   {% if show_quantity %}
   <div class="product__quantity pt2 mb2" {{ block.shopify_attributes }}>
@@ -94,21 +92,12 @@
     {%- endif -%}
 
     <input id="formVariantId" name="id" type="hidden" value="{{ product.selected_or_first_available_variant.id }}">
-    <div class="note note-success mt3 js-added-msg a-center mb4" style="display: none">
-      <b>{{ 'products.product.added' | t }}</b>&nbsp;&nbsp;&nbsp;<a class="underline" href="{{ routes.cart_url }}">
-        {{- 'products.product.view_cart' | t -}}
-      </a>
-      {{ 'products.product.or' | t }}
-      <a class="underline" href="{{ routes.all_products_collection_url }}">{{ 'products.product.continue' | t }}</a>.
-    </div>
-    <div class="note note-error js-error-msg a-center mb4 h-[60px]" style="display: none">
-      <b>{{ 'cart.general.cart_error' | t }}</b>&nbsp;&nbsp;&nbsp;{{ 'cart.general.update_qty_error' | t }}
-    </div>
+
     <input
         type="submit"
         name="button"
         data-variant-id="{{ current_variant.id }}"
-        class="button ajax-submit js-ajax-submit add-item add w100 inline-block w-full text-xl {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-secondary{% endif %}"
+        class="button ajax-submit js-ajax-submit add-item add w100 inline-block w-full text-xl {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-primary{% endif %}"
         value="{{ call_to_action }}"
         {% unless current_variant.available %}
           disabled
@@ -139,3 +128,25 @@
     {% break %}
   {%- endif -%}
 {%- endfor -%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#{{ product_form_id }}');
+    const submitButton = form.querySelector('.js-ajax-submit');
+    const originalText = submitButton.value;
+    
+    form.addEventListener('submit', function(e) {
+      submitButton.value = "{{ 'products.product.adding' | t }}";
+      
+      document.addEventListener('ajaxProduct:added', function() {
+        submitButton.value = "{{ 'products.product.added' | t }} ✓";
+        submitButton.classList.add('button-success');
+        
+        setTimeout(() => {
+          submitButton.value = originalText;
+          submitButton.classList.remove('button-success');
+        }, 2000);
+      }, { once: true });
+    });
+  });
+</script>

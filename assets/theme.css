@@ -1102,6 +1102,12 @@ button.btn-disabled,
   color: var(--button-text);
   background-color: var(--button-bg);
 }
+
+.primary-button .button-success {
+  --button-bg: #1d4ed8 !important;
+  --button-text: #323232 !important;
+}
+
 .product-additional-buttons .shopify-payment-button__button--unbranded,
 .product-additional-buttons .shopify-challenge__button,
 .product-additional-buttons .shopify-payment-button__button--unbranded:visited,
