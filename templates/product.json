@@ -183,9 +183,9 @@
       "type": "featured-collection",
       "settings": {
         "title": "Featured collection",
-        "subheading": "<p>Zobacz więcej</p>",
-        "link_text": "SHOP THE COLLECTION",
-        "link_url": "",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/dunk-low",
         "text_position": "left",
         "collection": "dunk-low",
         "display_type": "carousel",
