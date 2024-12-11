@@ -79,7 +79,7 @@
         "accordion_fYy6Be": {
           "type": "accordion",
           "settings": {
-            "label": "Szczegoly produktuu",
+            "label": "Szczegoly produktu",
             "content": "<p>This is a content</p>"
           }
         }
