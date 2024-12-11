@@ -2,44 +2,50 @@
 {%- assign content = block.settings.content | default: '' -%}
 {%- assign block_id = block.id | default: 'default-accordion' -%}
 
-Here's the complete corrected code for your product-accordion.liquid file:
-liquidCopy{%- assign label = block.settings.label | default: '' -%}
-{%- assign content = block.settings.content | default: '' -%}
-{%- assign block_id = block.id | default: 'default-accordion' -%}
-
 {%- style -%}
-    .accordion-item {
-        position: relative;
-        border-top: 1px solid #e5e5e5;
+
+    .accordion-item[data-accordion] {
+        position: relative !important;
+        border: none !important;
     }
     
-    .accordion-item:last-child {
-        border-bottom: 1px solid #e5e5e5;
+    .accordion-item[data-accordion]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #e5e5e5;
     }
-    
-    /* Remove the top border when accordion is active */
-    .accordion-item .accordion-button.active + .accordion-collapse {
-        margin-top: -1px; /* This will negate the border */
-    }
-    
+
     .accordion-header {
         width: 100%;
+        border: none !important;
     }
     
     .accordion-button {
         width: 100%;
         padding: 24px 0;
         background: none;
-        border: none;  /* Make sure no border here */
+        border: none !important;
         text-align: left;
         position: relative;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 700;
         color: #111;
+    }
+   
+    .accordion-button.active {
+        border: none !important;
+    }
+    
+    .accordion-button.active + .accordion-collapse {
+        border: none !important;
     }
     
     .accordion-button:hover {
@@ -83,6 +89,7 @@ liquidCopy{%- assign label = block.settings.label | default: '' -%}
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-out;
+        border: none !important;
     }
     
     .accordion-body {
@@ -90,17 +97,30 @@ liquidCopy{%- assign label = block.settings.label | default: '' -%}
         color: #666;
         font-size: 14px;
         line-height: 1.5;
+        border: none !important;
     }
 
     .accordion-body p {
         margin: 0;
+        border: none !important;
+    }
+
+
+    .accordion-item[data-accordion]:last-child::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #e5e5e5;
     }
 {%- endstyle -%}
     
 <div class="accordion-item" data-accordion>
     <div class="accordion-header" id="heading-{{ block_id }}">
         <button 
-            class="accordion-button" 
+            class="accordion-button font-bold" 
             type="button" 
             aria-expanded="false" 
             aria-controls="collapse-{{ block_id }}"
