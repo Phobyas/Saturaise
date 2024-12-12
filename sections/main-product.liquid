@@ -244,12 +244,12 @@
                 </div>
               {%- endunless -%}
             {%- when 'product_title' -%}
-              <h1 class=" lh1 pt2 mb1 animate--text delay--{{ forloop.index }} font-bold text-[30px]" {{ block.shopify_attributes }}>
+              <h1 class=" lh1 pt2 mb1 animate--text delay--{{ forloop.index }} font-bold text-left text-2xl md:text-[30px]" {{ block.shopify_attributes }}>
                 {{ product.title }}
               </h1>
             {%- when 'product_prices' -%}
               <div
-                class="product-form__prices pt2 mb2 animate--text delay--{{ forloop.index }}"
+                class="product-form__prices pt2 mb2 text-left animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 {% render 'snip-product-price', variant: current_variant, product: product %}
@@ -380,7 +380,7 @@
               {%- endform -%}
             {%- when 'metafield_popup' -%}
               <div
-                class="product-form__popup pt2 mb2 sm-pt1 sm-mb1 {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
+                class="product-form__popup pt2 mb2 sm-pt1 sm-mb1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 {% if block.settings.popup_label != blank and block.settings.popup_metafield_content != blank or block.settings.page != blank %}

@@ -7,7 +7,7 @@
 
 -%}
 
-<div class="swatches__container pt2 mb2 js-variant-selector" data-option-index="{{ option.position }}" data-other-options='{{ other_options | json }}'>
+<div class="swatches__container pt2 mb2 js-variant-selector text-left" data-option-index="{{ option.position }}" data-other-options='{{ other_options | json }}'>
   <p class="swatches__option-name">{{ option.name }} &nbsp;| {% for value in option.values %}{% if option.selected_value == value %}<span id="selected-option-{{ option.position }}" class="swatches__option-value">{{ value }}</span>{% endif %}{% endfor %}</p>
 
   {% for value in option.values %}
