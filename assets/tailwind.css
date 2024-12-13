@@ -976,11 +976,6 @@ video {
   padding-bottom: 0.5rem;
 }
 
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -1001,12 +996,13 @@ video {
   text-align: right;
 }
 
-.text-\[25\.5px\] {
-  font-size: 25.5px;
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
-.text-\[30px\] {
-  font-size: 30px;
+.text-\[25\.5px\] {
+  font-size: 25.5px;
 }
 
 .text-base {
@@ -1022,21 +1018,6 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 
 .font-bold {

@@ -913,7 +913,7 @@ table,th,td{border:0}table{width:100%;display:table;border-collapse:collapse;bor
 button,
 .button {
   font-family: var(--main-family);
-  font-size: var(--font-size);
+  font-size: 16px;
   font-weight: var(--main-weight);
   /* text-transform: var(--buttons-transform); */
   letter-spacing: var(--buttons-spacing);
