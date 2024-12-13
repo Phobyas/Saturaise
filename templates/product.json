@@ -28,13 +28,6 @@
           "type": "product_form",
           "settings": {}
         },
-        "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84": {
-          "type": "product_buttons",
-          "settings": {
-            "show_quantity": false,
-            "show_gift_card_recipient": false
-          }
-        },
         "35d7ec12-af12-4b47-9421-dd981a44a735": {
           "type": "metafield_popup",
           "settings": {
@@ -42,6 +35,13 @@
             "show_border_label": true,
             "popup_metafield_content": "<p>Add content which will be shown in a popup across all product pages</p>",
             "page": ""
+          }
+        },
+        "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84": {
+          "type": "product_buttons",
+          "settings": {
+            "show_quantity": false,
+            "show_gift_card_recipient": false
           }
         },
         "ab17f510-012b-488a-97e2-a6ebf60e7732": {
@@ -89,8 +89,8 @@
         "43192c80-a930-4433-aa13-e083c64b206d",
         "43a00949-a2f3-4d11-9bc8-0764850b060f",
         "e6875fb5-148a-4e09-8072-5d5b4b2a1765",
-        "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84",
         "35d7ec12-af12-4b47-9421-dd981a44a735",
+        "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84",
         "ab17f510-012b-488a-97e2-a6ebf60e7732",
         "6de531da-e00e-4bb6-bda9-87b7d806e825",
         "1623dfe7-5ea9-47ab-a679-594538b7e404",
