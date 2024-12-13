@@ -286,18 +286,6 @@
         "section_padding": "both"
       }
     },
-    "about_us_section": {
-      "type": "section-about-us",
-      "settings": {
-        "logo": "shopify://shop_images/logo-new-saturaise2.png",
-        "heading": "O nas",
-        "heading_size": "medium",
-        "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
-        "content_size": "large",
-        "text_position": "left",
-        "section_padding": "both"
-      }
-    },
     "1642520461c9848fcf": {
       "type": "text-with-icons",
       "blocks": {
@@ -372,6 +360,18 @@
         "items_per_page": 8,
         "section_padding": "both"
       }
+    },
+    "about_us_section": {
+      "type": "section-about-us",
+      "settings": {
+        "logo": "shopify://shop_images/logo-new-saturaise2.png",
+        "heading": "O nas",
+        "heading_size": "medium",
+        "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
+        "content_size": "large",
+        "text_position": "left",
+        "section_padding": "both"
+      }
     }
   },
   "order": [
@@ -382,8 +382,8 @@
     "featured_collection_nkPKrR",
     "3a259e86-1d8c-4b1e-b9b4-342fc4f7ada1",
     "featured_collection_j8VXQ6",
-    "about_us_section",
     "1642520461c9848fcf",
-    "featured_collection_ka7QDt"
+    "featured_collection_ka7QDt",
+    "about_us_section"
   ]
 }
