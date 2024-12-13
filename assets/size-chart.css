@@ -1,0 +1,39 @@
+.tab-mnu {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab-mnu li {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab-mnu li.active {
+  border: 1px solid #ddd;
+  border-bottom-color: #fff;
+}
+
+.tabe-pane__content {
+  display: none;
+}
+
+.tabe-pane__content.active {
+  display: block;
+}
+
+.size-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.size-table th,
+.size-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}

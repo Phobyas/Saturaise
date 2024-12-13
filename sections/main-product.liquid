@@ -227,6 +227,10 @@
                   {%- endif -%}
                 </div>
               {%- endunless -%}
+
+              {%- when 'size_chart' -%}
+                {% render 'size-chart-modal', index: forloop.index %}
+
             {%- when 'richtext_metafield' -%}
               {%- unless block.settings.content == blank -%}
                 <div
@@ -378,34 +382,23 @@
                 </div>
                 <!-- /#spi-banner -->
               {%- endform -%}
-            {%- when 'metafield_popup' -%}
-              <div
-                class="product-form__popup pt2 mb2 sm-pt1 sm-mb1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
-                {{ block.shopify_attributes }}
-              >
-                {% if block.settings.popup_label != blank and block.settings.popup_metafield_content != blank or block.settings.page != blank %}
+              {%- when 'metafield_popup' -%}
+                <div
+                  class="product-form__popup pt2 mb2 sm-pt1 sm-mb1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
+                  {{ block.shopify_attributes }}
+                >
                   <button
                     class="btn-as-link underline js-modal-open"
                     type="button"
                     name="button"
-                    data-wau-modal-target="product-modal--{{ forloop.index }}"
-                    {{ block.shopify_attributes }}
+                    data-wau-modal-target="size-chart-modal"
                   >
-                    {{- block.settings.popup_label -}}
+                    Size Chart
                   </button>
-                  <div data-wau-modal-content="product-modal--{{ forloop.index }}" style="display: none;">
-                    {% if block.settings.page != blank %}
-                      {% assign feat_page = pages[block.settings.page] %}
-                      {{ feat_page.content }}
-                    {% else %}
-                      <div class="rte">
-                        {{ block.settings.popup_metafield_content }}
-                      </div>
-                      <!-- /.rte -->
-                    {% endif %}
+                  <div data-wau-modal-content="size-chart-modal" style="display: none;">
+                    {% render 'size-chart-tables' %}
                   </div>
-                {% endif %}
-              </div>
+                </div>
             {% when 'complementary_products' %}
               <div class="product-blocks__block product-blocks__block--{{ block.type }}" {{ block.shopify_attributes }}>
                 {%
@@ -793,6 +786,12 @@
           "default": 2
         }
       ]
+    },
+    {
+      "type": "size_chart",
+      "name": "Size Chart",
+      "limit": 1,
+      "settings": []
     },
     {
       "type": "@app"

@@ -53,7 +53,10 @@
   {{ 'theme.css' | asset_url | stylesheet_tag }}
 
   {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-{{ 'swiper-bundle.min.js' | asset_url | script_tag }}
+  {{ 'swiper-bundle.min.js' | asset_url | script_tag }}
+
+  {{ 'size-chart.css' | asset_url | stylesheet_tag }}
+  {{ 'size-chart.js' | asset_url | script_tag }}
 
   {%- unless settings.main_font.system? -%}
     <link rel="preload" as="font" href="{{ settings.main_font | font_url }}" type="font/woff2" crossorigin>
