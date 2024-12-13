@@ -16,6 +16,7 @@
     "font_size": 14,
     "nav_size": 18,
     "h2_size": 30,
+    "nav_spacing": 1,
     "nav_transform": true,
     "buttons_transform": false,
     "text_color": "#323232",
