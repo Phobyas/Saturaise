@@ -172,9 +172,9 @@
       "type": "section-about-us",
       "settings": {
         "logo": "shopify://shop_images/logo-new-saturaise2.png",
-        "heading": "About Our Company",
+        "heading": "O nas",
         "heading_size": "medium",
-        "content": "<p>Share your story and connect with customers. Describe what makes your business unique.</p>",
+        "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
         "content_size": "medium",
         "text_position": "left",
         "section_padding": "both"
