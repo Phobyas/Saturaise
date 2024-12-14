@@ -1,25 +1,66 @@
+/* Modal specific styles for size chart */
+.modal__container[data-wau-modal-target="size-chart-modal"] {
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px !important;
+}
+
+.modal__container[data-wau-modal-target="size-chart-modal"]
+  .modal__inner-wrapper {
+  padding: 60px 20px 20px;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 8px;
+  width: 100% !important;
+  overflow-y: auto;
+}
+
+/* Size Chart Content */
+.tab-block {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tabs Navigation */
 .tab-mnu {
   display: flex;
+  flex-wrap: wrap;
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0;
-  border-bottom: 1px solid #ddd;
+  margin-top: 25px;
+  gap: 10px;
+  width: 100%;
 }
 
 .tab-mnu li {
-  padding: 10px 20px;
+  flex: 1;
+  padding: 12px 24px;
   cursor: pointer;
-  border: 1px solid transparent;
-  margin-bottom: -1px;
+  background: #eeeeee;
+  color: #323232;
+  transition: all 0.2s ease;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tab-mnu li:hover {
+  background: #e0e0e0;
 }
 
 .tab-mnu li.active {
-  border: 1px solid #ddd;
-  border-bottom-color: #fff;
+  background: #323232;
+  color: #fff;
+  font-weight: 500;
 }
 
+/* Table Content */
 .tabe-pane__content {
   display: none;
+  width: 100%;
 }
 
 .tabe-pane__content.active {
@@ -29,11 +70,120 @@
 .size-table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #eeeeee;
+  table-layout: fixed;
 }
 
 .size-table th,
 .size-table td {
-  padding: 8px;
+  width: calc(100% / 3);
+  padding: 12px 10px;
   text-align: center;
-  border: 1px solid #ddd;
+}
+
+.size-table th {
+  background: #323232;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+}
+
+.size-table td {
+  border: 1px solid #eeeeee;
+}
+
+.size-table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+
+.size-table tbody tr:hover {
+  background: #eeeeee;
+}
+
+/* Enhanced close button */
+.modal__container[data-wau-modal-target="size-chart-modal"]
+  .modal__trigger--close {
+  right: 15px;
+  top: 15px;
+  z-index: 10;
+  position: absolute;
+}
+
+.modal__container[data-wau-modal-target="size-chart-modal"]
+  .modal__trigger--close
+  button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: #323232 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal__container[data-wau-modal-target="size-chart-modal"]
+  .modal__trigger--close
+  button
+  .icn-close:before,
+.modal__container[data-wau-modal-target="size-chart-modal"]
+  .modal__trigger--close
+  button
+  .icn-close:after {
+  border-color: #fff;
+  border-width: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .modal__container[data-wau-modal-target="size-chart-modal"] {
+    width: 90% !important;
+    left: 50% !important;
+    position: fixed !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .modal__container[data-wau-modal-target="size-chart-modal"]
+    .modal__inner-wrapper {
+    width: 100% !important;
+    padding: 60px 15px 15px;
+    margin: 0;
+    border-radius: 12px;
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-mnu {
+    gap: 8px;
+  }
+
+  .tab-mnu li {
+    flex: 1 1 calc(100% / 3 - 6px);
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .size-table th,
+  .size-table td {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+
+  .modal__container[data-wau-modal-target="size-chart-modal"]
+    .modal__trigger--close {
+    right: 15px;
+    top: 15px;
+  }
+
+  .modal__container[data-wau-modal-target="size-chart-modal"]
+    .modal__trigger--close
+    button {
+    width: 44px;
+    height: 44px;
+    background: #323232 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
 }

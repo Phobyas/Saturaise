@@ -12,16 +12,13 @@
 }
 
 .modal__inner-content-container {
-  max-height: 560px;
   overflow-y: auto;
-  padding-right: 5px;
-  margin: 10px;
 }
 
 @media (max-width: 767px) {
   .modal__inner-content-container {
-    max-height:  unset;
-    overflow-y:  unset;
+    max-height: unset;
+    overflow-y: unset;
   }
 }
 
@@ -30,7 +27,6 @@
   background-color: var(--background);
   padding: 20px;
   border: 1px solid #888;
-  max-height: 800px;
   overflow-y: hidden;
   position: relative;
 }
@@ -46,12 +42,13 @@
 @media (min-width: 768px) and (max-width: 979px) {
   .modal__inner-wrapper,
   .modal__container {
-    width: 90%;
+    width: 100%;
   }
 }
 @media (max-width: 767px) {
   .modal__inner-wrapper,
   .modal__container {
+    max-height: 560px;
     width: 100%;
   }
   .modal__inner-wrapper {
@@ -63,9 +60,10 @@
 .modal__container.modal--active {
   display: block;
   opacity: 1;
+  width: 90%;
 }
 .modal__container button.slideout__trigger-ajax-cart.js-modal-close {
-    padding: 0 5px;
+  padding: 0 5px;
 }
 .modal__trigger--open {
   z-index: 2;
