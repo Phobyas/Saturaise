@@ -302,8 +302,8 @@
   {%- endunless -%}
   {%- unless has_sortby == false -%}
     <div class="filter-drawer__menu-block js-mobile-menu {% if collection.all_products_count >= 1000 or has_filter == false %}active--menu{% endif %} span-12 auto" data-menu-handle="sort">
-      <div class="filter-drawer__header sm-caps grid__wrapper edge">
-        <p class="span-12 auto a-left">{{ 'collections.filter.sort_title' | t }}</p>
+      <div class="filter-drawer__header grid__wrapper edge">
+        <p class="span-12 auto a-left text-xl">{{ 'collections.filter.sort_title' | t }}</p>
       </div>
       <ul class="slide-nav__first-level--wrapper" data-link-parent="main">
         {% for option in type.sort_options %}
@@ -315,7 +315,7 @@
             endif
           -%}
 
-          <li class="slide-nav__first-level--item js-filter">
+          <li class="slide-nav__first-level--item js-filter {% if status == 'current' %}current{% endif %}">
             <input
               type="checkbox"
               name="sort_by"
@@ -369,17 +369,40 @@
   <style>
     .slide-nav__first-level--item .filter__text--label {
       cursor: pointer;
+      font-size: 18px;
+      margin-top: 40px;
+      font-weight: 500;
     }
+    
+    /* Style for active sort option */
+    .slide-nav__first-level--item.current .filter__text--label,
+    .slide-nav__first-level--item.current a {
+      color: #1d4ed8 !important;  /* Red color for active state */
+      
+    }
+    
+    /* Style for active price range */
+    .filter--price-range.active .sm-caps,
+    .filter--price-range.active .filter-range__field__currency {
+      color: #1d4ed8 !important;
+    }
+    .filter--price-range.active .filter-range__field__input {
+      border-color: #1d4ed8;
+    }
+  
     .filter-drawer__wrapper .filter--color label {
       cursor: pointer;
     }
+    
     .regular-filter--label {
       pointer-events: none;
     }
+    
     .filter-drawer__wrapper,
     .filter-drawer__menu-block {
       background: var(--background);
     }
+    
     .filter-drawer__wrapper,
     .filter-drawer__wrapper label,
     .filter-drawer__wrapper small,
@@ -387,14 +410,26 @@
     .filter-drawer__wrapper p a,
     .filter-drawer__wrapper li a,
     .filter-drawer__wrapper .product-price {
-      color: var(--text-color) !important;
+      color: #323232 !important;
     }
+    
     .filter-drawer__wrapper p a:hover,
     .filter-drawer__wrapper li a:hover {
       color: var(--text-color-light);
     }
+    
     .filter-drawer__wrapper svg:hover .hover-fill {
       fill: var(--text-color-light);
+    }
+  
+    /* Style for active filters section */
+    .current_filters--filter a {
+      color: #1d4ed8 !important;
+      font-weight: 500;
+    }
+  
+    .current_filters--clear {
+      color: #323232 !important;
     }
   </style>
 </div>

@@ -107,7 +107,7 @@
       <div class="span-5 sm-span-12 auto a-left v-end">
         {%- for block in section.blocks -%}
           {%- case block.type -%}
-            {%- when 'filter' -%}
+            {% comment %} {%- when 'filter' -%}
               <button class="button js-slideout-open js-menu-toggle mr3"
                 data-wau-slideout-target="collection-filters"
                 data-slideout-direction="left"
@@ -124,7 +124,7 @@
                    size: '5px',
                    fill: 'var(--text-color)',
                    hover: 'var(--text-color)' %}
-              </button>
+              </button> {% endcomment %}
             {%- when 'sort_by' -%}
               <button class="button js-slideout-open js-menu-toggle mr3"
                 data-wau-slideout-target="collection-filters"
@@ -183,7 +183,7 @@
     </div>
 
       {%- if has_sortby or has_filter -%}
-        <aside class="slideout slideout__drawer-left py8 px7"
+        <aside class="slideout slideout__drawer-right py8 px7"
           data-wau-slideout="collection-filters" id="slideout-collection-filters">
           <form id="CollectionFiltersForm" data-filters>
             {% render 'snip-filter-drawer',
