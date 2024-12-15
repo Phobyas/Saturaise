@@ -472,6 +472,15 @@
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .product__section--main .product-gallery__media-container {
+    min-height: 400px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+  }
+}
+
 .product__section--main .product-gallery__product-video > video,
 .product__section--main .product-gallery__media-container > video,
 .product__section--main .product-gallery__product-video > video {
