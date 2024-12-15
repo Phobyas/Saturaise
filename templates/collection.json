@@ -24,6 +24,30 @@
         "color_scheme": "1"
       }
     },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "a8162060-cb0e-4be7-91eb-83a96e11ad84": {
+          "type": "filter",
+          "settings": {}
+        },
+        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f": {
+          "type": "sort_by",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "a8162060-cb0e-4be7-91eb-83a96e11ad84",
+        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f"
+      ],
+      "settings": {
+        "items_per_page": 40,
+        "items_per_row": 4,
+        "collection_image": false,
+        "show_count": true,
+        "show_savings": false
+      }
+    },
     "collections_badges_kVtn9A": {
       "type": "collections-badges",
       "blocks": {
@@ -56,35 +80,11 @@
         "category_gkN4VV"
       ],
       "settings": {}
-    },
-    "main": {
-      "type": "main-collection",
-      "blocks": {
-        "a8162060-cb0e-4be7-91eb-83a96e11ad84": {
-          "type": "filter",
-          "settings": {}
-        },
-        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f": {
-          "type": "sort_by",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "a8162060-cb0e-4be7-91eb-83a96e11ad84",
-        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f"
-      ],
-      "settings": {
-        "items_per_page": 40,
-        "items_per_row": 4,
-        "collection_image": false,
-        "show_count": true,
-        "show_savings": false
-      }
     }
   },
   "order": [
     "banner",
-    "collections_badges_kVtn9A",
-    "main"
+    "main",
+    "collections_badges_kVtn9A"
   ]
 }
