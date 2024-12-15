@@ -110,6 +110,11 @@
   -moz-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
 }
+/* @media (max-width: 767px) {
+  .product-loop__item--square .box-ratio img {
+    height: 120% !important;
+  }
+} */
 .product-loop__item--square .product-loop__info-wrapper {
   padding-top: var(--space-3);
 }
@@ -296,7 +301,7 @@
   letter-spacing: normal;
   /* font-size: var(--font-size); */
   line-height: normal;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .product-loop__price .product-loop__price--sale {

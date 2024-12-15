@@ -7,6 +7,12 @@
   flex-direction: column;
   gap: 20px;
 }
+
+@media (max-width: 767px) {
+  .section-featured-collection__outer-wrapper {
+    padding-left: 12px;
+  }
+}
 .section-featured-collection__outer-wrapper .featured-collection__text-wrapper {
   display: flex;
   justify-content: space-between;
@@ -61,7 +67,6 @@
     width: 80% !important;
   }
   .featured-collection__text-wrapper {
-    padding-left: 3%;
     padding-right: 3%;
   }
   .section-featured-collection__outer-wrapper {
