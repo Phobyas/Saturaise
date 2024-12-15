@@ -1,1 +1,90 @@
-{"sections":{"banner":{"type":"collection-header","settings":{"full_width":true,"collection_image":true,"scale":0,"banner_height":600,"heading":"","subheading":"","heading_placement":"center","alignment":"a-left","color_scheme":"1"}},"main":{"type":"main-collection","blocks":{"a8162060-cb0e-4be7-91eb-83a96e11ad84":{"type":"filter","settings":{}},"a693520f-e2ed-48e0-aaae-58e0dc5dcc3f":{"type":"sort_by","settings":{}}},"block_order":["a8162060-cb0e-4be7-91eb-83a96e11ad84","a693520f-e2ed-48e0-aaae-58e0dc5dcc3f"],"settings":{"items_per_page":30,"items_per_row":4,"collection_image":false,"show_count":true,"show_savings":true}}},"order":["banner","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "collection-header",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "collection_image": true,
+        "scale": 0,
+        "banner_height": 600,
+        "heading": "",
+        "subheading": "",
+        "heading_placement": "center",
+        "alignment": "a-left",
+        "color_scheme": "1"
+      }
+    },
+    "collections_badges_kVtn9A": {
+      "type": "collections-badges",
+      "blocks": {
+        "category_bPfyM7": {
+          "type": "category",
+          "settings": {
+            "title": "Air jordan 4",
+            "link": "shopify://collections/air-jordan-4",
+            "image": "shopify://shop_images/Air-Jordan-4-Retro-Bred-Reimagined.webp"
+          }
+        },
+        "category_UeFAQi": {
+          "type": "category",
+          "settings": {
+            "title": "",
+            "link": ""
+          }
+        },
+        "category_gkN4VV": {
+          "type": "category",
+          "settings": {
+            "title": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "category_bPfyM7",
+        "category_UeFAQi",
+        "category_gkN4VV"
+      ],
+      "settings": {}
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "a8162060-cb0e-4be7-91eb-83a96e11ad84": {
+          "type": "filter",
+          "settings": {}
+        },
+        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f": {
+          "type": "sort_by",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "a8162060-cb0e-4be7-91eb-83a96e11ad84",
+        "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f"
+      ],
+      "settings": {
+        "items_per_page": 40,
+        "items_per_row": 4,
+        "collection_image": false,
+        "show_count": true,
+        "show_savings": false
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "collections_badges_kVtn9A",
+    "main"
+  ]
+}
