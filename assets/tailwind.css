@@ -1195,4 +1195,9 @@ video {
   .md\:text-\[30px\] {
     font-size: 30px;
   }
+
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 }

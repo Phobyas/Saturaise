@@ -104,6 +104,26 @@
   .product-loop__badge-icon {
   z-index: 10;  /* Higher number to ensure it's always on top */
 }
+
+@media screen and (max-width: 768px) {
+  /* Keep container square but make image fill more space */
+  .template-index .product-loop__img-wrapper {
+    padding-bottom: 100%; /* Keep square aspect ratio */
+  }
+
+  .template-index .product-loop__img-wrapper img {
+    width: 90% !important; /* Make image take up more of the square */
+    height: 90% !important;
+    object-fit: contain;
+  }
+  
+  /* Maintain hover image consistency */
+  .template-index .hover-image img {
+    width: 90% !important;
+    height: 90% !important;
+    object-fit: contain;
+  }
+}
 </style>
 
 {%- liquid
@@ -273,7 +293,7 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-      <div class="product-loop__price text-base font-bold {{ product_info_mobile_grid_right }}">
+      <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }}">
         {% if product.price < product.compare_at_price %}
           Od
           <span class="product-loop__price--sale onsale inline-block text-sm font-bold ">
