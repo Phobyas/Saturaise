@@ -306,6 +306,7 @@
         <p class="span-12 auto a-left text-xl">{{ 'collections.filter.sort_title' | t }}</p>
       </div>
       <ul class="slide-nav__first-level--wrapper" data-link-parent="main">
+        <!-- Regular sort options -->
         {% for option in type.sort_options %}
           {%- liquid
             if option.value == collection.sort_by
@@ -314,7 +315,7 @@
               assign status = 'available'
             endif
           -%}
-
+      
           <li class="slide-nav__first-level--item js-filter {% if status == 'current' %}current{% endif %}">
             <input
               type="checkbox"
@@ -322,10 +323,43 @@
               value="{{ option.value | escape }}"
               style="display: none;"
               id="{{ option.name | downcase | handle }}">
-            <a class="slide-nav__first-level--link mb0 vib-center" href="?sort_by={{ option.name | escape }}">
+            <a class="slide-nav__first-level--link mb0 vib-center" href="?sort_by={{ option.value }}">
               <label for="{{ option.name | downcase | handle }}" class="filter__text--label">{{ option.name }}</label>
             </a>
           </li>
+        {% endfor %}
+      
+        <!-- Brand filter section -->
+        <li class="filter-drawer__header">
+          <p class="span-12 auto a-left text-xl">Brands</p>
+        </li>
+
+        {% for product in collection.products %}
+          {% assign brand = product.metafields.custom.brand %}
+          <div style="display:none;">Brand found: {{ brand }}</div>
+        {% endfor %}
+      
+        {% assign brands = '' %}
+        {% for product in collection.products %}
+          {% assign brand = product.metafields.custom.brand %}
+          {% unless brands contains brand %}
+            {% assign brands = brands | append: brand | append: ',' %}
+          {% endunless %}
+        {% endfor %}
+        {% assign brand_list = brands | split: ',' | sort %}
+        
+        {% for brand in brand_list %}
+          <div style="display:none;">Brand in list: {{ brand }}</div>
+          {% if brand != blank %}
+            <li class="slide-nav__first-level--item js-filter">
+              {% assign brand_collection_url = brand | handleize | prepend: '/collections/' %}
+              <a class="slide-nav__first-level--link mb0 vib-center" 
+                 href="{{ brand_collection_url }}"
+                 onclick="window.location.href='{{ brand_collection_url }}'; return false;">
+                <label class="filter__text--label">{{ brand }}</label>
+              </a>
+            </li>
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
