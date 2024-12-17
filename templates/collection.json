@@ -80,11 +80,48 @@
         "category_gkN4VV"
       ],
       "settings": {}
+    },
+    "accordion_txK8gd": {
+      "type": "accordion",
+      "blocks": {
+        "panel_GKEFRj": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_ncdw3c": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_yakGKE": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "panel_GKEFRj",
+        "panel_ncdw3c",
+        "panel_yakGKE"
+      ],
+      "settings": {
+        "heading": "Dlaczego warto",
+        "allow_multiple": false,
+        "section_padding": "both"
+      }
     }
   },
   "order": [
     "banner",
     "main",
-    "collections_badges_kVtn9A"
+    "collections_badges_kVtn9A",
+    "accordion_txK8gd"
   ]
 }
