@@ -116,7 +116,7 @@
   }
 } */
 .product-loop__item--square .product-loop__info-wrapper {
-  padding-top: var(--space-3);
+  padding-top: var(--space-1);
 }
 .product-loop__item--vertical .box-ratio,
 .product-loop__item--vertical .product-loop__video-inner-wrapper {
