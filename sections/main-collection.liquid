@@ -1,3 +1,15 @@
+{% style %}
+  p.desc span {
+    font-size: 18px !important;
+  }
+
+  .count {
+    font-size: 16px !important;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+{% endstyle %}
+
 {% comment %} Collection Page Assets {% endcomment %}
 <link rel="preload" href="{{ 'section-main-collection.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-main-collection.css' | asset_url }}"></noscript>
@@ -78,12 +90,14 @@
   {% paginate collection.products by page_limit %}
     <div id="CollectionProductGrid" class="grid__wrapper">
       {%- if collection.description != blank -%}
-        <div class="collection__page--description collection-description w-100 span-8 mt2 pb2 a-left">
+        <div class="collection__page--description  w-100 span-8 mt2 pb2 a-left">
           <div class="rte">
             <p class="text-2xl font-bold">
               {{ collection.title }}
             </p>
-            {{ collection.description }}
+            <p class="desc">
+              {{ collection.description }}
+            </p>
           </div>
         </div>
       {%- endif -%}
@@ -150,7 +164,7 @@
       </div>
       <div class="span-7 sm-hide auto a-right v-end">
         {%- if section.settings.show_count -%}
-          <p class="topbar__count mb0">{{ 'collections.general.item_count.other' | t: count: collection.products_count }}</p>
+          <p class="topbar__count mb0 count">{{ 'collections.general.item_count.other' | t: count: collection.products_count }}</p>
         {%- endif -%}
       </div>
       {%- if filter_count > 0 -%}
