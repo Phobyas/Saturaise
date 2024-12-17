@@ -63,17 +63,7 @@
     assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
   endif
 
-  
-
 -%}
-
-{% assign current_color = '' %}
-
-{% if product.metafields.shopify.color-pattern %}
-  {% assign current_color = product.metafields.shopify.color-pattern.value %}
-{% endif %}
-
-
 
 {% comment %} Collection Page Template {% endcomment %}
 <section
