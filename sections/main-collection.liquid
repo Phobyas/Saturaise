@@ -96,7 +96,8 @@
               {{ collection.title }}
             </p>
             <p class="desc">
-              {{ collection.description }}
+              {{ collection.description | replace: '<span>', '<span class=" text-base">' }}
+
             </p>
           </div>
         </div>
