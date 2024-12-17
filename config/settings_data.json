@@ -63,7 +63,7 @@
     "secondary_images_hover": false,
     "product_grid_video": false,
     "show_collection_sizes": false,
-    "show_collection_swatches": false,
+    "show_collection_swatches": true,
     "product_variants": "swatches",
     "color_swatch_shape": "square",
     "color_swatch_style": "variant-image",
