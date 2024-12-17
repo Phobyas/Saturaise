@@ -10,6 +10,8 @@
 
 -%}
 
+
+
 <div
   class="filter-drawer__wrapper grid__wrapper edge rg0 cg0 sm-rg0 sm-cg0">
 
@@ -298,6 +300,42 @@
           </div>
         {% endcase %}
       {%- endfor -%}
+
+      <div class="sidebar__filter-block sidebar-filter filter--color">
+  <p class="sm-caps">Color</p>
+  <ul class="color-filter-grid">
+    {% comment %} Get unique colors from current collection {% endcomment %}
+    {% assign colors = '' %}
+    {% for product in collection.products %}
+      {% assign color = product.metafields.custom.kolor %}
+      {% unless colors contains color %}
+        {% assign colors = colors | append: color | append: ',' %}
+      {% endunless %}
+    {% endfor %}
+    {% assign color_list = colors | split: ',' | sort %}
+
+    {% for color in color_list %}
+      {% if color != blank %}
+        {% assign color_handle = color | handleize %}
+        {% assign is_current_color = false %}
+        {% if current_tags contains color %}
+          {% assign is_current_color = true %}
+        {% endif %}
+
+        <li class="filter-item color-filter-item {% if is_current_color %}current{% endif %}">
+          <a class="js-collection-side-filter color-filter-link" 
+             href="{{ collection.url }}/{{ color_handle }}"
+             title="{{ color }}"
+             data-tag="{{ color_handle }}">
+            <span class="color-swatch" style="background-color: {{ color | downcase }};"></span>
+            <span class="color-label">{{ color }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
     </div>
   {%- endunless -%}
   {%- unless has_sortby == false -%}
@@ -329,38 +367,37 @@
           </li>
         {% endfor %}
       
-        <!-- Brand filter section -->
-        <li class="filter-drawer__header">
-          <p class="span-12 auto a-left text-xl">Brands</p>
-        </li>
+<!-- Color filter section -->
+<div class="filter-drawer__header">
+  <p class="span-12 auto a-left text-xl">Colors</p>
+</div>
 
-        {% for product in collection.products %}
-          {% assign brand = product.metafields.custom.brand %}
-          <div style="display:none;">Brand found: {{ brand }}</div>
-        {% endfor %}
-      
-        {% assign brands = '' %}
-        {% for product in collection.products %}
-          {% assign brand = product.metafields.custom.brand %}
-          {% unless brands contains brand %}
-            {% assign brands = brands | append: brand | append: ',' %}
-          {% endunless %}
-        {% endfor %}
-        {% assign brand_list = brands | split: ',' | sort %}
-        
-        {% for brand in brand_list %}
-          <div style="display:none;">Brand in list: {{ brand }}</div>
-          {% if brand != blank %}
-            <li class="slide-nav__first-level--item js-filter">
-              {% assign brand_collection_url = brand | handleize | prepend: '/collections/' %}
-              <a class="slide-nav__first-level--link mb0 vib-center" 
-                 href="{{ brand_collection_url }}"
-                 onclick="window.location.href='{{ brand_collection_url }}'; return false;">
-                <label class="filter__text--label">{{ brand }}</label>
-              </a>
-            </li>
-          {% endif %}
-        {% endfor %}
+{% comment %} Get unique colors from current collection {% endcomment %}
+{% comment %} Get unique colors from current collection {% endcomment %}
+{% assign colors = '' %}
+{% for product in collection.products %}
+  {% assign color = product.metafields.shopify.color-pattern %}
+  {% if color != blank %}
+    {% unless colors contains color.value %}
+      {% assign colors = colors | append: color.value | append: ',' %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+{% assign color_list = colors | split: ',' | sort %}
+
+{% for color in color_list %}
+  {% if color != blank %}
+    <li class="slide-nav__first-level--item js-filter">
+      <a class="slide-nav__first-level--link mb0 vib-center" 
+         href="{{ collection.url }}?filter.p.m.shopify.color-pattern={{ color | url_encode }}">
+        <label class="filter__text--label">
+          <span class="color-dot" style="background-color: {{ color | downcase }};"></span>
+          {{ color }}
+        </label>
+      </a>
+    </li>
+  {% endif %}
+{% endfor %}
       </ul>
     </div>
   {%- endunless -%}
@@ -465,5 +502,67 @@
     .current_filters--clear {
       color: #323232 !important;
     }
+
+    .color-dot {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  border: 1px solid #e5e5e5;
+}
+
+.slide-nav__first-level--item.current .color-dot {
+  border-color: #1d4ed8;
+}
+
+.color-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+  margin-top: 10px;
+}
+
+.color-filter-item {
+  margin: 0;
+}
+
+.color-filter-link {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.color-filter-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.filter-item.current .color-filter-link {
+  background-color: rgba(29, 78, 216, 0.1);
+}
+
+.filter-item.current .color-swatch {
+  border-color: #1d4ed8;
+}
+
+.filter-item.current .color-label {
+  color: #1d4ed8;
+  font-weight: 500;
+}
   </style>
 </div>

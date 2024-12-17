@@ -63,7 +63,17 @@
     assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
   endif
 
+  
+
 -%}
+
+{% assign current_color = '' %}
+
+{% if product.metafields.shopify.color-pattern %}
+  {% assign current_color = product.metafields.shopify.color-pattern.value %}
+{% endif %}
+
+
 
 {% comment %} Collection Page Template {% endcomment %}
 <section
@@ -110,7 +120,7 @@
       <div class="span-5 sm-span-12 auto a-left v-end">
         {%- for block in section.blocks -%}
           {%- case block.type -%}
-            {% comment %} {%- when 'filter' -%}
+            {%- when 'filter' -%}
               <button class="button js-slideout-open js-menu-toggle mr3"
                 data-wau-slideout-target="collection-filters"
                 data-slideout-direction="left"
@@ -127,7 +137,7 @@
                    size: '5px',
                    fill: 'var(--text-color)',
                    hover: 'var(--text-color)' %}
-              </button> {% endcomment %}
+              </button>
             {%- when 'sort_by' -%}
               <button class="button js-slideout-open js-menu-toggle mr3"
                 data-wau-slideout-target="collection-filters"
