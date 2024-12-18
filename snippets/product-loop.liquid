@@ -129,13 +129,33 @@
   }
 
   .template-index .product-loop__img-wrapper img {
-    width: 90% !important; /* Make image take up more of the square */
+    width: 90% !important; 
     height: 90% !important;
     object-fit: contain;
   }
   
   /* Maintain hover image consistency */
   .template-index .hover-image img {
+    width: 90% !important;
+    height: 90% !important;
+    object-fit: contain;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Keep container square but make image fill more space */
+  .template-product .product-loop__img-wrapper {
+    padding-bottom: 100%; /* Keep square aspect ratio */
+  }
+
+  .template-product .product-loop__img-wrapper img {
+    width: 90% !important; 
+    height: 90% !important;
+    object-fit: contain;
+  }
+  
+  /* Maintain hover image consistency */
+  .template-product .hover-image img {
     width: 90% !important;
     height: 90% !important;
     object-fit: contain;
@@ -302,7 +322,7 @@
       {% if settings.product_grid_vendor %}
         <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
       {% endif %}
-       <p class="product-loop__title p-title {% if template.name == 'index' %}p-title-index{% endif %}">
+       <p class="product-loop__title p-title {% if template.name == 'index' or template.name == 'product' %}p-title-index{% endif %}">
   <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
 </p>
     </div>
@@ -312,13 +332,14 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' %}price-index{% endif %}">
+    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
+
         {% if product.price < product.compare_at_price %}
           Od
-          <span class="product-loop__price--sale onsale inline-block text-sm font-bold {% if template.name == 'index' %}price-index{% endif %} ">
+          <span class="product-loop__price--sale onsale inline-block text-sm font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %} ">
             {{ product.price | money }}
           </span>
-          <span class="product-loop__price--compare was inline-block ml1 text-sm font-bold {% if template.name == 'index' %}price-index{% endif %} ">
+          <span class="product-loop__price--compare was inline-block ml1 text-sm font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
             {{ product.compare_at_price | money }}
           </span>
           {% assign savings = product.compare_at_price | minus: product.price %}
