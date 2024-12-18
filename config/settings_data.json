@@ -76,15 +76,16 @@
       "mobile-header": {
         "type": "mobile-header",
         "settings": {
-          "header_layout": "logo_left",
+          "header_layout": "logo_center",
           "show_searchbox": false,
           "enable_sticky": true,
-          "logo": "shopify://shop_images/logo-saturaise-1600px_1_ccf06207-854b-4a82-a3be-3b2cb0bba0b5.png",
-          "logo_max_width": 50,
+          "logo": "shopify://shop_images/logo-new-saturaise2.png",
+          "logo_max_width": 100,
           "logo_size": 25,
           "mobile_nav_scheme": "2",
           "main_nav": "main-menu",
-          "menu_image_text": "Browse the Lookbook",
+          "menu_image": "shopify://shop_images/logo-new-saturaise2.png",
+          "menu_image_text": "",
           "menu_image_url": "shopify://pages/lookbook"
         }
       },
