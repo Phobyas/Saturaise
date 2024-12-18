@@ -141,7 +141,7 @@ const SearchFilters = {
     var container = document.querySelector('[data-section-type="search-template"]');
     WAU.Slideout.init("search-filters");
     WAU.Slideout._closeByName("search-filters");
-
+ 
     this.typeToggle(container);
     this.drawerFilters();
     this.currentFilters();

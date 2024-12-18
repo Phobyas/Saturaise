@@ -1885,4 +1885,46 @@ Shopify.CountryProvinceSelector.prototype = {
 	});
 })();
 
+document.addEventListener('DOMContentLoaded', function() {
+  const searchToggle = document.querySelector('.js-mobile-search-toggle');
+  const searchSection = document.getElementById('mobile-search');
+  const searchInput = document.querySelector('.section-header__mobile_search--input');
+  const header = document.querySelector('.mobile-nav__mobile-header');
 
+  if (searchToggle && searchSection) {
+    searchToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const isHidden = searchSection.classList.contains('mobile-search--hidden');
+      
+      if (isHidden) {
+        // Show search
+        searchSection.classList.remove('mobile-search--hidden');
+        searchSection.classList.add('mobile-search--visible');
+        header.classList.add('search-active');
+        // Focus the input after animation
+        setTimeout(() => {
+          searchInput.focus();
+        }, 300);
+      } else {
+        // Hide search
+        searchSection.classList.remove('mobile-search--visible');
+        searchSection.classList.add('mobile-search--hidden');
+        header.classList.remove('search-active');
+      }
+    });
+
+    // Close search when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!searchSection.contains(e.target) && 
+          !searchToggle.contains(e.target) && 
+          !searchSection.classList.contains('mobile-search--hidden')) {
+        searchSection.classList.remove('mobile-search--visible');
+        searchSection.classList.add('mobile-search--hidden');
+        header.classList.remove('search-active');
+      }
+    });
+  }
+});
+
+ 

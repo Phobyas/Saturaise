@@ -34,6 +34,18 @@
   data-asset-preload="true"
   data-section-type="mobile-header">
   {%- capture mobile_cart_link -%}
+    <li class="mobile-header__cart-links--search">
+      <button class="js-mobile-search-toggle btn-as-link" aria-label="Toggle search" type="button">
+        {% render 'snip-icons',
+           wrapper: '.mobile-header__cart-links--search',
+           type: 'theme',
+           icon: 'search',
+           size: '24px',
+           classes: 'mt0 mr2 mb0 ml0',
+           fill: text_color,
+           hover: hover_color %}
+      </button>
+    </li>
      <li class="mobile-header__cart-links--cart cart-link relative">
         {% if settings.cart_type == 'page_only' %}
           <a class="{% if mob_lay == 'left' %}mr2{% endif %}" aria-label="{{ 'general.header.cart' | t }}" href="{{ routes.cart_url }}">
@@ -127,15 +139,15 @@
 {% comment %} Mobile Search {% endcomment %}
 {%- if section.settings.show_searchbox -%}
   {%- unless template contains 'search' -%}
-    <section id="mobile-search" class="grid__wrapper narrow lg-hide py3 relative">
+    <section id="mobile-search" class="grid__wrapper narrow lg-hide py3 relative mobile-search--hidden">
       <form class="section-header__mobile_search--form span-12 auto" action="{{ routes.search_url }}" method="get">
-       <label class="visually-hidden" for="q">{{ 'general.search.placeholder' | t }}</label>
-       <input
+        <input
           class="section-header__mobile_search--input mb0 no-bg-color"
           type="text"
           name="q"
-          placeholder="{{ 'general.search.placeholder' | t }}"/>
-        <button type="submit" class="button btn-as-link section-header__mobile_search--submit" aria-label="{{ 'general.search.placeholder' | t }}">
+          placeholder="{{ 'general.search.placeholder' | t }}"
+          aria-label="{{ 'general.search.placeholder' | t }}"/>
+        <button type="submit" class="button btn-as-link section-header__mobile_search--submit">
           {% render 'snip-icons',
              wrapper: '.section-header__mobile_search--submit',
              type: 'theme',
