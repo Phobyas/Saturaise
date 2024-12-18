@@ -110,6 +110,7 @@
 #mobile-search,
 #shopify-section-mobile-header {
   background-color: var(--mobile-header-bg) !important;
+  z-index: 1000;
 }
 .mobile-nav__wrapper input::placeholder,
 .section-header__mobile_search--input::placeholder {
@@ -209,6 +210,16 @@ div#shopify-section-mobile-header.section--reloaded #mobile-search {
   }
 }
 
+/* Mobile Search Container */
+#mobile-search {
+  position: absolute;
+  z-index: 1000;
+  background: var(--mobile-header-bg);
+  width: 100%;
+  padding: 20px 12px;
+}
+
+/* Mobile Search Base Styles */
 .mobile-search--hidden {
   display: none;
   opacity: 0;
@@ -221,30 +232,57 @@ div#shopify-section-mobile-header.section--reloaded #mobile-search {
   animation: slideDown 0.3s ease-in-out;
 }
 
-/* Search Bar Styles */
+/* Mobile Predictive Results */
+.mobile-predictive-results {
+  background: var(--mobile-header-bg);
+  width: 100%;
+  padding: 0 20px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-predictive-results.is-active {
+  display: block;
+  opacity: 1;
+}
+
+/* Search Results Item Styling */
+.mobile-predictive-results .predictive-search-item {
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(var(--mobile-header-text-rgb), 0.1);
+}
+
+.mobile-predictive-results .predictive-search-item:last-child {
+  border-bottom: none;
+}
+
+/* Search Form Styling */
 .section-header__mobile_search--form {
   position: relative;
   display: flex;
-  border: 1px solid var(--mobile-header-text);
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--mobile-header-bg);
+  align-items: center;
+  border-bottom: 1px solid var(--mobile-header-text);
+  border-radius: 9999px;
+  padding: 0px 10px;
+  margin: 0;
 }
 
 .section-header__mobile_search--input {
-  width: 100% !important;
-  padding: 10px 15px !important;
-  border: none !important;
+  flex: 1;
+  border: none;
+  padding: 20px !important;
+  font-size: 16px !important;
   background: transparent;
   color: var(--mobile-header-text);
-  font-size: 16px;
 }
 
 .section-header__mobile_search--submit {
-  padding: 0 15px;
+  padding: 10px;
   background: transparent;
   border: none;
-  border-left: 1px solid var(--mobile-header-text);
 }
 
 @keyframes slideDown {
@@ -258,19 +296,21 @@ div#shopify-section-mobile-header.section--reloaded #mobile-search {
   }
 }
 
-/* Active Search State */
-.search-active .mobile-nav__mobile-header {
-  border-bottom: none;
-}
-
-.mobile-search--hidden {
-  display: none;
+/* Backdrop */
+.mobile-search-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 998; /* Just below the search bar but above content */
 }
 
-.mobile-search--visible {
-  display: block;
+.mobile-search-backdrop.is-active {
   opacity: 1;
-  animation: slideDown 0.3s ease-in-out;
+  visibility: visible;
 }

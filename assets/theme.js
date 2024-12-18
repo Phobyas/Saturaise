@@ -1885,46 +1885,45 @@ Shopify.CountryProvinceSelector.prototype = {
 	});
 })();
 
+// Mobile Search Toggle
 document.addEventListener('DOMContentLoaded', function() {
   const searchToggle = document.querySelector('.js-mobile-search-toggle');
   const searchSection = document.getElementById('mobile-search');
-  const searchInput = document.querySelector('.section-header__mobile_search--input');
-  const header = document.querySelector('.mobile-nav__mobile-header');
+  let backdrop;
+
+  // Create backdrop element if it doesn't exist
+  if (!document.querySelector('.mobile-search-backdrop')) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'mobile-search-backdrop';
+    document.body.appendChild(backdrop);
+  } else {
+    backdrop = document.querySelector('.mobile-search-backdrop');
+  }
 
   if (searchToggle && searchSection) {
     searchToggle.addEventListener('click', function(e) {
       e.preventDefault();
       
-      const isHidden = searchSection.classList.contains('mobile-search--hidden');
-      
-      if (isHidden) {
-        // Show search
+      if (searchSection.classList.contains('mobile-search--hidden')) {
+        // Show search and backdrop
         searchSection.classList.remove('mobile-search--hidden');
         searchSection.classList.add('mobile-search--visible');
-        header.classList.add('search-active');
-        // Focus the input after animation
-        setTimeout(() => {
-          searchInput.focus();
-        }, 300);
+        backdrop.classList.add('is-active');
+        // Focus the search input
+        searchSection.querySelector('input[name="q"]').focus();
       } else {
-        // Hide search
+        // Hide search and backdrop
         searchSection.classList.remove('mobile-search--visible');
         searchSection.classList.add('mobile-search--hidden');
-        header.classList.remove('search-active');
+        backdrop.classList.remove('is-active');
       }
     });
 
-    // Close search when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!searchSection.contains(e.target) && 
-          !searchToggle.contains(e.target) && 
-          !searchSection.classList.contains('mobile-search--hidden')) {
-        searchSection.classList.remove('mobile-search--visible');
-        searchSection.classList.add('mobile-search--hidden');
-        header.classList.remove('search-active');
-      }
+    // Close search when clicking backdrop
+    backdrop.addEventListener('click', function() {
+      searchSection.classList.remove('mobile-search--visible');
+      searchSection.classList.add('mobile-search--hidden');
+      backdrop.classList.remove('is-active');
     });
   }
 });
-
- 
