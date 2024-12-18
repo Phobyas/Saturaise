@@ -8,6 +8,53 @@
     font-weight: bold;
     margin-bottom: 10px;
   }
+
+    /* Filter and Sort Button Styles */
+    .collection__page--topbar .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+    background: transparent;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .collection__page--topbar .button:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+  }
+
+  .collection__page--topbar .button .no-pe {
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  /* Adjust icon positioning */
+  .collection__page--topbar .button svg {
+    margin-left: 8px;
+    width: 12px;
+    height: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .collection__page--topbar .button:hover svg {
+    transform: translateY(2px);
+    fill: var(--bg-color);
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 768px) {
+    .collection__page--topbar .button {
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
 {% endstyle %}
 
 {% comment %} Collection Page Assets {% endcomment %}
@@ -130,35 +177,35 @@
                 data-wau-slideout-target="collection-filters"
                 data-slideout-direction="left"
                 data-toggle-menu="filter"
-                aria-label="Open filters"
+                aria-label="{{ 'collections.filter.filter' | t }}"
                 {% if collection.all_products_count >= 1000 %}style="display: none;"{% endif %}
                 tabindex="0" type="button" name="button">
-                <span class="no-pe mr5">{{ 'collections.filter.filter' | t }}</span>
-               {% render 'snip-icons',
-                   wrapper: '.collection__page--topbar',
-                   classes: 'a-right'
-                   type: 'theme',
-                   icon: 'filter',
-                   size: '5px',
-                   fill: 'var(--text-color)',
-                   hover: 'var(--text-color)' %}
+                <span class="no-pe">{{ 'collections.filter.filter' | t }}</span>
+                {% render 'snip-icons',
+                  wrapper: '.collection__page--topbar',
+                  classes: 'icon-filter'
+                  type: 'theme',
+                  icon: 'filter',
+                  size: '14px',
+                  fill: 'currentColor',
+                  hover: 'currentColor' %}
               </button>
             {%- when 'sort_by' -%}
               <button class="button js-slideout-open js-menu-toggle mr3"
                 data-wau-slideout-target="collection-filters"
                 data-slideout-direction="left"
                 data-toggle-menu="sort"
-                aria-label="Open filters"
+                aria-label="{{ 'collections.filter.sort_title' | t }}"
                 tabindex="0" type="button" name="button">
-                <span class="no-pe mr5">{{ 'collections.filter.sort_title' | t }}</span>
+                <span class="no-pe">{{ 'collections.filter.sort_title' | t }}</span>
                 {% render 'snip-icons',
-                   wrapper: '.collection__page--topbar',
-                   classes: 'a-right'
-                   type: 'apollo',
-                   icon: 'down-carrot',
-                   size: '5px',
-                   fill: 'var(--text-color)',
-                   hover: 'var(--text-color)' %}
+                  wrapper: '.collection__page--topbar',
+                  classes: 'icon-sort'
+                  type: 'apollo',
+                  icon: 'down-carrot',
+                  size: '12px',
+                  fill: 'currentColor',
+                  hover: 'currentColor' %}
               </button>
           {%- endcase -%}
         {%- endfor -%}
