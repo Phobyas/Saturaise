@@ -1,4 +1,4 @@
-.announcement-bar.wrapper { 
+.announcement-bar.wrapper {
   width: 100%;
   background-color: var(--announcement-bg);
   padding: 0 10px;
@@ -6,6 +6,7 @@
   position: relative;
   height: 40px;
   color: white;
+  z-index: 20;
 }
 
 .announcement-bar .marquee-track {
@@ -26,7 +27,7 @@
   width: 20%;
 }
 
-@media (max-width: 767px){
+@media (max-width: 767px) {
   .announcement-bar.wrapper {
     position: absolute;
     top: 0px;

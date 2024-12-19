@@ -6,7 +6,7 @@
 }
 
 .icn-close:after {
-  content: '';
+  content: "";
   height: 20px;
   border-left: 1px solid #fff;
   position: absolute;
@@ -15,7 +15,7 @@
 }
 
 .icn-close:before {
-  content: '';
+  content: "";
   height: 20px;
   border-left: 1px solid #fff;
   position: absolute;
@@ -33,7 +33,7 @@
   bottom: 0;
   left: unset;
   right: unset;
-  z-index: 13;
+  z-index: 1000 !important;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -123,7 +123,7 @@ aside.slideout.slideout--active.slideout__drawer-top {
 }
 .slideout__drawer-top {
   left: 0;
-  top:  0;
+  top: 0;
 }
 .slideout__drawer-right {
   right: 0;

@@ -34,9 +34,9 @@
   data-asset-preload="true"
   data-section-type="mobile-header">
   {%- capture mobile_cart_link -%}
-    <li class="mobile-header__cart-links--search">
+    <li class="mobile-header__cart-links--search mr-3">
       <button class="js-mobile-search-toggle btn-as-link" aria-label="Toggle search" type="button">
-        {% render 'snip-icons',
+        {% render 'saturaise-icons',
            wrapper: '.mobile-header__cart-links--search',
            type: 'theme',
            icon: 'search',
@@ -46,40 +46,42 @@
            hover: hover_color %}
       </button>
     </li>
-     <li class="mobile-header__cart-links--cart cart-link relative">
-        {% if settings.cart_type == 'page_only' %}
-          <a class="{% if mob_lay == 'left' %}mr2{% endif %}" aria-label="{{ 'general.header.cart' | t }}" href="{{ routes.cart_url }}">
-            <span class="js-cart-count">{{ cart.item_count }}</span>
-          </a>
-        {%- else -%}
-          {%- liquid
-            if settings.cart_type == 'drawer'
-              assign cart_classes = 'js-slideout-open'
-              assign cart_settings = 'data-wau-slideout-target="ajax-cart" data-slideout-direction="right"'
-            elsif settings.cart_type == 'modal_cart'
-              assign cart_classes = 'js-modal-open'
-              assign cart_settings = 'data-wau-modal-target="ajax-cart"'
-            endif
-          -%}
-          <div class="slideout__trigger--open lh0">
-            <a class="js-mini-cart-trigger {{ cart_classes }} {% if mob_lay == 'left' %}mr2{% endif %}"
-              {{ cart_settings }}
-              aria-label="Open cart"
-              href="{{ routes.cart_url }}">
-                <span class="js-cart-count">{{ cart.item_count }}</span>
-            </a>
-          </div>
-        {%- endif -%}
-      </li>
+    <li class="mobile-header__cart-links--cart cart-link relative">
+      {%- liquid
+        if settings.cart_type == 'drawer'
+          assign cart_classes = 'js-slideout-open'
+          assign cart_settings = 'data-wau-slideout-target="ajax-cart" data-slideout-direction="right"'
+        elsif settings.cart_type == 'modal_cart'
+          assign cart_classes = 'js-modal-open'
+          assign cart_settings = 'data-wau-modal-target="ajax-cart"'
+        endif
+      -%}
+      <div class="slideout__trigger--open lh0 cart-trigger-wrapper">
+        <a class="js-mini-cart-trigger {{ cart_classes }}"
+          {{ cart_settings }}
+          aria-label="Open cart"
+          href="{{ routes.cart_url }}">
+          {% render 'saturaise-icons',
+             wrapper: '.mobile-header__cart-links--cart',
+             type: 'theme',
+             icon: 'cart',
+             size: '32px',
+             classes: 'cart-icon',
+             fill: text_color,
+             hover: hover_color %}
+          <span class="js-cart-count cart-count-bubble">{{ cart.item_count }}</span>
+        </a>
+      </div>
+    </li>
    {%- endcapture -%}
   {%- capture mobile_nav_link -%}
     <li class="mobile-header__cart-links--nav relative">
       <div class="slideout__trigger--open mobile-header--open">
         <button class="slideout__trigger-mobile-menu js-slideout-open btn-as-link" data-wau-slideout-target="mobile-navigation" data-slideout-direction="top" aria-label="Open navigation" tabindex="0" type="button" name="button">
-          {% render 'snip-icons',
+          {% render 'saturaise-icons',
              wrapper: '.section-header__mobile',
              type: 'theme',
-             icon: 'menu-bars',
+             icon: 'menu-new',
              size: '32px',
              classes: 'mt0 mr0 mb0 ml0',
              fill: 'var(--header-text)',
@@ -97,7 +99,7 @@
           <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
         {% endif %}
       </div>
-      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 inline-block">
+      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 inline-block ">
        {{ mobile_cart_link }}
        {{ mobile_nav_link }}
       </ul>
@@ -148,7 +150,7 @@
           placeholder="{{ 'general.search.placeholder' | t }}"
           aria-label="{{ 'general.search.placeholder' | t }}"/>
         <button type="submit" class="button btn-as-link section-header__mobile_search--submit">
-          {% render 'snip-icons',
+          {% render 'saturaise-icons',
              wrapper: '.section-header__mobile_search--submit',
              type: 'theme',
              icon: 'search',
@@ -279,7 +281,7 @@
         color: {{ text_color }} !important;
       }
       .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
-        background-color: {{ text_color }} !important;
+
         color: {{ bg_color }} !important;
       }
       .mobile-nav__wrapper .c-accordion__top-level  {
