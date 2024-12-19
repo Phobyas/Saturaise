@@ -478,92 +478,84 @@ WAU.AjaxCart = {
     });
 
   },
-  cartEvents: function cartEvents(config) {
+cartEvents: function cartEvents(config) {
     var selectors = {
       cartDrawerRemove: '.js-cart-remove',
-			cartDrawerQty: '[data-item-qty]',
+      cartDrawerQty: '[data-item-qty]',
       cartDrawerQtyDecrease: '[data-ajax-qty-decrease]',
       cartDrawerQtyIncrease: '[data-ajax-qty-increase]',
       cartNote: '.js-cart-note',
       cartUpsell: '.js-upsell-submit'
     };
 
-    // Cart Events
-		document.querySelectorAll(selectors.cartDrawerQty).forEach((element, i) => {
-      element.addEventListener('change', function (e) {
+    // Quantity Controls
+    document.querySelectorAll(selectors.cartDrawerQtyDecrease).forEach((element) => {
+      element.addEventListener('click', function(e) {
         e.preventDefault();
-
-        var quantity = parseInt(this.value),
-						itemKey = this.dataset.itemKey,
-						itemMax = this.dataset.limit,
-						lineElement = element.closest('.ajax-cart__cart-item');
-
-				// Set new quantity
-				element.value = quantity;
-
-				// Adjust cart object
-				setTimeout(function() {
-					if (quantity === 0) {
-						WAU.AjaxCart.removeFromCart(itemKey, config);
-					} else {
-
-						WAU.AjaxCart.checkLimit(itemMax, quantity, lineElement, config);
-
-						WAU.ThemeCart.updateItem(itemKey, { quantity }).then(state => {
-							WAU.AjaxCart.updateView(config, state);
-						});
-					}
-				}, 250);
-
-
+        var itemId = this.dataset.ajaxQtyDecrease;
+        if (this.nextElementSibling.value === '1') {
+          var itemKey = this.dataset.itemKey;
+          WAU.AjaxCart.removeFromCart(itemKey, config);
+        } else {
+          WAU.AjaxCart.adjustQty(-1, itemId, config);
+        }
         return false;
       });
     });
-    document.querySelectorAll(selectors.cartDrawerRemove).forEach((element, i) => {
-      element.addEventListener('click', function (e) {
+
+    document.querySelectorAll(selectors.cartDrawerQtyIncrease).forEach((element) => {
+      element.addEventListener('click', function(e) {
         e.preventDefault();
-
-        var itemKey = this.dataset.itemKey;
-
-        WAU.AjaxCart.removeFromCart(itemKey, config);
-
-        return false;
-      });
-    });
-    document.querySelectorAll(selectors.cartDrawerQtyDecrease).forEach((element, i) => {
-      element.addEventListener('click', function (e) {
-        e.preventDefault();
-
-				if (this.nextElementSibling.value === '1') {
-					var itemKey = this.dataset.itemKey;
-					WAU.AjaxCart.removeFromCart(itemKey, config);
-				} else {
-					var itemId = this.dataset.ajaxQtyDecrease;
-	        WAU.AjaxCart.adjustQty(-1, itemId, config);
-				}
-
-        return false;
-      });
-    });
-    document.querySelectorAll(selectors.cartDrawerQtyIncrease).forEach((element, i) => {
-      element.addEventListener('click', function (e) {
-        e.preventDefault();
-
         var itemId = this.dataset.ajaxQtyIncrease;
-        WAU.AjaxCart.adjustQty(+1, itemId, config);
-
+        WAU.AjaxCart.adjustQty(1, itemId, config);
         return false;
       });
     });
-    document.querySelectorAll(selectors.cartNote).forEach((element, i) => {
-			element.addEventListener('blur', (event) => {
+
+    // Manual quantity input changes
+    document.querySelectorAll(selectors.cartDrawerQty).forEach((element) => {
+      element.addEventListener('change', function(e) {
+        e.preventDefault();
+        var quantity = parseInt(this.value),
+            itemKey = this.dataset.itemKey,
+            itemMax = this.dataset.limit,
+            lineElement = element.closest('.ajax-cart__cart-item');
+
+        if (quantity === 0) {
+          WAU.AjaxCart.removeFromCart(itemKey, config);
+        } else {
+          if (WAU.AjaxCart.checkLimit(itemMax, quantity, lineElement, config)) return false;
+          
+          WAU.ThemeCart.updateItem(itemKey, { quantity }).then(state => {
+            WAU.AjaxCart.updateView(config, state);
+          });
+        }
+        return false;
+      });
+    });
+
+    // Remove button
+    document.querySelectorAll(selectors.cartDrawerRemove).forEach((element) => {
+      element.addEventListener('click', function(e) {
+        e.preventDefault();
+        var itemKey = this.dataset.itemKey;
+        WAU.AjaxCart.removeFromCart(itemKey, config);
+        return false;
+      });
+    });
+
+    // Cart note
+    document.querySelectorAll(selectors.cartNote).forEach((element) => {
+      element.addEventListener('blur', (event) => {
         let note = element.value;
         WAU.ThemeCart.updateNote(note).then(state => {
           WAU.AjaxCart.updateView(config, state);
         });
       });
     });
-    document.querySelectorAll(selectors.cartUpsell).forEach((element, i) => {
+
+    // Cart upsell
+    document.querySelectorAll(selectors.cartUpsell).forEach((element) => {
       element.addEventListener('click', (e) => {
         e.preventDefault();
         const id = parseInt(element.dataset.variantId);
@@ -576,8 +568,8 @@ WAU.AjaxCart = {
     });
 
     // Reinit shipping calc
-    if ( config.show_calculator && document.querySelector('body').classList.contains('template-cart')) {
-      setTimeout(function(){
+    if (config.show_calculator && document.querySelector('body').classList.contains('template-cart')) {
+      setTimeout(function() {
         ShippingCalculator.init();
       }, 1000);
     }
@@ -612,38 +604,40 @@ WAU.AjaxCart = {
       WAU.AjaxCart.updateView(config, state);
     });
   },
-  adjustQty: function adjustQty(value, itemId, config) {
+adjustQty: function adjustQty(value, itemId, config) {
+  var selectors = {
+    lineItem: '.item_' + itemId,
+    updatesItem: '.updates_' + itemId
+  };
 
-    var selectors = {
-      lineItem: '.item_' + itemId,
-      updatesItem: '.updates_' + itemId
-    };
+  // Update Line Item
+  document.querySelectorAll(selectors.lineItem).forEach((element) => {
+    var elementInput = element.querySelector(selectors.updatesItem);
+    if (!elementInput) return;
+    
+    var key = elementInput.dataset.itemKey;
+    var max = elementInput.dataset.limit;
+    var quantity = parseInt(elementInput.value) + parseInt(value);
 
-    // Update Line Item
-    document.querySelectorAll(selectors.lineItem).forEach((element, i) => {
-      elementInput = element.querySelector(selectors.updatesItem),
-      key = elementInput.dataset.itemKey,
-      max = elementInput.dataset.limit,
-      quantity = parseInt(elementInput.value) + parseInt(value);
+    // Check limit to prevent over adding
+    if (WAU.AjaxCart.checkLimit(max, quantity, element, config)) return false;
 
-      // Check limit to prevent over adding
-			if (WAU.AjaxCart.checkLimit(max, quantity, element, config)) return false;
+    // Check new qty to prevent going lower than 1
+    if (quantity < 1) return false;
 
-      // Check new qty to prevent going lower than 1
-      if (quantity === 0 ) return false;
+    // Set new quantity
+    elementInput.value = quantity;
 
-      // Set new quantity
-      elementInput.value = quantity;
-
-      // Adjust cart object
-      setTimeout(function() {
-        WAU.ThemeCart.updateItem(key, { quantity }).then(state => {
-          WAU.AjaxCart.updateView(config, state);
-        });
-      }, 250);
-
-    });
-  },
+    // Adjust cart object
+    setTimeout(function() {
+      WAU.ThemeCart.updateItem(key, { quantity: quantity }).then(state => {
+        WAU.AjaxCart.updateView(config, state);
+      }).catch(error => {
+        console.error('Error updating cart:', error);
+      });
+    }, 250);
+  });
+},
 	checkLimit: function checkLimit(max, quantity, element, config) {
 		// Check limit to prevent over adding
 		if ( max != '' && quantity > max ) {

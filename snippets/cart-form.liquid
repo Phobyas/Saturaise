@@ -3,7 +3,7 @@
 <form class="ajax-cart__cart-form js-cart-form" action="{{ routes.cart_url }}" method="post">
   <div class="ajax-cart__cart-items">
     {% for item in cart.items %}
-      <div class="ajax-cart__cart-item">
+      <div class="item_{{ item.id }}-{{ forloop.index }} ajax-cart__cart-item">
         <!-- Remove Button -->
         <button type="button" class="ajax-cart__item-remove js-cart-remove" 
           data-item-id="{{ item.id }}-{{ forloop.index }}" 
@@ -57,15 +57,17 @@
             <button type="button" 
               data-ajax-qty-decrease="{{ item.id }}-{{ forloop.index }}"
               data-item-key="{{ item.key }}"
-              class="ajax-cart__qty-control--down">
+              class="downer-{{ item.id }}-{{ forloop.index }} ajax-cart__qty-control--down">
               −
             </button>
             
             <input type="number" 
-              class="ajax-cart__qty-input"
+              id="updates_{{ item.id }}-{{ forloop.index }}"
+              class="updates_{{ item.id }}-{{ forloop.index }} ajax-cart__qty-input"
               data-item-qty
               data-item-id="{{ item.id }}-{{ forloop.index }}"
               data-item-key="{{ item.key }}"
+              data-item-line="{{ forloop.index }}"
               name="updates[]"
               value="{{ item.quantity }}"
               min="0"
@@ -73,7 +75,7 @@
             
             <button type="button"
               data-ajax-qty-increase="{{ item.id }}-{{ forloop.index }}"
-              class="ajax-cart__qty-control--up">
+              class="up-{{ item.id }}-{{ forloop.index }} ajax-cart__qty-control--up">
               +
             </button>
           </div>
