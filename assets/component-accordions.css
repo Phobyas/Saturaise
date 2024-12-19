@@ -1,7 +1,7 @@
 /* * Menu Accordion Styles */
 /* * Base styles */
 .c-accordion {
-  --transition: all 0.4s cubic-bezier(.02, .01, .47, 1);
+  --transition: all 0.4s cubic-bezier(0.02, 0.01, 0.47, 1);
 }
 .c-accordion .dropdown-arrow {
   cursor: pointer;
@@ -40,7 +40,8 @@
   color: var(--text-color);
 }
 
-.c-accordion.c-accordion--product .c-accordion__header, .c-accordion.c-accordion--custom-page .c-accordion__header {
+.c-accordion.c-accordion--product .c-accordion__header,
+.c-accordion.c-accordion--custom-page .c-accordion__header {
   display: flex;
   width: 100%;
   font-weight: 600;
@@ -60,8 +61,12 @@
   transform: rotate(0deg);
 }
 /* rotate arrow when active */
-.c-accordion.c-accordion--product .c-accordion__header[aria-expanded="true"] .dropdown-arrow,
-.c-accordion.c-accordion--custom-page .c-accordion__header[aria-expanded="true"] .dropdown-arrow {
+.c-accordion.c-accordion--product
+  .c-accordion__header[aria-expanded="true"]
+  .dropdown-arrow,
+.c-accordion.c-accordion--custom-page
+  .c-accordion__header[aria-expanded="true"]
+  .dropdown-arrow {
   transform: rotate(180deg);
 }
 @media screen and (prefers-reduced-motion: no-preference) {
@@ -70,8 +75,12 @@
     transition: transform 0.35s ease;
   }
   /* rotate arrow when active */
-  .c-accordion.c-accordion--product .c-accordion__header[aria-expanded="true"] .dropdown-arrow,
-  .c-accordion.c-accordion--custom-page .c-accordion__header[aria-expanded="true"] .dropdown-arrow {
+  .c-accordion.c-accordion--product
+    .c-accordion__header[aria-expanded="true"]
+    .dropdown-arrow,
+  .c-accordion.c-accordion--custom-page
+    .c-accordion__header[aria-expanded="true"]
+    .dropdown-arrow {
     transition: transform 0.35s ease;
   }
 }
@@ -145,7 +154,8 @@
   list-style: none;
 }
 
-.c-accordion__top-level .c-accordion__link, .c-accordion__second-level .c-accordion__link {
+.c-accordion__top-level .c-accordion__link,
+.c-accordion__second-level .c-accordion__link {
   font-size: 0.875rem;
   font-weight: normal;
   font-stretch: normal;
@@ -154,7 +164,9 @@
   letter-spacing: 1px;
 }
 
-.c-accordion__third-level .c-accordion__link, .collection__sm-filter--final-level .c-accordion__link, .collection__sm-filter--final-level .c-accordion__tag-link a {
+.c-accordion__third-level .c-accordion__link,
+.collection__sm-filter--final-level .c-accordion__link,
+.collection__sm-filter--final-level .c-accordion__tag-link a {
   font-size: 0.875rem;
   font-weight: normal;
   font-stretch: normal;
@@ -188,7 +200,8 @@
   background-color: var(--background) !important;
 }
 
-#accordion .tlink.has_sub_menu, #accordion .tlink2.has_sub_menu {
+#accordion .tlink.has_sub_menu,
+#accordion .tlink2.has_sub_menu {
   font-size: var(--font-size);
   font-stretch: normal;
   font-style: normal;

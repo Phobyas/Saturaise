@@ -77,16 +77,19 @@
   {%- capture mobile_nav_link -%}
     <li class="mobile-header__cart-links--nav relative">
       <div class="slideout__trigger--open mobile-header--open">
-        <button class="slideout__trigger-mobile-menu js-slideout-open btn-as-link" data-wau-slideout-target="mobile-navigation" data-slideout-direction="top" aria-label="Open navigation" tabindex="0" type="button" name="button">
-          {% render 'saturaise-icons',
-             wrapper: '.section-header__mobile',
-             type: 'theme',
-             icon: 'menu-new',
-             size: '32px',
-             classes: 'mt0 mr0 mb0 ml0',
-             fill: 'var(--header-text)',
-             hover: 'var(--header-hover)' %}
-        </button>
+        <button class="slideout__trigger-mobile-menu js-slideout-open btn-as-link" 
+        data-wau-slideout-target="mobile-navigation" 
+        data-slideout-direction="top" 
+        aria-label="Open navigation" 
+        type="button">
+        {% render 'saturaise-icons',
+           type: 'theme',
+           icon: 'menu-new',
+           size: '32px',
+           classes: 'mt0 mr0 mb0 ml0',
+           fill: 'var(--header-text)',
+           hover: 'var(--header-hover)' %}
+      </button>
       </div>
     </li>
   {%- endcapture -%}
@@ -160,6 +163,29 @@
              hover: hover_color %}
         </button>
       </form>
+
+      <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.c-accordion__top-level');
+    menuItems.forEach((item, index) => {
+      item.style.setProperty('--item-index', index);
+    });
+    
+    const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
+    slideoutTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        document.body.classList.add('slideout-mobile-navigation--open');
+      });
+    });
+    
+    const closeButtons = document.querySelectorAll('.js-slideout-close');
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        document.body.classList.remove('slideout-mobile-navigation--open');
+      });
+    });
+  });
+</script>
     </section>
   {%- endunless -%}
 {%- endif -%}
@@ -188,7 +214,7 @@
           {% assign unique_id = section.id | slice: 0, 7 %}
           {% assign mobile_menu_allow_multiple = false %}
 
-          <ul class="js-accordion js-accordion-mobile-nav c-accordion c-accordion--mobile-nav c-accordion--outer__wrapper c-accordion--{{ unique_id }}"
+          <ul class="js-accordion js-accordion-mobile-nav m c-accordion c-accordion--mobile-nav c-accordion--outer__wrapper c-accordion--{{ unique_id }}"
             id="c-accordion--mobile"
             {% if mobile_menu_allow_multiple %}data-accordion-allow-multiple{% endif %}>
 
@@ -297,6 +323,7 @@
     {% endstyle %}
   </div>
 </aside>
+
 
 {% schema %}
 {
@@ -410,7 +437,30 @@
       "type": "url",
       "id": "menu_image_url",
       "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Menu text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "menu_bg_color",
+      "label": "Menu background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "menu_text_size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Menu text size",
+      "default": 24
     }
   ]
 }
 {% endschema %}
+
