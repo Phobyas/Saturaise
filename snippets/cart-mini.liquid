@@ -30,7 +30,7 @@ data-ajax-cart-mini>
     <div class="span-4 sm-span-4 auto a-right v-start">
       <div class="py1 slideout__trigger--close">
         <button class="slideout__trigger-ajax-cart {{ cart_class }} btn-as-link lh1" {{ cart_data }} aria-label="Close cart" tabindex="0" type="button" name="button">
-          <span class="vib-center mr1">{{ 'cart.general.close_cart' | t }}</span>
+          {% comment %} <span class="vib-center mr1">{{ 'cart.general.close_cart' | t }}</span> {% endcomment %}
           {% render 'snip-icons',
              wrapper: '.ajax-cart__header-wrapper',
              type: 'theme',
