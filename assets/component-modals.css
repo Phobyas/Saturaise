@@ -62,6 +62,14 @@
   opacity: 1;
   width: 90%;
 }
+
+@media (min-width: 768px) {
+  .modal__container.modal--active {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .modal__container button.slideout__trigger-ajax-cart.js-modal-close {
   padding: 0 5px;
 }

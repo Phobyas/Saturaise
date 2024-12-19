@@ -940,7 +940,7 @@
     float: left;
   }
   .product__section-images .scroll--gallery_item {
-    padding: 10px;
+    padding: 10px 10px 10px 0;
   }
   .product__section-images .scroll--gallery_item img {
     aspect-ratio: 1 / 1;
