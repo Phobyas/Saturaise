@@ -489,28 +489,36 @@ cartEvents: function cartEvents(config) {
     };
 
     // Quantity Controls
-    document.querySelectorAll(selectors.cartDrawerQtyDecrease).forEach((element) => {
-      element.addEventListener('click', function(e) {
-        e.preventDefault();
-        var itemId = this.dataset.ajaxQtyDecrease;
-        if (this.nextElementSibling.value === '1') {
-          var itemKey = this.dataset.itemKey;
-          WAU.AjaxCart.removeFromCart(itemKey, config);
-        } else {
-          WAU.AjaxCart.adjustQty(-1, itemId, config);
-        }
-        return false;
-      });
-    });
+// Quantity Controls
+document.querySelectorAll(selectors.cartDrawerQtyDecrease).forEach((element) => {
+  element.addEventListener('click', function(e) {
+    e.preventDefault();
+    console.log('Decrease clicked');
+    var itemId = this.dataset.ajaxQtyDecrease;
+    console.log('Item ID for decrease:', itemId);
+    
+    if (this.nextElementSibling.value === '1') {
+      var itemKey = this.dataset.itemKey;
+      console.log('Removing item:', itemKey);
+      WAU.AjaxCart.removeFromCart(itemKey, config);
+    } else {
+      console.log('Adjusting qty -1');
+      WAU.AjaxCart.adjustQty(-1, itemId, config);
+    }
+    return false;
+  });
+});
 
-    document.querySelectorAll(selectors.cartDrawerQtyIncrease).forEach((element) => {
-      element.addEventListener('click', function(e) {
-        e.preventDefault();
-        var itemId = this.dataset.ajaxQtyIncrease;
-        WAU.AjaxCart.adjustQty(1, itemId, config);
-        return false;
-      });
-    });
+document.querySelectorAll(selectors.cartDrawerQtyIncrease).forEach((element) => {
+  element.addEventListener('click', function(e) {
+    e.preventDefault();
+    console.log('Increase clicked');
+    var itemId = this.dataset.ajaxQtyIncrease;
+    console.log('Item ID for increase:', itemId);
+    WAU.AjaxCart.adjustQty(1, itemId, config);
+    return false;
+  });
+});
 
     // Manual quantity input changes
     document.querySelectorAll(selectors.cartDrawerQty).forEach((element) => {
@@ -613,29 +621,55 @@ adjustQty: function adjustQty(value, itemId, config) {
   // Update Line Item
   document.querySelectorAll(selectors.lineItem).forEach((element) => {
     var elementInput = element.querySelector(selectors.updatesItem);
-    if (!elementInput) return;
+    if (!elementInput) {
+      console.log('Input not found');
+      return;
+    }
     
     var key = elementInput.dataset.itemKey;
-    var max = elementInput.dataset.limit;
-    var quantity = parseInt(elementInput.value) + parseInt(value);
+    if (!key) {
+      console.log('Item key not found', elementInput.dataset);
+      return;
+    }
 
-    // Check limit to prevent over adding
-    if (WAU.AjaxCart.checkLimit(max, quantity, element, config)) return false;
+    var currentQty = parseInt(elementInput.value);
+    var newQty = currentQty + parseInt(value);
+    console.log('Attempting to update quantity:', {currentQty, newQty, key, itemId});
 
     // Check new qty to prevent going lower than 1
-    if (quantity < 1) return false;
+    if (newQty < 1) {
+      console.log('Quantity would be less than 1');
+      return false;
+    }
 
-    // Set new quantity
-    elementInput.value = quantity;
+    // Set new quantity first
+    elementInput.value = newQty;
 
-    // Adjust cart object
-    setTimeout(function() {
-      WAU.ThemeCart.updateItem(key, { quantity: quantity }).then(state => {
+    // Update the cart with proper error handling
+    WAU.ThemeCart.updateItem(key, { quantity: newQty })
+      .then(state => {
+        console.log('Cart update successful', state);
         WAU.AjaxCart.updateView(config, state);
-      }).catch(error => {
-        console.error('Error updating cart:', error);
+      })
+      .catch(error => {
+        console.log('Cart update failed', error);
+        // Reset quantity on error
+        elementInput.value = currentQty;
+        
+        // Show error message
+        let cartNote = document.createElement("div");
+        cartNote.classList.add('mini-cart__cart-note');
+        cartNote.innerHTML = `<p class="a-center"><b>${config.cart_error}</b>&nbsp;&nbsp;${config.update_qty_error}</p>`;
+        
+        let itemQuantityElement = element.querySelector('.js-item-quantity');
+        if (itemQuantityElement) {
+          itemQuantityElement.parentNode.appendChild(cartNote);
+          
+          setTimeout(function() {
+            cartNote.remove();
+          }, 2000);
+        }
       });
-    }, 250);
   });
 },
 	checkLimit: function checkLimit(max, quantity, element, config) {

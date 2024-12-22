@@ -1037,6 +1037,14 @@ video {
   line-height: 1.75rem;
 }
 
+.text-\[25px\] {
+  font-size: 25px;
+}
+
+.text-\[22px\] {
+  font-size: 22px;
+}
+
 .font-bold {
   font-weight: 700;
 }
@@ -1059,6 +1067,10 @@ video {
 
 .tracking-wider {
   letter-spacing: 0.05em;
+}
+
+.text-\[\] {
+  color: ;
 }
 
 .underline {
@@ -1211,5 +1223,9 @@ video {
   .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
+  }
+
+  .md\:text-\[25px\] {
+    font-size: 25px;
   }
 }

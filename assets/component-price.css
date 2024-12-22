@@ -81,6 +81,12 @@
   font-weight: bold;
   letter-spacing: var(--heading-spacing);
 }
+
+@media (max-width: 767px) {
+  .price-item {
+    font-size: 16px;
+  }
+}
 .price-item--sale {
   color: var(--sale-color);
 }
