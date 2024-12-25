@@ -167,7 +167,8 @@
       "shipping_multi_rate_three": ", starting at ",
       "shipping_country": "Country",
       "shipping_choose_country": "Choose Country",
-      "shipping_zip_postal": "Zip/Postal Code"
+      "shipping_zip_postal": "Zip/Postal Code",
+      "view_cart": "Check Cart"
     }
   },
   "collections": {

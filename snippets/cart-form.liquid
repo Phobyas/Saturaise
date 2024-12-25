@@ -5,7 +5,7 @@
     {% for item in cart.items %}
       <div class="item_{{ item.id }}-{{ forloop.index }} ajax-cart__cart-item">
         <!-- Remove Button -->
-        <button type="button" class="ajax-cart__item-remove js-cart-remove" 
+        <button type="button" class="ajax-cart__item-remove js-cart-remove pl-2" 
           data-item-id="{{ item.id }}-{{ forloop.index }}" 
           data-item-key="{{ item.key }}" 
           data-line-item="{{ forloop.index }}">
@@ -110,6 +110,10 @@
       <button type="submit" name="checkout" class="ajax-cart__checkout-button">
         {{ 'cart.general.checkout' | t }}
       </button>
+      
+      <a href="{{ routes.cart_url }}" class="mt-4 ajax-cart__view-button">
+        {{ 'cart.general.view_cart' | t }}
+      </a>
     </div>
 
     {% if settings.show_cart_notes %}
