@@ -47,37 +47,87 @@
 }
 {% endschema %}
     
-    <div class="w-full flex pl-10 py-1 md:py-2 mt-5 overflow-x-auto scrollbar-hide justify-start md:justify-start">
-      <div class="flex flex-shrink gap-3 md:gap-6 md:px-6 justify-center max-w-[1600px]">
-        {% for block in section.blocks %}
-          {% if block.settings.title != blank and block.settings.link != blank %}
-            <a 
-              href="{{ block.settings.link }}" 
+<div class="w-full flex justify-center">
+ <div class="relative w-full max-w-[1600px]">
+   <div id="badgeScroller" class="w-full flex py-1 md:py-2 mt-5 overflow-x-auto scrollbar-hide">
+     <div class="flex flex-shrink gap-3 md:gap-6">
+       {% for block in section.blocks %}
+         {% if block.settings.title != blank and block.settings.link != blank %}
+           <a href="{{ block.settings.link }}" 
               class="flex items-center gap-3 px-3 py-2 bg-[#EFEFEF] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
-              {{ block.shopify_attributes }}
-            >
-              {% if block.settings.image %}
-                <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
-                    {{ block.settings.image | image_url: width: 96 | image_tag: 
-                      class: 'w-full h-full object-contain',
-                      loading: 'lazy',
-                      alt: block.settings.title
-                    }}
-                  </div>
-              {% endif %}
-              <span class="text-base font-semibold">{{ block.settings.title }}</span>
-            </a>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    
-    <style>
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-    </style>
+              {{ block.shopify_attributes }}>
+             {% if block.settings.image %}
+               <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
+                 {{ block.settings.image | image_url: width: 96 | image_tag: 
+                   class: 'w-full h-full object-contain',
+                   loading: 'lazy',
+                   alt: block.settings.title
+                 }}
+               </div>
+             {% endif %}
+             <span class="text-base font-semibold">{{ block.settings.title }}</span>
+           </a>
+         {% endif %}
+       {% endfor %}
+     </div>
+   </div>
+ </div>
+</div>
+
+<style>
+ #badgeScroller {
+   cursor: grab;
+   -ms-overflow-style: none;
+   scrollbar-width: none;
+ }
+ 
+ #badgeScroller::-webkit-scrollbar {
+   display: none;
+ }
+
+ #badgeScroller.dragging {
+   cursor: grabbing;
+   user-select: none;
+ }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const scroller = document.getElementById('badgeScroller');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    scroller.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isDown = true;
+      scroller.classList.add('dragging');
+      startX = e.pageX - scroller.offsetLeft;
+      scrollLeft = scroller.scrollLeft;
+    });
+
+    scroller.addEventListener('mouseleave', () => {
+      isDown = false;
+      scroller.classList.remove('dragging');
+    });
+
+    scroller.addEventListener('mouseup', () => {
+      isDown = false;
+      scroller.classList.remove('dragging');
+    });
+
+    scroller.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scroller.offsetLeft;
+      const walk = (x - startX);
+      scroller.scrollLeft = scrollLeft - walk;
+    });
+
+    // Prevent default drag behavior on children
+    const links = scroller.getElementsByTagName('a');
+    Array.from(links).forEach(link => {
+      link.addEventListener('dragstart', (e) => e.preventDefault());
+    });
+  });
+</script>
