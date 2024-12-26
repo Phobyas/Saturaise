@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    "./**/*.liquid", // Ensure Shopify Liquid files are scanned
+    "./**/*.liquid", 
   ],
   theme: {
     extend: {

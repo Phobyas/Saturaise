@@ -785,14 +785,6 @@ video {
   max-width: 24rem;
 }
 
-.max-w-\[100\%\] {
-  max-width: 100%;
-}
-
-.max-w-\[100vh\] {
-  max-width: 100vh;
-}
-
 .flex-none {
   flex: none;
 }
@@ -1155,6 +1147,11 @@ video {
 .hover\:bg-white:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .group:hover .group-hover\:scale-105 {
