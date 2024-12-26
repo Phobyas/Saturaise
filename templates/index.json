@@ -161,6 +161,30 @@
             "image": "shopify://shop_images/nike-dunk-low-world-champ.webp"
           }
         },
+        "category_kJpgdA": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 4",
+            "link": "shopify://products/air-jordan-4-fear-2024-kopia",
+            "image": "shopify://shop_images/nike-dunk-low-wmns-cacao-wow_20628849_46151291_20482.webp"
+          }
+        },
+        "category_jV8gzt": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 4",
+            "link": "shopify://collections/air-jordan-4",
+            "image": "shopify://shop_images/dunk-low-photon-dust-941323.webp"
+          }
+        },
+        "category_xpAn9e": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 4",
+            "link": "shopify://collections/air-jordan-4",
+            "image": "shopify://shop_images/dunk-low-unc-350901.webp"
+          }
+        },
         "category_nLQmAP": {
           "type": "category",
           "settings": {
@@ -179,6 +203,9 @@
         "category_JimxB9",
         "category_LwUUKV",
         "category_7gnDcc",
+        "category_kJpgdA",
+        "category_jV8gzt",
+        "category_xpAn9e",
         "category_nLQmAP"
       ],
       "settings": {}
