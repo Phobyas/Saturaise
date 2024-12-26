@@ -116,10 +116,10 @@
       </a>
     </div>
 
-    {% if settings.show_cart_notes %}
+    {% comment %} {% if settings.show_cart_notes %}
       <div class="ajax-cart__info-wrapper js-cart-info {% if cart.item_count < 1 %}hide{% endif %}">
         <textarea name="note" class="js-cart-note">{{ cart.note }}</textarea>
       </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
   </div>
 </form>

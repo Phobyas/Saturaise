@@ -207,13 +207,14 @@
       endif
     -%}
     <div class="slideout__trigger--open lh0">
-      <a 
+      <a  
         class="js-mini-cart-trigger {{ cart_classes }} px1"
         {{ cart_settings }}
         aria-label="Open cart"
         href="{{ routes.cart_url }}"
       >
         {% render 'saturaise-icons', icon: 'cart'%}
+        <span class="js-cart-count cart-count-bubble">{{ cart.item_count }}</span>
       </a>
     </div>
   {%- endif -%}

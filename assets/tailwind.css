@@ -665,14 +665,6 @@ video {
   margin-top: 1.25rem;
 }
 
-.ml-2 {
-  margin-left: 0.5rem;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
 .block {
   display: block;
 }
@@ -791,6 +783,14 @@ video {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-\[100\%\] {
+  max-width: 100%;
+}
+
+.max-w-\[100vh\] {
+  max-width: 100vh;
 }
 
 .flex-none {
@@ -1005,12 +1005,12 @@ video {
   padding-bottom: 4rem;
 }
 
-.pt-16 {
-  padding-top: 4rem;
-}
-
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.pt-16 {
+  padding-top: 4rem;
 }
 
 .text-left {
