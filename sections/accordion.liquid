@@ -109,6 +109,8 @@
   .section-accordion .accordion-body p {
     margin: 0;
     border: none !important;
+    font-weight: 500;
+    font-size: 14px !important;
   }
 
   .section-accordion .accordion-item[data-accordion]:last-child::after {
@@ -130,7 +132,7 @@
   {% if section.settings.heading != blank %}
     <div class="grid__wrapper">
       <div class="span-12 text-a-center mb-4">
-        <h2 class="heading font-bold">{{ section.settings.heading }}</h2>
+        <h2 class="heading font-bold text-2xl">{{ section.settings.heading }}</h2>
       </div>
     </div>
   {% endif %}
