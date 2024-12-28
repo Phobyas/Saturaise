@@ -9,89 +9,204 @@
   elsif section.settings.section_padding == 'none'
     assign section_padding = 'mt0 mb0'
   endif
-
-  assign heading_align = 'a-center'
-
 -%}
 
-<div class="section-accordion global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+{%- style -%}
+  .section-accordion .accordion-item[data-accordion] {
+    position: relative !important;
+    border: none !important;
+  }
+  
+  .section-accordion .accordion-item[data-accordion]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e5e5e5;
+  }
+
+  .section-accordion .accordion-header {
+    width: 100%;
+    border: none !important;
+  }
+  
+  .section-accordion .accordion-button {
+    width: 100%;
+    padding: 24px 0;
+    background: none;
+    border: none !important;
+    text-align: left;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+  }
+  
+  .section-accordion .accordion-button.active {
+    border: none !important;
+  }
+  
+  .section-accordion .accordion-button:hover {
+    opacity: 0.75;
+  }
+  
+  .section-accordion .accordion-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+  
+  .section-accordion .accordion-icon::before,
+  .section-accordion .accordion-icon::after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    transition: transform 0.3s ease;
+  }
+  
+  .section-accordion .accordion-icon::before {
+    top: 7px;
+    left: 0;
+    width: 16px;
+    height: 2px;
+  }
+  
+  .section-accordion .accordion-icon::after {
+    left: 7px;
+    top: 0;
+    height: 16px;
+    width: 2px;
+  }
+  
+  .section-accordion .accordion-button.active .accordion-icon::after {
+    transform: rotate(90deg);
+  }
+  
+  .section-accordion .accordion-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    border: none !important;
+  }
+  
+  .section-accordion .accordion-body {
+    padding: 0 0 24px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    border: none !important;
+    font-weight: 500 !important;
+    margin-bottom: 0px;
+  }
+
+  .section-accordion .accordion-body p {
+    margin: 0;
+    border: none !important;
+  }
+
+  .section-accordion .accordion-item[data-accordion]:last-child::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e5e5e5;
+  }
+{%- endstyle -%}
+
+<div class="section-accordion global__section {{ section_padding }} px-3 {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="accordion"
   data-section-loaded="false">
 
-    {% if section.settings.heading != blank %}
-      <div class="grid__wrapper">
-        {%
-          render 'snip-headings',
-          align: heading_align,
-          grid: 'span-12',
-          heading: section.settings.heading
-        %}
+  {% if section.settings.heading != blank %}
+    <div class="grid__wrapper">
+      <div class="span-12 text-a-center mb-4">
+        <h2 class="heading font-bold">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+  {% endif %}
+
+  <div style="max-width: 1600px; margin: 0 auto;">
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.heading != blank %}
+          <div class="accordion-item" data-accordion {{ block.shopify_attributes }}>
+            <div id="heading-{{ unique_id }}-{{ forloop.index }}">
+              <button 
+                class="accordion-button" 
+                type="button" 
+                aria-expanded="false" 
+                aria-controls="collapse-{{ unique_id }}-{{ forloop.index }}"
+              >
+                {{ block.settings.heading }}
+                <span class="accordion-icon"></span>
+              </button>
+            </div>
+            <div 
+              id="collapse-{{ unique_id }}-{{ forloop.index }}" 
+              class="accordion-collapse" 
+              aria-labelledby="heading-{{ unique_id }}-{{ forloop.index }}"
+            >
+              <div class="accordion-body rte mb-0">
+                {{ block.settings.content }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <div class="rte mb0">
+        <p>Add accordion content in the theme editor.</p>
       </div>
     {% endif %}
-
-    <div
-      class="js-accordion c-accordion c-accordion--icon c-accordion--{{ unique_id }} c-accordion--custom-page"
-      id="c-accordion--{{ unique_id }}"
-      {% if section.settings.allow_multiple %}
-      data-accordion-allow-multiple
-      {% endif %}
-      style="max-width: 900px; margin: 0 auto;"
-    >
-
-      {% if section.blocks.size > 0 %}
-       {% for block in section.blocks %}
-
-         {%- liquid
-
-            assign accordion_content_class = 'c-accordion__panel--'
-            assign accordion_content_id = accordion_content_class | append: unique_id | append: '-' | append: forloop.index
-
-         -%}
-
-         {% if block.settings.heading != blank %}
-            <button
-              class="js-accordion-header c-accordion__header h4"
-              aria-expanded="false"
-              aria-controls="{{ accordion_content_id }}"
-              data-toggle="accordion" {{ block.shopify_attributes }}>
-              {{ block.settings.heading }}
-                <span class="dropdown-arrow">
-                  {% render 'snip-icons',
-                     wrapper: '.c-accordion__header',
-                     type: 'apollo',
-                     icon: 'down-carrot',
-                     classes: 'c-accordion__header--icon vib-center',
-                     size: '6px',
-                     fill: 'var(--text-color)',
-                     hover: 'var(--text-color)' %}
-                </span>
-            </button>
-             <div
-              class="c-accordion__panel {{ accordion_content_id }} rte"
-              id="{{ accordion_content_id }}"
-              data-parent="#c-accordion--{{ unique_id }}">
-              <div class="c-accordion__inner">
-               <div class="rte mb0">
-                 {{ block.settings.content }}
-               </div>
-              </div>
-             </div>
-         {% endif %}
-       {% endfor %}
-      {% else %}
-        <div class="rte mb0">
-          <p>Add accordiond content in the theme editor.</p>
-        </div>
-      {% endif %}
-     </div>
-     <style>
-       .section-accordion .c-accordion__header {
-         text-transform: inherit;
-         font-weight: normal !important;
-       }
-     </style>
+  </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const accordions = document.querySelectorAll('[data-accordion]');
+    
+    accordions.forEach(accordion => {
+        const button = accordion.querySelector('.accordion-button');
+        const content = accordion.querySelector('.accordion-collapse');
+        
+        button.addEventListener('click', () => {
+            const isExpanded = button.classList.contains('active');
+            
+            {% unless section.settings.allow_multiple %}
+            // Close all other accordions
+            document.querySelectorAll('.accordion-button').forEach(otherButton => {
+                if (otherButton !== button && otherButton.classList.contains('active')) {
+                    otherButton.classList.remove('active');
+                    otherButton.setAttribute('aria-expanded', false);
+                    otherButton.closest('[data-accordion]').querySelector('.accordion-collapse').style.maxHeight = null;
+                }
+            });
+            {% endunless %}
+            
+            // Toggle active class
+            button.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isExpanded);
+            
+            // Toggle content visibility
+            if (!isExpanded) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } else {
+                content.style.maxHeight = null;
+            }
+        });
+    });
+});
+</script>
 
 {% schema %}
 {

@@ -219,7 +219,7 @@
   data-alpha="{{ product.title }}"
   data-price="{{ product.price }}">
 
-  <div class="product-image relative" style="border-radius: 8px !important; overflow: hidden !important;">
+  <div class="product-image relative">
     {% unless icon_type == '' %}
       <div class="product-loop__badge-icon icon-type--{{ icon_type }} icn">{{ icon_text }}</div>
     {% endunless %}
