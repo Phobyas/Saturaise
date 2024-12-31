@@ -234,8 +234,6 @@ input[type="search"]#Search::-webkit-search-results-decoration {
 }
 
 .predictive-search__heading {
-  margin-left: var(--space-3);
-  margin-right: var(--space-3);
   margin-bottom: 0;
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
@@ -247,11 +245,12 @@ input[type="search"]#Search::-webkit-search-results-decoration {
 .predictive-search__results-list .product-loop__info-wrapper,
 .predictive-search__results-list .product-loop__price {
   grid-column: auto/span 12;
+  display: flex;
+  flex-direction: row;
 }
 
 .predictive-search__heading#predictive-search-products {
   margin-bottom: var(--space-3);
-  padding-left: var(--space-5);
 }
 
 .predictive-search__item-content .price.price--listing .price-item {
@@ -328,10 +327,10 @@ input[type="search"]#Search::-webkit-search-results-decoration {
   font-weight: 700;
 }
 
-.search__product-loop.grid__wrapper {
+/* .search__product-loop.grid__wrapper {
   padding-left: var(--space-3);
   padding-right: var(--space-3);
-}
+} */
 
 #predictiveSearch .product-index {
   margin-bottom: 30px;
@@ -344,6 +343,8 @@ input[type="search"]#Search::-webkit-search-results-decoration {
 
 #predictiveSearch .searchbox__input {
   width: 96%;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 #predictive-search-results {
