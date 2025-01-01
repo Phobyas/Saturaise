@@ -70,7 +70,7 @@ section/predictive-search.liquid
       {%- endif -%}
 
 
-      <!-- Queries/Collections -->
+      {% comment %} <!-- Queries/Collections -->
       {%- if has_queries or has_collections -%}
         <li class="{{ grid_width }} auto">
           <h3 id="predictive-search-collections" class="predictive-search__heading h4 a-left">
@@ -93,10 +93,10 @@ section/predictive-search.liquid
             {%- endfor -%}
           </ul>
         </li>
-      {%- endif -%}
+      {%- endif -%} {% endcomment %}
 
 
-      <!-- Pages/Articles -->
+      {% comment %} <!-- Pages/Articles -->
       {%- if has_pages or has_articles -%}
         <li class="{{ grid_width }} auto">
           <h3 id="predictive-search-pages" class="predictive-search__heading h4 a-left">
@@ -131,5 +131,5 @@ section/predictive-search.liquid
         </div>
       </li>
     </ul>
-  </div>
+  </div> {% endcomment %}
 {%- endif -%}

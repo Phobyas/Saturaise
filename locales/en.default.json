@@ -47,7 +47,7 @@
       "results_for_html": "Your search for \"{{ terms }}\" revealed the following:",
       "title": "Search our store",
       "title_results": "Search results",
-      "placeholder": "Search",
+      "placeholder": "Type to search...",
       "products": "Products",
       "articles": "Articles",
       "pages": "Pages",

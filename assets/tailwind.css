@@ -1000,12 +1000,12 @@ video {
   padding-left: 0.5rem;
 }
 
-.pt-16 {
-  padding-top: 4rem;
-}
-
 .pl-3 {
   padding-left: 0.75rem;
+}
+
+.pt-16 {
+  padding-top: 4rem;
 }
 
 .text-left {
@@ -1045,11 +1045,6 @@ video {
 
 .text-xl {
   font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
   line-height: 1.75rem;
 }
 
