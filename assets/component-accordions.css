@@ -97,7 +97,6 @@
 
 .c-accordion li:not(.c-accordion__panel) {
   padding: var(--space-4) 1.375rem var(--space-4) 2rem;
-  border-bottom: 1px solid;
 }
 
 /* add more bottom padding on active panel */
@@ -176,17 +175,18 @@
 }
 
 /* Colors */
-.c-accordion--outer__wrapper {
+/* .c-accordion--outer__wrapper {
   border-top: 0.8px solid var(--text-color) !important;
-}
+} */
 
 .c-accordion__top-level {
-  border-bottom: 0.8px solid var(--text-color) !important;
+  border-bottom: 2px solid !important;
+  border-color: #ccc !important;
 }
 
-.c-accordion li:not(.c-accordion__panel) {
+/* .c-accordion li:not(.c-accordion__panel) {
   border-color: var(--text-color) !important;
-}
+} */
 
 .c-accordion__link {
   color: var(--text-color) !important;

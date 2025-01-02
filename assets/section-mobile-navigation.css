@@ -39,7 +39,7 @@
 
 .mobile-nav__wrapper .c-accordion__top-level .c-accordion__link {
   font-size: 18px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   text-transform: uppercase;
   line-height: 3;
   letter-spacing: 1px;
@@ -148,7 +148,7 @@
   justify-content: center;
 }
 .mobile-nav__wrapper .c-accordion__top-level {
-  border-bottom: 0.8px solid var(--mobile-header-text);
+  border-bottom: 2px solid #ccc;
 }
 .mobile-nav__wrapper
   .c-accordion.c-accordion--mobile-nav
@@ -197,7 +197,6 @@
 }
 .mobile-nav__wrapper .c-accordion li:not(.c-accordion__panel),
 .mobile-nav__wrapper .c-accordion--outer__wrapper {
-  border: none !important;
   padding: 0 !important;
 }
 .mobile-nav__wrapper .c-accordion__second-level-wrapper {
