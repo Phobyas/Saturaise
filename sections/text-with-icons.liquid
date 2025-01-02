@@ -64,7 +64,6 @@
       assign grid_wrapper = 'repeat(12,1fr)'
   endcase
 
-
   if section.settings.color_scheme == 'none'
     assign text_color = 'var(--text-color)'
     assign bg_color = 'var(--background)'
@@ -94,11 +93,10 @@
     </div>
     <div class="section-txt-icons__inner-wrapper grid__wrapper px9 pb8 sm-cg0 {{ wrapper_class }}">
       {% for block in section.blocks %}
-        <article class="section-txt-icons__item text-promo-{{ block.id }} a-center animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
-          {% if block.settings.link != blank %}<a href="{{ block.settings.link }}">{% endif %}
-            <div class="section-txt-icons__image mb4">
+        <article class="section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="section-txt-icons__content-wrapper">{% endif %}
+            <div class="section-txt-icons__image">
               {%- liquid
-
                 assign has_image = false
 
                 if block.settings.image != blank
@@ -111,7 +109,6 @@
                 else
                   assign icon = block.settings.icon
                   assign icon_type = 'apollo'
-
                 endif
               -%}
               {% unless has_image %}
@@ -143,12 +140,12 @@
                 </div>
               {% endif %}
             </div>
-            <div class="section-txt-icons__content mb2">
+            <div class="section-txt-icons__content">
               {% if block.settings.title != blank %}
-                <p class="section-txt-icons__block-heading mb2 h5">{{ block.settings.title }}</p>
+                <p class="section-txt-icons__block-heading mb1 h5">{{ block.settings.title }}</p>
               {% endif %}
               {% if block.settings.subheading != blank %}
-                <div class="section-txt-icons__block-subheading mb2">
+                <div class="section-txt-icons__block-subheading">
                   {{ block.settings.subheading }}
                 </div>
               {% endif %}
@@ -163,58 +160,118 @@
     </div>
   </div>
   {% style %}
+    /* Main container */
+    .text-promo-{{ block.id }},
+    .section-txt-icons__item {
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+      margin-bottom: 15px !important;
+    }
+    
+    /* Content wrapper when link exists */
+    .section-txt-icons__item a.section-txt-icons__content-wrapper {
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+      text-decoration: none !important;
+    }
+    
+    /* Image/Icon container */
+    .section-txt-icons__image {
+      flex: 0 0 {{ section.settings.icon_size }}px !important;
+      min-width: {{ section.settings.icon_size }}px !important;
+      margin-right: 15px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+    }
+    
+    /* Icon specific styles */
     .section-txt-icons__text-icon--icon {
-      width: 80px;
-      height: 80px;
-      position: relative;
+      width: {{ section.settings.icon_size }}px !important;
+      height: {{ section.settings.icon_size }}px !important;
+      position: relative !important;
     }
+    
+    /* SVG sizing */
     .section-txt-icons__text-icon--icon svg {
-      max-width: 120px;
+      width: 100% !important;
+      height: 100% !important;
     }
+    
+    /* Image sizing */
     .section-txt-icons__text-icon--image {
-      max-width: 120px;
+      width: {{ section.settings.icon_size }}px !important;
+      max-width: 100% !important;
     }
-    .section-txt-icons__item.a-center .section-txt-icons__text-icon--icon,
-    .section-txt-icons__item.a-center .section-txt-icons__text-icon--image {
-      margin-left: auto;
-      margin-right: auto;
+    
+    /* Text container */
+    .section-txt-icons__content {
+      flex: 1 !important;
+      text-align: left !important;
+      padding-left: 0 !important;
     }
+    
+    /* Heading styles */
+    .section-txt-icons__block-heading {
+      margin: 0 0 5px 0 !important;
+    }
+    
+    /* Color overrides to prevent theme interference */
     .text-icons-{{ section.id }},
     .text-icons-{{ section.id }} h2,
     .text-icons-{{ section.id }} p,
     .text-icons-{{ section.id }} a {
       color: {{ text_color }} !important;
     }
+    
     .text-icons-{{ section.id }} a:hover {
       color: {{ hover_color }} !important;
     }
+    
     .text-icons-{{ section.id }} .section-txt-icons__outer-wrapper {
       background-color: {{ bg_color }} !important;
     }
-    @media (min-width:  768px) {
-      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
-        grid-template-columns:  {{ grid_wrapper }} !important;
+    
+    /* Mobile responsiveness */
+    @media (max-width: 767px) {
+      .section-txt-icons__item,
+      .section-txt-icons__item a.section-txt-icons__content-wrapper {
+        flex-direction: row !important;
       }
-      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
-        grid-column:  {{ block_width }} !important;
+      
+      .section-txt-icons__image {
+        margin-bottom: 0 !important;
       }
     }
+    
+    /* Grid layout overrides */
+    @media (min-width: 768px) {
+      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
+        grid-template-columns: {{ grid_wrapper }} !important;
+      }
+      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
+        grid-column: {{ block_width }} !important;
+      }
+    }
+    
     @media (max-width: 767px) {
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
         grid-template-columns: repeat(12,1fr) !important;
       }
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
         {%- if section.blocks.size >= 8 -%}
-          grid-column:  auto/span 4 !important;
+          grid-column: auto/span 4 !important;
         {%- else -%}
-          grid-column:  auto/span 6 !important;
+          grid-column: auto/span 6 !important;
         {%- endif -%}
       }
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item.odd.last_item {
         grid-column: auto / span 12 !important;
       }
     }
-  {% endstyle %}
+    {% endstyle %}
 </div>
 
 {% schema %}
@@ -225,7 +282,7 @@
   "max_blocks": 12,
   "settings": [
     {
-      "type": "text",
+      "type": "text", 
       "id": "title",
       "label": "Heading",
       "default": "Text with Icons"
@@ -233,8 +290,8 @@
     {
       "type": "range",
       "id": "icon_size",
-      "min": 35,
-      "max": 80,
+      "min": 10,
+      "max": 100,
       "step": 5,
       "unit": "px",
       "label": "Icon size (height)",
@@ -310,7 +367,7 @@
             },
             {
               "value": "jewelry_earrings",
-              "label": "Earrings",
+              "label": "Earrings", 
               "group": "Jewelry"
             },
             {
@@ -321,7 +378,7 @@
             {
               "value": "jewelry_rings",
               "label": "Rings",
-              "group": "Jewelry"
+              "group": "Jewelry" 
             },
             {
               "value": "jewelry_pendants",
@@ -334,7 +391,7 @@
               "group": "Jewelry"
             },
             {
-              "value": "jewelry_baguette",
+              "value": "jewelry_baguette", 
               "label": "Baguette",
               "group": "Jewelry"
             },
@@ -355,7 +412,7 @@
             },
             {
               "value": "jewelry_marquise",
-              "label": "Marquise",
+              "label": "Marquise", 
               "group": "Jewelry"
             },
             {
