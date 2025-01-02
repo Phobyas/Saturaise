@@ -107,7 +107,8 @@
 
 @media (max-width: 768px) {
   .product__section--main .swatches__form--label {
-    width: 60px;
+    width: 56px;
+    height: 56px;
   }
 }
 
@@ -825,6 +826,11 @@
 .product__section--main .product__section-right p {
   color: var(--text-color);
   font-size: 16px;
+}
+
+.product__section--main .product__section-right p span {
+  font-size: 14px !important;
+  font-weight: 500;
 }
 
 .product__section--main .product-single__view-in-space {

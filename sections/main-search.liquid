@@ -254,8 +254,10 @@
             {% endif %}
 
             {% if has_products %}
-              {% render 'snip-headings', grid: 'span-12 mb0 p0', align: heading_align, translation: 'general.search.products' %}
-              <div class="span-12">
+              <h3 class="{{ grid | default: 'span-12 mb0' }} pl-3 font-bold">
+                {{ 'general.search.products' | t }}
+              </h3>
+              <div class="span-12 px-3">
                 <div class="product-loop grid__wrapper cg9 rg6 sm-cg2">
                   {% for item in search.results %}
                     {% if item.object_type == 'product' %}
