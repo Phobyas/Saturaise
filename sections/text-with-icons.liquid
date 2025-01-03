@@ -82,18 +82,18 @@
 
 {% comment %} Text With Icons Template {% endcomment %}
 <div
-  class="section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="bg-[#eeeeee] mb-3 section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="text-with-icons"
   data-section-loaded="false">
 
-  <div class="section-txt-icons__outer-wrapper">
-    <div class="grid__wrapper pt8">
+  <div class="section-txt-icons__outer-wrapper pt-3">
+    <div class="grid__wrapper pt-6 md:pt-8">
       {% render 'snip-headings', align: heading_align, classes: 'section-txt-icons__section-heading pb5', grid: 'span-12', heading: section.settings.title %}
     </div>
-    <div class="section-txt-icons__inner-wrapper grid__wrapper px9 pb8 sm-cg0 {{ wrapper_class }}">
+    <div class="section-txt-icons__inner-wrapper grid__wrapper px9 pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
       {% for block in section.blocks %}
-        <article class="section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
+        <article class="mr-3 pr-5 section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
           {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="section-txt-icons__content-wrapper">{% endif %}
             <div class="section-txt-icons__image">
               {%- liquid
@@ -167,6 +167,8 @@
       align-items: center !important;
       width: 100% !important;
       margin-bottom: 15px !important;
+      justify-content: center !important;
+      padding: 0 10px !important;
     }
     
     /* Content wrapper when link exists */
@@ -174,7 +176,9 @@
       display: flex !important;
       align-items: center !important;
       width: 100% !important;
+      max-width: 400px !important;
       text-decoration: none !important;
+      padding: 0 !important;
     }
     
     /* Image/Icon container */
@@ -184,7 +188,7 @@
       margin-right: 15px !important;
       display: flex !important;
       align-items: center !important;
-      justify-content: flex-start !important;
+      justify-content: center !important;
     }
     
     /* Icon specific styles */
@@ -208,45 +212,88 @@
     
     /* Text container */
     .section-txt-icons__content {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
       flex: 1 !important;
       text-align: left !important;
       padding-left: 0 !important;
+      min-height: {{ section.settings.icon_size }}px !important;
+      max-width: calc(100% - {{ section.settings.icon_size }}px - 20px) !important;
     }
     
     /* Heading styles */
     .section-txt-icons__block-heading {
-      margin: 0 0 5px 0 !important;
+      margin: 0 !important;
+      line-height: 1.4 !important;
+      text-align: left !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+    }
+
+    .section-txt-icons__block-subheading {
+      margin-top: 5px !important;
+      line-height: 1.3 !important;
+      text-align: left !important;
     }
     
-    /* Color overrides to prevent theme interference */
-    .text-icons-{{ section.id }},
-    .text-icons-{{ section.id }} h2,
-    .text-icons-{{ section.id }} p,
-    .text-icons-{{ section.id }} a {
-      color: {{ text_color }} !important;
+    .section-txt-icons__block-subheading p {
+      margin: 0 !important;
+      text-align: left !important;
     }
     
-    .text-icons-{{ section.id }} a:hover {
-      color: {{ hover_color }} !important;
-    }
-    
-    .text-icons-{{ section.id }} .section-txt-icons__outer-wrapper {
-      background-color: {{ bg_color }} !important;
+    /* Grid layout overrides - reduced padding */
+    .section-txt-icons__inner-wrapper {
+      padding-left: 20px !important;
+      padding-right: 20px !important;
     }
     
     /* Mobile responsiveness */
     @media (max-width: 767px) {
       .section-txt-icons__item,
       .section-txt-icons__item a.section-txt-icons__content-wrapper {
-        flex-direction: row !important;
+        padding: 5px !important;
+        margin-bottom: 10px !important;
+        justify-content: center !important;
       }
       
       .section-txt-icons__image {
-        margin-bottom: 0 !important;
+        margin-right: 15px !important;
+        flex: 0 0 40px !important;
+        min-width: 40px !important;
+      }
+
+      .section-txt-icons__text-icon--icon {
+        width: 40px !important;
+        height: 40px !important;
+      }
+
+      .section-txt-icons__content {
+        min-height: 40px !important;
+        padding-right: 5px !important;
+        max-width: calc(100% - 55px) !important;
+        text-align: left !important;
+      }
+
+      .section-txt-icons__block-heading,
+      .section-txt-icons__block-subheading,
+      .section-txt-icons__block-subheading p {
+        text-align: left !important;
+        font-size: 16px !important;
+        font-weight 600px !important;
+      }
+
+      .section-txt-icons__inner-wrapper {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+
+      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
+        grid-column: auto/span 12 !important;
       }
     }
     
-    /* Grid layout overrides */
+    /* Desktop grid adjustments */
     @media (min-width: 768px) {
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
         grid-template-columns: {{ grid_wrapper }} !important;
@@ -255,23 +302,7 @@
         grid-column: {{ block_width }} !important;
       }
     }
-    
-    @media (max-width: 767px) {
-      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
-        grid-template-columns: repeat(12,1fr) !important;
-      }
-      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
-        {%- if section.blocks.size >= 8 -%}
-          grid-column: auto/span 4 !important;
-        {%- else -%}
-          grid-column: auto/span 6 !important;
-        {%- endif -%}
-      }
-      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item.odd.last_item {
-        grid-column: auto / span 12 !important;
-      }
-    }
-    {% endstyle %}
+{% endstyle %}
 </div>
 
 {% schema %}
