@@ -438,6 +438,22 @@
         "text_align": "left",
         "section_padding": "both"
       }
+    },
+    "hero_image_with_text_8TiM4a": {
+      "type": "hero-image-with-text",
+      "settings": {
+        "text_align": "left",
+        "vertical_align": "middle",
+        "title": "Image with text",
+        "text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+        "heading_size": 64,
+        "text_size": 16,
+        "button": "",
+        "link": "",
+        "section_padding": "bottom",
+        "color_scheme": "2",
+        "color_header": false
+      }
     }
   },
   "order": [
@@ -451,6 +467,7 @@
     "1642520461c9848fcf",
     "featured_collection_ka7QDt",
     "about_us_section",
-    "editorial_columns_tYfktM"
+    "editorial_columns_tYfktM",
+    "hero_image_with_text_8TiM4a"
   ]
 }
