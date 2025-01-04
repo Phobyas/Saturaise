@@ -193,6 +193,22 @@
 {% comment %} Mobile Navigation Slideout {% endcomment %}
 <aside id="mobile-slideout" class="slideout slideout__drawer-left" data-wau-overlay="false" data-wau-slideout="mobile-navigation" id="slideout-mobile-navigation">
   <div class="slideout__trigger--close mobile-header--close">
+    {% if section.settings.menu_image != blank %}
+      <div class="grid__wrapper narrow pt-12 pb-2">
+        <div class="mobile-nav__img-wrapper span-12 auto relative">
+          {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
+            {% render 'helper-image',
+             type: section.settings.menu_image,
+             sm_render: '360px'
+             md_render: '360px',
+             lg_render: '360px' %}
+            {%- if section.settings.menu_image_text -%}
+              <p class="h2 absolute-center">{{ section.settings.menu_image_text }}</p>
+            {%- endif -%}
+          {%- if section.settings.menu_image_url -%}</a>{%- endif -%}
+        </div>
+      </div>
+    {% endif %}
     <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
       {% render 'snip-icons',
          wrapper: '.section-header__mobile',
@@ -208,6 +224,9 @@
   class="mobile-nav__wrapper no-section-animation">
 
     <div class="mobile-nav__menu-blocks pt0">
+
+
+
       {% if section.settings.main_nav != blank %}
         <div class="mobile-nav__mobile-menu-wrapper px6">
 
@@ -245,22 +264,7 @@
 
         </div>
       {% endif %}
-      {% if section.settings.menu_image != blank %}
-        <div class="grid__wrapper narrow py8">
-          <div class="mobile-nav__img-wrapper span-12 auto relative">
-            {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
-              {% render 'helper-image',
-               type: section.settings.menu_image,
-               sm_render: '360px'
-               md_render: '360px',
-               lg_render: '360px' %}
-              {%- if section.settings.menu_image_text -%}
-                <p class="h2 absolute-center">{{ section.settings.menu_image_text }}</p>
-              {%- endif -%}
-            {%- if section.settings.menu_image_url -%}</a>{%- endif -%}
-          </div>
-        </div>
-      {% endif %}
+
     </div>
     {% style %}
       #slideout-mobile-navigation,

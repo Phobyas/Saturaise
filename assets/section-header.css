@@ -347,10 +347,10 @@ input[type="search"]#Search::-webkit-search-results-decoration {
   font-weight: 700;
 }
 
-#predictive-search-results {
+/* #predictive-search-results {
   padding-right: 2%;
   padding-left: 2%;
-}
+} */
 
 .searchbox .predictive-search__heading {
   margin-left: 0;
