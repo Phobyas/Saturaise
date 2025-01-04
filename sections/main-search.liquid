@@ -1,3 +1,60 @@
+{% style %}
+  .desc p span {
+    font-size: 18px !important;
+  }
+
+  .count {
+    font-size: 16px !important;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  /* Filter and Sort Button Styles */
+  .search__page--topbar .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: 1px solid var(--text-color);
+    border-radius: 8px;
+    background: transparent;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .search__page--topbar .button:hover {
+    background: #eee;
+    color: var(--bg-color);
+  }
+
+  .search__page--topbar .button .no-pe {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .search__page--topbar .button svg {
+    margin-left: 8px;
+    width: 12px;
+    height: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .search__page--topbar .button:hover svg {
+    transform: translateY(2px);
+    fill: var(--bg-color);
+  }
+
+  @media screen and (max-width: 768px) {
+    .search__page--topbar .button {
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+{% endstyle %}
+
 {% comment %} Search Assets {% endcomment %}
 <link rel="preload" href="{{ 'section-main-search.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-main-search.css' | asset_url }}"></noscript>
@@ -33,6 +90,22 @@
    assign filter_count = filter_count | plus: filter.active_values.size
  endfor
 
+ if settings.varying_grid
+ assign grid_type = 'reverse cg6 sm-cg4 rg6 sm-rg6'
+else
+ assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
+endif
+
+case section.settings.items_per_row
+when 4
+ assign items_per_row = 'span-3 sm-span-6 auto'
+when 3
+ assign items_per_row = 'span-4 sm-span-6 auto'
+when 2
+ assign items_per_row = 'span-6 sm-span-6 auto'
+when 1
+ assign items_per_row = 'span-12 sm-span-12'
+endcase
 -%}
 
 {% comment %} Search Page Template {% endcomment %}
@@ -258,7 +331,7 @@
                 {{ 'general.search.products' | t }}
               </h3>
               <div class="span-12 px-3">
-                <div class="product-loop grid__wrapper cg9 rg6 sm-cg2">
+                <div class="product-loop grid__wrapper {{ grid_type }} edge">
                   {% for item in search.results %}
                     {% if item.object_type == 'product' %}
                       {% liquid
@@ -268,13 +341,15 @@
                           assign fetch_priority = 'high'
                         endif
                        %}
-                      {% render 'product-loop',
-                        carousel: false,
-                        product: item,
-                        product_info_align: product_info_align,
-                        items_per_row: 'span-4 sm-span-6 auto',
-                        loading: loading,
-                        fetchpriority: fetch_priority %}
+                       {% render 'product-loop',
+                       product: item,
+                       grid_items: section.settings.items_per_row,
+                       product_info_align: 'a-center',
+                       items_per_row: items_per_row,
+                       varying_grid: settings.varying_grid,
+                       index: forloop.index,
+                       loading: loading,
+                       fetchpriority: fetch_priority %}
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -295,15 +370,30 @@
 </section>
 
 {% schema %}
-{
-  "name": "Search",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_filters",
-      "label": "Show search filters",
-      "info": "Learn how to add storefront filters [here](https://help.shopify.com/en/manual/online-store/themes/os20/customize/filters)"
-    }
-  ]
-}
-{% endschema %}
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_filters",
+        "label": "Show search filters",
+        "info": "Learn how to add storefront filters [here](https://help.shopify.com/en/manual/online-store/themes/os20/customize/filters)"
+      },
+      {
+        "type": "range",
+        "id": "items_per_row",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "label": "Products per row",
+        "default": 4
+      },
+      {
+        "type": "checkbox",
+        "id": "show_count",
+        "label": "Show product count",
+        "default": true
+      }
+    ]
+  }
+  {% endschema %}
