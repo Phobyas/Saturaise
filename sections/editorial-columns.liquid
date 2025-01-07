@@ -63,7 +63,7 @@
   data-section-type="editorial-columns"
   data-section-loaded="false">
   <div class="grid__wrapper">
-    {% render 'snip-headings', align: heading_align, classes: 'section-txt-cols__section-heading', grid: 'span-12', heading: section.settings.title %}
+    <h2 class="section-txt-cols__section-heading {{ heading_align }} mb-3 grid-span-12 no-wrap">{{ section.settings.title }}</h2>
   </div>
   <div class="section-txt-cols__inner-wrapper grid__wrapper">
     {% for block in section.blocks %}
@@ -104,6 +104,10 @@
           grid-template-columns: repeat(5, 1fr) !important;
         }
       {% endif %}
+
+      .section-txt-cols__section-heading.no-wrap {
+      white-space: nowrap;
+      }
     </style>
 
     {% if section.blocks.size == 0 %}
