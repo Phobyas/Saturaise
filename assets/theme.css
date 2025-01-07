@@ -1468,8 +1468,7 @@ select:-webkit-autofill:focus-visible {
 .form-vertical > * {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 5px;
-  width: auto !important;
+  width: auto;
 }
 .form-vertical input,
 .form-vertical [type="submit"] {

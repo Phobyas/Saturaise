@@ -46,11 +46,64 @@
     fill: var(--bg-color);
   }
 
+  .search__page--bar-wrapper {
+   width: 100% !important;
+   max-width: 1200px !important;
+   margin: 0 auto !important;
+   padding: 0 12px;
+ }
+
+ .search__page--bar-wrapper input {
+    border-radius: 4px !important;
+    border: 1px solid #ddd !important;
+    height: 44px !important;
+    padding: 0 15px !important;
+    font-size: 16px !important;
+  }
+
+  .search__page--bar-wrapper .button {
+  background: white !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+  height: 44px !important;
+  width: 44px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.search__page--bar-wrapper .button svg {
+  width: 18px !important;
+  height: 18px !important;
+  fill: #333 !important;
+}
+
+.search__page--bar-wrapper .button:hover {
+  background: #f5f5f5 !important;
+}
+
+ .form.form-vertical {
+   width: 100% !important;
+   display: flex !important;
+   gap: 10px !important;
+ }
+
+ .text-search p{
+   font-size: 20px !important;
+   font-weight: 600;
+   text-align: left;
+ }
+
   @media screen and (max-width: 768px) {
     .search__page--topbar .button {
       min-height: 36px;
       padding: 6px 12px;
       font-size: 13px;
+    }
+
+    .text-search p{
+      font-size: 16px !important;
     }
   }
 {% endstyle %}
@@ -115,9 +168,9 @@ endcase
   data-section-type="search-template">
   <div id="searchResultsWrapper" class="grid__wrapper">
     {% paginate search.results by 24 %}
-      <div id="search-bar" class="search__page--bar-wrapper push-2 span-8 mb2">
+      <div id="search-bar" class="search__page--bar-wrapper span-12 auto mb2">
         <form action="{{ routes.search_url }}" method="get">
-          <div class="a-center">
+          <div class="a-left text-search">
             {% if search.performed %}
               {% if search.results_count == 0 %}
                 <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
@@ -133,16 +186,10 @@ endcase
               name="q"
               id="q"
               placeholder="{{ 'general.search.placeholder' | t }}"/>
-            <button type="submit" class="button">
-              {% render 'snip-icons',
-                 wrapper: '.search__page-bar-wrapper',
-                 type: 'theme',
-                 icon: 'search',
-                 size: '15px',
-                 classes: 'mr0',
-                 fill: 'var(--button-text)',
-                 hover: 'var(--button-hover)' %}
-            </button>
+              <button type="submit" class="button">
+                {% render 'saturaise-icons', 
+                  icon: 'search' %}
+              </button>
           </div>
         </form>
       </div>
@@ -327,9 +374,9 @@ endcase
             {% endif %}
 
             {% if has_products %}
-              <h3 class="{{ grid | default: 'span-12 mb0' }} pl-3 font-bold">
+              {% comment %} <h3 class="{{ grid | default: 'span-12 mb4' }} pl-3 font-bold">
                 {{ 'general.search.products' | t }}
-              </h3>
+              </h3> {% endcomment %}
               <div class="span-12 px-3">
                 <div class="product-loop grid__wrapper {{ grid_type }} edge">
                   {% for item in search.results %}
