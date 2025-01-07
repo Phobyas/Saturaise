@@ -442,15 +442,16 @@
     "hero_image_with_text_8TiM4a": {
       "type": "hero-image-with-text",
       "settings": {
+        "image": "shopify://shop_images/SATURAISE_-_BANNER_MOBILE_1_NO_TEXT.jpg",
         "text_align": "left",
-        "vertical_align": "middle",
-        "title": "Image with text",
+        "vertical_align": "top",
+        "title": "Kontakt",
         "text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
-        "heading_size": 64,
-        "text_size": 16,
-        "button": "",
-        "link": "",
-        "section_padding": "bottom",
+        "heading_size": 30,
+        "text_size": 18,
+        "button": "Napisz do nas!",
+        "link": "shopify://pages/contact",
+        "section_padding": "both",
         "color_scheme": "2",
         "color_header": false
       }
