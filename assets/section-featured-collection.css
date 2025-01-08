@@ -12,6 +12,11 @@
   .section-featured-collection__outer-wrapper {
     padding-left: 12px;
   }
+
+  .section-featured-collection__section-heading {
+    font-size: 24px !important;
+    padding-bottom: 0;
+  }
 }
 .section-featured-collection__outer-wrapper .featured-collection__text-wrapper {
   display: flex;
@@ -30,6 +35,7 @@
 }
 
 .section-featured-collection__section-heading {
+  font-size: 26px;
   padding-bottom: 0;
 }
 

@@ -41,7 +41,6 @@
     assign loading = 'eager'
     assign fetch_priority = 'high'
   endif
-
 -%}
 
 {% comment %} Hero image with text template {% endcomment %}
@@ -62,16 +61,14 @@
           <div class="rte mb1 animate--text delay--1">{{ section.settings.text }}</div>
         {% endif %}
         {% if section.settings.button != blank and section.settings.link != blank %}
-          <a href="{{ section.settings.link }}" class="relative inline-block btn-border-link  mt4 animate--text delay--3">
+          <a href="{{ section.settings.link }}" class="relative inline-block btn-border-link mt4 animate--text delay--3">
             <span>{{ section.settings.button | escape }}</span>
           </a>
         {% endif %}
       </div>
     </article>
     <article class="image span-6 auto relative {{ vertical_align }}">
-      <div
-        class="image-container pt8">
-
+      <div class="image-container">
         {% if section.settings.image == blank %}
           <div class="demo-1 color-1 placeholder-image">
             {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -92,53 +89,32 @@
   <style media="screen">
     .text-with-image-{{ section.id }}.section-text-with-image {
       background: -webkit-linear-gradient({{ bg_color }} 80%, var(--background) 20%);
-      color: {{ text_color }};
     }
+    
     .text-with-image-{{ section.id }}.section-text-with-image p,
     .text-with-image-{{ section.id }}.section-text-with-image a:not(.btn-border-link) {
       font-size: {{ section.settings.text_size }}px;
       color: {{ text_color }};
     }
-    .text-with-image-{{ section.id }}.section-text-with-image .rte a:hover {
-      color: {{ hover_color }};
-    }
+    
     .text-with-image-{{ section.id }}.section-text-with-image h3 {
       font-size: {{ section.settings.heading_size }}px;
       color: {{ text_color }};
     }
-    @media (min-width: 768px) {
-      .text-with-image-{{ section.id }}.section-text-with-image a,
-      .text-with-image-{{ section.id }}.section-text-with-image h3 {
-        color: {{ text_color }} !important;
-      }
-      .text-with-image-{{ section.id }}.section-text-with-image .rte a:hover {
-        color: {{ hover_color }} !important;
-      }
-      .text-with-image-{{ section.id }}.section-text-with-image .btn-border-link:before,
-      .text-with-image-{{ section.id }}.section-text-with-image .btn-border-link:after,
-      .text-with-image-{{ section.id }}.section-text-with-image .btn-border-link span:before,
-      .text-with-image-{{ section.id }}.section-text-with-image .btn-border-link span:after {
-        background: {{ text_color }};
-      }
-    }
+    
     @media (max-width: 767px) {
       .text-with-image-{{ section.id }}.section-text-with-image {
         background: -webkit-linear-gradient({{ bg_color }} 35%, var(--background) 35%);
       }
-      .text-with-image-{{ section.id }}.section-text-with-image h3 {
-        font-size: calc({{ section.settings.heading_size }}px - ({{ section.settings.heading_size }}px * 0.15));
-      }
-      .text-with-image-{{ section.id }}.section-text-with-image p {
-        font-size: calc({{ section.settings.text_size }}px - ({{ section.settings.text_size }}px * 0.15));
-      }
     }
+    
     {% if section.settings.color_header %}
       .template-index #shopify-section-header,
       .template-index .section-header__mobile,
       .template-index .section-header__main-bar,
       .template-index .navigation,
       .template-index #mobile-search {
-        transition:  background-color 1s ease-in-out;
+        transition: background-color 1s ease-in-out;
         background-color: {{ bg_color }} !important;
       }
       .template-index .navigation__menulink:not(:hover),
@@ -157,7 +133,7 @@
       .template-index .section-header .site-logo a:hover,
       .template-index ul.header__cart-links__wrapper a:hover,
       .template-index ul.header__cart-links__wrapper button:hover,
-      .template-index ul.header__navigation a.dlink:hover span  {
+      .template-index ul.header__navigation a.dlink:hover span {
         color: {{ hover_color }} !important;
       }
       .template-index ul.header__cart-links__wrapper svg .hover-fill,
