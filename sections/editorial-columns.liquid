@@ -58,12 +58,12 @@
 
 {% comment %} Editorial Columns Template {% endcomment %}
 <div
-  class="section-txt-cols text-columns-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="section-txt-cols pl-3 md:pl-0 text-columns-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="editorial-columns"
   data-section-loaded="false">
   <div class="grid__wrapper">
-    <h2 class="section-txt-cols__section-heading {{ heading_align }} mb-3 grid-span-12 no-wrap pl-3 md:pl-0">{{ section.settings.title }}</h2>
+    <h2 class="section-txt-cols__section-heading {{ heading_align }} mb-3 grid-span-12 no-wrap">{{ section.settings.title }}</h2>
   </div>
   <div class="section-txt-cols__inner-wrapper grid__wrapper">
     {% for block in section.blocks %}
@@ -105,7 +105,14 @@
         }
       {% endif %}
 
+      @media (max-width: 767px) {
+        .section-txt-cols__section-heading.no-wrap {
+          font-size: 24px !important;
+          white-space: nowrap;
+        }
+      }
       .section-txt-cols__section-heading.no-wrap {
+      font-size: 26px;
       white-space: nowrap;
       }
     </style>

@@ -4,7 +4,6 @@
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
-    padding-left: 12px !important;
   }
 
   .section-txt-cols__item {
