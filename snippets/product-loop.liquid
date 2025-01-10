@@ -107,7 +107,7 @@
 
 
   .p-title {
-    height: 70px;
+    height: 45px;
   }
 
   .p-title-index {
@@ -332,14 +332,14 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
+    <div class="product-loop__price text-base md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
 
         {% if product.price < product.compare_at_price %}
           Od
-          <span class="product-loop__price--sale onsale inline-block text-sm font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %} ">
+          <span class="product-loop__price--sale onsale inline-block text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %} ">
             {{ product.price | money }}
           </span>
-          <span class="product-loop__price--compare was inline-block ml1 text-sm font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
+          <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
             {{ product.compare_at_price | money }}
           </span>
           {% assign savings = product.compare_at_price | minus: product.price %}

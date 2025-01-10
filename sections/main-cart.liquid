@@ -134,17 +134,82 @@
       </div>
     {%- endif -%}
   {%- endunless -%}
+
+{% comment %} Product Recommendations Block {% endcomment %}
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'product_recommendations' -%}
+      {%- if cart.item_count > 0 -%}
+        <div class="cart-recommendations" {{ block.shopify_attributes }}
+          data-base-url="{{ routes.product_recommendations_url }}"
+          data-product-id="{{ product.id }}"
+          data-section-id="{{ section.id }}"
+          data-section-type="product-recommendations"
+          data-section-loaded="false">
+          
+          {%- if recommendations.performed and recommendations.products_count > 0 -%}
+            <div class="product-recommendations grid__wrapper narrow">
+              {%- if block.settings.title != blank -%}
+                <h2 class="section-heading a-center mb4">{{ block.settings.title }}</h2>
+              {%- endif -%}
+              
+              <div class="product-recommendations__grid grid__wrapper edge cg6 rg6">
+                {%- for product in recommendations.products limit: block.settings.items_shown -%}
+                  {% render 'product-loop',
+                    product: product,
+                    grid_width: grid_width %}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+  {%- endcase -%}
+{%- endfor -%}
 </section>
 
 {% schema %}
-{
-  "name": "Cart",
-  "settings": [
-    {
-      "type": "url",
-      "id": "link",
-      "label": "Continue shopping link"
-    }
-  ]
-}
-{% endschema %}
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Continue shopping link"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "product_recommendations",
+        "name": "Product recommendations",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "range",
+            "id": "items_per_row",
+            "min": 2,
+            "max": 4,
+            "step": 1,
+            "label": "Products per row",
+            "default": 4
+          },
+          {
+            "type": "range",
+            "id": "items_shown",
+            "min": 2,
+            "max": 12,
+            "step": 1,
+            "label": "Products shown",
+            "default": 6
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "You may also like"
+          }
+        ]
+      }
+    ]
+  }
+  {% endschema %}

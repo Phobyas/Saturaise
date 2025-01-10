@@ -314,7 +314,7 @@
   line-height: normal;
   margin-left: var(--space-0);
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 @media (min-width: 768px) {
@@ -331,7 +331,7 @@
   line-height: normal;
   margin-left: var(--space-0);
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 @media (min-width: 768px) {
@@ -343,7 +343,7 @@
 
 .product-loop__title,
 .product-loop__title a {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 }
 
