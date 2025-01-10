@@ -62,7 +62,7 @@
         {% endif %}
         {% if section.settings.button != blank and section.settings.link != blank %}
           <a href="{{ section.settings.link }}" class="relative inline-block btn-border-link mt4 animate--text delay--3">
-            <span>{{ section.settings.button | escape }}</span>
+            <span class="text-lg">{{ section.settings.button | escape }}</span>
           </a>
         {% endif %}
       </div>

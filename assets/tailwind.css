@@ -952,19 +952,6 @@ video {
   background-color: rgb(255 255 255 / 0.9);
 }
 
-.bg-slate-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(71 85 105 / var(--tw-bg-opacity, 1));
-}
-
-.bg-\[\] {
-  background-color: ;
-}
-
-.bg-\[efefef\] {
-  background-color: efefef;
-}
-
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -1087,6 +1074,11 @@ video {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-sm {

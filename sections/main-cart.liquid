@@ -10,7 +10,7 @@
   <div class="loading-wrapper js-mini-cart-loader no-js-hidden">
     <div class="loading-ripple"><div></div><div></div></div>
   </div>
-
+ 
   <div class="ajax-cart__header-wrapper grid__wrapper narrow">
     <div class="span-4 sm-span-4 auto a-left v-center">
       {%- if section.settings.link != blank -%}
@@ -41,8 +41,87 @@
   <div class="ajax-cart__form-wrapper--nojs js-ajax-cart-content-nojs">
     {% render "cart-no-js", cart: cart %}
   </div>
+  
   <div class="ajax-cart__form-wrapper cart-wrapper js-ajax-cart-content">
+    <form action="{{ routes.cart_url }}" method="post" class="ajax-cart__cart-form">
+      <div class="ajax-cart__cart-items">
+        {% for item in cart.items %}
+          <div class="ajax-cart__cart-item">
+            {% comment %} Product Info Column {% endcomment %}
+            <div class="ajax-cart__item-info-column">
+              <div class="ajax-cart__item-image">
+                <div class="ajax-cart__item-image__wrapper">
+                  {%- if item.image -%}
+                    <img src="{{ item.image | img_url: '240x' }}"
+                         alt="{{ item.image.alt | escape }}"
+                         width="120"
+                         height="120"
+                         loading="lazy">
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="ajax-cart__item-details">
+                <a href="{{ item.url }}" class="ajax-cart__title">{{ item.product.title }}</a>
+                {%- unless item.variant.title contains 'Default' -%}
+                  <div class="ajax-cart__variant-info">{{ item.variant.title }}</div>
+                {%- endunless -%}
+                <div class="ajax-cart__price">
+                  {%- if item.original_price != item.final_price -%}
+                    <s>{{ item.original_price | money }}</s>
+                    <span class="onsale">{{ item.final_price | money }}</span>
+                  {%- else -%}
+                    {{ item.original_price | money }}
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+
+            {% comment %} Quantity Controls Column {% endcomment %}
+            <div class="ajax-cart__item-controls-column">
+              <div class="ajax-cart__qty-wrapper">
+                <button type="button" class="ajax-cart__qty-control--down" data-qty="minus">-</button>
+                <input type="number" 
+                       name="updates[]" 
+                       value="{{ item.quantity }}" 
+                       min="0" 
+                       class="ajax-cart__qty-input">
+                <button type="button" class="ajax-cart__qty-control--up" data-qty="plus">+</button>
+              </div>
+              <button type="button" class="ajax-cart__item-remove" data-remove-item>
+                {{ 'cart.general.remove' | t }}
+              </button>
+            </div>
+
+            {% comment %} Line Price Column {% endcomment %}
+            <div class="ajax-cart__line-price">
+              {{ item.final_line_price | money }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% comment %} Cart Summary {% endcomment %}
+      <div class="ajax-cart__summary-wrapper">
+        <div class="ajax-cart__final-details">
+          <div class="ajax-cart__subtotal">
+            <span>{{ 'cart.general.subtotal' | t }}</span>
+            <span>{{ cart.items_subtotal_price | money }}</span>
+          </div>
+          <div class="ajax-cart__total">
+            <span>{{ 'cart.general.total' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+        </div>
+
+        <div class="ajax-cart__buttons">
+          <button type="submit" name="checkout" class="ajax-cart__checkout-button">
+            {{ 'cart.general.checkout' | t }}
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
+
   {%- unless request.design_mode -%}
     {%- if additional_checkout_buttons -%}
       <div class="ajax-cart__footer-wrapper grid__wrapper narrow">
@@ -55,8 +134,8 @@
       </div>
     {%- endif -%}
   {%- endunless -%}
-
 </section>
+
 {% schema %}
 {
   "name": "Cart",
