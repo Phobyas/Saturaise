@@ -35,6 +35,60 @@
         "section_padding": "both"
       }
     },
+    "featured_product_MJrcUb": {
+      "type": "featured-product",
+      "blocks": {
+        "product_title_CG39mg": {
+          "type": "product_title",
+          "settings": {}
+        },
+        "product_sku_LN3FJP": {
+          "type": "product_sku",
+          "settings": {}
+        },
+        "product_prices_XxYWVj": {
+          "type": "product_prices",
+          "settings": {}
+        },
+        "product_form_DkkaND": {
+          "type": "product_form",
+          "settings": {}
+        },
+        "product_buttons_Q7f9Qq": {
+          "type": "product_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "product_description_PGJDaA": {
+          "type": "product_description",
+          "settings": {}
+        },
+        "social_share_y8NyRh": {
+          "type": "social_share",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "product_title_CG39mg",
+        "product_sku_LN3FJP",
+        "product_prices_XxYWVj",
+        "product_form_DkkaND",
+        "product_buttons_Q7f9Qq",
+        "product_description_PGJDaA",
+        "social_share_y8NyRh"
+      ],
+      "settings": {
+        "featured_product": "",
+        "title": "Featured Product",
+        "thumbnail_position": "right",
+        "click_to_enlarge": true,
+        "enable_video_looping": false,
+        "show_tax_info": false,
+        "section_padding": "both"
+      }
+    },
     "image-with-text": {
       "type": "image-with-text",
       "settings": {
@@ -48,12 +102,29 @@
         "iwt_section_height": 500,
         "section_padding": "both"
       }
+    },
+    "featured_collection_b4tEDi": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Dunk Low",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/dunk-low",
+        "text_position": "left",
+        "collection": "dunk-low",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
     }
   },
   "order": [
     "banner",
     "main",
     "product-recommendations",
-    "image-with-text"
+    "featured_product_MJrcUb",
+    "image-with-text",
+    "featured_collection_b4tEDi"
   ]
 }
