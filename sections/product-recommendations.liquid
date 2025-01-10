@@ -81,26 +81,22 @@
         endif
       -%}
       <div class="product-recommendations js-product-rec-inner" data-section-loaded="false">
-        {%- capture text_section -%}
-          <div class="product-recommendations__text-wrapper span-3 auto px3 v-center">
-            {%- if section.settings.title != blank -%}
-              <h2 class="section-product-recommendations__section-heading">{{ section.settings.title }}</h2>
-            {%- endif -%}
-            {%- if section.settings.subheading != blank -%}
-              <div class="rte mb2">{{ section.settings.subheading }}</div>
-            {%- endif -%}
-            {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
-              <a class="btn-border-link inline-block mt4 mb0 sm-mb2 relative" href="{{ section.settings.link_url }}">
-                <span>{{ section.settings.link_text }}</span>
-              </a>
-            {%- endif -%}
-          </div>
-        {%- endcapture -%}
-
-        <div class="pl-3 grid__wrapper relative section-product-recommendations__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
-          {%- if section.settings.text_position == 'left' -%}
-            {{ text_section }}
+        <div class="product-recommendations__text-wrapper mb-4">
+          {%- if section.settings.title != blank -%}
+            <h2 class="section-product-recommendations__section-heading">{{ section.settings.title }}</h2>
           {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <div class="rte mb2">{{ section.settings.subheading }}</div>
+          {%- endif -%}
+          {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
+            <a class="btn-border-link inline-block mt4 mb0 sm-mb2 relative" href="{{ section.settings.link_url }}">
+              <span>{{ section.settings.link_text }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      
+        <div class=" grid__wrapper relative section-product-recommendations__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
+
 
           {% capture carousel_config %}{
             "wrapAround":{{ enough_to_wrap }},
@@ -125,7 +121,7 @@
             "accessibility": true
           }{% endcapture %}
 
-          <div class="product-recommendations__wrapper--loop {{ wrapper_grid_width }} auto{% if carousel %} js-carousel is-hidden{% endif %}" 
+          <div class="pl-3 md:pl-0 product-recommendations__wrapper--loop span-12 auto{% if carousel %} js-carousel is-hidden{% endif %}" 
           {%- if carousel -%}
             data-flickity-other='{{ carousel_config }}' 
             data-flickity-mobile='{{ mobile_carousel_config }}'
@@ -143,30 +139,76 @@
               {% endfor %}
             {%- unless carousel -%}</div>{%- endunless -%}
           </div>
-          {%- if section.settings.text_position == 'right' -%}
-            {{ text_section }}
-          {%- endif -%}
+
         </div>
         {% style %}
+          /* Basic Layout and Structure */
+          .product-recommendations__wrapper {
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+          }
           
+          .product-recommendations__text-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            align-content: end;
+            width: 100%;
+          }
+          
+          .section-product-recommendations__section-heading {
+            font-size: 26px;
+            padding-bottom: 0;
+            font-weight: 700;
+          }
+          
+          /* Product Title Styles */
           .p-title-index {
             height: 45px !important;
           }
-
+          
           .p-title-index a {
             font-size: 18px !important;
           }
-
+          
+          /* Flickity Button Styles */
+          .section-product-recommendations__wrapper--carousel .flickity-button.previous {
+            position: absolute;
+            top: calc(50% - 44px);
+            left: -80px;
+          }
+          
+          .section-product-recommendations__wrapper--carousel .flickity-button.next {
+            position: absolute;
+            top: calc(50% - 44px);
+            right: -80px;
+            left: unset;
+          }
+          
+          .section-product-recommendations__wrapper--carousel .flickity-viewport,
+          .section-product-recommendations__wrapper--carousel .flickity-enabled.is-draggable {
+            outline: none !important;
+            outline-offset: none !important;
+          }
+          
+          /* Desktop Styles */
           @media (min-width: 768px) { 
             .product-recommendations__wrapper--loop {
               padding-bottom: 30px;
             }
+            
             .product-recommendations .flickity-viewport {
               padding-bottom: 10px;
             }
+            
             .section-product-recommendations__wrapper--carousel .product-loop__item {
               margin-bottom: 20px;
             }
+          
             {% if carousel %}
               .product-recommendations__wrapper--{{ section.id }} .section--reloaded [data-section-loaded="false"] .product-loop__item,
               .product-recommendations__wrapper--{{ section.id }} [data-section-loaded="false"] .product-loop__item,
@@ -175,11 +217,13 @@
                 margin-right: 2%;
                 display: inline-block !important;
               }
+              
               .section--reloaded [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
               [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
               .no-js .section-product-recommendations__wrapper--carousel .product-loop__item:nth-child({{ section.settings.items_per_row }}) {
                 margin-right: 0;
               }
+              
               .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
                 width: {{ prod_grid }}% !important;
                 padding-right: 2%;
@@ -188,15 +232,36 @@
               }
             {% endif %}
           }
+          
+          /* Mobile Styles */
           @media (max-width: 767px) {
+          
+            .section-product-recommendations__section-heading {
+              font-size: 24px !important;
+              padding-bottom: 0;
+            }
+            
             .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
               padding-right: 10px;
               width: 80% !important;
             }
           }
-
           
-        {% endstyle %}
+          /* Carousel States */
+          .product-recommendations__wrapper--loop.is-hidden {
+            display: none;
+          }
+          
+          .product-recommendations__wrapper--loop.js-carousel {
+            opacity: 0;
+            -webkit-transition: opacity 0.4s;
+            transition: opacity 0.4s;
+          }
+          
+          .product-recommendations__wrapper--loop.js-carousel.flickity-enabled {
+            opacity: 1;
+          }
+          {% endstyle %}
       </div>
     {%- endif -%}
   {%- else  -%}
