@@ -201,6 +201,62 @@
   {% endstyle %}
 </div>
 
+
+<script>
+  (function() {
+    function initCarousel() {
+      const carousel = document.querySelector('.featured-collection-{{ section.id }} .js-carousel');
+      if (!carousel) return;
+      
+      // Get existing Flickity instance if it exists
+      let flkty = Flickity.data(carousel);
+      
+      // If no instance exists, initialize it
+      if (!flkty) {
+        const config = window.innerWidth < 768 
+          ? JSON.parse(carousel.getAttribute('data-flickity-mobile'))
+          : JSON.parse(carousel.getAttribute('data-flickity-other'));
+          
+        flkty = new Flickity(carousel, config);
+      }
+      
+      // Add direct click handlers to the buttons
+      const prevButton = carousel.querySelector('.flickity-button.previous');
+      const nextButton = carousel.querySelector('.flickity-button.next');
+      
+      if (prevButton) {
+        prevButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          flkty.previous();
+        });
+      }
+      
+      if (nextButton) {
+        nextButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          flkty.next();
+        });
+      }
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCarousel);
+    } else {
+      initCarousel();
+    }
+
+    // Re-init on Shopify section updates
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.target.classList.contains('featured-collection-{{ section.id }}')) {
+        setTimeout(initCarousel, 0);
+      }
+    });
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Featured collection",
