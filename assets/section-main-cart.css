@@ -226,14 +226,15 @@
 .ajax-cart__subtotal span,
 .ajax-cart__discounts span {
   color: #666;
-  font-weight: 500 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
 }
 
 .ajax-cart__total span {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid #f2f2f2;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   font-size: 14px;
 }
 
@@ -259,6 +260,24 @@
 
 .ajax-cart__checkout-button:hover {
   background: #222;
+}
+
+@media screen and (max-width: 768px) {
+  .ajax-cart__view-button {
+    display: none !important;
+  }
+
+  .ajax-cart__checkout-button {
+    padding-bottom: 24px;
+  }
+
+  .ajax-cart__summary-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 22vh;
+    z-index: 100;
+  }
 }
 
 .ajax-cart__view-button {
