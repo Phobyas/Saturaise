@@ -253,7 +253,7 @@
               </h1>
             {%- when 'product_prices' -%}
               <div
-                class="product-form__prices pt2 mb2 text-left animate--text delay--{{ forloop.index }}"
+                class="product-form__prices pt2 text-left animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 {% render 'snip-product-price', variant: current_variant, product: product %}
@@ -350,7 +350,7 @@
             {%- when 'product_description' -%}
               {%- if product.description != blank -%}
                 <div
-                  class="product-template__description rte pt3 mb6 animate--text delay--{{ forloop.index }}"
+                  class="product-template__description rte pt6 mb6 animate--text delay--{{ forloop.index }}"
                   {{ block.shopify_attributes }}
                 >
                   <p class="label mb1">{{ 'products.product.product_info' | t }}</p>
