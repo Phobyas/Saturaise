@@ -7,6 +7,90 @@
 
 -%}
 
+{% style %}
+  /* Variant Swatch Grid System - v1.0 */
+  {% assign unique_style_id = 'vs-' | append: product.id | append: '-' | append: unique_id %}
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+  }
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  #{{ unique_style_id }} .variant-swatch,
+  .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch {
+    flex: 1 1 auto !important;
+    min-width: calc((100% - 40px) / 6) !important;
+    max-width: calc((100% - 40px) / 6) !important;
+    margin: 0 !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Handle groups of less than 6 swatches */
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper:not(:has(.variant-swatch:nth-child(6))) .variant-swatch {
+    flex-basis: calc((100% - 40px) / 6) !important;
+  }
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper:not(:has(.variant-swatch:nth-child(5))) .variant-swatch {
+    flex-basis: calc((100% - 32px) / 5) !important;
+  }
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper:not(:has(.variant-swatch:nth-child(4))) .variant-swatch {
+    flex-basis: calc((100% - 24px) / 4) !important;
+  }
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper:not(:has(.variant-swatch:nth-child(3))) .variant-swatch {
+    flex-basis: calc((100% - 16px) / 3) !important;
+  }
+  
+  .product__variants-swatches[data-section="{{ unique_id }}"] .product__variant-swatch-wrapper:not(:has(.variant-swatch:nth-child(2))) .variant-swatch {
+    flex-basis: calc((100% - 8px) / 2) !important;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch {
+      min-width: calc((100% - 24px) / 4) !important;
+      max-width: calc((100% - 24px) / 4) !important;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch {
+      min-width: calc((100% - 16px) / 3) !important;
+      max-width: calc((100% - 16px) / 3) !important;
+    }
+  }
+  
+  /* Color swatch specific styles */
+  .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch--color {
+    aspect-ratio: 1/1 !important;
+  }
+  
+  /* Ensure proper spacing when swatches are empty */
+  .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch:empty {
+    display: none !important;
+  }
+  
+  /* Maintain click target size */
+  .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch label,
+  .product__variants-swatches[data-section="{{ unique_id }}"] .variant-swatch input {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  {% endstyle %}
+
 {% form 'product', product,
    id: product_form_id,
    class: "product__form-container product_form",
