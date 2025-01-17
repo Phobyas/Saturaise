@@ -67,7 +67,7 @@
         {% endif %}
       </div>
     </article>
-    <article class="image span-6 auto relative py-8 px-2 {{ vertical_align }}">
+    <article class="image span-6 auto relative py-8 md:px-2 {{ vertical_align }}">
       <div class="image-container">
         {% if section.settings.image == blank %}
           <div class="demo-1 color-1 placeholder-image">
@@ -98,7 +98,7 @@
     }
 
     .text-with-image-{{ section.id }}.section-text-with-image p strong {
-      font-size: 24px !important;
+      font-size: 24px;
     }
     
     .text-with-image-{{ section.id }}.section-text-with-image h3 {

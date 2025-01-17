@@ -893,6 +893,12 @@ a.no-hover:hover {
   .site-wrap{overflow-x:hidden;}
 }
 
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-wrap{
+    padding: 0 8px !important;
+  }
+}
+
 @media (min-width: 768px) {
   .r-span-1.auto {
     grid-row: auto/span 1;

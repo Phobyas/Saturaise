@@ -4,6 +4,8 @@ ul.header__navigation li.dropdown ul.submenu .nested,
 #drop-mega-menu .left,
 .section-header__main-bar {
   background-color: var(--header-bg);
+  padding-right: 20px !important;
+  padding-left: 12px !important;
 }
 
 .section-header__main-bar {

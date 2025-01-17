@@ -1060,6 +1060,10 @@ video {
   padding-top: 1.5rem;
 }
 
+.pl-0 {
+  padding-left: 0px;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1258,6 +1262,11 @@ video {
     padding-bottom: 0.5rem;
   }
 
+  .md\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
   .md\:pb-8 {
     padding-bottom: 2rem;
   }
@@ -1272,10 +1281,6 @@ video {
 
   .md\:pt-8 {
     padding-top: 2rem;
-  }
-
-  .md\:pt-12 {
-    padding-top: 3rem;
   }
 
   .md\:text-left {
@@ -1293,5 +1298,11 @@ video {
   .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:pl-0 {
+    padding-left: 0px;
   }
 }

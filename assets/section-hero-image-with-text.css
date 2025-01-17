@@ -50,10 +50,6 @@
   letter-spacing: var(--main-spacing);
 }
 
-/* .section-text-with-image .text-with-image {
-  padding: 0 0;
-} */
-
 .section-text-with-image .image-container {
   height: 600px;
   position: relative;
@@ -105,5 +101,17 @@
 
   .section-text-with-image .image-container {
     height: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-text-with-image h3 {
+    font-size: 24px !important;
+  }
+  .section-text-with-image p {
+    font-size: 16px !important;
+  }
+  .section-text-with-image p strong {
+    font-size: 20px !important;
   }
 }
