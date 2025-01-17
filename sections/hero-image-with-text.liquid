@@ -45,15 +45,15 @@
 
 {% comment %} Hero image with text template {% endcomment %}
 <div
-  class="global__section section-text-with-image text-with-image-{{ section.id }} {{ section_padding }} {% if section.settings.color_header %}no-section-animation{% endif %} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="mb5 global__section section-text-with-image text-with-image-{{ section.id }} {{ section_padding }} {% if section.settings.color_header %}no-section-animation{% endif %} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-loaded="false"
   data-section-type="hero-image-with-text"
   data-section-loaded="false">
 
   <div class="grid__wrapper px-3 md:px-0 bg-main ">
-    <article class="text span-6 auto {{ text_align }} {{ vertical_align }}">
-      <div class="text-with-image md:pt-8 pb9 sm-pb5">
+    <article class="text span-6 auto my-auto {{ text_align }} {{ vertical_align }}">
+      <div class="text-with-image">
         {% if section.settings.title != blank %}
           <h3 class="mb6 animate--text">{{ section.settings.title | escape }}</h3>
         {% endif %}
