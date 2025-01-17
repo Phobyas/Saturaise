@@ -6,6 +6,26 @@
   background-color: #efefef !important;
 }
 
+.btn-contact {
+  display: flex;
+  height: 60px !important;
+  width: 50% !important;
+  text-align: center;
+  border: 1px solid #323232 !important;
+  background: none !important;
+  color: #323232 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.btn-contact:hover {
+  background: #f9fafb !important;
+}
+
 .section-text-with-image .grid__wrapper {
   max-width: 1400px;
   margin: 0 auto;
@@ -57,6 +77,11 @@
   .section-text-with-image {
     padding: 0;
     color: var(--text-color) !important;
+  }
+
+  .btn-contact {
+    width: 80% !important;
+    margin: 40px auto 40px auto !important;
   }
 
   .section-text-with-image h3 {
