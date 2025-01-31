@@ -345,7 +345,7 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-base md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
+    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
 
         {% if product.price < product.compare_at_price %}
           Od

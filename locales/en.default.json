@@ -54,7 +54,8 @@
       "collections": "Collections",
       "search_for": "Search for “{{ terms }}”",
       "vendor": "Vendor",
-      "suggestions": "Suggestions"
+      "suggestions": "Suggestions",
+      "browse_all": "Browse All"
     },
     "currency": {
       "dropdown_label": "Currency"
