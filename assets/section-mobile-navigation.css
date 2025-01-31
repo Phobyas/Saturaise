@@ -221,7 +221,7 @@ div#shopify-section-mobile-header.section--reloaded #mobile-search {
 
 /* Mobile Search Container */
 #mobile-search {
-  position: fixed;
+  position: absolute;
   z-index: 10;
   background: var(--mobile-header-bg);
   width: 100%;
