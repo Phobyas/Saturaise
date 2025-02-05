@@ -28,7 +28,7 @@
 
 {% comment %} Mobile Header {% endcomment %}
 <section
-  class="section-header__mobile mobile-nav__mobile-header {{ sticky }} lg-hide l0 z5 pt2 pb2 js-mobile-header relative"
+  class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide l0 z5 pt2 pb2 js-mobile-header relative z-50"
   data-section-id="{{ section.id }}"
   data-asset-url="{{ 'section-mobile-navigation.js' | asset_url }}"
   data-asset-preload="true"
@@ -144,7 +144,7 @@
 {% comment %} Mobile Search {% endcomment %}
 {%- if section.settings.show_searchbox -%}
   {%- unless template contains 'search' -%}
-    <section id="mobile-search" class="grid__wrapper narrow lg-hide py3 relative mobile-search--hidden">
+    <section id="mobile-search" class="grid__wrapper narrow lg-hide py3 relative">
       <form class="section-header__mobile_search--form span-12 auto" action="{{ routes.search_url }}" method="get">
         <input
           class="section-header__mobile_search--input mb0 no-bg-color"
