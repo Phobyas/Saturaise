@@ -7,9 +7,10 @@
   width: 100% !important;
   z-index: 1001 !important;
   background: var(--mobile-header-bg) !important;
-  transform: translateY(0) !important;
-  transition: transform 0.3s ease !important;
-  border-bottom: 2px solid #efefef;
+}
+
+.shopify-section:first-of-type:not(#shopify-section-mobile-header) {
+  padding-top: 20px !important;
 }
 
 .mobile-nav__mobile-header.sticky--active {
