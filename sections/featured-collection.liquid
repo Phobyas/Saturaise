@@ -84,29 +84,33 @@
 
 {% capture carousel_config %}{
   "wrapAround": {{ enough_to_wrap }},
-  "cellAlign": "left", 
+  "cellAlign": "left",
   "dragThreshold": "3",
   "draggable": {{ enough_to_wrap }},
   "selectedAttraction": 0.08,
   "friction": 0.5,
-  "groupCells": true,
-  "prevNextButtons": {{ enough_to_wrap }},
+  "groupCells": false,
   "pageDots": {{ enough_to_wrap }},
-  "accessibility": true
+  "accessibility": true,
+  "contain": true,
+  "percentPosition": true,
+  "cellSelector": ".product-loop__item",
+  "groupCells": 1
  }{% endcapture %}
  
  {% capture mobile_carousel_config %}{
   "wrapAround": true,
   "cellAlign": "left",
-  "dragThreshold": "2",
+  "dragThreshold": "1",
   "draggable": true,
-  "selectedAttraction": 0.08,
-  "friction": 0.5,
+  "selectedAttraction": 0.06,
+  "friction": 0.4,
   "prevNextButtons": false,
   "pageDots": true,
-  "accessibility": true
+  "accessibility": true,
+  "groupCells": 1
  }{% endcapture %}
-
+ 
 {% comment %} Featured Collection Template {% endcomment %}
 <div
   class="section-featured-collection featured-collection-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
