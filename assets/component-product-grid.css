@@ -358,3 +358,21 @@
   right: 10px;
   top: 10px;
 }
+
+@media (max-width: 767px) {
+  .product-recommendations .product-loop__price .product-loop__price--compare,
+  .product-recommendations .product-loop__price--sale {
+    margin-left: var(--space-1);
+    font-size: 16px !important;
+  }
+
+  .product-loop__price {
+    font-size: 14px;
+  }
+
+  .product-recommendations .product-loop__title,
+  .product-recommendations .product-loop__title a {
+    font-size: 18px !important;
+    font-weight: bold;
+  }
+}

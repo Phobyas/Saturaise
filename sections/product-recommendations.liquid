@@ -98,28 +98,36 @@
         <div class=" grid__wrapper relative section-product-recommendations__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
 
 
-          {% capture carousel_config %}{
-            "wrapAround":{{ enough_to_wrap }},
-            "cellAlign": "left",
-            "dragThreshold":"15",
-            "draggable": {{ enough_to_wrap }},
-            "pauseAutoPlayOnHover":false,
-            "prevNextButtons": {{ enough_to_wrap }},
-            "pageDots": false,
-            "accessibility": true,
-            "arrowShape": "M71.9,95L25.1,52.2c-0.6-0.6-0.9-1.3-0.9-2.2s0.3-1.6,0.9-2.2L71.9,5l3.9,4.3L31.4,50l44.4,40.7L71.9,95z"
-          }{% endcapture %}
-          
-          {% capture mobile_carousel_config %}{
-            "wrapAround": true,
-            "cellAlign": "left",
-            "dragThreshold":"15",
-            "draggable": true,
-            "pauseAutoPlayOnHover":false,
-            "prevNextButtons": true,
-            "pageDots": false,
-            "accessibility": true
-          }{% endcapture %}
+        {% capture carousel_config %}{
+          "wrapAround": {{ enough_to_wrap }},
+          "cellAlign": "left", 
+          "dragThreshold": "3",
+          "draggable": {{ enough_to_wrap }},
+          "selectedAttraction": 0.08,
+          "friction": 0.5,
+          "groupCells": 1,
+          "pageDots": {{ enough_to_wrap }},
+          "accessibility": true,
+          "contain": true,
+          "percentPosition": true,
+          "cellSelector": ".product-loop__item",
+          "adaptiveHeight": false,
+          "arrowShape": "M71.9,95L25.1,52.2c-0.6-0.6-0.9-1.3-0.9-2.2s0.3-1.6,0.9-2.2L71.9,5l3.9,4.3L31.4,50l44.4,40.7L71.9,95z"
+         }{% endcapture %}
+         
+         {% capture mobile_carousel_config %}{
+          "wrapAround": true,
+          "cellAlign": "left",
+          "dragThreshold": "0.1",
+          "draggable": true,
+          "selectedAttraction": 0.01,
+          "friction": 0.15,
+          "prevNextButtons": false,
+          "pageDots": true,
+          "accessibility": true,
+          "groupCells": 1,
+          "percentPosition": true
+         }{% endcapture %}
 
           <div class="pl-3 md:pl-0 product-recommendations__wrapper--loop span-12 auto{% if carousel %} js-carousel is-hidden{% endif %}" 
           {%- if carousel -%}
@@ -168,7 +176,7 @@
           
           /* Product Title Styles */
           .p-title-index {
-            height: 45px !important;
+            height: 50px !important;
           }
           
           .p-title-index a {
@@ -197,6 +205,8 @@
           
           /* Desktop Styles */
           @media (min-width: 768px) { 
+
+          
             .product-recommendations__wrapper--loop {
               padding-bottom: 30px;
             }
@@ -244,7 +254,12 @@
             .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
               padding-right: 10px;
               width: 80% !important;
+              
             }
+
+            .p-title {
+            height: 50px !important;
+          }
           }
           
           /* Carousel States */

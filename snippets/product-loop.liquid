@@ -107,11 +107,11 @@
 
 
   .p-title {
-    height: 45px;
+    height: 50px !important;
   }
 
   .p-title-index {
-    height: 45px !important;
+    height: 50px !important;
   }
 
   .p-title-index a {
@@ -142,7 +142,7 @@
   }
 
   .p-title {
-    height: 70px;
+    height: 70px !important;
   }
 }
 
@@ -350,7 +350,7 @@
       {% if settings.product_grid_vendor %}
         <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
       {% endif %}
-       <p class="product-loop__title p-title {% if template.name == 'index' or template.name == 'product' %}p-title-index{% endif %}">
+      <p class="product-loop__title p-title {% if template.name == 'index' or template.name == 'product' or section.class contains 'product-recommendations__wrapper' %}p-title-index{% endif %}">
   <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
 </p>
     </div>
@@ -360,16 +360,19 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
+    <div class="product-loop__price text-sm md:text-base font-bold {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
+  {% if section.name == "Product recommendations" %}style="font-size: 18px;"{% endif %}>
 
-        {% if product.price < product.compare_at_price %}
-          Od
-          <span class="product-loop__price--sale onsale inline-block text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %} ">
-            {{ product.price | money }}
-          </span>
-          <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}">
-            {{ product.compare_at_price | money }}
-          </span>
+    {% if product.price < product.compare_at_price %}
+      Od
+      <span class="product-loop__price--sale onsale inline-block text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
+        {% if section.name == "Product recommendations" %}style="font-size: 16px;"{% endif %}>
+        {{ product.price | money }}
+      </span>
+      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
+        {% if section.name == "Product recommendations" %}style="font-size: 16px;"{% endif %}>
+        {{ product.compare_at_price | money }}
+      </span>
           {% assign savings = product.compare_at_price | minus: product.price %}
           <span class="product-loop__price--savings savings hide">
             ({{ 'collections.general.save' | t }} {{ savings | money }})
