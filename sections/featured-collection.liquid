@@ -101,16 +101,16 @@
  {% capture mobile_carousel_config %}{
   "wrapAround": true,
   "cellAlign": "left",
-  "dragThreshold": "1",
+  "dragThreshold": "0.5",
   "draggable": true,
-  "selectedAttraction": 0.06,
-  "friction": 0.4,
+  "selectedAttraction": 0.04,
+  "friction": 0.3,
   "prevNextButtons": false,
   "pageDots": true,
   "accessibility": true,
   "groupCells": 1
  }{% endcapture %}
- 
+
 {% comment %} Featured Collection Template {% endcomment %}
 <div
   class="section-featured-collection featured-collection-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
