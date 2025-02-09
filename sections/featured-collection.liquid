@@ -102,28 +102,32 @@
  {% capture mobile_carousel_config %}{
   "wrapAround": true,
   "cellAlign": "left",
-  "dragThreshold": "0.05",
+  "dragThreshold": 0.02,
   "draggable": true,
-  "selectedAttraction": 0.01,
-  "friction": 0.1,
+  "selectedAttraction": 0.005,
+  "friction": 0.05,
   "prevNextButtons": false,
   "pageDots": true,
   "accessibility": true,
-  "groupCells": 1
+  "groupCells": 1,
+  "freeScroll": true,
+  "freeScrollFriction": 0.03
 }{% endcapture %}
 
  {% if template == 'product' %}
   {% capture mobile_carousel_config %}{
     "wrapAround": true,
     "cellAlign": "left",
-    "dragThreshold": "0.05",
+    "dragThreshold": 0.02,
     "draggable": true,
-    "selectedAttraction": 0.01,
-    "friction": 0.1,
+    "selectedAttraction": 0.005,
+    "friction": 0.05,
     "prevNextButtons": false,
     "pageDots": true,
     "accessibility": true,
-    "groupCells": 1
+    "groupCells": 1,
+    "freeScroll": true,
+    "freeScrollFriction": 0.03
   }{% endcapture %}
 {% endif %}
  
