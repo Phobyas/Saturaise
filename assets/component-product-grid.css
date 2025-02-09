@@ -360,14 +360,14 @@
 }
 
 @media (max-width: 767px) {
-  .product-recommendations .product-loop__price .product-loop__price--compare,
+  .product-loop__price--compare,
   .product-recommendations .product-loop__price--sale {
     margin-left: var(--space-1);
     font-size: 16px !important;
   }
 
-  .product-loop__price {
-    font-size: 14px;
+  .product-recommendations .product-loop__price {
+    font-size: 16px !important;
   }
 
   .product-recommendations .product-loop__title,
