@@ -118,16 +118,15 @@
          {% capture mobile_carousel_config %}{
           "wrapAround": true,
           "cellAlign": "left",
-          "dragThreshold": "0.1",
+          "dragThreshold": "0.05",
           "draggable": true,
           "selectedAttraction": 0.01,
-          "friction": 0.15,
+          "friction": 0.1,
           "prevNextButtons": false,
           "pageDots": true,
           "accessibility": true,
-          "groupCells": 1,
-          "percentPosition": true
-         }{% endcapture %}
+          "groupCells": 1
+        }{% endcapture %}
 
           <div class="pl-3 md:pl-0 product-recommendations__wrapper--loop span-12 auto{% if carousel %} js-carousel is-hidden{% endif %}" 
           {%- if carousel -%}
