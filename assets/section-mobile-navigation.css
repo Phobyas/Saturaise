@@ -9,10 +9,6 @@
   background: var(--mobile-header-bg) !important;
 }
 
-.shopify-section:first-of-type:not(#shopify-section-mobile-header) {
-  padding-top: 20px !important;
-}
-
 .mobile-nav__mobile-header.sticky--active {
   width: 100% !important;
   position: fixed !important;
@@ -179,5 +175,11 @@
     width: 20px !important;
     height: 20px !important;
     font-size: 14px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .shopify-section:first-of-type:not(#shopify-section-mobile-header) {
+    padding-top: 20px !important;
   }
 }

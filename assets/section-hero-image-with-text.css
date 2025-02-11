@@ -20,6 +20,8 @@
   align-items: center;
   justify-content: center;
   margin-top: 40px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-contact:hover {
@@ -75,19 +77,25 @@
     color: var(--text-color) !important;
   }
 
+  .section-text-with-image p {
+    font-size: 14px !important;
+  }
+
   .btn-contact {
-    width: 80% !important;
+    width: 60% !important;
     margin: 40px auto 40px auto !important;
+    font-size: 16px !important;
   }
 
   .section-text-with-image h3 {
     color: var(--text-color) !important;
-    font-size: 0.85em;
+    font-size: 1.5rem; /* More consistent sizing */
+    line-height: 1.2;
   }
 
   .section-text-with-image .rte p {
     color: var(--text-color) !important;
-    font-size: 0.9em;
+    font-size: 1em;
   }
 
   .section-text-with-image article.text {
@@ -101,6 +109,8 @@
 
   .section-text-with-image .image-container {
     height: 400px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -108,10 +118,20 @@
   .section-text-with-image h3 {
     font-size: 24px !important;
   }
+
+  .section-text-with-image p strong {
+    font-size: 20px !important;
+  }
+  .section-text-with-image .image-container {
+    height: 450px; /* Intermediate height between desktop and mobile */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
   .section-text-with-image p {
     font-size: 16px !important;
   }
-  .section-text-with-image p strong {
-    font-size: 20px !important;
+  .section-text-with-image {
+    padding: 40px 24px 40px 24px;
   }
 }

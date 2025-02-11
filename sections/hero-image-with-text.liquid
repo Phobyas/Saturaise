@@ -41,7 +41,7 @@
     assign loading = 'eager'
     assign fetch_priority = 'high'
   endif
--%}
+-%} 
 
 {% comment %} Hero image with text template {% endcomment %}
 <div
@@ -58,7 +58,7 @@
           <h3 class="mb6 animate--text">{{ section.settings.title | escape }}</h3>
         {% endif %}
         {% if section.settings.text != blank %}
-          <div class="rte mb1 animate--text delay--1 md:pr-8">{{ section.settings.text }}</div>
+          <div class="rte mb1 animate--text delay--1 px-6 md:pr-8 md:pl-0">{{ section.settings.text }}</div>
         {% endif %}
         {% if section.settings.button != blank and section.settings.link != blank %}
           <a href="{{ section.settings.link }}" class="relative inline-block btn-contact mt4 animate--text transition-colors delay--3">
