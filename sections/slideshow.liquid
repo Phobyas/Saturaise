@@ -190,31 +190,28 @@ data-section-type="carousel">
             {% if has_image_link %}<a href="{{ block.settings.link }}">{% endif %}
               <div class="slideshow__slide-image">
                 {% if has_image %}
-                  {% render 'helper-image',
-                     type: block.settings.image,
-                     sm_render: '100vw'
-                     md_render: '100vw',
-                     lg_render: '100vw',
-                     class: mobile_class,
-                     loading: loading,
-                     fetchpriority: fetch_priority %}
+                  {% if mobile_image != blank %}
+                    <picture>
+                      <source media="(max-width: 1024px)" srcset="{{ block.settings.mobile_image | image_url: width: 800 }}">
+                      <source media="(min-width: 1025px)" srcset="{{ block.settings.image | image_url: width: 1600 }}">
+                      <img src="{{ block.settings.image | image_url: width: 1600 }}" alt="{{ block.settings.heading | escape }}">
+                    </picture>
+                  {% else %}
+                    {% render 'helper-image',
+                       type: block.settings.image,
+                       sm_render: '100vw'
+                       md_render: '100vw',
+                       lg_render: '100vw',
+                       class: mobile_class,
+                       loading: loading,
+                       fetchpriority: fetch_priority %}
+                  {% endif %}
                 {% else %}
                   {% capture current %}{% cycle 1, 2 %}{% endcapture %}
                   {%- assign placeholder = 'lifestyle-' | append: current -%}
                   <div class="demo-1 color-1 placeholder-image onboard">
                     {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
-                {% endif %}
-
-                {% if mobile_image != blank %}
-                  {% render 'helper-image',
-                     type: block.settings.mobile_image,
-                     sm_render: '100vw'
-                     md_render: '100vw',
-                     lg_render: '100vw',
-                     class: 'md-lg-hide',
-                     loading: loading,
-                     fetchpriority: fetch_priority %}
                 {% endif %}
               </div>
             {% if has_image_link %}</a>{% endif %}

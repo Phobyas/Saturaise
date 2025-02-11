@@ -178,12 +178,12 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .shopify-section:first-of-type:not(#shopify-section-mobile-header) {
     padding-top: 20px !important;
   }
 }
-@media (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .shopify-section:first-of-type:not(#shopify-section-mobile-header) {
     padding-top: 60px !important;
   }

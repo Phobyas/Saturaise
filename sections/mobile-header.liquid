@@ -132,6 +132,13 @@
       .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
         max-width: {{ section.settings.logo_max_width }}% !important;
       }
+
+      @media (min-width: 768px) and (max-width: 1024px) {
+        .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+           max-width: 80% !important;
+        }
+      }
+
       #mobile-slideout {
         background-color: {{ bg_color }};
         z-index: 15;
