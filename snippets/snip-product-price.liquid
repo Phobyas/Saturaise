@@ -25,7 +25,7 @@
 <link rel="preload" href="{{ 'component-price.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}"></noscript>
 
-<div id="product-price" class="product__price-container price pt1 mb1
+<div id="product-price" class="product__price-container price pt-1 mb-1
   {% if available == false %} price--sold-out {% endif %}
   {% if compare_at_price > price %} price--on-sale {% endif %}
   {% if variant.unit_price_measurement %} price--unit-available {% endif %}"

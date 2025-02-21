@@ -222,7 +222,7 @@
               </h1>
             {%- when 'product_prices' -%}
              <div class="product-form__prices pt2 mb2" {{ block.shopify_attributes }}>
-              <div id="product-price" class="product__price-container price pt1 mb1" data-price>
+              <div id="product-price" class="product__price-container price" data-price>
                 {% if set_product_has_variants and min_price != max_price %}
                   <span class="price-item">{{ 'products.general.from' | t }} {{ min_price | money }} - {{ max_price | money }}</span>
                 {% else %}

@@ -97,7 +97,7 @@
         type="submit"
         name="button"
         data-variant-id="{{ current_variant.id }}"
-        class="button ajax-submit js-ajax-submit add-item add w100 inline-block w-full text-xl {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-primary{% endif %}"
+        class="button ajax-submit js-ajax-submit add-item add w100 inline-block w-full text-2xl {% if settings.product_show_payment_button or product.selling_plan_groups.size == 0 %} btn-primary{% endif %}"
         value="{{ call_to_action }}"
         {% unless current_variant.available %}
           disabled

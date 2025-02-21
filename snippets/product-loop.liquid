@@ -378,8 +378,10 @@
             ({{ 'collections.general.save' | t }} {{ savings | money }})
           </span>
         {% else %}
-          {% if product.price_varies %}
-            {{ 'products.general.from' | t }} {{ product.price_min | money }} - {{ product.price_max | money }}
+        {% if product.price_varies %}
+          Od {{ product.price_min | money }}
+        {% else %}
+          {{ product.price | money }}
           {% else %}
             {% assign min_price = null %}
             {% for variant in product.variants %}

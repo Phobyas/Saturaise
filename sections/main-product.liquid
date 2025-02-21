@@ -177,7 +177,7 @@
 >
   {% render 'product-json', product: product %}
  
-  <div class="product-top grid__wrapper sm-cg0  full-width--{{ full_width }} scroll-gallery--{{ is_scroll_gallery }}">
+  <div class="product-top grid__wrapper sm-cg0 pt-12 full-width--{{ full_width }} scroll-gallery--{{ is_scroll_gallery }}">
     <article
       id="product-photos"
       class="product__section-images product-photos {{ image_grid_size }} dv-span-12 auto v-start {{ gallery_classes }} single_image--{{ is_single_image }} pb5 sm-pb0"
@@ -247,13 +247,22 @@
                   {%- endif -%}
                 </div>
               {%- endunless -%}
-            {%- when 'product_title' -%}
-              <h1 class=" lh1 pt2 mb1 animate--text delay--{{ forloop.index }} font-bold text-left text-[22px] md:text-[25px]" {{ block.shopify_attributes }}>
-                {{ product.title }}
-              </h1>
+              {%- when 'product_title' -%}
+                {% if product.vendor != blank %}
+                  <p class="product-supplier text-sm text-gray-500 pt-2 mb-0">
+                    {% if product.collections.size > 0 %}
+                      <a href="{{ product.collections.first.url }}" class="hover:underline">{{ product.vendor }}</a>
+                    {% else %}
+                      {{ product.vendor }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+                <h1 class="lh1 pt-2 mb-1 animate--text delay--{{ forloop.index }} font-bold text-left text-[22px] md:text-[32px]" {{ block.shopify_attributes }}>
+                  {{ product.title }}
+                </h1>
             {%- when 'product_prices' -%}
               <div
-                class="product-form__prices pt2 text-left animate--text delay--{{ forloop.index }}"
+                class="product-form__prices pt-3 text-left animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
               >
                 {% render 'snip-product-price', variant: current_variant, product: product %}
@@ -350,14 +359,18 @@
             {%- when 'product_description' -%}
               {%- if product.description != blank -%}
                 <div
-                  class="product-template__description rte pt6 mb8 animate--text delay--{{ forloop.index }}"
+                  class="product-template__description rte pt-6 mt-3 mb-8 animate--text delay--{{ forloop.index }}"
                   {{ block.shopify_attributes }}
                 >
                   <p class="label mb1">{{ 'products.product.product_info' | t }}</p>
                   {% if product.description contains '[#' %}
-                    {{ product.description | split: '[#' | first }}
+                    <div>
+                      {{ product.description | split: '[#' | first }}
+                    </div class="desc">
                   {% else %}
-                    {{ product.description }}
+                    <div class="desc">
+                      {{ product.description }}
+                    </div>
                   {% endif %}
                 </div>
               {%- endif -%}
@@ -365,7 +378,7 @@
               <div
                 class="product-template__social-share pt2 pb2 animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
-              >
+              > 
                 <p class="inline-block mb0 mr3 v-center">{{ 'products.product.social_share' | t }}</p>
                 {%
                   render 'snip-social-sharing',
@@ -384,7 +397,7 @@
               {%- endform -%}
               {%- when 'metafield_popup' -%}
                 <div
-                  class="product-form__popup py-3 mb2 sm-pt1 sm-mb1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
+                  class="product-form__popup pb-6 mb-3 sm-pt-1 sm-mb-1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
                   {{ block.shopify_attributes }}
                 >
                   <button

@@ -329,7 +329,7 @@
       "sale": "Sale",
       "sold": "Sold Out",
       "set": "Set",
-      "from": "From",
+      "from": "Od",
       "view_full": "View Product",
       "sale_price": "Sale Price",
       "regular_price": "Regular Price"
@@ -360,7 +360,7 @@
       "continue": "Continue Shopping",
       "quantity": "Quantity",
       "product_details": "Product Details",
-      "product_info": "Product Info",
+      "product_info": "Opis produktu",
       "product_type": "Product Type",
       "brand": "Brand",
       "collection": "Collection",
