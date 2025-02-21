@@ -80,7 +80,7 @@
           "type": "accordion",
           "settings": {
             "label": "Wysyłka",
-            "content": "<p>This is a content</p>"
+            "content": "<p>Przewidywany czas wysyłki wynosi 2-7 dni roboczych, w zależności od dostępności produktów</p>"
           }
         }
       },
