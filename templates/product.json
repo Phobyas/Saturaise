@@ -65,21 +65,21 @@
         "accordion_htTf93": {
           "type": "accordion",
           "settings": {
-            "label": "Szczegoly produktu",
-            "content": "<p>This is a content Vey long This is a content Vey long This is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey long This is a content Vey long This is a content Vey long This is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey long This is a content Vey long This is a content Vey long This is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey longThis is a content Vey long</p>"
+            "label": "Autentyczność",
+            "content": "<p>W Saturaise.com gwarantujemy, że wszystkie oferowane przez nas produkty są w 100% oryginalne. Nasza starannie wyselekcjonowana sieć zaufanych partnerów handlowych zapewnia nam dostęp wyłącznie do autentycznych sneakersów. Każda para butów przechodzi szczegółową weryfikację autentyczności przez nasz doświadczony zespół, zanim trafi do sprzedaży. Wieloletnie relacje z partnerami w Polsce i za granicą pozwalają nam oferować wyłącznie oryginalne produkty najwyższej jakości.</p>"
           }
         },
         "accordion_7GidaU": {
           "type": "accordion",
           "settings": {
-            "label": "Szczegoly produktu",
+            "label": "Metody płatności",
             "content": "<p>This is a content</p>"
           }
         },
         "accordion_fYy6Be": {
           "type": "accordion",
           "settings": {
-            "label": "Szczegoly produktu",
+            "label": "Wysyłka",
             "content": "<p>This is a content</p>"
           }
         }
@@ -106,6 +106,59 @@
         "click_to_enlarge": false,
         "enable_video_looping": false,
         "show_tax_info": false
+      }
+    },
+    "text_with_icons_KzVrHV": {
+      "type": "text-with-icons",
+      "blocks": {
+        "text_block_QVRKFb": {
+          "type": "text_block",
+          "settings": {
+            "icon": "jewelry_princess",
+            "link": "",
+            "title": "Princess",
+            "subheading": ""
+          }
+        },
+        "text_block_PmEzxz": {
+          "type": "text_block",
+          "settings": {
+            "icon": "jewelry_radiant",
+            "link": "",
+            "title": "Radiant",
+            "subheading": ""
+          }
+        },
+        "text_block_wrG4dk": {
+          "type": "text_block",
+          "settings": {
+            "icon": "jewelry_round",
+            "link": "",
+            "title": "Round",
+            "subheading": ""
+          }
+        },
+        "text_block_7Q39Uw": {
+          "type": "text_block",
+          "settings": {
+            "icon": "jewelry_trillion",
+            "link": "",
+            "title": "Trillion",
+            "subheading": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_block_QVRKFb",
+        "text_block_PmEzxz",
+        "text_block_wrG4dk",
+        "text_block_7Q39Uw"
+      ],
+      "settings": {
+        "title": "Shop by Shape",
+        "icon_size": 60,
+        "color_scheme": "2",
+        "section_padding": "both"
       }
     },
     "product-details": {
@@ -205,59 +258,6 @@
         "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
         "content_size": "medium",
         "text_position": "left",
-        "section_padding": "both"
-      }
-    },
-    "text_with_icons_KzVrHV": {
-      "type": "text-with-icons",
-      "blocks": {
-        "text_block_QVRKFb": {
-          "type": "text_block",
-          "settings": {
-            "icon": "jewelry_princess",
-            "link": "",
-            "title": "Princess",
-            "subheading": ""
-          }
-        },
-        "text_block_PmEzxz": {
-          "type": "text_block",
-          "settings": {
-            "icon": "jewelry_radiant",
-            "link": "",
-            "title": "Radiant",
-            "subheading": ""
-          }
-        },
-        "text_block_wrG4dk": {
-          "type": "text_block",
-          "settings": {
-            "icon": "jewelry_round",
-            "link": "",
-            "title": "Round",
-            "subheading": ""
-          }
-        },
-        "text_block_7Q39Uw": {
-          "type": "text_block",
-          "settings": {
-            "icon": "jewelry_trillion",
-            "link": "",
-            "title": "Trillion",
-            "subheading": ""
-          }
-        }
-      },
-      "block_order": [
-        "text_block_QVRKFb",
-        "text_block_PmEzxz",
-        "text_block_wrG4dk",
-        "text_block_7Q39Uw"
-      ],
-      "settings": {
-        "title": "Shop by Shape",
-        "icon_size": 60,
-        "color_scheme": "2",
         "section_padding": "both"
       }
     }
