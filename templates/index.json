@@ -132,57 +132,64 @@
         "category_kcDV4c": {
           "type": "category",
           "settings": {
-            "title": "Air Force 1",
-            "link": "shopify://products/5-pocket-jean",
-            "image": "shopify://shop_images/nike-sb-air-jordan-4-pine-green-1.webp"
+            "title": "Nike Cortez",
+            "link": "shopify://collections/cortez",
+            "image": "shopify://shop_images/nike-cortez-vintage-medium-curry-womens.webp"
           }
         },
         "category_JimxB9": {
           "type": "category",
           "settings": {
-            "title": "Dunk Low",
-            "link": "shopify://collections/dunk-low",
-            "image": "shopify://shop_images/SBDunkLowSkakeLikeAGirlBordeaux.webp"
+            "title": "New Balance",
+            "link": "shopify://collections/new-balance",
+            "image": "shopify://shop_images/New-Balance-530-White-Silver-Navy-1.webp"
+          }
+        },
+        "category_QeYWPk": {
+          "type": "category",
+          "settings": {
+            "title": "",
+            "link": ""
           }
         },
         "category_LwUUKV": {
           "type": "category",
           "settings": {
-            "title": "Air Jordan 3",
-            "link": "shopify://collections/air-jordan-4",
-            "image": "shopify://shop_images/dunk-low-off-white-lot-32-249812.webp"
+            "title": "UGG",
+            "link": "shopify://collections/ugg",
+            "image": "shopify://shop_images/UGGLowmelChestnut_1.webp"
           }
         },
         "category_7gnDcc": {
           "type": "category",
           "settings": {
-            "title": "Dunk Low",
-            "link": "shopify://collections/dunk-low",
-            "image": "shopify://shop_images/nike-dunk-low-world-champ.webp"
+            "title": "Travis Scott",
+            "link": "shopify://collections/travis-scott",
+            "image": "shopify://shop_images/air-jordan-1-low-og-sp-travis-scott-olive-1.webp"
           }
         },
         "category_kJpgdA": {
           "type": "category",
           "settings": {
-            "title": "Air Jordan 4",
-            "link": "shopify://products/air-jordan-4-fear-2024-kopia",
-            "image": "shopify://shop_images/nike-dunk-low-wmns-cacao-wow_20628849_46151291_20482.webp"
+            "title": "Air Force 1",
+            "link": "shopify://collections/air-force-1",
+            "image": "shopify://shop_images/air-force-1-low-07-triple-white-348189.webp"
           }
         },
         "category_jV8gzt": {
           "type": "category",
           "settings": {
-            "title": "Air Jordan 4",
-            "link": "shopify://collections/air-jordan-4",
-            "image": "shopify://shop_images/dunk-low-photon-dust-941323.webp"
+            "title": "Air Max",
+            "link": "shopify://collections/air-max",
+            "image": "shopify://shop_images/Nike-Air-Max-Plus-Voltage-Purple.webp"
           }
         },
         "category_xpAn9e": {
           "type": "category",
           "settings": {
-            "title": "Air Jordan 4",
-            "link": "shopify://collections/air-jordan-4",
-            "image": "shopify://shop_images/dunk-low-unc-350901.webp"
+            "title": "Adidas Campus",
+            "link": "shopify://collections/campus",
+            "image": "shopify://shop_images/adidas-campus-00s-dark-green-cloud-white-enfant-1.webp"
           }
         },
         "category_nLQmAP": {
@@ -201,6 +208,7 @@
         "category_MRKK9a",
         "category_kcDV4c",
         "category_JimxB9",
+        "category_QeYWPk",
         "category_LwUUKV",
         "category_7gnDcc",
         "category_kJpgdA",
