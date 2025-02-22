@@ -5,14 +5,14 @@
 /* Navigation & Dropdown CSS */
 .navigation {
   --dropdown-background-color: var(--header-bg);
-  --header-wrapper-background:  var(--header-bg);
-  --nav-hover-color:  var(--header-bg);
-  --dropown-hover-background:  var(--header-bg);
+  --header-wrapper-background: var(--header-bg);
+  --nav-hover-color: var(--header-bg);
+  --dropown-hover-background: var(--header-bg);
   --dropdown-min-width: 220px;
   --nav-color: var(--header-text);
-  --nav-hover-link-color:  var(--header-hover);
+  --nav-hover-link-color: var(--header-hover);
   --dropdown-link-hover-color: var(--header-hover);
-  --dropdown-link-color:  var(--header-text);
+  --dropdown-link-color: var(--header-text);
 
   background: inherit;
   list-style: none;
@@ -80,7 +80,9 @@
   border-bottom: none;
 }
 
-.navigation__menuitem.navigation__menuitem--dropdown > .navigation__menulink svg {
+.navigation__menuitem.navigation__menuitem--dropdown
+  > .navigation__menulink
+  svg {
   margin-left: 5px;
 }
 
@@ -97,7 +99,8 @@
 }
 
 .navigation__menuitem--dropdown:hover .dropdown:not(.dropdown--nested),
-.navigation__menuitem--active.navigation__menuitem--dropdown .dropdown:not(.dropdown--nested) {
+.navigation__menuitem--active.navigation__menuitem--dropdown
+  .dropdown:not(.dropdown--nested) {
   display: block;
 }
 
@@ -171,7 +174,8 @@
 }
 
 .dropdown__menuitem:hover > .dropdown--nested.dropdown--edge.dropdown,
-.dropdown__menuitem.dropdown__menuitem--active > .dropdown--nested.dropdown--edge.dropdown {
+.dropdown__menuitem.dropdown__menuitem--active
+  > .dropdown--nested.dropdown--edge.dropdown {
   left: initial;
   right: calc(100% + 10px); /* 10px to make up for the padding. */
 }
@@ -189,7 +193,7 @@
   width: 100%;
   max-width: 100%;
   margin: 0;
-  border-bottom: 3px solid #EFEFEF;
+  border-bottom: 3px solid #efefef;
 }
 
 .megamenu--container {
@@ -216,22 +220,22 @@
 
 @media screen and (min-width: 1680px) {
   .nav-inner-container.nav_inline ul.megamenu.row {
-      left: 50%;
-      margin-left: -700px;
+    left: 50%;
+    margin-left: -700px;
   }
 }
 
 @media screen and (min-width: 1220px) and (max-width: 1679px) {
   .nav-inner-container.nav_inline ul.megamenu.row {
-      left: 50%;
-      margin-left: -600px;
+    left: 50%;
+    margin-left: -600px;
   }
 }
 
 @media screen and (min-width: 981px) and (max-width: 1219px) {
   .nav-inner-container.nav_inline ul.megamenu.row {
-      left: 50%;
-      margin-left: -480px;
+    left: 50%;
+    margin-left: -480px;
   }
 }
 
@@ -241,8 +245,8 @@
 }
 
 .megamenu span.grid__wrapper.grid__wrapper-nest {
-    padding: 0 3%;
-    grid-column-gap: 30px;
+  padding: 0 3%;
+  grid-column-gap: 30px;
 }
 
 .megamenu__collection-image {
@@ -257,7 +261,6 @@
   padding-bottom: 50% !important;
 }
 
-
 .megamenu__collection-image .box-ratio img {
   object-fit: cover;
   height: 100%;
@@ -268,8 +271,7 @@
   transform: translate(-50%, -50%);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
- }
-
+}
 
 .megamenu__header {
   padding: 20px 0 5px;
@@ -277,12 +279,13 @@
   color: var(--dropdown-link-color);
   margin-bottom: 10px;
   text-align: left;
-  font-size: var(--font-size)
+  font-size: var(--font-size);
 }
 
 .megamenu__headerlink {
   padding-left: 0;
-  font-weight: bold; 
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .megamenu__list {
@@ -293,11 +296,11 @@
 .megamenu__listcontainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   break-inside: avoid;
   page-break-inside: avoid;
   padding: 0 10px;
-  border-right: 3px solid #EFEFEF;
+  border-right: 3px solid #efefef;
   height: 100%;
 }
 
@@ -311,13 +314,13 @@
 
 .megamenu__listitem {
   line-height: unset !important;
-  text-align: center !important;
+  text-align: left !important;
   display: block !important;
   clear: left;
   padding: 0 0 5px;
 }
 
-.megamenu__listitem:last-of-type p{
+.megamenu__listitem:last-of-type p {
   font-weight: bold !important;
   margin-top: 10px;
 }
@@ -327,8 +330,8 @@
   font-weight: normal !important;
   color: var(--dropdown-link-color) !important;
   font-size: var(--font-size) !important;
-  font-family:var(--main-family) !important;
-  font-weight: var(--main-weight);
+  font-family: var(--main-family) !important;
+  font-weight: 500 !important;
   font-style: var(--main-style);
   background: transparent !important;
   text-transform: none !important;
@@ -336,6 +339,10 @@
 
 .megamenu__listlink:hover {
   color: var(--dropdown-link-hover-color) !important;
+}
+
+.megamenu__listlink P {
+  text-transform: uppercase;
 }
 
 .megamenu__imagecontainer {
@@ -347,6 +354,6 @@ ul.megamenu li.desktop-3:nth-child(5n) {
 }
 
 ul.megamenu__ulcontainer {
-    margin-top: 20px;
-    padding: 0 10px;
+  margin-top: 20px;
+  padding: 0 10px;
 }

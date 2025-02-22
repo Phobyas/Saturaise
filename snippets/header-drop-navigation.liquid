@@ -105,8 +105,10 @@ Liquid logic for navigation
       {% assign columns = '3' %}
     {% when 4 %}
       {% assign columns = '4' %}
-    {% else %}
+    {% when 5 %}  
       {% assign columns = '5' %}
+    {% else %}
+      {% assign columns = '6' %}
   {% endcase %}
   <li
     class="navigation__menuitem navigation__menuitem--dropdown js-aria-expand js-doubletap-to-go"
@@ -152,7 +154,7 @@ Liquid logic for navigation
                     </li>
                   {% endfor %}
                   <li class="megamenu__listitem">
-                    <a class="megamenu__listlink bold" href="{{ sub_link.url }}">{{ section.settings.megamenu__link-text }}</a>
+                    <a class="megamenu__listlink bold uppercase" href="{{ sub_link.url }}">{{ section.settings.megamenu__link-text }}</a>
                   </li>
                 </ul>
               </li>
