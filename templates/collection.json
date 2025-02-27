@@ -41,7 +41,7 @@
         "a693520f-e2ed-48e0-aaae-58e0dc5dcc3f"
       ],
       "settings": {
-        "items_per_page": 48,
+        "items_per_page": 32,
         "items_per_row": 4,
         "collection_image": false,
         "show_count": true,
