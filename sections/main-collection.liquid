@@ -1,6 +1,22 @@
 {% style %}
-  .desc p span {
-    font-size: 18px !important;
+  .desc h3 {
+    font-size: 16px !important;
+  }
+
+  .desc p {
+    font-size: 16px !important;
+    margin-top: 8px !important;
+  }
+
+  @media (max-width: 1024px) {
+    .desc h3 {
+      font-size: 14px !important;
+    }
+
+    .desc p {
+      font-size: 14px !important;
+      margin-top: 6px !important;
+    }
   }
 
   .count {
@@ -138,11 +154,11 @@
     <div id="CollectionProductGrid" class="grid__wrapper">
       {%- if collection.description != blank -%}
         <div class="collection__page--description  w-100 span-8 mt2 pb2 a-left">
-          <div class="rte">
+          <div class="rte desc">
             <h1 class="text-2xl font-bold">
               {{ collection.title }}
             </h1>
-            <p class="desc">
+            <p >
               {{ collection.description | replace: '<span>', '<span class=" text-base">' }}
 
             </p>
