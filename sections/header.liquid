@@ -125,6 +125,7 @@
         data-routes="{{ routes.predictive_search_url | default: '/search/suggest' }}"
         data-input-selector='input[name="q"]'
         data-results-selector="#predictive-search"
+        data-results-per-resource="10"
         >
       {%- endif -%}
         <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get">

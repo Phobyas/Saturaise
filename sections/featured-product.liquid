@@ -242,7 +242,7 @@
             {%- when 'product_description' -%}
               {%- if product.description != blank -%}
                 <div class="product-template__description rte pt3 mb2 animate--text delay--{{ forloop.index }}" {{ block.shopify_attributes }}>
-                  <p class="label mb1">{{ 'products.product.product_info' | t }}</p>
+                  <p class="label mb1 font-[600]">{{ 'products.product.product_info' | t }}</p>
                   {% if product.description contains '[#' %}
                     {{ product.description | split: '[#' | first }}
                   {% else %}

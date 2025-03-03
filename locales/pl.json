@@ -1,0 +1,429 @@
+{
+  "general": {
+    "password_page": {
+      "thanks": "Dziękujemy za dołączenie do naszej listy",
+      "enter_store": "Zaloguj się hasłem",
+      "register": "Zapisz się, aby otrzymywać aktualizacje",
+      "password": "Hasło",
+      "enter": "Wejdź",
+      "email_address": "Adres e-mail",
+      "submit": "Wyślij",
+      "powered": "Ten sklep będzie obsługiwany przez"
+    },
+    "homepage": {
+      "onboarding": {
+        "no_content": "Ta sekcja obecnie nie zawiera żadnej zawartości. Dodaj zawartość do tej sekcji, korzystając z paska bocznego."
+      }
+    },
+    "404": {
+      "title": "Hmm... Wygląda na to, że zabłądziłeś",
+      "subtext": "Strona, której szukasz, nie została znaleziona.",
+      "button": "Wróć do strony głównej"
+    },
+    "forms": {
+      "post_error": "Proszę poprawić następujące błędy:"
+    },
+    "breadcrumbs": {
+      "home": "Strona główna"
+    },
+    "newsletter_form": {
+      "newsletter_email": "Zostańmy przyjaciółmi",
+      "email_placeholder": "Adres e-mail",
+      "confirmation": "Dziękujemy za subskrypcję",
+      "submit": "WYŚLIJ"
+    },
+    "search": {
+      "no_results": "Brak wyników",
+      "no_results_html": "Twoje wyszukiwanie \"{{ terms }}\" nie przyniosło żadnych wyników.",
+      "results_for_html": "Twoje wyszukiwanie \"{{ terms }}\" ujawniło następujące wyniki:",
+      "title": "Przeszukaj nasz sklep",
+      "title_results": "Wyniki wyszukiwania",
+      "placeholder": "Wpisz, aby wyszukać...",
+      "products": "Produkty",
+      "articles": "Artykuły",
+      "pages": "Strony",
+      "collections": "Kolekcje",
+      "search_for": "Szukaj \"{{ terms }}\"",
+      "vendor": "Sprzedawca",
+      "suggestions": "Sugestie",
+      "browse_all": "Przeglądaj wszystko"
+    },
+    "currency": {
+      "dropdown_label": "Waluta"
+    },
+    "language": {
+      "dropdown_label": "Język"
+    },
+    "accessibility": {
+      "unit_price_label": "Cena jednostkowa",
+      "unit_price_separator": "za",
+      "error": "Błąd"
+    },
+    "header": {
+      "search": "Szukaj",
+      "login": "Zaloguj się",
+      "account": "Konto",
+      "logout": "Wyloguj się",
+      "cart": "Koszyk",
+      "bag": "Torba"
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Przejdź do treści"
+  },
+  "sections": {
+    "contact_form": {
+      "name": "Imię i nazwisko",
+      "firstname": "Imię",
+      "lastname": "Nazwisko",
+      "subject": "Temat",
+      "companyname": "Firma",
+      "address": "Adres",
+      "email": "Email",
+      "phone": "Numer telefonu",
+      "message": "Wiadomość",
+      "websiteurl": "Adres URL strony internetowej",
+      "acceptsmarketing": "Zapisz się, aby otrzymywać informacje o nowych produktach i ofertach!",
+      "send": "Wyślij",
+      "post_success": "Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe."
+    }
+  },
+  "blogs": {
+    "article": {
+      "recent_posts": "Ostatnie posty",
+      "posted_on_date_html": "Opublikowano {{ date }}",
+      "tags": "Tagi",
+      "tagged": "Oznaczone",
+      "comments": "Komentarz(e)",
+      "by": "Autor:",
+      "read_more": "Czytaj więcej"
+    },
+    "comments": {
+      "title": "Zostaw komentarz",
+      "your_name": "Twoje imię",
+      "your_email": "Twój e-mail",
+      "your_comment": "Twoja wiadomość",
+      "moderated": "Wszystkie komentarze do bloga są sprawdzane przed opublikowaniem",
+      "post": "Opublikuj komentarz",
+      "success_moderated": "Twój komentarz został pomyślnie opublikowany. Opublikujemy go niebawem, ponieważ nasz blog jest moderowany.",
+      "success": "Twój komentarz został pomyślnie opublikowany! Dziękujemy!",
+      "comments_with_count": {
+        "one": "{{ count }} komentarz",
+        "other": "{{ count }} komentarzy"
+      }
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Koszyk",
+      "close_cart": "Zamknij koszyk",
+      "empty_title": "Czy o czymś zapomniałeś?",
+      "empty": "Twój koszyk jest obecnie pusty.",
+      "price": "Cena",
+      "qty": "Ilość",
+      "remove": "Usuń",
+      "total": "Razem",
+      "subtotal": "Suma częściowa",
+      "continue": "Kontynuuj zakupy",
+      "continue_browsing_html": "Kliknij",
+      "continue_browsing_html2": ", aby kontynuować zakupy.",
+      "update": "Aktualizuj koszyk",
+      "checkout": "Do kasy",
+      "note": "Dodaj notatkę",
+      "discount_applied": "Rabat zastosowany!",
+      "savings": "Suma oszczędności",
+      "discounts": "Rabaty",
+      "cart_discount": "Kod rabatowy (zastosowany przy kasie)",
+      "free_shipping_before": "Jesteś tylko",
+      "free_shipping_after": "od darmowej wysyłki!",
+      "free_shipping_qualified": "Twoje zamówienie kwalifikuje się do darmowej wysyłki!",
+      "free_shipping_exclusions": "(Nie dotyczy wysyłki międzynarodowej)",
+      "items": "Produkt(y)",
+      "cart_error": "Błąd koszyka",
+      "form_error": "Błąd formularza",
+      "update_qty_error": "Niektóre produkty stały się niedostępne. Zaktualizuj ilość i spróbuj ponownie.",
+      "set_error": "Produkt w tym zestawie jest niedostępny lub nie ma go już w magazynie.",
+      "stock_issue": "Problem z dostępnością",
+      "item_out_first": "Nie możesz dodać więcej tego produktu. Tylko ",
+      "item_out_last": " sztuk(i) dostępnych.",
+      "tax": "Podatek",
+      "shipping": "Wysyłka",
+      "at_checkout": "Obliczone przy kasie",
+      "overview": "Podsumowanie zamówienia",
+      "calc_error": "Błąd kalkulatora:",
+      "calc_heading": "Oszacuj koszt wysyłki",
+      "calc_shipping": "Oblicz koszt wysyłki",
+      "calc_calculating": "Obliczanie...",
+      "shipping_no_destination": "Nie wysyłamy do tej lokalizacji.",
+      "shipping_single_rate": "Dostępna jest jedna stawka wysyłki dla ",
+      "shipping_multi_rate_one": "Dostępnych jest ",
+      "shipping_multi_rate_two": " stawek wysyłki dla ",
+      "shipping_multi_rate_three": ", zaczynając od ",
+      "shipping_country": "Kraj",
+      "shipping_choose_country": "Wybierz kraj",
+      "shipping_zip_postal": "Kod pocztowy",
+      "view_cart": "Sprawdź koszyk"
+    }
+  },
+  "collections": {
+    "general": {
+      "all_collections": "Wszystkie kolekcje",
+      "all_products": "Wszystkie produkty",
+      "empty": "Pusta kolekcja",
+      "no_matches": "Brak produktów w tej kolekcji",
+      "shop_all": "Zobacz wszystkie",
+      "clear_all_tags": "Wyczyść wszystkie filtry",
+      "save": "Zapisz",
+      "items": "Produkt(y)",
+      "item_count": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produktów"
+      }
+    },
+    "onboarding": {
+      "collection_name": "Nazwa kolekcji",
+      "menu_title": "Tytuł menu",
+      "menu_item": "Element menu",
+      "menu_item_description": "Krótki opis tego elementu menu...",
+      "menu_item_option": "Opcja"
+    },
+    "sidebar": {
+      "linklist_title": "Kupuj według"
+    },
+    "filter": {
+      "filter": "Filtr",
+      "all": "Wszystkie",
+      "clear_all": "Wyczyść wszystkie",
+      "from": "Od",
+      "filter_and_sort": "Filtruj i sortuj",
+      "filtering_by_label": "Bieżące filtry",
+      "filter_button": "Filtruj",
+      "filters_selected": "{{ count }} wybranych",
+      "max_price": "Najwyższa cena to {{ price }}",
+      "reset": "Reset",
+      "sort_title": "Sortuj",
+      "to": "Do",
+      "no_results": "Brak wyników",
+      "use_fewer_filters": "Użyj mniej filtrów.",
+      "type_to_filter": "Wpisz, aby filtrować",
+      "match_all": "(Dopasuj wszystkie)"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Konto",
+      "details": "Szczegóły konta",
+      "view_addresses": "Zobacz adresy",
+      "return": "Powrót do szczegółów konta",
+      "logout": "Wyloguj się",
+      "help": "Nie możesz znaleźć odpowiedzi, których szukasz? Napisz do nas na adres"
+    },
+    "activate_account": {
+      "title": "Aktywuj konto",
+      "subtext": "Utwórz hasło, aby aktywować swoje konto.",
+      "password": "Hasło",
+      "password_confirm": "Potwierdź hasło",
+      "submit": "Aktywuj konto",
+      "cancel": "Odrzuć zaproszenie"
+    },
+    "addresses": {
+      "title": "Książka adresowa",
+      "default": "Domyślny",
+      "add_new": "Dodaj nowy adres",
+      "edit_address": "Edytuj adres",
+      "first_name": "Imię",
+      "last_name": "Nazwisko",
+      "company": "Firma",
+      "address1": "Adres1",
+      "address2": "Adres2",
+      "city": "Miasto",
+      "country": "Kraj",
+      "province": "Województwo",
+      "zip": "Kod pocztowy",
+      "phone": "Telefon",
+      "set_default": "Ustaw jako adres domyślny",
+      "add": "Dodaj adres",
+      "update": "Aktualizuj adres",
+      "cancel": "Anuluj",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "delete_confirm": "Czy na pewno chcesz usunąć ten adres?"
+    },
+    "login": {
+      "title": "Logowanie",
+      "email": "Email",
+      "password": "Hasło",
+      "forgot_password": "Zapomniałeś hasła?",
+      "sign_in": "Zaloguj się",
+      "cancel": "Powrót do sklepu",
+      "guest_title": "Kontynuuj jako gość",
+      "guest_continue": "Kontynuuj"
+    },
+    "orders": {
+      "title": "Historia zamówień",
+      "order_number": "Zamówienie",
+      "date": "Data",
+      "payment_status": "Status płatności",
+      "fulfillment_status": "Status realizacji",
+      "total": "Razem",
+      "none": "Nie złożyłeś jeszcze żadnych zamówień."
+    },
+    "order": {
+      "title": "Zamówienie",
+      "date": "Złożone dnia",
+      "cancelled": "Zamówienie anulowane dnia",
+      "cancelled_reason": "Powód: {{ reason }}",
+      "billing_address": "Adres rozliczeniowy",
+      "payment_status": "Status płatności",
+      "shipping_address": "Adres dostawy",
+      "fulfillment_status": "Status realizacji",
+      "discount": "Rabat",
+      "shipping": "Wysyłka",
+      "tax": "Podatek",
+      "total": "Razem",
+      "details": {
+        "product": "Produkt",
+        "sku": "SKU",
+        "price": "Cena",
+        "quantity": "Ilość",
+        "total": "Razem",
+        "fulfilled_at": "Zrealizowano {{ date }}",
+        "subtotal": "Suma częściowa"
+      }
+    },
+    "recover_password": {
+      "title": "Zresetuj hasło",
+      "email": "Email",
+      "submit": "Wyślij",
+      "cancel": "Anuluj",
+      "enter_for": "Wprowadź nowe hasło dla",
+      "subtext": "Wyślemy Ci e-mail, aby zresetować hasło.",
+      "success": "Wysłaliśmy Ci e-mail z linkiem do aktualizacji hasła."
+    },
+    "reset_password": {
+      "title": "Zresetuj hasło konta",
+      "subtext": "Wprowadź nowe hasło dla {{ email }}",
+      "password": "Hasło",
+      "password_confirm": "Potwierdź hasło",
+      "submit": "Zresetuj hasło"
+    },
+    "register": {
+      "title": "Utwórz konto",
+      "first_name": "Imię",
+      "last_name": "Nazwisko",
+      "email": "Email",
+      "password": "Hasło",
+      "submit": "Utwórz"
+    }
+  },
+  "products": {
+    "general": {
+      "new": "NEW",
+      "sale": "SALE",
+      "sold": "Wyprzedane",
+      "set": "Zestaw",
+      "from": "Od",
+      "view_full": "Zobacz produkt",
+      "sale_price": "Cena promocyjna",
+      "regular_price": "Cena regularna"
+    },
+    "product": {
+      "designer": "Projektant",
+      "sold_out": "Wyprzedane",
+      "customize_set": "Dostosuj zestaw",
+      "set_only_default": "Wybrana domyślna opcja.",
+      "regular_price": "Cena regularna",
+      "set_price": "Cena zestawu",
+      "price_varies": "Cena zmienna",
+      "unavailable": "Niedostępny",
+      "compare_at": "Porównaj z",
+      "include_taxes": "Z podatkiem.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Koszty wysyłki</a> obliczane przy kasie.",
+      "add_to_cart": "Dodaj do koszyka",
+      "pre_order": "Przedsprzedaż",
+      "add_set_to_cart": "Dodaj zestaw do koszyka",
+      "instore_only": "Dostępne tylko w sklepie",
+      "back_to": "Powrót do",
+      "or": "lub",
+      "adding": "Dodawanie...",
+      "thank_you": "Dziękujemy!",
+      "added": "Dodano do koszyka",
+      "added_success": "Dodano do koszyka",
+      "view_cart": "Zobacz koszyk",
+      "continue": "Kontynuuj zakupy",
+      "quantity": "Ilość",
+      "product_details": "Szczegóły produktu",
+      "product_info": "Opis produktu",
+      "product_type": "Rodzaj produktu",
+      "brand": "Marka",
+      "collection": "Kolekcja",
+      "product_description": "Opis produktu",
+      "product_more_details": "Więcej szczegółów",
+      "size_guide": "Tabela rozmiarów:",
+      "delivery": "Dostawa:",
+      "returns": "Zwroty:",
+      "related_products": "Produkty powiązane",
+      "inventory": "W magazynie",
+      "weight": "Waga",
+      "sku": "SKU",
+      "variant": "Wariant",
+      "call_to_action": "Kup teraz",
+      "social_share": "Udostępnij",
+      "view_in_space": "Zobacz w swojej przestrzeni",
+      "view_in_space_label": "Zobacz w swojej przestrzeni, ładuje przedmiot w oknie rozszerzonej rzeczywistości",
+      "starting_at": "Od",
+      "onboarding": {
+        "title": "Tytuł produktu",
+        "subtitle": "Mały podtytuł ze szczegółami produktu"
+      },
+      "choose_option": "Wybierz opcję",
+      "required": "Wymagane"
+    }
+  },
+  "product_pickup_availability": {
+    "view_store_info": "Uzyskaj informacje",
+    "check_other_stores": "Zobacz sklepy",
+    "pick_up_available": "Odbiór dostępny",
+    "pick_up_currently_unavailable": "Odbiór obecnie niedostępny",
+    "pick_up_available_at_html": "Odbiór dostępny w {{ location_name }}",
+    "pick_up_unavailable_at_html": "Odbiór obecnie niedostępny w {{ location_name }}",
+    "pickup": "Odbiór"
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Oto Twoja karta podarunkowa o wartości {{ value }} dla {{ shop }}!",
+      "subtext": "Oto Twoja karta podarunkowa!",
+      "disabled": "Wyłączona",
+      "expired": "Wygasła dnia {{ expiry }}",
+      "active": "Wygasa dnia {{ expiry }}",
+      "redeem": "Użyj tego kodu przy kasie, aby zrealizować swoją kartę podarunkową",
+      "shop_link": "Rozpocznij zakupy",
+      "print": "Drukuj",
+      "email": "Email"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Chcę wysłać to jako prezent",
+      "email_label": "Email odbiorcy",
+      "email_label_optional_for_no_js_behavior": "Email odbiorcy (opcjonalne)",
+      "email": "Email",
+      "name_label": "Imię odbiorcy (opcjonalne)",
+      "name": "Imię",
+      "message_label": "Wiadomość (opcjonalna)",
+      "message": "Wiadomość",
+      "max_characters": "Maksymalnie {{ max_chars }} znaków",
+      "send_on_label": "wyślij dnia"
+    }
+  },
+  "social": {
+    "icons": {
+      "facebook": "Udostępnij na Facebooku",
+      "twitter": "Udostępnij na Twitterze",
+      "pinterest": "Udostępnij na Pinterest"
+    }
+  },
+  "date_formats": {
+    "month_date_year": "%d %B %Y"
+  }
+}

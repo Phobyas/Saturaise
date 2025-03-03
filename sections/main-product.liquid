@@ -249,9 +249,9 @@
               {%- endunless -%}
               {%- when 'product_title' -%}
                 {% if product.vendor != blank %}
-                  <p class="product-supplier text-sm text-gray-500 pt-2 mb-0">
+                  <p class="product-supplier text-[16px] text-gray-500 pt-2 mb-2 text-left font-[600]">
                     {% if product.collections.size > 0 %}
-                      <a href="{{ product.collections.first.url }}" class="hover:underline">{{ product.vendor }}</a>
+                      <a href="{{ product.collections.first.url }}" class="font-[600] text-[16px]">{{ product.vendor }}</a>
                     {% else %}
                       {{ product.vendor }}
                     {% endif %}

@@ -251,6 +251,18 @@ input[type="search"]#Search::-webkit-search-results-decoration {
   flex-direction: row;
 }
 
+.predictive-search__results-list .product-loop__title a {
+  font-size: 16px !important;
+}
+
+.predictive-search__results-list .p-title {
+  height: 90px !important;
+}
+
+.predictive-search__results-list .product-loop__price {
+  font-size: 14px !important;
+}
+
 .predictive-search__heading#predictive-search-products {
   margin-bottom: var(--space-3);
 }
@@ -385,8 +397,9 @@ input[type="search"]#Search::-webkit-search-results-decoration {
   padding-left: var(--space-3);
 }
 .searchbox__input {
-  margin-top: 0 !important;
-  padding-left: 0 !important;
+  margin-bottom: 12px !important;
+  padding-left: 0px !important;
+  border-bottom: 2px solid #efefef;
 }
 .slideout__trigger-search button {
   position: absolute;
