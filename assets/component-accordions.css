@@ -161,6 +161,12 @@
   letter-spacing: 1px;
 }
 
+@media (min-width: 768px) and (max-width: 1024px) {
+  .c-accordion__top-level .c-accordion__link {
+    font-size: 1rem;
+  }
+}
+
 .c-accordion__third-level .c-accordion__link,
 .collection__sm-filter--final-level .c-accordion__link,
 .collection__sm-filter--final-level .c-accordion__tag-link a {
