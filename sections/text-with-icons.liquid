@@ -82,13 +82,13 @@
 
 {% comment %} Text With Icons Template {% endcomment %}
 <div
-  class="bg-[#eeeeee] mb-3 section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="bg-[#eeeeee] mb-6 section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="text-with-icons"
   data-section-loaded="false">
 
   <div class="section-txt-icons__outer-wrapper pt-3">
-    <div class="grid__wrapper pt-6 md:pt-8">
+    <div class="grid__wrapper pt-6 md:pt-12">
       {% render 'snip-headings', align: heading_align, classes: 'section-txt-icons__section-heading pb5', grid: 'span-12', heading: section.settings.title %}
     </div>
     <div class="section-txt-icons__inner-wrapper grid__wrapper px9 pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
@@ -142,7 +142,7 @@
             </div>
             <div class="section-txt-icons__content">
               {% if block.settings.title != blank %}
-                <p class="section-txt-icons__block-heading mb1 h5">{{ block.settings.title }}</p>
+                <p class="section-txt-icons__block-heading mb1 h5 text-center">{{ block.settings.title }}</p>
               {% endif %}
               {% if block.settings.subheading != blank %}
                 <div class="section-txt-icons__block-subheading">
@@ -170,6 +170,7 @@
       justify-content: center !important;
       padding: 0 10px !important;
     }
+
     
     /* Content wrapper when link exists */
     .section-txt-icons__item a.section-txt-icons__content-wrapper {
@@ -227,8 +228,8 @@
       margin: 0 !important;
       line-height: 1.4 !important;
       text-align: left !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
     }
 
     .section-txt-icons__block-subheading {
@@ -278,9 +279,9 @@
       .section-txt-icons__block-heading,
       .section-txt-icons__block-subheading,
       .section-txt-icons__block-subheading p {
-        text-align: left !important;
-        font-size: 16px !important;
-        font-weight 600px !important;
+        text-align: center !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
       }
 
       .section-txt-icons__inner-wrapper {

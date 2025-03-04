@@ -1,7 +1,7 @@
 <style>
 
   .heading-title {
-    font-weight: bold;
+    font-weight: 700;
   }
   
 </style>
@@ -154,7 +154,7 @@
     {%- endif -%}
     {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
       <a class="inline-block mt4 mb0 sm-mb2" href="{{ section.settings.link_url }}">
-        <span class="text-sm font-semibold underline">{{ section.settings.link_text }}</span>
+        <span class="text-sm font-medium underline">{{ section.settings.link_text }}</span>
       </a>
     {%- endif -%}
   </div>
