@@ -10,9 +10,9 @@
 {
   "current": {
     "favicon": "shopify://shop_images/fav-icon-1600px.png",
-    "main_font": "lato_n4",
-    "nav_font": "lato_n6",
-    "heading_font": "lato_n4",
+    "main_font": "poppins_n4",
+    "nav_font": "poppins_n5",
+    "heading_font": "poppins_n4",
     "font_size": 14,
     "nav_size": 18,
     "h2_size": 26,
@@ -45,6 +45,8 @@
     "scheme_3_bg": "#efefef",
     "scheme_3_text": "#FFFFFF",
     "scheme_3_hover": "#323232",
+    "cart_type": "drawer",
+    "show_additional_buttons": true,
     "shipping_calculator_default_country": "Poland",
     "show_shipping_countdown": false,
     "free_shipping_threshold": "150",
