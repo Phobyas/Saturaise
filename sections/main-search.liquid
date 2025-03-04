@@ -49,7 +49,7 @@
   .search__page--bar-wrapper {
    width: 100% !important;
    max-width: 1200px !important;
-   margin: 0 auto !important;
+   margin: 24px auto 36px auto !important;
    padding: 0 12px;
  }
 
@@ -162,13 +162,13 @@ endcase
 -%}
 
 {% comment %} Search Page Template {% endcomment %}
-<section class="search-template search__page--wrapper no-section-animation pt6 mb9"
+<section class="search-template search__page--wrapper no-section-animation pt-16 mb-12"
   data-section-id="{{ section.id }}"
   data-asset-url="{{ 'section-main-search.js' | asset_url }}"
   data-section-type="search-template">
   <div id="searchResultsWrapper" class="grid__wrapper">
     {% paginate search.results by 24 %}
-      <div id="search-bar" class="search__page--bar-wrapper span-12 auto mb2">
+      <div id="search-bar" class="search__page--bar-wrapper span-12 auto ">
         <form action="{{ routes.search_url }}" method="get">
           <div class="a-left text-search">
             {% if search.performed %}

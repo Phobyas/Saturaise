@@ -350,7 +350,7 @@
 @media (min-width: 768px) {
   .product-loop__title,
   .product-loop__title a {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -374,5 +374,11 @@
   .product-recommendations .product-loop__title a {
     font-size: 18px !important;
     font-weight: bold;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .product-loop__title a {
+    font-size: 14px !important;
   }
 }

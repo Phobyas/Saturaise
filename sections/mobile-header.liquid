@@ -26,6 +26,39 @@
 <link rel="preload" href="{{ 'component-modals.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'component-modals.css' | asset_url }}"></noscript>
 
+{% style %}
+  .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
+    font-size: {{ section.settings.logo_size }}px !important;
+    word-break: break-word;
+    font-family:  var(--heading-family);
+    font-weight:  var(--heading-weight);
+  }
+  .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+    max-width: {{ section.settings.logo_max_width }}% !important;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+       max-width: 80% !important;
+    }
+  }
+
+  .close-menu-btn {
+
+
+  }
+
+  #mobile-slideout {
+    background-color: {{ bg_color }};
+    z-index: 15;
+  }
+
+  .mobile-nav__img-wrapper{
+    width: 60% !important;
+  }
+
+{% endstyle %}
+
 {% comment %} Mobile Header {% endcomment %}
 <section
   class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide l0 z5 pt2 pb2 js-mobile-header relative z-50"
@@ -122,28 +155,7 @@
       </ul>
     {%- endif -%}
 
-    {% style %}
-      .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
-        font-size: {{ section.settings.logo_size }}px !important;
-        word-break: break-word;
-        font-family:  var(--heading-family);
-        font-weight:  var(--heading-weight);
-      }
-      .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
-        max-width: {{ section.settings.logo_max_width }}% !important;
-      }
-
-      @media (min-width: 768px) and (max-width: 1024px) {
-        .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
-           max-width: 80% !important;
-        }
-      }
-
-      #mobile-slideout {
-        background-color: {{ bg_color }};
-        z-index: 15;
-      }
-    {% endstyle %}
+    
   </article>
 </section>
 <div class="clear js-clear-element"></div>
@@ -200,9 +212,14 @@
 {% comment %} Mobile Navigation Slideout {% endcomment %}
 <aside id="mobile-slideout" class="slideout slideout__drawer-left" data-wau-overlay="false" data-wau-slideout="mobile-navigation" id="slideout-mobile-navigation">
   <div class="slideout__trigger--close mobile-header--close">
+
+
+    <div class="flex px-6">
+
+    
     {% if section.settings.menu_image != blank %}
-      <div class="grid__wrapper narrow pt-12 pb-2">
-        <div class="mobile-nav__img-wrapper span-12 auto relative">
+      <div class="grid__wrapper pt-12 pb-2">
+        <div class="mobile-nav__img-wrapper span-6 auto relative mt-3">
           {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
             {% render 'helper-image',
              type: section.settings.menu_image,
@@ -215,17 +232,21 @@
           {%- if section.settings.menu_image_url -%}</a>{%- endif -%}
         </div>
       </div>
+      
+      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  pt-2" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
+        {% render 'snip-icons',
+           wrapper: '.section-header__mobile',
+           type: 'theme',
+           icon: 'close',
+           size: '18px',
+           classes: 'mt0 mr0 mb0 ml0',
+           fill: 'var(--header-text)',
+           hover: 'var(--header-hover)' %}
+      </button>
+
+      </div>
     {% endif %}
-    <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
-      {% render 'snip-icons',
-         wrapper: '.section-header__mobile',
-         type: 'theme',
-         icon: 'close',
-         size: '18px',
-         classes: 'mt0 mr0 mb0 ml0',
-         fill: 'var(--header-text)',
-         hover: 'var(--header-hover)' %}
-    </button>
+
   </div>
   <div
   class="mobile-nav__wrapper no-section-animation">
@@ -327,6 +348,7 @@
       .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
       .slideout-mobile-navigation--open .section-header__mobile_search--input {
         border-color: {{ text_color }};
+        text-transform: uppercase;
       }
       .mobile-nav__wrapper .c-accordion__link:hover {
         color: {{ hover_color }} !important;

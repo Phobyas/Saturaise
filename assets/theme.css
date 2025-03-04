@@ -1060,7 +1060,7 @@ a.button.btn-as-link,
   margin-bottom: 0 !important;
   border-radius: unset !important;
   text-transform: initial !important;
-  padding: 0 !important;
+  /* padding: 0 !important; */
   line-height: normal !important;
   height: unset !important;
   cursor: pointer;

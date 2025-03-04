@@ -61,7 +61,7 @@ section/predictive-search.liquid
             
             <!-- See All Products Link (before product loop) -->
             <div class="predictive-search__view-all a-right pt-2 pb-5">
-              <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="text-[16px] font-[600] underline">
+              <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="text-[16px] font-medium underline">
                 {{ 'general.search.browse_all' | t }}
               </a>
             </div>
