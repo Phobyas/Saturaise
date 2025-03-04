@@ -42,14 +42,14 @@
   }
 </template>
 <template data-html="content">
-  <div class="ajax-cart__empty-cart a-center pt6 js-cart-empty {{ isEmpty }}">
+  <div class="ajax-cart__empty-cart a-center cart-wrapper mt-16 js-cart-empty {{ isEmpty }}">
     
     <div class="cart__empty-message">
     
     <span class="text-lg font-[600]">{{ 'cart.general.empty' | t }}</span>
     <div>
     <span class="text-lg font-[600]">{{ 'cart.general.continue_browsing_html' | t }}</span>
-    <a class="text-lg font-bold" href="/collections/all">tutaj</a>
+    <a class="text-lg font-bold underline" href="/collections/all">tutaj</a>
     <span class="text-lg font-[600]">{{ 'cart.general.continue_browsing_html2' | t }}</span>
     </div>
 

@@ -242,6 +242,7 @@ input[type="search"]#Search::-webkit-search-results-decoration {
   border-bottom: 1px solid var(--ps-border-color);
   color: var(--ps-color);
   font-weight: 700;
+  font-size: 16px !important;
 }
 
 .predictive-search__results-list .product-loop__info-wrapper,
