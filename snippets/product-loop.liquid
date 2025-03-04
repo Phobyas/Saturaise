@@ -363,7 +363,7 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm md:text-base font-medium {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
+    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
   {% if section.name == "Product recommendations" %}style="font-size: 18px;"{% endif %}>
 
     {% if product.price < product.compare_at_price %}

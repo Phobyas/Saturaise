@@ -114,6 +114,12 @@ aside.slideout[aria-hidden="false"] {
   }
 }
 
+@media (min-width: 768px) and (max-width: 1024px) {
+  .slideout {
+    width: 60%;
+  }
+}
+
 /*Slideout from top*/
 aside.slideout__drawer-top {
   transform: translateY(-100%);

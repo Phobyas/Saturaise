@@ -1367,4 +1367,9 @@ video {
   .lg\:pt-0 {
     padding-top: 0px;
   }
+
+  .lg\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 }
