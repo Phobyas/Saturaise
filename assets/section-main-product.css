@@ -875,7 +875,7 @@
 .product-additional-buttons,
 .product-additional-buttons .shopify-payment-button__button--unbranded {
   display: block;
-  height: 80px !important;
+  height: 72px !important;
   background: #323232 !important;
   font-size: 20px !important;
   font-weight: 600 !important;

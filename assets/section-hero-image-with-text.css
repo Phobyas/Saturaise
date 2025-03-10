@@ -7,25 +7,30 @@
 }
 
 .btn-contact {
-  display: flex;
-  height: 60px !important;
-  width: 50% !important;
-  text-align: center;
-  border: 1px solid #323232 !important;
-  background: none !important;
-  color: #323232 !important;
-  font-size: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 40px !important;
+  padding: 12px 24px !important;
+  border: 1px solid var(--scheme-1-text) !important;
+  border-radius: 8px !important;
+  background: var(--scheme-1-bg) !important;
+  color: var(--scheme-1-text) !important;
+  transition: all 0.3s ease !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
-  border-radius: 8px;
-  align-items: center;
-  justify-content: center;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
   margin-top: 40px;
+  width: auto !important;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .btn-contact:hover {
-  background: #f9fafb !important;
+  background: var(--scheme-1-hover) !important;
+  color: var(--scheme-1-bg) !important;
 }
 
 .section-text-with-image .grid__wrapper {
@@ -84,7 +89,7 @@
   .btn-contact {
     width: 60% !important;
     margin: 40px auto 40px auto !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
 
   .section-text-with-image h3 {

@@ -84,6 +84,12 @@
       font-size: {{ section.settings.text_size }}px;
       line-height: calc(({{ section.settings.text_size }}px * .375) + {{ section.settings.text_size }}px);
     }
+
+    .rich-text-{{ section.id }} h1 {
+      font-size: 24px !important;
+      font-weight: 700 !important;
+    }
+
      @media (min-width: 768px) {
       .rich-text-{{ section.id }} .section-heading,
       .rich-text-{{ section.id }} .pages-content {
