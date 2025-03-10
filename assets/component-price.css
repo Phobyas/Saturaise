@@ -78,7 +78,7 @@
   line-height: var(--h3-size);
   color: var(--text-color);
   font-family: var(--heading-family);
-  font-weight: bold;
+  font-weight: 500;
   letter-spacing: var(--heading-spacing);
 }
 
