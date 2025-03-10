@@ -473,7 +473,7 @@
         "text_size": 16,
         "page": "",
         "alignment": "a-left",
-        "content_width": 85,
+        "content_width": 100,
         "reduce_padding": false,
         "section_padding": "both",
         "color_scheme": "1"
