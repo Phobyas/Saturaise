@@ -29,17 +29,40 @@
   data-section-loaded="false">
 
   <div class="grid__wrapper {% unless reduce_padding %}py-9{% endunless %}">
-    {% render 'snip-headings', align: section.settings.alignment, classes: 'animate--text delay--1 px4', grid: 'span-12' %}
+    {% render 'snip-headings', align: section.settings.alignment, classes: 'animate--text delay--1 px-3 lg:px-0', grid: 'span-12' %}
 
     {%- unless section.settings.page == blank and section.settings.rich_text == blank -%}
-      <div class="span-12 auto {{ section.settings.alignment }} px-4 mb-2">
+      <div class="span-12 auto {{ section.settings.alignment }} px-3 lg:px-0 mb-2">
         <div class="pages-content animate--text delay--2">
           <div class="rte">
-            {% if section.settings.page != blank %}
-              {% assign feat_page = pages[section.settings.page] %}
-              {{ feat_page.content }}
-            {% elsif section.settings.rich_text != blank %}
-              {{ section.settings.rich_text }}
+            {% if section.settings.enable_expand and section.settings.rich_text != blank or section.settings.page != blank %}
+              <div class="description-container collapsed">
+                <div class="description-content">
+                  {% if section.settings.page != blank %}
+                    {% assign feat_page = pages[section.settings.page] %}
+                    {{ feat_page.content }}
+                  {% elsif section.settings.rich_text != blank %}
+                    {{ section.settings.rich_text }}
+                  {% endif %}
+                </div>
+                
+                <div class="fade-overlay"></div>
+              </div>
+              
+              {% if section.settings.alignment == 'a-center' %}
+                <div class="text-center mt-4">
+              {% else %}
+                <div class="text-left mt-4">
+              {% endif %}
+                <button class="toggle-description rich-text-description-button">{{ section.settings.expand_text }}</button>
+              </div>
+            {% else %}
+              {% if section.settings.page != blank %}
+                {% assign feat_page = pages[section.settings.page] %}
+                {{ feat_page.content }}
+              {% elsif section.settings.rich_text != blank %}
+                {{ section.settings.rich_text }}
+              {% endif %}
             {% endif %}
           </div>
         </div>
@@ -79,6 +102,14 @@
         line-height: calc(({{ section.settings.text_size }}px * .2) + {{ section.settings.text_size }}px);
       }
     }
+    
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .rich-text-{{ section.id }} .section-heading,
+      .rich-text-{{ section.id }} .pages-content {
+        max-width: 90%;
+      }
+    }
+    
     {% unless section.settings.color_scheme == 'none' %}
       .rich-text-{{ section.id }},
       .rich-text-{{ section.id }} h2,
@@ -93,7 +124,111 @@
         background-color: var(--scheme-{{ section.settings.color_scheme }}-bg) !important;
       }
     {% endunless %}
+    
+    /* Expand/Collapse Styles */
+    .description-container {
+      position: relative;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+     
+    .description-container.collapsed {
+      max-height: {{ section.settings.collapsed_height }}px;
+    }
+    
+    .description-container.expanded {
+      max-height: 10000px; /* Large value to accommodate any length */
+    }
+    
+    .fade-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), 
+        {% if section.settings.color_scheme == 'none' %}
+          rgba(255,255,255,1)
+        {% else %}
+          var(--scheme-{{ section.settings.color_scheme }}-bg)
+        {% endif %}
+      );
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .description-container.expanded .fade-overlay {
+      opacity: 0;
+    }
+    
+    .rich-text-description-button {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 40px !important;
+      padding: 8px 16px !important;
+      border: 1px solid 
+        {% if section.settings.color_scheme == 'none' %}
+          var(--dotted-color, #333)
+        {% else %}
+          var(--scheme-{{ section.settings.color_scheme }}-text)
+        {% endif %} !important;
+      border-radius: 8px !important;
+      background: 
+        {% if section.settings.color_scheme == 'none' %}
+          var(--background, #fff)
+        {% else %}
+          var(--scheme-{{ section.settings.color_scheme }}-bg)
+        {% endif %} !important;
+      color: 
+        {% if section.settings.color_scheme == 'none' %}
+          var(--text-color, #333)
+        {% else %}
+          var(--scheme-{{ section.settings.color_scheme }}-text)
+        {% endif %} !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.5px !important;
+      text-transform: uppercase !important;
+      cursor: pointer !important;
+    }
+    
+    .rich-text-description-button:hover {
+      background: 
+        {% if section.settings.color_scheme == 'none' %}
+          #f5f5f5
+        {% else %}
+          var(--scheme-{{ section.settings.color_scheme }}-hover)
+        {% endif %} !important;
+      {% if section.settings.color_scheme != 'none' %}
+        color: var(--scheme-{{ section.settings.color_scheme }}-bg) !important;
+      {% endif %}
+    }
   </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButton = document.querySelector('.rich-text-{{ section.id }} .toggle-description');
+      const descriptionContainer = document.querySelector('.rich-text-{{ section.id }} .description-container');
+      
+      if (toggleButton && descriptionContainer) {
+        toggleButton.addEventListener('click', function() {
+          const isExpanded = descriptionContainer.classList.contains('expanded');
+          
+          if (!isExpanded) {
+            descriptionContainer.classList.remove('collapsed');
+            descriptionContainer.classList.add('expanded');
+            toggleButton.textContent = '{{ section.settings.collapse_text }}';
+          } else {
+            descriptionContainer.classList.remove('expanded');
+            descriptionContainer.classList.add('collapsed');
+            toggleButton.textContent = '{{ section.settings.expand_text }}';
+          }
+        });
+      }
+    });
+  </script>
 </div>
 
 {% schema %}
@@ -165,6 +300,38 @@
       "unit": "%",
       "label": "Content width",
       "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Expand/Collapse Feature"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_expand",
+      "label": "Enable expand/collapse",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "collapsed_height",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Collapsed height",
+      "default": 200
+    },
+    {
+      "type": "text",
+      "id": "expand_text",
+      "label": "Expand button text",
+      "default": "ROZWIŃ"
+    },
+    {
+      "type": "text",
+      "id": "collapse_text",
+      "label": "Collapse button text",
+      "default": "ZWIŃ"
     },
     {
       "type": "checkbox",
