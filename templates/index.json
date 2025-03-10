@@ -474,6 +474,10 @@
         "page": "",
         "alignment": "a-left",
         "content_width": 100,
+        "enable_expand": true,
+        "collapsed_height": 100,
+        "expand_text": "ROZWIŃ",
+        "collapse_text": "ZWIŃ",
         "reduce_padding": false,
         "section_padding": "both",
         "color_scheme": "1"
