@@ -1,1 +1,63 @@
-{"sections":{"banner":{"type":"template-header","settings":{"full_width":true,"scale":2,"banner_height":400,"heading":"","subheading":"","heading_placement":"center","alignment":"a-center","color_scheme":"3"}},"main":{"type":"main-page","blocks":{"4eb3e1c9-91d8-41a2-9f34-7ab315323c81":{"type":"heading","settings":{"heading":"Get in touch!","block_position":"sidebar"}},"6a1e5aff-95ea-4f9e-b9eb-e5dc11c43fe2":{"type":"text","settings":{"text_rte":"<p>Visit us in person:<br\/>1234 Example St.<br\/>Toronto, Canada<br\/><br\/>Phone Number:<br\/>123-456-7890<br\/><br\/>Hours:<br\/>Monday — Friday<br\/>8am to 8pm EST<\/p>","show_border":true,"block_position":"sidebar"}},"4335fa9a-4179-4f3f-8983-d5b81c71f219":{"type":"page_content","disabled":true,"settings":{"block_position":"content"}},"07e56099-bfa6-4c3d-bd77-8a2dbbf45945":{"type":"contact_form","settings":{"block_position":"content"}}},"block_order":["4eb3e1c9-91d8-41a2-9f34-7ab315323c81","6a1e5aff-95ea-4f9e-b9eb-e5dc11c43fe2","4335fa9a-4179-4f3f-8983-d5b81c71f219","07e56099-bfa6-4c3d-bd77-8a2dbbf45945"],"settings":{}}},"order":["banner","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "template-header",
+      "disabled": true,
+      "settings": {
+        "full_width": false,
+        "scale": 2,
+        "banner_height": 400,
+        "heading": "",
+        "subheading": "",
+        "heading_placement": "center",
+        "alignment": "a-center",
+        "color_scheme": "3"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "title": "Kontakt",
+        "subtitle": "Masz pytania? Skontaktuj się z nami!",
+        "show_contact_info": true,
+        "contact_title": "Obsługa klienta",
+        "email": "kontakt@twojsklep.pl",
+        "phone": "+48 123 456 789",
+        "show_address": true,
+        "address_title": "Adres",
+        "address_line1": "ul. Przykładowa 123",
+        "address_line2": "00-000 Warszawa",
+        "show_hours": true,
+        "hours_title": "Godziny pracy",
+        "hours_weekdays": "Poniedziałek - Piątek: 9:00 - 17:00",
+        "hours_weekend": "Sobota - Niedziela: Zamknięte",
+        "form_title": "Napisz do nas",
+        "name_placeholder": "Twoje imię i nazwisko",
+        "email_placeholder": "Twój adres email",
+        "phone_placeholder": "Twój numer telefonu",
+        "subject_label": "Temat",
+        "subject_placeholder": "Temat wiadomości",
+        "message_placeholder": "Treść wiadomości",
+        "submit_text": "Wyślij wiadomość",
+        "primary_color": "#323232",
+        "heading_color": "#000000",
+        "text_color": "#333333",
+        "bg_color": "#ffffff",
+        "card_bg_color": "#f8f8f8"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main"
+  ]
+}
