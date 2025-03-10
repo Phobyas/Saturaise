@@ -166,9 +166,17 @@
         "category_4eiKkM": {
           "type": "category",
           "settings": {
-            "title": "Foam RNNR",
-            "link": "shopify://collections/yeezy-foam-runner",
-            "image": "shopify://shop_images/adidas-yeezy-foam-rnnr-mx-brown-blue-1.webp"
+            "title": "Air Jordan 3",
+            "link": "shopify://collections/air-jordan-3",
+            "image": "shopify://shop_images/air-jordan-3-retro-off-noir3.webp"
+          }
+        },
+        "category_kpqDfb": {
+          "type": "category",
+          "settings": {
+            "title": "Akcesoria",
+            "link": "shopify://collections/akcesoria",
+            "image": "shopify://shop_images/Medicom-Bearbrick-Blindbox-Series-48-2.png"
           }
         }
       },
@@ -187,7 +195,8 @@
         "category_bzNJga",
         "category_TqHEJf",
         "category_rgRaPE",
-        "category_4eiKkM"
+        "category_4eiKkM",
+        "category_kpqDfb"
       ],
       "settings": {}
     },
