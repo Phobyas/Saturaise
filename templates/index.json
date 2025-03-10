@@ -463,6 +463,10 @@
         "color_scheme": "2",
         "color_header": false
       }
+    },
+    "collection_extended_description_GqeMym": {
+      "type": "collection-extended-description",
+      "settings": {}
     }
   },
   "order": [
@@ -477,6 +481,7 @@
     "featured_collection_ka7QDt",
     "about_us_section",
     "editorial_columns_tYfktM",
-    "hero_image_with_text_8TiM4a"
+    "hero_image_with_text_8TiM4a",
+    "collection_extended_description_GqeMym"
   ]
 }
