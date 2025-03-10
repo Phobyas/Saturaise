@@ -1,245 +1,561 @@
-{% comment %} Page Logic {% endcomment %}
-{%- liquid
+{% comment %}
+  section/contact-form.liquid
+{% endcomment %}
 
-  assign sidebar_blocks = 0
-  for block in section.blocks
-    if block.settings.block_position == 'sidebar'
-      assign sidebar_blocks = sidebar_blocks | plus: 1
-    endif
-  endfor
-
-  if sidebar_blocks > 0
-    assign grid_width = 'span-9'
-  else
-    assign grid_width = 'span-12'
-  endif
-
--%}
-
-{% comment %} Page Template {% endcomment %}
-<section
-  id="page"
-  class="global__section page-template"
-  data-section-id="{{ section.id }}"
-  data-section-type="page-template"
-  data-section-loaded="false">
-
-  <div class="grid__wrapper narrow cg9 sm-cg0">
-   {%- if section.blocks.size > 0 -%}
-      <div class="span-3 auto {{ text_align }}">
-        {%- for block in section.blocks -%}
-          {%- if block.settings.block_position == 'sidebar' -%}
-            {%- case block.type -%}
-              {%- when 'text' -%}
-                <div class="page-template__content-block py3 {% if block.settings.show_border %}border-bottom{% endif %} animate--text">
-                  <div class="rte mb0">{{ block.settings.text_rte }}</div>
-                </div>
-              {%- when 'menu' -%}
-                <div class="page-template__content-block py3 {% if block.settings.show_border %}border-bottom{% endif %} animate--text">
-                  <ul>
-                    {%- for link in linklists[block.settings.menu].links -%}
-                      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                    {%- endfor -%}
-                  </ul>
-                </div>
-              {%- when 'heading' -%}
-                <div class="page-template__content-block animate--text">
-                  <h3 class="{{ text_align }} border-bottom mb0 pb2">{{ block.settings.heading }}</h3>
-                </div>
-              {%- when 'page_content' -%}
-                <div class="page-template__content-block rte mb0 py3 animate--text">
-                  {{ page.content }}
-                </div>
-              {%- when 'contact_form' -%}
-                <div class="page-template__content-block mb0 py3 animate--text">
-                  {% render 'snip-custom-contact' %}
-                </div>
-            {%- endcase -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-    <div class="page-content {{ grid_width }} auto">
-      <div class="page_inner-container {{ text_align }}">
-        {%- for block in section.blocks -%}
-          {%- if block.settings.block_position == 'content' -%}
-            {%- case block.type -%}
-              {%- when 'text' -%}
-                <div class="page-template__content-block py3 {% if block.settings.show_border %}border-bottom{% endif %} animate--text">
-                  <div class="rte mb0">{{ block.settings.text_rte }}</div>
-                </div>
-              {%- when 'menu' -%}
-                <div class="page-template__content-block py3 {% if block.settings.show_border %}border-bottom{% endif %} animate--text">
-                  <ul>
-                    {%- for link in linklists[block.settings.menu].links -%}
-                      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                    {%- endfor -%}
-                  </ul>
-                </div>
-              {%- when 'heading' -%}
-                <div class="page-template__content-block animate--text">
-                  <h3 class="{{ text_align }} border-bottom mb0 pb2">{{ block.settings.heading }}</h3>
-                </div>
-              {%- when 'page_content' -%}
-                <div class="page-template__content-block rte mb0 py3 animate--text">
-                  {{ page.content }}
-                </div>
-              {%- when 'contact_form' -%}
-                <div class="page-template__content-block mb0 py3 animate--text">
-                  {% render 'snip-custom-contact' %}
-                </div>
-            {%- endcase -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
+<div class="custom-contact-page" id="contact-{{ section.id }}">
+  <div class="contact-header">
+    {% if section.settings.title != blank %}
+      <h1>{{ section.settings.title }}</h1>
+    {% endif %}
+    
+    {% if section.settings.subtitle != blank %}
+      <p class="contact-subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+  
+  <div class="contact-container">
+    <div class="contact-info">
+      {% if section.settings.show_contact_info %}
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>{{ section.settings.contact_title }}</h3>
+          <p>{{ section.settings.email }}</p>
+          <p>{{ section.settings.phone }}</p>
+        </div>
+      {% endif %}
+      
+      {% if section.settings.show_address %}
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>{{ section.settings.address_title }}</h3>
+          <p>{{ section.settings.address_line1 }}</p>
+          <p>{{ section.settings.address_line2 }}</p>
+        </div>
+      {% endif %}
+      
+      {% if section.settings.show_hours %}
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.99 2C6.47 2 2 6.48 2 12C2 17.52 6.47 22 11.99 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 11.99 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20ZM12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>{{ section.settings.hours_title }}</h3>
+          <p>{{ section.settings.hours_weekdays }}</p>
+          <p>{{ section.settings.hours_weekend }}</p>
+        </div>
+      {% endif %}
+    </div>
+    
+    <div class="contact-form-container">
+      {% if section.settings.form_title != blank %}
+        <h2>{{ section.settings.form_title }}</h2>
+      {% endif %}
+      
+      {%- form 'contact', id: 'ContactForm' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="form-status form-status-list form-status--success">
+            <h3>{{ 'templates.contact.form.post_success' | t }}</h3>
+          </div>
+        {%- elsif form.errors -%}
+          <div class="form-status form-status-list form-status--error">
+            <h3>{{ 'templates.contact.form.error_heading' | t }}</h3>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>
+                  <a href="#ContactForm-{{ field }}">
+                    {%- if form.errors.translated_fields[field] contains 'author' -%}
+                      {{ 'templates.contact.form.name' | t }}
+                    {%- elsif form.errors.translated_fields[field] contains 'body'-%}
+                      {{ 'templates.contact.form.message' | t }}
+                    {%- else -%}
+                      {{ form.errors.translated_fields[field] }}
+                    {%- endif -%}
+                    {{ form.errors.messages[field] }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
+            <input type="text" id="ContactForm-name" name="contact[name]" value="{% if form.name %}{{ form.name }}{% endif %}" placeholder="{{ section.settings.name_placeholder }}">
+          </div>
+          
+          <div class="form-group">
+            <label for="ContactForm-email">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></label>
+            <input 
+              type="email" 
+              id="ContactForm-email" 
+              name="contact[email]" 
+              value="{% if form.email %}{{ form.email }}{% endif %}" 
+              spellcheck="false" 
+              autocomplete="email" 
+              autocapitalize="off" 
+              required 
+              placeholder="{{ section.settings.email_placeholder }}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
+          <input 
+            type="tel" 
+            id="ContactForm-phone" 
+            name="contact[phone]" 
+            value="{% if form.phone %}{{ form.phone }}{% endif %}" 
+            placeholder="{{ section.settings.phone_placeholder }}">
+        </div>
+        
+        <div class="form-group">
+          <label for="ContactForm-subject">{{ section.settings.subject_label }}</label>
+          <input 
+            type="text" 
+            id="ContactForm-subject"
+            name="contact[subject]"
+            value="{% if form.subject %}{{ form.subject }}{% endif %}"
+            placeholder="{{ section.settings.subject_placeholder }}">
+        </div>
+        
+        <div class="form-group">
+          <label for="ContactForm-body">{{ 'templates.contact.form.comment' | t }} <span aria-hidden="true">*</span></label>
+          <textarea 
+            id="ContactForm-body" 
+            name="contact[body]" 
+            rows="5" 
+            required 
+            placeholder="{{ section.settings.message_placeholder }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        </div>
+        
+        <button type="submit" class="contact-submit-button">
+          {{ section.settings.submit_text }}
+        </button>
+      {%- endform -%}
     </div>
   </div>
+</div>
 
-</section>
+<style>
+  #contact-{{ section.id }} {
+    --primary-color: {{ section.settings.primary_color }};
+    --text-color: {{ section.settings.text_color }};
+    --bg-color: {{ section.settings.bg_color }};
+    --card-bg-color: {{ section.settings.card_bg_color }};
+    --heading-color: {{ section.settings.heading_color }};
+    
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    color: var(--text-color);
+  }
+  
+  .contact-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  
+  .contact-header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--heading-color);
+  }
+  
+  .contact-subtitle {
+    font-size: 18px;
+    color: var(--text-color);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .contact-container {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+  
+  .contact-info {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+  }
+  
+  .info-card {
+    padding: 28px 24px;
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .info-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+  }
+  
+  .info-icon {
+    margin: 0 auto 16px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .info-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--heading-color);
+  }
+  
+  .info-card p {
+    font-size: 16px;
+    color: var(--text-color);
+    margin: 4px 0;
+  }
+  
+  .contact-form-container {
+    background-color: var(--bg-color);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  }
+  
+  .contact-form-container h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+    color: var(--heading-color);
+  }
+  
+  .form-status {
+    margin-bottom: 30px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .form-status--success {
+    background-color: #f1f9f1;
+    color: #2e7d32;
+  }
+  
+  .form-status--error {
+    background-color: #fdeded;
+    color: #d32f2f;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-color);
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.3s;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 50, 50, 50), 0.1);
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #aaa;
+  }
+  
+  .contact-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 14px 30px;
+    width: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+  
+  .contact-submit-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  
+  @media (min-width: 768px) {
+    .contact-info {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .form-row {
+      flex-direction: row;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .contact-container {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    
+    .contact-info {
+      width: 35%;
+      grid-template-columns: 1fr;
+    }
+    
+    .contact-form-container {
+      width: 65%;
+    }
+  }
+</style>
 
 {% schema %}
 {
-  "name": "Page template",
+  "name": "Contact Form Custom",
+  "tag": "section",
+  "class": "section",
   "settings": [
-  ],
-  "blocks": [
     {
-      "name": "Text",
+      "type": "header",
+      "content": "Header Settings"
+    },
+    {
       "type": "text",
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "text_rte",
-          "label": "Text"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_border",
-          "label": "Show bottom border",
-          "default": false
-        },
-        {
-          "type": "select",
-          "id": "block_position",
-          "label": "Layout position",
-          "options": [
-            {
-              "value": "content",
-              "label": "Content"
-            },
-            {
-              "value": "sidebar",
-              "label": "Sidebar"
-            }
-          ],
-          "default": "sidebar"
-        }
-      ]
+      "id": "title",
+      "label": "Title",
+      "default": "Kontakt"
     },
     {
-      "name": "Menu",
-      "type": "menu",
-      "settings": [
-        {
-          "type": "link_list",
-          "id": "menu",
-          "label": "Menu"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_border",
-          "label": "Show bottom border",
-          "default": false
-        },
-        {
-          "type": "select",
-          "id": "block_position",
-          "label": "Layout position",
-          "options": [
-            {
-              "value": "content",
-              "label": "Content"
-            },
-            {
-              "value": "sidebar",
-              "label": "Sidebar"
-            }
-          ],
-          "default": "sidebar"
-        }
-      ]
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Masz pytania? Skontaktuj się z nami!"
     },
     {
-      "name": "Heading",
-      "type": "heading",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading"
-        },
-        {
-          "type": "select",
-          "id": "block_position",
-          "label": "Layout position",
-          "options": [
-            {
-              "value": "content",
-              "label": "Content"
-            },
-            {
-              "value": "sidebar",
-              "label": "Sidebar"
-            }
-          ],
-          "default": "sidebar"
-        }
-      ]
+      "type": "header",
+      "content": "Contact Information"
     },
     {
-      "name": "Page content",
-      "type": "page_content",
-      "limit":1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "block_position",
-          "label": "Layout position",
-          "options": [
-            {
-              "value": "content",
-              "label": "Content"
-            },
-            {
-              "value": "sidebar",
-              "label": "Sidebar"
-            }
-          ],
-          "default": "content"
-        }
-      ]
+      "type": "checkbox",
+      "id": "show_contact_info",
+      "label": "Show Contact Info Card",
+      "default": true
     },
     {
-      "name": "Contact form",
-      "type": "contact_form",
-      "settings": [
-        {
-          "type": "select",
-          "id": "block_position",
-          "label": "Layout position",
-          "options": [
-            {
-              "value": "content",
-              "label": "Content"
-            },
-            {
-              "value": "sidebar",
-              "label": "Sidebar"
-            }
-          ],
-          "default": "content"
-        }
-      ]
+      "type": "text",
+      "id": "contact_title",
+      "label": "Contact Info Title",
+      "default": "Obsługa klienta"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email",
+      "default": "kontakt@twojsklep.pl"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone",
+      "default": "+48 123 456 789"
+    },
+    {
+      "type": "header",
+      "content": "Address Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_address",
+      "label": "Show Address Card",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "address_title",
+      "label": "Address Title",
+      "default": "Adres"
+    },
+    {
+      "type": "text",
+      "id": "address_line1",
+      "label": "Address Line 1",
+      "default": "ul. Przykładowa 123"
+    },
+    {
+      "type": "text",
+      "id": "address_line2",
+      "label": "Address Line 2",
+      "default": "00-000 Warszawa"
+    },
+    {
+      "type": "header",
+      "content": "Business Hours"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hours",
+      "label": "Show Hours Card",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "hours_title",
+      "label": "Hours Title",
+      "default": "Godziny pracy"
+    },
+    {
+      "type": "text",
+      "id": "hours_weekdays",
+      "label": "Weekday Hours",
+      "default": "Poniedziałek - Piątek: 9:00 - 17:00"
+    },
+    {
+      "type": "text",
+      "id": "hours_weekend",
+      "label": "Weekend Hours",
+      "default": "Sobota - Niedziela: Zamknięte"
+    },
+    {
+      "type": "header",
+      "content": "Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form Title",
+      "default": "Napisz do nas"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Name Field Placeholder",
+      "default": "Twoje imię i nazwisko"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Field Placeholder",
+      "default": "Twój adres email"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone Field Placeholder",
+      "default": "Twój numer telefonu"
+    },
+    {
+      "type": "text",
+      "id": "subject_label",
+      "label": "Subject Field Label",
+      "default": "Temat"
+    },
+    {
+      "type": "text",
+      "id": "subject_placeholder",
+      "label": "Subject Field Placeholder",
+      "default": "Temat wiadomości"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message Field Placeholder",
+      "default": "Treść wiadomości"
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Submit Button Text",
+      "default": "Wyślij wiadomość"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color",
+      "default": "#323232"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Form Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#f8f8f8"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form Custom",
+      "category": "Custom Contact"
     }
   ]
 }

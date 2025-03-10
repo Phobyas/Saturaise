@@ -1053,11 +1053,6 @@ video {
   padding-bottom: 2.25rem;
 }
 
-.px-0 {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -1116,10 +1111,6 @@ video {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pl-0 {
-  padding-left: 0px;
 }
 
 .text-left {
