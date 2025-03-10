@@ -464,9 +464,20 @@
         "color_header": false
       }
     },
-    "collection_extended_description_GqeMym": {
-      "type": "collection-extended-description",
-      "settings": {}
+    "rich_text_i3dKF3": {
+      "type": "rich-text",
+      "settings": {
+        "title": "Welcome",
+        "rich_text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+        "heading_size": 24,
+        "text_size": 16,
+        "page": "",
+        "alignment": "a-left",
+        "content_width": 85,
+        "reduce_padding": false,
+        "section_padding": "both",
+        "color_scheme": "1"
+      }
     }
   },
   "order": [
@@ -482,6 +493,6 @@
     "about_us_section",
     "editorial_columns_tYfktM",
     "hero_image_with_text_8TiM4a",
-    "collection_extended_description_GqeMym"
+    "rich_text_i3dKF3"
   ]
 }
