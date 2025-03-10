@@ -71,7 +71,7 @@
           "type": "category",
           "settings": {
             "title": "Yeezy Slide",
-            "link": "shopify://collections/dunk-low",
+            "link": "shopify://collections/yeezy-slide",
             "image": "shopify://shop_images/adidas-yeezy-slide-slate-grey-1.webp"
           }
         },
@@ -79,32 +79,32 @@
           "type": "category",
           "settings": {
             "title": "Air Max",
-            "link": "shopify://collections/dunk-low",
+            "link": "shopify://collections/air-max",
             "image": "shopify://shop_images/air-max-1-patta-noise-aqua-special-box-bracelet-179543.webp"
           }
         },
         "category_bPfyM7": {
           "type": "category",
           "settings": {
-            "title": "Air jordan 4",
-            "link": "shopify://collections/air-jordan-4",
-            "image": "shopify://shop_images/Air-Jordan-4-Retro-Bred-Reimagined.webp"
+            "title": "Air jordan 1",
+            "link": "shopify://collections/air-jordan-1",
+            "image": "shopify://shop_images/air-jordan-1-high-chicago-lost-and-found-1.webp"
           }
         },
         "category_UeFAQi": {
           "type": "category",
           "settings": {
-            "title": "Air Jordan 4",
-            "link": "shopify://collections/air-jordan-4",
-            "image": "shopify://shop_images/dunk-low-unc-350901.webp"
+            "title": "Travis Scott",
+            "link": "shopify://collections/travis-scott",
+            "image": "shopify://shop_images/air-jordan-1-retro-low-golf-travis-scott-neutral-olive3.webp"
           }
         },
         "category_gkN4VV": {
           "type": "category",
           "settings": {
-            "title": "Dunk Low",
-            "link": "shopify://collections/dunk-low",
-            "image": "shopify://shop_images/nike-dunk-low-union-blue-dj9649-400-1.wethenew-1.webp"
+            "title": "UGG",
+            "link": "shopify://collections/ugg",
+            "image": "shopify://shop_images/ugg-tazz-slipper-mustard-seed1.webp"
           }
         }
       },
