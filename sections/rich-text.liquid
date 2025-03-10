@@ -28,11 +28,11 @@
   data-section-type="rich-text"
   data-section-loaded="false">
 
-  <div class="grid__wrapper edge {% unless reduce_padding %}py9{% endunless %}">
+  <div class="grid__wrapper {% unless reduce_padding %}py-9{% endunless %}">
     {% render 'snip-headings', align: section.settings.alignment, classes: 'animate--text delay--1 px4', grid: 'span-12' %}
 
     {%- unless section.settings.page == blank and section.settings.rich_text == blank -%}
-      <div class="span-12 auto {{ section.settings.alignment }} px4 mb2">
+      <div class="span-12 auto {{ section.settings.alignment }} px-4 mb-2">
         <div class="pages-content animate--text delay--2">
           <div class="rte">
             {% if section.settings.page != blank %}
@@ -48,6 +48,7 @@
   </div>
   <style>
     .rich-text-{{ section.id }} h2 {
+      font-weight: 700 !important;
       font-size: {{ section.settings.heading_size }}px;
       line-height: calc(({{ section.settings.heading_size }}px * .375) + {{ section.settings.heading_size }}px);
     }
@@ -56,6 +57,7 @@
     .rich-text-{{ section.id }} .pages-content,
     .rich-text-{{ section.id }} .pages-content p,
     .rich-text-{{ section.id }} .pages-content a {
+      font-weight: 500 !important;
       font-size: {{ section.settings.text_size }}px;
       line-height: calc(({{ section.settings.text_size }}px * .375) + {{ section.settings.text_size }}px);
     }
