@@ -11,18 +11,14 @@
     width: 270px !important;
     margin-right: 15px !important;
   }
-  .section-txt-cols__block-heading {
-    font-size: 18px !important;
-  }
-  .section-txt-cols__block-subheading p {
-    font-size: 14px !important;
-  }
 }
 
 .section-txt-cols__block-heading {
   word-break: break-all;
+  font-size: 18px !important;
+  font-weight: bold;
 }
 
 .section-txt-cols__block-subheading p {
-  font-size: 16px;
+  font-size: 14px;
 }
