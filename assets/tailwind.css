@@ -830,6 +830,10 @@ video {
   max-width: 24rem;
 }
 
+.max-w-\[\] {
+  max-width: ;
+}
+
 .flex-none {
   flex: none;
 }
@@ -1059,6 +1063,16 @@ video {
 .py-9 {
   padding-top: 2.25rem;
   padding-bottom: 2.25rem;
+}
+
+.px-9 {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
+.px-16 {
+  padding-left: 4rem;
+  padding-right: 4rem;
 }
 
 .pb-12 {

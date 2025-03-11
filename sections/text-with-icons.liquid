@@ -82,7 +82,7 @@
 
 {% comment %} Text With Icons Template {% endcomment %}
 <div
-  class="bg-[#eeeeee] mb-6 section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="bg-[#eeeeee] mb-6 section-txt-icons max-w-[1600px] mx-auto text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="text-with-icons"
   data-section-loaded="false">
@@ -91,7 +91,7 @@
     <div class="grid__wrapper pt-6 md:pt-12">
       {% render 'snip-headings', align: heading_align, classes: 'section-txt-icons__section-heading pb5', grid: 'span-12', heading: section.settings.title %}
     </div>
-    <div class="section-txt-icons__inner-wrapper grid__wrapper px9 pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
+    <div class="section-txt-icons__inner-wrapper grid__wrapper  pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
       {% for block in section.blocks %}
         <article class="mr-3 pr-5 section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
           {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="section-txt-icons__content-wrapper">{% endif %}
@@ -245,8 +245,8 @@
     
     /* Grid layout overrides - reduced padding */
     .section-txt-icons__inner-wrapper {
-      padding-left: 20px !important;
-      padding-right: 20px !important;
+      padding-left: 32px !important;
+      padding-right: 32px !important;
     }
     
     /* Mobile responsiveness */
