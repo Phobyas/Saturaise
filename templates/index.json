@@ -414,14 +414,16 @@
         "text_block_KV9Qbj": {
           "type": "text_block",
           "settings": {
-            "link": "",
-            "title": "Our collections",
-            "subheading": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+            "image": "shopify://shop_images/AIR-JORDAN-4-AJ4.jpg",
+            "link": "shopify://collections/air-jordan-4",
+            "title": "Air Jordan 4",
+            "subheading": "<p>Odkryj legendarną kolekcję Air Jordan 4 - kultowe sneakersy, które zdefiniowały miejską modę. Stworzone przez Tinkera Hatfielda w 1989 roku, łączą przełomowy design z wyjątkowym komfortem. Nasza oferta obejmuje zarówno klasyczne, jak i limitowane edycje AJ4, spełniając oczekiwania najbardziej wymagających miłośników sneakersów. Wybierz swój idealny model i stań się częścią trwającej ponad trzy dekady historii tych ikonicznych butów.</p>"
           }
         },
         "text_block_Ba7TwT": {
           "type": "text_block",
           "settings": {
+            "image": "shopify://shop_images/Air-Jordan-Travis-Scott.jpg",
             "link": "",
             "title": "Our collections",
             "subheading": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
@@ -430,6 +432,7 @@
         "text_block_xkGdVH": {
           "type": "text_block",
           "settings": {
+            "image": "shopify://shop_images/ADIDAS-YEEZY-350-V2.jpg",
             "link": "",
             "title": "Our collections",
             "subheading": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
