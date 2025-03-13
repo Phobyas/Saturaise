@@ -185,7 +185,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     // Add rollup functionality for mobile text
     function setupTextRollup() {
-      if (window.innerWidth <= 767) {
+      if (window.innerWidth <= 1023) {
         const items = document.querySelectorAll('.text-columns-{{ section.id }} .section-txt-cols__item');
         
         items.forEach(item => {

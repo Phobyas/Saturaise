@@ -1,4 +1,4 @@
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .section-txt-cols__inner-wrapper {
     display: flex !important;
     flex-wrap: nowrap !important;
