@@ -115,8 +115,19 @@
           "type": "text_block",
           "settings": {
             "icon": "jewelry_princess",
+            "image": "shopify://shop_images/shipping-fast-solid-svgrepo-com.svg",
             "link": "",
-            "title": "Princess",
+            "title": "Szybka i darmowa dostawa",
+            "subheading": ""
+          }
+        },
+        "text_block_7mHhJV": {
+          "type": "text_block",
+          "settings": {
+            "icon": "chat",
+            "image": "shopify://shop_images/verified-check-svgrepo-com_f524942c-1fae-47e7-b68d-fca20b61e66b.svg",
+            "link": "",
+            "title": "Oryginalne produkty sprawdzone przez specjalistów",
             "subheading": ""
           }
         },
@@ -124,8 +135,9 @@
           "type": "text_block",
           "settings": {
             "icon": "jewelry_radiant",
+            "image": "shopify://shop_images/chat-line-svgrepo-com_692af779-28fc-4c45-998e-915db6c552d2.svg",
             "link": "",
-            "title": "Radiant",
+            "title": "Obsługa klienta",
             "subheading": ""
           }
         },
@@ -133,30 +145,22 @@
           "type": "text_block",
           "settings": {
             "icon": "jewelry_round",
+            "image": "shopify://shop_images/refund-svgrepo-com_1.svg",
             "link": "",
-            "title": "Round",
-            "subheading": ""
-          }
-        },
-        "text_block_7Q39Uw": {
-          "type": "text_block",
-          "settings": {
-            "icon": "jewelry_trillion",
-            "link": "",
-            "title": "Trillion",
+            "title": "Łatwe zwroty produktów",
             "subheading": ""
           }
         }
       },
       "block_order": [
         "text_block_QVRKFb",
+        "text_block_7mHhJV",
         "text_block_PmEzxz",
-        "text_block_wrG4dk",
-        "text_block_7Q39Uw"
+        "text_block_wrG4dk"
       ],
       "settings": {
-        "title": "Shop by Shape",
-        "icon_size": 60,
+        "title": "",
+        "icon_size": 35,
         "color_scheme": "2",
         "section_padding": "both"
       }
