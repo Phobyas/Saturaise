@@ -260,6 +260,27 @@
         "text_position": "left",
         "section_padding": "both"
       }
+    },
+    "hero_image_with_text_7yXDU9": {
+      "type": "hero-image-with-text",
+      "settings": {
+        "text_align": "left",
+        "vertical_align": "middle",
+        "title": "Kontakt",
+        "text": "<p>Nie ma butów, które Cię interesują lub Twojego rozmiaru? Masz problem z zamówieniem? Chcesz osobiście odebrać zakupiony produkt? Jesteśmy tutaj, by pomóc w każdej sytuacji i odpowiedzieć na wszelkie pytania! </p><p><strong>Adres biura:</strong></p><p>Żyrowa 47-330 Ogrodowa 9a/4</p><p><strong>Kontakt (9:00 - 16:00)</strong></p><p>Instagram: TBD</p><p>Telefon: TBD</p><p>Email: saturaisekontakt@gmail.com</p>",
+        "heading_size": 32,
+        "text_size": 16,
+        "button": "",
+        "link": "",
+        "section_padding": "bottom",
+        "color_scheme": "2",
+        "color_header": false,
+        "use_map": false,
+        "map_latitude": "52.2297",
+        "map_longitude": "21.0122",
+        "map_zoom": 14,
+        "map_marker_title": "Our Store Location"
+      }
     }
   },
   "order": [
@@ -268,6 +289,7 @@
     "product-details",
     "product-recommendations",
     "featured_collection_YMFETD",
-    "section_about_us_iTXNV9"
+    "section_about_us_iTXNV9",
+    "hero_image_with_text_7yXDU9"
   ]
 }
