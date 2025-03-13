@@ -464,7 +464,12 @@
         "link": "shopify://pages/contact",
         "section_padding": "both",
         "color_scheme": "2",
-        "color_header": false
+        "color_header": false,
+        "use_map": true,
+        "map_latitude": "52.2297",
+        "map_longitude": "21.0122",
+        "map_zoom": 14,
+        "map_marker_title": "Our Store Location"
       }
     },
     "rich_text_i3dKF3": {
