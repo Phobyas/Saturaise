@@ -424,12 +424,12 @@
     "featured_collection_RPE3G4": {
       "type": "featured-collection",
       "settings": {
-        "title": "New Balance",
+        "title": "Air Max",
         "subheading": "",
         "link_text": "Zobacz więcej",
-        "link_url": "shopify://collections/new-balance",
+        "link_url": "shopify://collections/air-max",
         "text_position": "left",
-        "collection": "new-balance",
+        "collection": "air-max",
         "display_type": "carousel",
         "items_per_row": 4,
         "items_per_page": 6,
