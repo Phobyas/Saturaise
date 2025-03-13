@@ -438,6 +438,21 @@
         "section_padding": "both"
       }
     },
+    "featured_collection_RPE3G4": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "New Balance",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/new-balance",
+        "text_position": "left",
+        "collection": "new-balance",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    },
     "editorial_columns_tYfktM": {
       "type": "editorial-columns",
       "blocks": {
@@ -535,6 +550,7 @@
     "featured_collection_G9xaAi",
     "about_us_section",
     "featured_collection_Nc3wWr",
+    "featured_collection_RPE3G4",
     "editorial_columns_tYfktM",
     "hero_image_with_text_8TiM4a",
     "rich_text_i3dKF3"
