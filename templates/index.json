@@ -275,20 +275,13 @@
           "settings": {
             "collection": "bestsellery"
           }
-        },
-        "collection_bY8QF3": {
-          "type": "collection",
-          "settings": {
-            "collection": "adidas"
-          }
         }
       },
       "block_order": [
         "collection_gn6jxm",
         "collection_4QViLA",
         "collection_KAK9q3",
-        "collection_bG6CPA",
-        "collection_bY8QF3"
+        "collection_bG6CPA"
       ],
       "settings": {
         "title": "Odkrywaj Marki",
