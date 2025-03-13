@@ -782,6 +782,10 @@ video {
   height: 100%;
 }
 
+.max-h-\[100vh\] {
+  max-height: 100vh;
+}
+
 .w-12 {
   width: 3rem;
 }
@@ -1170,10 +1174,6 @@ video {
   line-height: 1.75rem;
 }
 
-.text-\[32px\] {
-  font-size: 32px;
-}
-
 .font-\[600\] {
   font-weight: 600;
 }
@@ -1205,10 +1205,6 @@ video {
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-}
-
-.text-\[\] {
-  color: ;
 }
 
 .underline {

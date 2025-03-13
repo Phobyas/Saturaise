@@ -92,42 +92,115 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const scroller = document.getElementById('badgeScroller');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    scroller.addEventListener('mousedown', (e) => {
+document.addEventListener('DOMContentLoaded', function() {
+  const scroller = document.getElementById('badgeScroller');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+  let hasMoved = false; // Track if there was actual movement
+  
+  scroller.addEventListener('mousedown', (e) => {
+    isDown = true;
+    scroller.classList.add('dragging');
+    startX = e.pageX - scroller.offsetLeft;
+    scrollLeft = scroller.scrollLeft;
+    hasMoved = false; // Reset movement tracking on mousedown
+  });
+  
+  scroller.addEventListener('mouseleave', () => {
+    isDown = false;
+    scroller.classList.remove('dragging');
+  });
+  
+  scroller.addEventListener('mouseup', (e) => {
+    if (isDown && hasMoved) {
+      // If we dragged (not just clicked), prevent the default link behavior
       e.preventDefault();
-      isDown = true;
-      scroller.classList.add('dragging');
-      startX = e.pageX - scroller.offsetLeft;
-      scrollLeft = scroller.scrollLeft;
-    });
-
-    scroller.addEventListener('mouseleave', () => {
-      isDown = false;
-      scroller.classList.remove('dragging');
-    });
-
-    scroller.addEventListener('mouseup', () => {
-      isDown = false;
-      scroller.classList.remove('dragging');
-    });
-
-    scroller.addEventListener('mousemove', (e) => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - scroller.offsetLeft;
-      const walk = (x - startX);
-      scroller.scrollLeft = scrollLeft - walk;
-    });
-
-    // Prevent default drag behavior on children
-    const links = scroller.getElementsByTagName('a');
-    Array.from(links).forEach(link => {
-      link.addEventListener('dragstart', (e) => e.preventDefault());
+      e.stopPropagation();
+      
+      // Find if we're on a link and prevent its navigation
+      let target = e.target;
+      while (target !== scroller) {
+        if (target.tagName === 'A') {
+          // This prevents the click that would follow this mouseup
+          const preventClick = function(e) {
+            e.preventDefault();
+            target.removeEventListener('click', preventClick);
+          };
+          target.addEventListener('click', preventClick);
+          break;
+        }
+        target = target.parentNode;
+      }
+    }
+    
+    isDown = false;
+    scroller.classList.remove('dragging');
+  });
+  
+  scroller.addEventListener('mousemove', (e) => {
+    if(!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - scroller.offsetLeft;
+    const walk = (x - startX);
+    
+    // Only consider it a drag if moved more than 5px
+    if (Math.abs(walk) > 5) {
+      hasMoved = true;
+    }
+    
+    scroller.scrollLeft = scrollLeft - walk;
+  });
+  
+  // Prevent default drag behavior on children
+  const links = scroller.getElementsByTagName('a');
+  Array.from(links).forEach(link => {
+    link.addEventListener('dragstart', (e) => e.preventDefault());
+    
+    // Add this to handle touch events better
+    link.addEventListener('click', (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+      }
     });
   });
+  
+  // Add touch support with the same logic
+  scroller.addEventListener('touchstart', (e) => {
+    isDown = true;
+    scroller.classList.add('dragging');
+    startX = e.touches[0].pageX - scroller.offsetLeft;
+    scrollLeft = scroller.scrollLeft;
+    hasMoved = false;
+  }, { passive: true });
+  
+  scroller.addEventListener('touchend', () => {
+    isDown = false;
+    scroller.classList.remove('dragging');
+    
+    // If there was movement, prevent clicks for a short time
+    if (hasMoved) {
+      const links = scroller.getElementsByTagName('a');
+      Array.from(links).forEach(link => {
+        link.style.pointerEvents = 'none';
+        setTimeout(() => {
+          link.style.pointerEvents = '';
+        }, 100);
+      });
+    }
+  });
+  
+  scroller.addEventListener('touchmove', (e) => {
+    if(!isDown) return;
+    const x = e.touches[0].pageX - scroller.offsetLeft;
+    const walk = (x - startX);
+    
+    // Only consider it a drag if moved more than 5px
+    if (Math.abs(walk) > 5) {
+      hasMoved = true;
+    }
+    
+    scroller.scrollLeft = scrollLeft - walk;
+  }, { passive: false });
+});
 </script>
