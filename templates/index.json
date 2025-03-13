@@ -225,7 +225,7 @@
         "title": "Air Jordan 4",
         "subheading": "",
         "link_text": "Zobacz więcej",
-        "link_url": "shopify://collections/bestsellery",
+        "link_url": "shopify://collections/air-jordan-4",
         "text_position": "left",
         "collection": "air-jordan-4",
         "display_type": "carousel",
@@ -237,12 +237,12 @@
     "featured_collection_qEQC7t": {
       "type": "featured-collection",
       "settings": {
-        "title": "Dunk Low",
+        "title": "Nike Cortez",
         "subheading": "",
         "link_text": "Zobacz więcej",
-        "link_url": "shopify://collections/dunk-low",
+        "link_url": "shopify://collections/cortez",
         "text_position": "left",
-        "collection": "dunk-low",
+        "collection": "cortez",
         "display_type": "carousel",
         "items_per_row": 4,
         "items_per_page": 7,
@@ -311,12 +311,12 @@
       "settings": {
         "title": "Ubrania",
         "subheading": "",
-        "link_text": "SHOP THE COLLECTION",
-        "link_url": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/ubrania",
         "text_position": "left",
-        "collection": "air-jordan-4",
+        "collection": "ubrania",
         "display_type": "carousel",
-        "items_per_row": 5,
+        "items_per_row": 4,
         "items_per_page": 8,
         "section_padding": "both"
       }
@@ -396,6 +396,21 @@
         "section_padding": "both"
       }
     },
+    "featured_collection_G9xaAi": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Yeezy Slide",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/yeezy-slide",
+        "text_position": "left",
+        "collection": "yeezy-slide",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
+        "section_padding": "both"
+      }
+    },
     "about_us_section": {
       "type": "section-about-us",
       "settings": {
@@ -405,6 +420,21 @@
         "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
         "content_size": "large",
         "text_position": "left",
+        "section_padding": "both"
+      }
+    },
+    "featured_collection_Nc3wWr": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Travis Scott",
+        "subheading": "",
+        "link_text": "Zobacz więcej",
+        "link_url": "shopify://collections/travis-scott",
+        "text_position": "left",
+        "collection": "travis-scott",
+        "display_type": "carousel",
+        "items_per_row": 4,
+        "items_per_page": 8,
         "section_padding": "both"
       }
     },
@@ -502,7 +532,9 @@
     "featured_collection_j8VXQ6",
     "1642520461c9848fcf",
     "featured_collection_ka7QDt",
+    "featured_collection_G9xaAi",
     "about_us_section",
+    "featured_collection_Nc3wWr",
     "editorial_columns_tYfktM",
     "hero_image_with_text_8TiM4a",
     "rich_text_i3dKF3"
