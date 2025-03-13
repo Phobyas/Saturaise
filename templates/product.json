@@ -275,10 +275,10 @@
         "section_padding": "bottom",
         "color_scheme": "2",
         "color_header": false,
-        "use_map": false,
-        "map_latitude": "52.2297",
-        "map_longitude": "21.0122",
-        "map_zoom": 14,
+        "use_map": true,
+        "map_latitude": "50.45473949051039",
+        "map_longitude": "18.131082121558123",
+        "map_zoom": 13,
         "map_marker_title": "Our Store Location"
       }
     }
