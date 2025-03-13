@@ -9,6 +9,11 @@
   elsif section.settings.section_padding == 'none'
     assign section_padding = 'mt0 mb0'
   endif
+
+  assign is_faq_page = false
+  if request.path contains '/pages/faq'
+    assign is_faq_page = true
+  endif
 -%}
 
 {%- style -%}
@@ -97,14 +102,22 @@
   }
   
   .section-accordion .accordion-body {
-    padding: 0 0 24px;
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-    border: none !important;
-    font-weight: 500 !important;
-    margin-bottom: 0px;
+  padding: 0 0 24px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+  border: none !important;
+  font-weight: 500 !important;
+  margin-bottom: 0px;
+}
+
+{% if is_faq_page %}
+@media screen and (min-width: 1024px) {
+  .section-accordion .accordion-body {
+    width: 80%;
   }
+}
+{% endif %}
 
   .section-accordion .accordion-body p {
     margin: 0;
@@ -124,7 +137,7 @@
   }
 {%- endstyle -%}
 
-<div class="section-accordion global__section {{ section_padding }} px-3 {% if request.visual_preview_mode %}preview-mode{% endif %}"
+<div class="section-accordion global__section {{ section_padding }} px-3 {% if request.visual_preview_mode %}preview-mode{% endif %} {% if is_faq_page %}faq-page-accordion{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="accordion"
   data-section-loaded="false">

@@ -1,3 +1,24 @@
+{% style %}
+
+
+    .faq-sub p{
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+
+  @media screen and (min-width: 1024px){
+    .faq-sub{
+      max-width: 60%;
+    }
+
+    .faq-sub p{
+      font-size: 16px !important;
+    }
+  }
+
+{% endstyle %}
+
+
 {% comment %} Template Header Logic {% endcomment %}
 {%- liquid
 
@@ -129,9 +150,9 @@ data-scale="1.{{ scale }}"
 {%- if is_parallax -%}data-asset-url="{{ 'section-parallax.js' | asset_url }}"{%- endif -%}>
 
   {%- capture text_content -%}
-     <h1 class="span-12 auto mb1 animate--text">{{ heading }}</h1>
+     <h1 class="span-12 auto mb1 animate--text text-[24px] font-bold">{{ heading }}</h1>
     {%- if subheading != blank -%}
-      <div class="span-12 auto mb0 rte animate--text delay--1">
+      <div class="span-12 auto mb0 rte animate--text delay--1 faq-sub">
         {{ subheading }}
       </div>
     {%- endif -%}
@@ -171,7 +192,7 @@ data-scale="1.{{ scale }}"
     <div class="section__banner-image span-12 auto">
       {{ image_content }}
     </div>
-    <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} sm-py12 absolute-center banner-text--over">
+    <div class="section__banner-caption grid__wrapper span-12 auto px-3 lg:px-0 {{ section.settings.alignment }} sm-py12 absolute-center banner-text--over">
       {{ text_content }}
     </div>
   {% elsif heading != blank and heading_placement == 'below' %}
