@@ -26,7 +26,7 @@
       "type": "product-recommendations",
       "settings": {
         "items_per_row": 4,
-        "items_shown": 6,
+        "items_shown": 12,
         "title": "Zobacz też",
         "subheading": "",
         "link_text": "",
