@@ -110,11 +110,68 @@
           font-size: 24px !important;
           white-space: nowrap;
         }
+        
+        .section-txt-cols__inner-wrapper {
+          display: flex !important;
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 20px; /* Add space for scrollbar */
+          scroll-padding: 0 20px;
+          scroll-snap-type: x mandatory;
+        }
+        
+        .section-txt-cols__item {
+          flex: 0 0 auto;
+          width: 270px !important;
+          margin-right: 15px !important;
+          scroll-snap-align: start;
+          position: relative;
+        }
+        
+        .section-txt-cols__block-subheading {
+          position: relative;
+        }
+        
+        .section-txt-cols__item.collapsed .section-txt-cols__block-subheading {
+          max-height: 120px; /* Limit height of content */
+          overflow: hidden;
+          margin-bottom: 30px;
+        }
+        
+        .section-txt-cols__item.collapsed .section-txt-cols__block-subheading::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 40px;
+          background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
+          pointer-events: none;
+        }
+        
+        .read-more-btn {
+          display: inline-block;
+          padding: 5px 10px;
+          margin-top: 5px;
+          font-size: 12px;
+          color: #333;
+          background: transparent;
+          border: 1px solid #333;
+          border-radius: 4px;
+          cursor: pointer;
+          position: absolute;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 2;
+        }
       }
+      
       .section-txt-cols__section-heading.no-wrap {
-      font-size: 26px;
-      white-space: nowrap;
-      font-weight: 700 !important;
+        font-size: 26px;
+        white-space: nowrap;
+        font-weight: 700 !important;
       }
     </style>
 
@@ -123,6 +180,69 @@
     {% endif %}
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add rollup functionality for mobile text
+    function setupTextRollup() {
+      if (window.innerWidth <= 767) {
+        const items = document.querySelectorAll('.text-columns-{{ section.id }} .section-txt-cols__item');
+        
+        items.forEach(item => {
+          const content = item.querySelector('.section-txt-cols__block-subheading');
+          
+          // Only process if content exists and doesn't already have a button
+          if (content && !item.querySelector('.read-more-btn')) {
+            // Check if content is taller than our limit
+            if (content.scrollHeight > 120) {
+              item.classList.add('collapsed');
+              
+              // Create read more button
+              const button = document.createElement('button');
+              button.classList.add('read-more-btn');
+              button.textContent = 'Więcej';
+              item.appendChild(button);
+              
+              // Add click event
+              button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (item.classList.contains('collapsed')) {
+                  item.classList.remove('collapsed');
+                  button.textContent = 'Mniej';
+                } else {
+                  item.classList.add('collapsed');
+                  button.textContent = 'Więcej';
+                }
+              });
+            }
+          }
+        });
+      } else {
+        // Remove collapsed state and buttons on desktop
+        const items = document.querySelectorAll('.text-columns-{{ section.id }} .section-txt-cols__item');
+        items.forEach(item => {
+          item.classList.remove('collapsed');
+          const btn = item.querySelector('.read-more-btn');
+          if (btn) {
+            btn.remove();
+          }
+        });
+      }
+    }
+    
+    // Run on load with a slight delay to ensure DOM is fully processed
+    setTimeout(setupTextRollup, 100);
+    
+    // Run on window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(setupTextRollup, 250);
+    });
+  });
+</script>
 
 {% schema %}
 {

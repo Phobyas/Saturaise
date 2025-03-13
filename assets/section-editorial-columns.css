@@ -4,12 +4,72 @@
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    scroll-padding: 0 20px;
+    scroll-snap-type: x mandatory;
   }
 
   .section-txt-cols__item {
     flex: 0 0 auto;
     width: 270px !important;
     margin-right: 15px !important;
+    scroll-snap-align: start;
+    position: relative;
+    padding-bottom: 35px;
+  }
+
+  .section-txt-cols__block-subheading {
+    position: relative;
+  }
+
+  .section-txt-cols__item.collapsed .section-txt-cols__block-subheading {
+    max-height: 120px;
+    overflow: hidden;
+  }
+
+  .section-txt-cols__item.collapsed .section-txt-cols__block-subheading::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 1) 90%
+    );
+    pointer-events: none;
+  }
+
+  /* Simple text-only read more link with explicit no-border */
+  .read-more-btn {
+    background: none;
+    border: none !important; /* Explicit no border with !important */
+    outline: none;
+    box-shadow: none;
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    left: 0; /* Align to the very left */
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    width: auto;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Eliminate any potential button styling that might be inherited */
+  .read-more-btn:focus,
+  .read-more-btn:active,
+  .read-more-btn:hover {
+    border: none !important;
+    outline: none;
+    box-shadow: none;
+    background: none;
   }
 }
 
