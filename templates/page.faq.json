@@ -15,15 +15,16 @@
         "full_width": true,
         "scale": 2,
         "banner_height": 400,
-        "heading": "asdasdas",
-        "subheading": "<p>asdasdasdada</p>",
+        "heading": "Często zadawane pytania",
+        "subheading": "<p>Zebraliśmy tutaj odpowiedzi na wszystkie często zadawane pytania. Gdyby jednak nie udało Ci się tu znaleźć, tego czego szukasz,<a href=\"https://aplug.pl/pages/kontakt\" title=\"Kontakt\">skontaktuj się z nami </a>- postaramy się rozwiać wszelkie wątpliwości.</p>",
         "heading_placement": "center",
-        "alignment": "a-center",
-        "color_scheme": "3"
+        "alignment": "a-left",
+        "color_scheme": "1"
       }
     },
     "rich_text_4GckLR": {
       "type": "rich-text",
+      "disabled": true,
       "settings": {
         "title": "Welcome",
         "rich_text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
@@ -72,15 +73,185 @@
         "panel_wKrFGf"
       ],
       "settings": {
-        "heading": "FAQs",
+        "heading": "Produkty i autentyczność",
         "allow_multiple": false,
         "section_padding": "both"
+      }
+    },
+    "accordion_XM4UCE": {
+      "type": "accordion",
+      "blocks": {
+        "panel_KegxT9": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_qnmCeY": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_zQ7w4h": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "panel_KegxT9",
+        "panel_qnmCeY",
+        "panel_zQ7w4h"
+      ],
+      "settings": {
+        "heading": "Wysyłka i dostawa",
+        "allow_multiple": false,
+        "section_padding": "both"
+      }
+    },
+    "accordion_e9yjpr": {
+      "type": "accordion",
+      "blocks": {
+        "panel_a7G7nX": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_PLVRpX": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_VTgcdK": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "panel_a7G7nX",
+        "panel_PLVRpX",
+        "panel_VTgcdK"
+      ],
+      "settings": {
+        "heading": "Zakup i płatność",
+        "allow_multiple": false,
+        "section_padding": "both"
+      }
+    },
+    "accordion_Cqg9xG": {
+      "type": "accordion",
+      "blocks": {
+        "panel_8EAEQU": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_4Bqt6H": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_bPmnMM": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "panel_8EAEQU",
+        "panel_4Bqt6H",
+        "panel_bPmnMM"
+      ],
+      "settings": {
+        "heading": "Pozostałe pytania",
+        "allow_multiple": false,
+        "section_padding": "both"
+      }
+    },
+    "accordion_UhmeLH": {
+      "type": "accordion",
+      "blocks": {
+        "panel_3Ge9dt": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_3wEwMx": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "panel_DVDqbq": {
+          "type": "panel",
+          "settings": {
+            "heading": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "panel_3Ge9dt",
+        "panel_3wEwMx",
+        "panel_DVDqbq"
+      ],
+      "settings": {
+        "heading": "Zwroty i wymiany",
+        "allow_multiple": false,
+        "section_padding": "both"
+      }
+    },
+    "hero_image_with_text_pwABdb": {
+      "type": "hero-image-with-text",
+      "settings": {
+        "text_align": "left",
+        "vertical_align": "middle",
+        "title": "Image with text",
+        "text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+        "heading_size": 64,
+        "text_size": 16,
+        "button": "",
+        "link": "",
+        "section_padding": "bottom",
+        "color_scheme": "2",
+        "color_header": false,
+        "use_map": true,
+        "map_latitude": "52.2297",
+        "map_longitude": "21.0122",
+        "map_zoom": 14,
+        "map_marker_title": "Our Store Location"
       }
     }
   },
   "order": [
     "banner",
     "rich_text_4GckLR",
-    "accordion_jQjxjC"
+    "accordion_jQjxjC",
+    "accordion_XM4UCE",
+    "accordion_e9yjpr",
+    "accordion_Cqg9xG",
+    "accordion_UhmeLH",
+    "hero_image_with_text_pwABdb"
   ]
 }
