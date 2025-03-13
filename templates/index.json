@@ -98,11 +98,12 @@
     "collections_badges_pWqmae": {
       "type": "collections-badges",
       "blocks": {
-        "category_3hwmX6": {
+        "category_jV8gzt": {
           "type": "category",
           "settings": {
-            "title": "",
-            "link": ""
+            "title": "Air Max",
+            "link": "shopify://collections/air-max",
+            "image": "shopify://shop_images/Nike-Air-Max-Plus-Voltage-Purple.webp"
           }
         },
         "category_Fag8nq": {
@@ -111,6 +112,38 @@
             "title": "Dunk Low",
             "link": "shopify://collections/dunk-low",
             "image": "shopify://shop_images/nike-dunk-low-court-purple-2021-DD1391-104-wethenew.webp"
+          }
+        },
+        "category_kJpgdA": {
+          "type": "category",
+          "settings": {
+            "title": "Air Force 1",
+            "link": "shopify://collections/air-force-1",
+            "image": "shopify://shop_images/air-force-1-low-07-triple-white-348189.webp"
+          }
+        },
+        "category_xpAn9e": {
+          "type": "category",
+          "settings": {
+            "title": "Adidas Campus",
+            "link": "shopify://collections/campus",
+            "image": "shopify://shop_images/adidas-campus-00s-dark-green-cloud-white-enfant-1.webp"
+          }
+        },
+        "category_LwUUKV": {
+          "type": "category",
+          "settings": {
+            "title": "UGG",
+            "link": "shopify://collections/ugg",
+            "image": "shopify://shop_images/UGGLowmelChestnut_1.webp"
+          }
+        },
+        "category_nLQmAP": {
+          "type": "category",
+          "settings": {
+            "title": "Yeezy Slide",
+            "link": "shopify://collections/yeezy-slide",
+            "image": "shopify://shop_images/yeezy-slide-pure-restock-1.webp"
           }
         },
         "category_yRyGai": {
@@ -145,21 +178,6 @@
             "image": "shopify://shop_images/New-Balance-530-White-Silver-Navy-1.webp"
           }
         },
-        "category_QeYWPk": {
-          "type": "category",
-          "settings": {
-            "title": "",
-            "link": ""
-          }
-        },
-        "category_LwUUKV": {
-          "type": "category",
-          "settings": {
-            "title": "UGG",
-            "link": "shopify://collections/ugg",
-            "image": "shopify://shop_images/UGGLowmelChestnut_1.webp"
-          }
-        },
         "category_7gnDcc": {
           "type": "category",
           "settings": {
@@ -167,54 +185,20 @@
             "link": "shopify://collections/travis-scott",
             "image": "shopify://shop_images/air-jordan-1-low-og-sp-travis-scott-olive-1.webp"
           }
-        },
-        "category_kJpgdA": {
-          "type": "category",
-          "settings": {
-            "title": "Air Force 1",
-            "link": "shopify://collections/air-force-1",
-            "image": "shopify://shop_images/air-force-1-low-07-triple-white-348189.webp"
-          }
-        },
-        "category_jV8gzt": {
-          "type": "category",
-          "settings": {
-            "title": "Air Max",
-            "link": "shopify://collections/air-max",
-            "image": "shopify://shop_images/Nike-Air-Max-Plus-Voltage-Purple.webp"
-          }
-        },
-        "category_xpAn9e": {
-          "type": "category",
-          "settings": {
-            "title": "Adidas Campus",
-            "link": "shopify://collections/campus",
-            "image": "shopify://shop_images/adidas-campus-00s-dark-green-cloud-white-enfant-1.webp"
-          }
-        },
-        "category_nLQmAP": {
-          "type": "category",
-          "settings": {
-            "title": "Yeezy Slide",
-            "link": "shopify://collections/yeezy-slide",
-            "image": "shopify://shop_images/yeezy-slide-pure-restock-1.webp"
-          }
         }
       },
       "block_order": [
-        "category_3hwmX6",
+        "category_jV8gzt",
         "category_Fag8nq",
+        "category_kJpgdA",
+        "category_xpAn9e",
+        "category_LwUUKV",
+        "category_nLQmAP",
         "category_yRyGai",
         "category_MRKK9a",
         "category_kcDV4c",
         "category_JimxB9",
-        "category_QeYWPk",
-        "category_LwUUKV",
-        "category_7gnDcc",
-        "category_kJpgdA",
-        "category_jV8gzt",
-        "category_xpAn9e",
-        "category_nLQmAP"
+        "category_7gnDcc"
       ],
       "settings": {}
     },
