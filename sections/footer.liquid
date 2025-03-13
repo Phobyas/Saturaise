@@ -64,7 +64,7 @@
                   {% endif %}
                 {% when 'menu' %}
                   <div class="footer-block__menu">
-                    <p class="footer-block__heading h5">{{ block.settings.title | escape }}</p>
+                    <p class="footer-block__heading">{{ block.settings.title | escape }}</p>
                     <ul>
                       {% for link in linklists[block.settings.footer_nav].links %}
                         <li>{{ link.title | link_to: link.url }}</li>
@@ -73,12 +73,12 @@
                   </div>
                 {% when 'social' %}
                   <div class="footer-block__social">
-                    <p class="footer-block__heading h5">{{ block.settings.title | escape }}</p>
+                    <p class="footer-block__heading">{{ block.settings.title | escape }}</p>
                     {% render 'snip-footer-social-icons', fill: 'var(--footer-text)' %}
                   </div>
                 {% when 'text' %}
                   <div class="footer-block__text">
-                    <p class="footer-block__heading h5">{{ block.settings.title | escape }}</p>
+                    <p class="footer-block__heading ">{{ block.settings.title | escape }}</p>
                     <div class="rte">
                       {{ block.settings.footer_text }}
                     </div>
