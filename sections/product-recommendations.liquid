@@ -83,7 +83,7 @@
       <div class="product-recommendations js-product-rec-inner" data-section-loaded="false">
         <div class="product-recommendations__text-wrapper mb-4">
           {%- if section.settings.title != blank -%}
-            <h2 class="section-product-recommendations__section-heading">{{ section.settings.title }}</h2>
+            <h2 class="section-product-recommendations__section-heading px-3 lg:px-0">{{ section.settings.title }}</h2>
           {%- endif -%}
           {%- if section.settings.subheading != blank -%}
             <div class="rte mb2">{{ section.settings.subheading }}</div>
@@ -171,7 +171,7 @@
           }
           
           .section-product-recommendations__section-heading {
-            font-size: 26px;
+            font-size: 32px;
             padding-bottom: 0;
             font-weight: 700;
           }
