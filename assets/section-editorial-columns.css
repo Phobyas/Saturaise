@@ -21,4 +21,5 @@
 
 .section-txt-cols__block-subheading p {
   font-size: 14px;
+  text-align: justify;
 }

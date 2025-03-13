@@ -140,3 +140,51 @@
     padding: 40px 24px 40px 24px;
   }
 }
+
+.section-text-with-image .map-container {
+  height: 600px;
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Popraw style dla popupu Leaflet */
+.section-text-with-image .leaflet-popup-content-wrapper {
+  border-radius: 4px;
+}
+
+.section-text-with-image .leaflet-popup-content {
+  margin: 10px 12px;
+  font-size: 14px;
+}
+
+.section-text-with-image .leaflet-control-attribution {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 9px !important;
+  padding: 2px 4px !important;
+  opacity: 0.1;
+  transition: opacity 2s ease;
+}
+
+.section-text-with-image .leaflet-control-attribution:hover {
+  opacity: 0.3;
+}
+
+.section-text-with-image .leaflet-control-attribution a {
+  color: #777 !important;
+}
+
+/* Style responsywne */
+@media (max-width: 767px) {
+  .section-text-with-image .map-container {
+    height: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-text-with-image .map-container {
+    height: 450px;
+  }
+}

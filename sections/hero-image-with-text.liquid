@@ -68,21 +68,54 @@
       </div>
     </article>
     <article class="image span-6 auto relative py-8 md:px-2 {{ vertical_align }}">
-      <div class="image-container">
-        {% if section.settings.image == blank %}
-          <div class="demo-1 color-1 placeholder-image">
-            {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
-          </div>
-        {% else %}
-          {% render 'helper-image',
-             type: section.settings.image,
-             sm_render: sm_render
-             md_render: md_render,
-             lg_render: lg_render,
-             loading: loading,
-             fetchpriority: fetch_priority %}
-        {% endif %}
-      </div>
+      {% if section.settings.use_map %}
+        <div class="map-container" id="map-{{ section.id }}">
+          <!-- Map will be initialized here -->
+        </div>
+        
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const lat = {{ section.settings.map_latitude | default: 52.2297 }};
+            const lng = {{ section.settings.map_longitude | default: 21.0122 }};
+            const zoom = {{ section.settings.map_zoom | default: 14 }};
+            const title = "{{ section.settings.map_marker_title | default: 'Our Store Location' }}";
+            
+            const map = L.map('map-{{ section.id }}').setView([lat, lng], zoom);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Dodaj marker z popupem
+            const marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup('<strong>' + title + '</strong>').openPopup();
+            
+            // Napraw problem z mapą, która nie renderuje się poprawnie w niektórych kontenerach
+            setTimeout(function() {
+              map.invalidateSize();
+            }, 100);
+          });
+        </script>
+      {% else %}
+        <div class="image-container">
+          {% if section.settings.image == blank %}
+            <div class="demo-1 color-1 placeholder-image">
+              {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {% else %}
+            {% render 'helper-image',
+               type: section.settings.image,
+               sm_render: sm_render,
+               md_render: md_render,
+               lg_render: lg_render,
+               loading: loading,
+               fetchpriority: fetch_priority %}
+          {% endif %}
+        </div>
+      {% endif %}
     </article>
   </div>
 
@@ -301,6 +334,45 @@
       "label": "Match header to section colors",
       "info": "Use this setting if this section is displayed first on the home page",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Map Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_map",
+      "label": "Use map instead of image",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "map_latitude",
+      "label": "Latitude",
+      "default": "52.2297",
+      "info": "Your business location latitude"
+    },
+    {
+      "type": "text",
+      "id": "map_longitude",
+      "label": "Longitude",
+      "default": "21.0122",
+      "info": "Your business location longitude"
+    },
+    {
+      "type": "range",
+      "id": "map_zoom",
+      "min": 1,
+      "max": 18,
+      "step": 1,
+      "label": "Map Zoom Level",
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "map_marker_title",
+      "label": "Map Marker Title",
+      "default": "Our Store Location"
     }
   ],
   "presets": [
