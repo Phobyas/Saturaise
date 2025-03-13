@@ -25,7 +25,7 @@
         "footer-1": {
           "type": "menu",
           "settings": {
-            "footer_nav": "main-menu",
+            "footer_nav": "footer",
             "title": "Saturaise",
             "column_width": 2
           }
@@ -33,7 +33,7 @@
         "footer-2": {
           "type": "menu",
           "settings": {
-            "footer_nav": "footer",
+            "footer_nav": "footer-menu-2",
             "title": "Collections",
             "column_width": 2
           }
@@ -41,7 +41,7 @@
         "footer-3": {
           "type": "menu",
           "settings": {
-            "footer_nav": "main-menu",
+            "footer_nav": "footer-menu-3",
             "title": "Need Help?",
             "column_width": 2
           }
