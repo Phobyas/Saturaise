@@ -38,7 +38,7 @@
         "expand_text": "ROZWIŃ",
         "collapse_text": "ZWIŃ",
         "reduce_padding": false,
-        "section_padding": "both",
+        "section_padding": "top",
         "color_scheme": "1"
       }
     },
@@ -57,7 +57,7 @@
         "expand_text": "ROZWIŃ",
         "collapse_text": "ZWIŃ",
         "reduce_padding": false,
-        "section_padding": "both",
+        "section_padding": "bottom",
         "color_scheme": "1"
       }
     }
