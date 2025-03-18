@@ -102,19 +102,11 @@
             "heading": "Koszt wysyłki",
             "content": "<p>Wiemy, że zakup wymarzonych produktów to już znaczący wydatek, dlatego chcemy odciążyć naszych klientów, zapewniając darmową wysyłkę na terenie całej Polski. W przypadku zamówień międzynarodowych, koszt dostawy jest ustalany indywidualnie w zależności od kraju docelowego i zostanie automatycznie wyświetlony podczas procesu finalizacji zakupu.</p>"
           }
-        },
-        "panel_zQ7w4h": {
-          "type": "panel",
-          "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
-          }
         }
       },
       "block_order": [
         "panel_KegxT9",
-        "panel_qnmCeY",
-        "panel_zQ7w4h"
+        "panel_qnmCeY"
       ],
       "settings": {
         "heading": "Wysyłka i dostawa",
@@ -128,15 +120,15 @@
         "panel_a7G7nX": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Jak dobrać odpowiedni rozmiar?",
+            "content": "<p>Dla każdego produktu w naszym sklepie internetowym udostępniamy szczegółową tabelę rozmiarów, zawierającą również informacje o długości wkładki. Informacje te pomogą Ci wybrać idealnie dopasowany rozmiar.</p><p>Jeśli nadal masz wątpliwości dotyczące wyboru rozmiaru lub potrzebujesz indywidualnej porady, zachęcamy do <strong>kontaktu z naszym zespołem</strong>.</p><p>W przypadku gdy zamówiony produkt nie pasuje rozmiarem, masz prawo odstąpić od umowy w ciągu 14 dni od otrzymania przesyłki, a my zwrócimy Ci pełną kwotę zakupu. Pamiętaj, że produkt powinien być jedynie przymierzony, a nie noszony!</p>"
           }
         },
         "panel_PLVRpX": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Dostępne metody płatności",
+            "content": "<p>W Saturaise dbamy o komfort zakupów, dlatego oferujemy szeroki wybór metod płatności dostosowanych do Twoich preferencji:</p><p>Płatność BLIK</p><p>Przelew tradycyjny</p><p>Przelew na telefon</p><p>Płatność kartą płatniczą</p><p>PayPal</p><p>Płatność za pobraniem</p><p>Apple Pay</p><p>Dzięki różnorodnym opcjom płatności możesz wybrać rozwiązanie, które najlepiej odpowiada Twoim potrzebom, zapewniając sobie wygodne i bezpieczne zakupy w naszym sklepie internetowym!</p>"
           }
         },
         "panel_VTgcdK": {
