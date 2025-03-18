@@ -55,15 +55,15 @@
         "panel_XgCNHg": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Czy oferujecie wyłącznie oryginalne produkty?",
+            "content": "<p>Zapewniamy, że w sklepie internetowym Saturaise znajdziesz tylko i wyłącznie oryginalne produkty. Nasza rozbudowana i zaufana sieć dostawców umożliwia nam pozyskiwanie wyłącznie autentycznych towarów, których pochodzenie możemy w pełni udokumentować. Nasz wykwalifikowany zespół starannie weryfikuje każdy produkt przed wprowadzeniem go do oferty sklepowej. Dzięki temu mamy absolutną pewność, że wszystkie artykuły w naszym asortymencie są oryginalne. W ciągu 3 lat działalności zbudowaliśmy szerokie kontakty zarówno w Europie, jak i poza jej granicami, co wzmacnia naszą pozycję rynkową i gwarantuje dostęp do autentycznych produktów.</p>"
           }
         },
         "panel_wKrFGf": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "W jaki sposób pozyskujemy limitowane i trudno dostępne produkty?",
+            "content": "<p>Wszystkie produkty w Saturaise pochodzą bezpośrednio od naszej sieci zaufanych partnerów detalicznych i profesjonalnych dostawców. Specjalizujemy się w oferowaniu limitowanych edycji produktów, które błyskawicznie wyprzedają się w standardowych sklepach i na tradycyjnych platformach internetowych.</p><p>Naszym celem jest zapewnienie Ci bezpiecznego dostępu do w pełni oryginalnych produktów. Współpracując z siecią detalistów, kolekcjonerów i specjalistów w całej Europie, jesteśmy w stanie dostarczać te wyjątkowe produkty nawet po ich oficjalnej premierze i wyprzedaniu standardowych kanałów dystrybucji.</p>"
           }
         }
       },
