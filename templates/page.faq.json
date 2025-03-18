@@ -65,12 +65,20 @@
             "heading": "W jaki sposób pozyskujemy limitowane i trudno dostępne produkty?",
             "content": "<p>Wszystkie produkty w Saturaise pochodzą bezpośrednio od naszej sieci zaufanych partnerów detalicznych i profesjonalnych dostawców. Specjalizujemy się w oferowaniu limitowanych edycji produktów, które błyskawicznie wyprzedają się w standardowych sklepach i na tradycyjnych platformach internetowych.</p><p>Naszym celem jest zapewnienie Ci bezpiecznego dostępu do w pełni oryginalnych produktów. Współpracując z siecią detalistów, kolekcjonerów i specjalistów w całej Europie, jesteśmy w stanie dostarczać te wyjątkowe produkty nawet po ich oficjalnej premierze i wyprzedaniu standardowych kanałów dystrybucji.</p>"
           }
+        },
+        "panel_AjCGEy": {
+          "type": "panel",
+          "settings": {
+            "heading": "Jak mogę uzyskać więcej informacji o produktach lub dowiedzieć się o nowościach?",
+            "content": "<p>Zachęcamy do kontaktu z nami poprzez e-mail lub nasze profile w mediach społecznościowych, aby uzyskać szczegółowe informacje o produktach lub być na bieżąco z nowościami w naszej ofercie.</p>"
+          }
         }
       },
       "block_order": [
         "panel_xprYPR",
         "panel_XgCNHg",
-        "panel_wKrFGf"
+        "panel_wKrFGf",
+        "panel_AjCGEy"
       ],
       "settings": {
         "heading": "Produkty i autentyczność",
