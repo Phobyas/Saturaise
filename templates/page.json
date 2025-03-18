@@ -60,31 +60,11 @@
         "section_padding": "bottom",
         "color_scheme": "1"
       }
-    },
-    "rich_text_4jDqmG": {
-      "type": "rich-text",
-      "settings": {
-        "title": "Welcome",
-        "rich_text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
-        "heading_size": 40,
-        "text_size": 20,
-        "page": "",
-        "alignment": "a-center",
-        "content_width": 60,
-        "enable_expand": false,
-        "collapsed_height": 200,
-        "expand_text": "ROZWIŃ",
-        "collapse_text": "ZWIŃ",
-        "reduce_padding": false,
-        "section_padding": "both",
-        "color_scheme": "1"
-      }
     }
   },
   "order": [
     "banner",
     "rich_text_QAEYck",
-    "rich_text_LYFPqG",
-    "rich_text_4jDqmG"
+    "rich_text_LYFPqG"
   ]
 }
