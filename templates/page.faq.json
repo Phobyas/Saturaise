@@ -130,19 +130,11 @@
             "heading": "Dostępne metody płatności",
             "content": "<p>W Saturaise dbamy o komfort zakupów, dlatego oferujemy szeroki wybór metod płatności dostosowanych do Twoich preferencji:</p><p>Płatność BLIK</p><p>Przelew tradycyjny</p><p>Przelew na telefon</p><p>Płatność kartą płatniczą</p><p>PayPal</p><p>Płatność za pobraniem</p><p>Apple Pay</p><p>Dzięki różnorodnym opcjom płatności możesz wybrać rozwiązanie, które najlepiej odpowiada Twoim potrzebom, zapewniając sobie wygodne i bezpieczne zakupy w naszym sklepie internetowym!</p>"
           }
-        },
-        "panel_VTgcdK": {
-          "type": "panel",
-          "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
-          }
         }
       },
       "block_order": [
         "panel_a7G7nX",
-        "panel_PLVRpX",
-        "panel_VTgcdK"
+        "panel_PLVRpX"
       ],
       "settings": {
         "heading": "Zakup i płatność",
@@ -156,8 +148,8 @@
         "panel_8EAEQU": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Nie znalazłeś produktu, którego szukasz?",
+            "content": "<p>Zdarza się, że produkt, którego potrzebujesz, nie jest aktualnie dostępny w naszym asortymencie. Nie przejmuj się! Jesteśmy gotowi Ci pomóc. Jeśli nie możesz znaleźć odpowiedniego rozmiaru, modelu lub wersji kolorystycznej w naszej ofercie, <strong>skontaktuj się z nami</strong>. Możemy na specjalne zamówienie sprowadzić dla Ciebie produkt, który dokładnie odpowiada Twoim oczekiwaniom.</p><p>Bez względu na to, czy poszukujesz czegoś nietypowego, czy trudno dostępnego, dołożymy wszelkich starań, aby pomóc Ci zdobyć wymarzony produkt. Twoja satysfakcja jest naszym najwyższym priorytetem!</p>"
           }
         },
         "panel_4Bqt6H": {
