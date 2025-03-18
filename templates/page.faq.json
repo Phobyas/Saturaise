@@ -92,8 +92,8 @@
         "panel_KegxT9": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Jak przebiega proces realizacji zamówienia?",
+            "content": "<p>Po złożeniu zamówienia w naszym sklepie internetowym otrzymasz wiadomość e-mail z potwierdzeniem i numerem zamówienia. Jeśli zamówiony produkt wymaga sprowadzenia, niezwłocznie rozpoczynamy jego poszukiwanie w naszej rozbudowanej sieci europejskich partnerów. Po zlokalizowaniu produktu jest on dostarczany do naszego centrum logistycznego, gdzie nasz zespół przeprowadza szczegółową weryfikację autentyczności i kontrolę jakości. Po pomyślnym przejściu procesu weryfikacji, produkt jest starannie zapakowany w oryginalne opakowanie, a następnie zabezpieczony w naszym firmowym opakowaniu i przekazany do wysyłki. Na koniec otrzymasz e-mail z numerem przesyłki, dzięki któremu będziesz mógł śledzić status dostawy.</p>"
           }
         },
         "panel_qnmCeY": {
