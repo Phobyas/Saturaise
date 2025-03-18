@@ -99,8 +99,8 @@
         "panel_qnmCeY": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Koszt wysyłki",
+            "content": "<p>Wiemy, że zakup wymarzonych produktów to już znaczący wydatek, dlatego chcemy odciążyć naszych klientów, zapewniając darmową wysyłkę na terenie całej Polski. W przypadku zamówień międzynarodowych, koszt dostawy jest ustalany indywidualnie w zależności od kraju docelowego i zostanie automatycznie wyświetlony podczas procesu finalizacji zakupu.</p>"
           }
         },
         "panel_zQ7w4h": {
