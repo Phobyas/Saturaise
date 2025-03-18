@@ -155,15 +155,15 @@
         "panel_4Bqt6H": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Dlaczego ceny mogą różnić się w zależności od rozmiaru?",
+            "content": "<p>Różnice w cenach poszczególnych rozmiarów wynikają głównie z zasad podaży i popytu. Rzadziej spotykane rozmiary lub te, które cieszą się szczególnie dużym zainteresowaniem, mogą mieć wyższe ceny ze względu na ich ograniczoną dostępność na rynku. Naszym niezmiennym celem jest oferowanie konkurencyjnych cen, które jednocześnie odzwierciedlają realia rynkowe i odpowiadają potrzebom naszych klientów.</p>"
           }
         },
         "panel_bPmnMM": {
           "type": "panel",
           "settings": {
-            "heading": "Heading",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+            "heading": "Czy skupujemy produkty lub poszukujemy nowych dostawców?",
+            "content": "<p>Nieustannie poszukujemy nowych produktów i dostawców do naszego modelu Consignment. Skup najczęściej odbywa się za pośrednictwem naszego Messengera, ale z przyjemnością rozpatrzymy również propozycje przekazane poprzez <strong>inne formy kontaktu</strong>.</p>"
           }
         }
       },
