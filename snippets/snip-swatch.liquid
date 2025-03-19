@@ -110,14 +110,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  min-width: 30vw !important
  
 }
 
 .swatches__swatch--regular,
 .swatches__swatch--color {
   flex: 1 1 auto;
-  min-width: calc((100% - 40px) / 6);
-  max-width: calc((100% - 40px) / 6);
+    min-width: max(50px, calc((100% - 40px) / 6));
+    max-width: calc((100% - 40px) / 6);
 }
 
 @media screen and (max-width: 768px) {

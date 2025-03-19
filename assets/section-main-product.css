@@ -217,6 +217,7 @@
   .swatches__form--input:checked
   + .swatches__form--label:before {
   border-color: var(--text-color) !important;
+  min-width: 50px !important;
 }
 
 .product__section--main .swatches__container.error {
