@@ -34,7 +34,7 @@ Liquid logic for navigation
 
       {{ link.title }}
 
-      {%
+      {% comment %} {%
          render 'snip-icons',
          wrapper: '.navigation__menulink',
          type: 'apollo',
@@ -43,7 +43,7 @@ Liquid logic for navigation
          size: '8px',
          fill: 'var(--nav-color)',
          hover: 'var(--nav-hover-link-color)'
-      %}
+      %} {% endcomment %}
     </a>
 
     <ul
@@ -122,7 +122,7 @@ Liquid logic for navigation
 
       {{ link.title }}
 
-      {%
+      {% comment %} {%
        render 'snip-icons',
        wrapper: '.navigation__menulink',
        type: 'apollo',
@@ -131,7 +131,7 @@ Liquid logic for navigation
        size: '8px',
        fill: 'var(--nav-color)',
        hover: 'var(--nav-hover-link-color)'
-      %}
+      %} {% endcomment %}
 
     </a>
     <ul class="megamenu row grid__wrapper">
