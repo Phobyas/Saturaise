@@ -929,7 +929,7 @@
 }
 @media screen and (max-width: 740px) {
   article#product-description {
-    text-align: center;
+    text-align: left;
   }
   .product-template__description.rte {
     text-align: left;
