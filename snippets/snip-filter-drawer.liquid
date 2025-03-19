@@ -303,7 +303,7 @@
   {%- unless has_sortby == false -%}
     <div class="filter-drawer__menu-block js-mobile-menu {% if collection.all_products_count >= 1000 or has_filter == false %}active--menu{% endif %} span-12 auto" data-menu-handle="sort">
       <div class="filter-drawer__header grid__wrapper edge">
-        <p class="span-12 auto a-left text-xl">{{ 'collections.filter.sort_title' | t }}</p>
+        <p class="span-12 auto a-left text-lg font-bold">{{ 'collections.filter.sort_title' | t }}</p>
       </div>
       <ul class="slide-nav__first-level--wrapper" data-link-parent="main">
         <!-- Regular sort options -->
@@ -372,9 +372,13 @@
   <style>
     .slide-nav__first-level--item .filter__text--label {
       cursor: pointer;
-      font-size: 18px;
-      margin-top: 40px;
+      font-size: 14px;
+      margin-top: 60px;
       font-weight: 500;
+    }
+
+    .slide-nav__first-level--item{
+      margin-top: 12px !important;
     }
     
     /* Style for active sort option */
