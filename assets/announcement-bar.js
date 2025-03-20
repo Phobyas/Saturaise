@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const trackElem = document.getElementById("marquee-track");
 
   // Parametry animacji
-  const speed = 0.5; // Prędkość przesuwania (piksele na krok)
+  const speed = 0.3; // Prędkość przesuwania (piksele na krok)
 
   if (!trackElem || !containerElem || trackElem.children.length === 0) return;
 
