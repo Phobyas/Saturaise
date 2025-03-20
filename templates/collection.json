@@ -9,6 +9,13 @@
  */
 {
   "sections": {
+    "breadcrumbs_b7XDqm": {
+      "type": "breadcrumbs",
+      "settings": {
+        "alignment": "a-left",
+        "section_padding": "top"
+      }
+    },
     "banner": {
       "type": "collection-header",
       "disabled": true,
@@ -206,6 +213,7 @@
     }
   },
   "order": [
+    "breadcrumbs_b7XDqm",
     "banner",
     "main",
     "collections_badges_kVtn9A",
