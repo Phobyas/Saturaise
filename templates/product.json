@@ -9,6 +9,13 @@
  */
 {
   "sections": {
+    "breadcrumbs_GQ8KUY": {
+      "type": "breadcrumbs",
+      "settings": {
+        "alignment": "a-left",
+        "section_padding": "top"
+      }
+    },
     "main": {
       "type": "main-product",
       "blocks": {
@@ -288,6 +295,7 @@
     }
   },
   "order": [
+    "breadcrumbs_GQ8KUY",
     "main",
     "text_with_icons_KzVrHV",
     "product-details",
