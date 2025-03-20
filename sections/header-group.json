@@ -98,7 +98,7 @@
         "enable_sticky": true,
         "enable_header_overlay": false,
         "logo": "shopify://shop_images/logo-new-saturaise2.png",
-        "logo_max_width": 230,
+        "logo_max_width": 200,
         "logo_size": 30,
         "main_nav": "main-menu"
       }
