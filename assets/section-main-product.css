@@ -913,7 +913,7 @@
 }
 #product-description .product-form__popup button {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 500;
   text-decoration: underline;
   color: var(--swatch-accent) !important;
 }
