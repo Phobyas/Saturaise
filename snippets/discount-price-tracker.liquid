@@ -157,13 +157,13 @@
       PriceindicationElement.insertBefore(image, PriceindicationElement.firstChild);
     }
     var newStyle = document.createElement('style');
-    newStyle.appendChild(document.createTextNode(`\
-    @font-face {\
-        font-family: price-indication-font;\
-        src: url('${shopData.templateInfo['{{ template.name }}']['fontFamily']}');\
-    }\
-    .price-indication-font {font-family: price-indication-font !important}\
-    `));
+    // newStyle.appendChild(document.createTextNode(`\
+    // @font-face {\
+    //     font-family: price-indication-font;\
+    //     src: url('${shopData.templateInfo['{{ template.name }}']['fontFamily']}');\
+    // }\
+    // .price-indication-font {font-family: price-indication-font !important}\
+    // `));
     
     document.head.appendChild(newStyle);
     PriceindicationElement.classList.add("price-indication-font");
