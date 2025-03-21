@@ -267,6 +267,8 @@
               >
                 {% render 'snip-product-price', variant: current_variant, product: product %}
                 {% if section.settings.show_tax_info %}{% render 'snip-product-taxes' %}{% endif %}
+
+                {%- render 'discount-price-tracker', product:product -%}  
               </div>
             {%- when 'product_sku' -%}
               <div

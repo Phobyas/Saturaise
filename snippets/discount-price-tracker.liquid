@@ -1,0 +1,190 @@
+{% liquid
+  assign min = 19879 
+  assign max = 1987919879 
+  assign diff = max | minus: min 
+  assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min | append: ""
+%}
+
+{% if product.gift_card? == false %}
+  <div id="discount-price-tracker-{{ randomNumber }}">
+  <p id="discount-price-tracker-p-{{ randomNumber }}"></p>
+  </div>
+{% endif %}
+
+{% assign productInfo = product.metafields.price_indication.productInfo %}
+{% assign shopData = shop.metafields.price_settings.settings %}
+
+<script>
+
+  if (typeof lastUrl === "undefined"){
+    let lastUrl = location.href; 
+    new MutationObserver(() => {
+      const url = location.href;
+      if (url !== lastUrl) {
+        lastUrl = url;
+        onUrlChange();
+      }
+    }).observe(document, {subtree: true, childList: true});
+    }
+    function onUrlChange() {
+      const url = new URL(location.href);
+      const new_variant=url.searchParams.get('variant');
+      showPrice(new_variant);
+      
+    }
+</script>
+<script>
+  function getPrice(priceObj) {
+    return parseFloat(priceObj[Object.keys(priceObj)[0]]);
+  }
+  function applyMinimumOnPriceArray(prices) {
+    return Math.min(...prices.map(getPrice)).toString();
+  }
+  function applyIncludeSubsequentDiscountsCalculation(
+    currentPrice,
+    InScopePrices
+ ) {
+    const lastPrice = getPrice(InScopePrices.slice(-1)[0]);
+ 
+    if (parseFloat(currentPrice) > lastPrice) return lastPrice;
+ 
+    for (let i = InScopePrices.length - 1; i > 0; i--) {
+       if (getPrice(InScopePrices[i]) > getPrice(InScopePrices[i - 1])) {
+          return getPrice(InScopePrices[i - 1]);
+       }
+    }
+    return getPrice(InScopePrices[0]);
+ }
+  function calculateLowestPrice(Period, includeSubsequentDiscounts, variant) {
+
+    const dateNow = Date.now();
+    const pricesArray = variant.pricesArray.sort((a, b) => parseInt(Object.keys(a)[0]) - parseInt(Object.keys(b)[0]));
+    const InScopePrices = pricesArray.filter(price => (dateNow - parseInt(Object.keys(price)[0])) / 86400000 < parseInt(Period));
+    if (InScopePrices.length === 0) return variant.current_price;
+    if (InScopePrices.length === 1) return getPrice(InScopePrices[0]).toString();
+    const minPrice =
+      includeSubsequentDiscounts === false
+        ? applyMinimumOnPriceArray(InScopePrices.slice(0, -1))
+        : applyIncludeSubsequentDiscountsCalculation(
+              getPrice(InScopePrices.slice(-1)[0]),
+              InScopePrices.slice(0, -1)
+          );
+    return minPrice;
+      
+  }
+
+</script>
+    
+
+
+
+<script>
+  shopData={{ shopData }}
+  for (let template of Object.keys(shopData.templateInfo)) {
+    const { fontFamily } = shopData.templateInfo[template];
+    shopData.templateInfo[template].fontFamily = shopData.fonts[fontFamily] || "";
+  }
+  delete shopData.fonts;
+  productInfo={{ productInfo }}
+  
+  function findCollectionInCollectionRules(){
+    const productsCollections = {{ product.collections | json }}
+    const collectionRuleSettingList = shopData.collectionRuleSettingList;
+    for (let i=0 ; i < collectionRuleSettingList.length; i++){
+      const searchedCollection = productsCollections.find((coll)=>coll.id.toString() == collectionRuleSettingList[i].id.toString() );
+      if (searchedCollection) return collectionRuleSettingList[i];
+    }
+     return false;
+  }
+
+  function showPrice(new_variant){
+    const variant_id=(new_variant==="")?'{{ product.selected_or_first_available_variant.id }}':new_variant
+    const variantInfo = productInfo.variants.find((variant) => variant.variant_id.toString() === variant_id.toString());
+    let hideLowestPrice;
+    let showPriceChangeRegardless;
+    let additionallyShowPercentage;
+    let Period;
+    let lowest_price_x_days;
+    if (!productInfo.ignGlobalSettings){
+      hideLowestPrice = shopData.globalCustomizedPricingSetting.hideLowestPrice;
+      showPriceChangeRegardless = shopData.globalCustomizedPricingSetting.showPriceChangeRegardless;
+      additionallyShowPercentage = shopData.globalCustomizedPricingSetting.additionallyShowPercentage;
+      Period = shopData.globalCustomizedPricingSetting.Period;
+      includeSubsequentDiscounts = shopData.globalCustomizedPricingSetting.includeSubsequentDiscounts;
+    } else if (!productInfo.ignCollectionSettings){
+      const foundCollection = findCollectionInCollectionRules();
+      if (foundCollection && foundCollection.ignGlobalSettings){
+        hideLowestPrice = foundCollection.hideLowestPrice;
+        showPriceChangeRegardless = foundCollection.showPriceChangeRegardless;
+        additionallyShowPercentage = foundCollection.additionallyShowPercentage;
+        Period = foundCollection.Period;
+        includeSubsequentDiscounts = foundCollection.includeSubsequentDiscounts;
+      }else{
+        hideLowestPrice = shopData.globalCustomizedPricingSetting.hideLowestPrice;
+        showPriceChangeRegardless = shopData.globalCustomizedPricingSetting.showPriceChangeRegardless;
+        additionallyShowPercentage = shopData.globalCustomizedPricingSetting.additionallyShowPercentage;
+        Period = shopData.globalCustomizedPricingSetting.Period;
+        includeSubsequentDiscounts = shopData.globalCustomizedPricingSetting.includeSubsequentDiscounts;
+      }
+    
+    }else{
+      hideLowestPrice = productInfo.hideLowestPrice;
+      showPriceChangeRegardless = productInfo.showPriceChangeRegardless;
+      additionallyShowPercentage = productInfo.additionallyShowPercentage;
+      Period = productInfo.Period;
+      includeSubsequentDiscounts = productInfo.includeSubsequentDiscounts;
+    }
+    lowest_price_x_days = calculateLowestPrice(Period, includeSubsequentDiscounts, variantInfo);
+    if ( hideLowestPrice || (!showPriceChangeRegardless && (variantInfo.compare_price === variantInfo.current_price || !variantInfo.compare_price))) {
+      document.getElementById("discount-price-tracker-p-{{ randomNumber }}").textContent = "";
+      document.getElementById("discount-price-tracker-{{ randomNumber }}").style.display= "none";
+      return;
+    }
+    const PriceindicationElement = document.getElementById('discount-price-tracker-p-{{ randomNumber }}');
+    document.getElementById("discount-price-tracker-{{ randomNumber }}").style.display= "";
+    
+    PriceindicationElement.style.textAlign= shopData.templateInfo['{{ template.name }}']['textAlignment'];
+    if (Period === '1') {
+        PriceindicationElement.textContent = ` ${shopData.templateInfo['{{ template.name }}']['previewLowestPriceOf']} ${shopData.templateInfo['{{ template.name }}']['previewDay']} ${shopData.templateInfo['{{ template.name }}']['previewWas']} ${parseFloat(lowest_price_x_days).toFixed(2).toString().replace(".",",")} {{ cart.currency.symbol }}`;
+    } else {
+        PriceindicationElement.textContent = ` ${shopData.templateInfo['{{ template.name }}']['previewLowestPriceWithin']} ${Period} ${shopData.templateInfo['{{ template.name }}']['previewDays']} ${shopData.templateInfo['{{ template.name }}']['previewWas']} ${parseFloat(lowest_price_x_days).toFixed(2).toString().replace(".",",")} {{ cart.currency.symbol }}`;
+    }
+    if (shopData.templateInfo['{{ template.name }}']['iconFileContent'] !== ""){
+      var image = new Image();
+      image.src= shopData.templateInfo['{{ template.name }}']['iconFileContent'];
+      image.width = shopData.templateInfo['{{ template.name }}']['fontSize']
+      image.height = shopData.templateInfo['{{ template.name }}']['fontSize']
+      PriceindicationElement.insertBefore(image, PriceindicationElement.firstChild);
+    }
+    var newStyle = document.createElement('style');
+    newStyle.appendChild(document.createTextNode(`\
+    @font-face {\
+        font-family: price-indication-font;\
+        src: url('${shopData.templateInfo['{{ template.name }}']['fontFamily']}');\
+    }\
+    .price-indication-font {font-family: price-indication-font !important}\
+    `));
+    
+    document.head.appendChild(newStyle);
+    PriceindicationElement.classList.add("price-indication-font");
+    PriceindicationElement.style.fontSize = `${shopData.templateInfo['{{ template.name }}']['fontSize']}px`;
+    PriceindicationElement.style.color = shopData.templateInfo['{{ template.name }}']['textFontColor'];
+    if (shopData.templateInfo['{{ template.name }}']['showBackgroundColor']) {
+        PriceindicationElement.style.backgroundColor = shopData.templateInfo['{{ template.name }}']['backgroundColor'];
+    }
+    PriceindicationElement.style.padding = `${shopData.templateInfo['{{ template.name }}']['backgroundPaddingTopBottom']}px ${shopData.templateInfo['{{ template.name }}']['backgroundPaddingLeftRight']}px ${shopData.templateInfo['{{ template.name }}']['backgroundPaddingTopBottom']}px ${shopData.templateInfo['{{ template.name }}']['backgroundPaddingLeftRight']}px`;
+    PriceindicationElement.style.margin = `${shopData.templateInfo['{{ template.name }}']['backgroundMarginTop']}px ${shopData.templateInfo['{{ template.name }}']['backgroundMarginRight']}px ${shopData.templateInfo['{{ template.name }}']['backgroundMarginBottom']}px ${shopData.templateInfo['{{ template.name }}']['backgroundMarginLeft']}px`;
+    PriceindicationElement.style.borderRadius = `${shopData.templateInfo['{{ template.name }}']['cornerRadius']}px`;
+    const percentageElement = document.createElement('span');
+    if (additionallyShowPercentage === "3" || (additionallyShowPercentage === "1" && parseFloat(lowest_price_x_days) >= variantInfo.current_price) || (additionallyShowPercentage === "2" && parseFloat(lowest_price_x_days) < variantInfo.current_price)) {
+        percentageElement.textContent = `  ${parseFloat(variantInfo.current_price) === parseFloat(lowest_price_x_days) ? "(0%)":  parseFloat(variantInfo.current_price) > parseFloat(lowest_price_x_days) ? "(+"+ (parseFloat(parseFloat(variantInfo.current_price)/parseFloat(lowest_price_x_days)-1)*100).toFixed(2) +"%)" : "(-"+(parseFloat(1-parseFloat(variantInfo.current_price)/parseFloat(lowest_price_x_days))*100).toFixed(2) +"%)"}`;
+        if (parseFloat(variantInfo.current_price) > parseFloat(lowest_price_x_days)) {
+            percentageElement.style.color = shopData.templateInfo['{{ template.name }}']['increasedPercentageFontColor']
+        } else {
+            percentageElement.style.color = shopData.templateInfo['{{ template.name }}']['decreasedPercentageFontColor']
+        }
+    }
+    PriceindicationElement.appendChild(percentageElement);
+  }
+  showPrice("")
+</script>
