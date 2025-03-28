@@ -213,6 +213,11 @@
   margin-bottom: 20px;
 }
 
+.section-heading {
+  font-weight: 700 !important;
+  font-size: 24px !important;
+}
+
 .ajax-cart__subtotal,
 .ajax-cart__total,
 .ajax-cart__discounts {
