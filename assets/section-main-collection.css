@@ -479,6 +479,11 @@ ul.current_filters li {
   display: inline-block;
 }
 
+.filter-drawer__filtering__results p {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
 ul.current_filters li.current_filters--filter a {
   font-size: var(--font-size);
   color: var(--text-color);
@@ -498,8 +503,14 @@ ul.current_filters li.current_filters--filter a:after {
 }
 
 ul.current_filters li a.current_filters--clear {
-  text-decoration: underline;
-  font-size: var(--font-size);
+  text-decoration: underline !important;
+  font-size: 12px;
+  font-weight: 500 !important;
+  flex-wrap: nowrap !important;
+}
+
+.js-current-filter {
+  font-size: 12px !important;
 }
 
 /* Tag Group Filters */
@@ -670,10 +681,14 @@ span.filter__count {
 .sidebar__filter-block ul,
 .filter-drawer__header p {
   margin-bottom: 0;
+  font-size: 16px !important;
+  font-weight: 700 !important;
 }
 
 .sidebar__filter-block p {
   margin-bottom: var(--space-1);
+  font-size: 14px !important;
+  font-weight: 700 !important;
 }
 
 .sidebar__filter-block .regular-filter--label {

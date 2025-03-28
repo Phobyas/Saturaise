@@ -155,7 +155,7 @@ aside.slideout.slideout--active.slideout__drawer-top {
   cursor: pointer;
 }
 .slideout__trigger--close button {
-  padding: 35px 10px 0 10px;
+  /* padding: 35px 10px 0 10px; */
   margin-bottom: 0;
   line-height: unset;
   height: 50px;

@@ -31,7 +31,7 @@
   {%- unless has_filter == false -%}
      <div class="filter-drawer__menu-block {% unless collection.all_products_count >= 1000 %}active--menu{% endunless %} js-mobile-menu span-12 auto" data-menu-handle="filter" {% if collection.all_products_count >= 1000 %}style="display: none;"{% endif %}>
       <div class="filter-drawer__header sm-caps grid__wrapper edge">
-        <p class="span-9 auto a-left">{{ 'collections.filter.filter' | t }}</p>
+        <p class="span-6 auto a-left">{{ 'collections.filter.filter' | t }}</p>
         {%- if filter_count > 0 -%}
           {%- liquid
             if type == collection
@@ -40,7 +40,7 @@
               assign clear_url = routes.search_url
             endif
           -%}
-          <p class="span-3 auto a-right"><a class="current_filters--clear js-current-filter ml4" href="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></p>
+          <p class="span-6 auto a-right"><a class="current_filters--clear js-current-filter ml4" href="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></p>
         {%- endif -%}
       </div>
       {%- for filter in type.filters -%}
@@ -76,7 +76,7 @@
 
           -%}
           <div class="sidebar__filter-block sidebar-filter filter--{{ filter_type }}">
-            <p class="sm-caps">{{ filter.label | escape }} {% if filter.operator == 'AND' %}<small>{{ 'collections.filter.match_all' | t }}</small>{% endif %}</p>
+            <p class="sm-caps filter-t">{{ filter.label | escape }} {% if filter.operator == 'AND' %}<small>{{ 'collections.filter.match_all' | t }}</small>{% endif %}</p>
             <ul>
               {% liquid
                 if filter.operator == 'AND'
@@ -418,6 +418,8 @@
     .filter-drawer__wrapper li a,
     .filter-drawer__wrapper .product-price {
       color: #323232 !important;
+      font-size: 12px;
+      font-weight: 500;
     }
     
     .filter-drawer__wrapper p a:hover,
@@ -437,6 +439,11 @@
   
     .current_filters--clear {
       color: #323232 !important;
+    }
+
+    .filter-t {
+      font-size: 14px !important;
+      font-weight: 700 !important;
     }
   </style>
 </div>

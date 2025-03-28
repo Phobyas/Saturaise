@@ -1173,14 +1173,6 @@ video {
   line-height: 1.25rem;
 }
 
-.text-\[32px\] {
-  font-size: 32px;
-}
-
-.text-\[30px\] {
-  font-size: 30px;
-}
-
 .font-\[600\] {
   font-weight: 600;
 }
@@ -1190,10 +1182,6 @@ video {
 }
 
 .font-medium {
-  font-weight: 500;
-}
-
-.font-\[500\] {
   font-weight: 500;
 }
 
@@ -1216,14 +1204,6 @@ video {
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-}
-
-.text-\[\] {
-  color: ;
-}
-
-.text-\[32\] {
-  color: 32;
 }
 
 .underline {
