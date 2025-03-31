@@ -59,18 +59,18 @@
   {% endschema %}
       
   <div class="w-full flex justify-center mt-3">
-    <div class="relative w-full max-w-[1600px] pl-3 lg:pl-0">
+    <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
       <!-- Header with arrows -->
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-medium">Browse Categories</h3>
-        <div class="badge-arrows flex gap-2">
+        <div></div>
+        <div class="badge-arrows flex gap-4">
           <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
               <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
             </svg>
           </button>
           <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
               <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
             </svg>
           </button>
@@ -80,7 +80,7 @@
       <!-- Badge scroller -->
       <div class="relative">
         <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
-          <div class="flex flex-shrink gap-3 md:gap-6">
+          <div class="flex flex-shrink gap-2 md:gap-4">
             {% for block in section.blocks %}
               {% if block.settings.title != blank and block.settings.link != blank %}
                 <a href="{{ block.settings.link }}" 
@@ -125,7 +125,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background-color: #000000;
+      background-color: #323232;
       border: none;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }

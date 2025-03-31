@@ -139,9 +139,13 @@
     height: 1px;
     background-color: #e5e5e5;
   }
+
+  .faq-page-accordion {
+    padding: 0 12px
+  }
 {%- endstyle -%}
 
-<div class="section-accordion global__section {{ section_padding }} px-3 {% if request.visual_preview_mode %}preview-mode{% endif %} {% if is_faq_page %}faq-page-accordion{% endif %}"
+<div class="section-accordion global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %} {% if is_faq_page %}faq-page-accordion{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="accordion"
   data-section-loaded="false">

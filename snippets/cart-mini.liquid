@@ -5,7 +5,6 @@
 {% comment %} Mini Cart Logic {% endcomment %}
 {%- liquid
   if settings.cart_type == 'drawer'
-    assign is_narrow = 'narrow'
     assign cart_type_class = 'ajax-cart__drawer-wrapper'
     assign cart_class = 'js-slideout-close'
     assign cart_data = 'data-slideout-direction="right" aria-controls="slideout-ajax-cart"'
@@ -24,16 +23,15 @@ data-ajax-cart-mini>
   <div class="loading-wrapper js-mini-cart-loader no-js-hidden">
     <div class="loading-ripple"><div></div><div></div></div>
   </div>
-  <div class="ajax-cart__header-wrapper {{ is_narrow }} grid__wrapper pt0 pb3">
+  <div class="ajax-cart__header-wrapper grid__wrapper px-3" style="width: auto; max-width: 600px; margin: 0 auto;">
     <div class="span-8 sm-span-8 auto a-left v-start">
       <p class="py2 mb0 lh1 h3 cart-title">{{ 'cart.general.title' | t }}</p>
     </div>
     <div class="span-4 sm-span-4 auto a-right v-start">
-      <div class="py1 slideout__trigger--close">
+      <div class="py1 slideout__trigger--close" style="display: flex; justify-content: flex-end; padding: 0 !important;">
         <button class="slideout__trigger-ajax-cart {{ cart_class }} btn-as-link lh1" {{ cart_data }} aria-label="Close cart" tabindex="0" type="button" name="button">
-          {% comment %} <span class="vib-center mr1">{{ 'cart.general.close_cart' | t }}</span> {% endcomment %}
           {% render 'snip-icons',
-             wrapper: '.ajax-cart__header-wrapper',
+             wrapper: '.slideout__trigger-ajax-cart',
              type: 'theme',
              icon: 'close',
              size: '16px',
@@ -50,7 +48,7 @@ data-ajax-cart-mini>
   </div>
   {%- unless request.design_mode -%}
     {%- if additional_checkout_buttons -%}
-      <div class="ajax-cart__footer-wrapper grid__wrapper narrow">
+      <div class="ajax-cart__footer-wrapper grid__wrapper" style="width: auto; max-width: 600px; margin: 0 auto;">
         <div class="span-12 auto">
           <p class="sm-caps or-divider mt2 mb2 a-center"><span>Or</span></p>
           <div class="ajax-cart__buttons-additional">

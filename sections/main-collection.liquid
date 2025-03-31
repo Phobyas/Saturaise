@@ -72,6 +72,14 @@
       font-size: 13px;
     }
   }
+
+  @media screen and (max-width: 1023px){
+    #collection-page {
+      padding: 0 12px;
+    }
+  }
+
+  collection-page
 {% endstyle %}
 
 {% comment %} Collection Page Assets {% endcomment %}
@@ -144,7 +152,7 @@
 {% comment %} Collection Page Template {% endcomment %}
 <section
   id="collection-page"
-  class="collection__page--wrapper px-3 collection-template collection-{{ section.id }} mt6 pb9 no-section-animation"
+  class="collection__page--wrapper collection-template collection-{{ section.id }} mt6 pb9 no-section-animation"
   data-section-id="{{ section.id }}"
   data-section-type="collection"
   data-asset-url="{{ 'section-main-collection.js' | asset_url }}"

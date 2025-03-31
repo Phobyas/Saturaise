@@ -350,7 +350,14 @@
 @media (min-width: 768px) {
   .product-loop__title,
   .product-loop__title a {
-    font-size: 18px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .product-loop__title,
+  .product-loop__title a {
+    font-size: 16px;
   }
 }
 
