@@ -63,7 +63,9 @@
       {%- form 'contact', id: 'ContactForm' -%}
         {%- if form.posted_successfully? -%}
           <div class="form-status form-status-list form-status--success">
-            <h3>{{ 'sections.contact_form.post_success' | t }}</h3>
+            <span class="success-icon">✓</span>
+            <h3>Wiadomość wysłana</h3>
+            <p>Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.</p>
           </div>
         {%- elsif form.errors -%}
           <div class="form-status form-status-list form-status--error">
@@ -135,6 +137,7 @@
             id="ContactForm-body" 
             name="contact[body]" 
             rows="5" 
+            style="min-height: 180px !important; height: 180px !important;"
             required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
         </div>
         
@@ -147,6 +150,60 @@
 </div>
 
 <style>
+  /* Success message styling - refined and subtle */
+  .form-status--success {
+    background-color: #f1f9f1;
+    color: #2e7d32;
+    padding: 16px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    animation: fadeInSuccess 0.5s ease forwards;
+    border: 1px solid #c8e6c9;
+    font-size: 15px;
+  }
+  
+  @keyframes fadeInSuccess {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .form-status--success .success-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    background: #2e7d32;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 24px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .form-status--success h3 {
+    display: inline-block;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  
+  .form-status--success p {
+    font-size: 15px;
+    margin: 4px 0 0;
+    opacity: 0.9;
+  }
+
   #contact-{{ section.id }} {
     --primary-color: {{ section.settings.primary_color }};
     --text-color: {{ section.settings.text_color }};
@@ -187,6 +244,7 @@
     flex-direction: column;
     gap: 30px;
     flex: 1;
+    position: relative;
   }
   
   .contact-info {
@@ -252,11 +310,6 @@
     margin-bottom: 20px;
     padding: 15px;
     border-radius: 8px;
-  }
-  
-  .form-status--success {
-    background-color: #f1f9f1;
-    color: #2e7d32;
   }
   
   .form-status--error {
@@ -332,6 +385,39 @@
     transform: translateY(-2px);
   }
   
+  /* FIX for textarea shrinking issue */
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.3s;
+    min-height: 180px !important; /* Increased from 120px to 180px */
+    height: 180px !important; /* Increased from 120px to 180px */
+    resize: vertical; /* Allow only vertical resizing */
+    flex: none !important; /* Prevent flex shrinking */
+  }
+
+  /* Advanced selectors to ensure textarea maintains height */
+  #ContactForm-body,
+  #ContactForm-body:focus,
+  #ContactForm-body:active,
+  textarea[name="contact[body]"],
+  textarea[name="contact[body]"]:focus,
+  textarea[name="contact[body]"]:active {
+    min-height: 180px !important;
+    height: 180px !important;
+  }
+
+  /* Override the flex behavior of the form group containing the textarea */
+  .form-group:last-of-type {
+    display: block !important; /* Override flex */
+    flex: none !important; /* Override flex grow/shrink */
+    height: auto !important; /* Let it be as tall as needed */
+  }
+  
   /* Tablet styles */
   @media (min-width: 768px) {
     #contact-{{ section.id }} {
@@ -390,7 +476,7 @@
     }
     
     .contact-header {
-      margin-bottom: 60px;
+      margin-bottom: 40px;
     }
     
     .contact-header h1 {
@@ -454,23 +540,20 @@
     }
     
     #contact-{{ section.id }} .form-group:last-of-type {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+      flex: none !important;
+      display: block !important;
     }
     
     #contact-{{ section.id }} textarea {
-      flex-grow: 1;
-      min-height: 120px;
+      flex: none !important;
+      min-height: 180px !important; /* Increased from 120px to 180px */
+      height: 180px !important; /* Increased from 120px to 180px */
     }
     
-    .form-group {
+    /* Make the message form group take specific height instead of flexible growth */
+    #contact-{{ section.id }} .form-group:last-of-type {
+      height: auto !important;
       margin-bottom: 20px;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-      padding: 14px 16px;
     }
   }
   
@@ -484,10 +567,119 @@
       min-height: auto;
     }
   }
+
+  /* Fix for validation messages duplicating */
+  .validation-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-top: 4px;
+  }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Get the form and email input
+    const contactForm = document.getElementById('ContactForm');
+    const emailInput = document.getElementById('ContactForm-email');
+    
+    if (contactForm && emailInput) {
+      // Disable HTML5 validation - we'll handle it ourselves
+      contactForm.setAttribute('novalidate', 'novalidate');
+      
+      // Handle form submission
+      contactForm.addEventListener('submit', function(event) {
+        // Clear any existing error messages first
+        const allErrorMessages = document.querySelectorAll('.validation-message');
+        allErrorMessages.forEach(msg => msg.parentNode.removeChild(msg));
+        
+        // Check email validity
+        if (emailInput.value.trim() === '') {
+          // Email is empty
+          event.preventDefault();
+          showErrorMessage(emailInput, 'Wypełnij to pole.');
+        } else if (!isValidEmail(emailInput.value.trim())) {
+          // Email format is invalid
+          event.preventDefault();
+          showErrorMessage(emailInput, 'Uwzględnij znak „@" w adresie e-mail. W adresie „' + emailInput.value + '" brakuje znaku „@".');
+        }
+        
+        // Check message field (required)
+        const messageInput = document.getElementById('ContactForm-body');
+        if (messageInput && messageInput.value.trim() === '') {
+          event.preventDefault();
+          showErrorMessage(messageInput, 'Wypełnij to pole.');
+        }
+      });
+      
+      // Clear error message when user types in email field
+      emailInput.addEventListener('input', function() {
+        const errorMessage = this.parentNode.querySelector('.validation-message');
+        if (errorMessage) {
+          errorMessage.parentNode.removeChild(errorMessage);
+        }
+      });
+      
+      // Also clear on focus
+      emailInput.addEventListener('focus', function() {
+        const errorMessage = this.parentNode.querySelector('.validation-message');
+        if (errorMessage) {
+          errorMessage.parentNode.removeChild(errorMessage);
+        }
+      });
+      
+      // Helper function to show error message
+      function showErrorMessage(inputElement, message) {
+        // Create error message element
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'validation-message';
+        errorMessage.style.color = '#d32f2f';
+        errorMessage.style.fontSize = '14px';
+        errorMessage.style.marginTop = '4px';
+        errorMessage.textContent = message;
+        
+        // Insert after the input element
+        inputElement.parentNode.appendChild(errorMessage);
+        
+        // Focus on the input
+        inputElement.focus();
+      }
+      
+      // Helper function to validate email format
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+    }
+    
+    // Fix for textarea height
+    const fixTextareaHeight = function() {
+      const textarea = document.getElementById('ContactForm-body');
+      if (!textarea) return;
+      
+      // Set fixed height
+      textarea.style.minHeight = '180px';
+      textarea.style.height = '180px';
+      
+      // Event listeners to maintain height
+      textarea.addEventListener('focus', function() {
+        this.style.minHeight = '180px';
+        this.style.height = '180px';
+      });
+      
+      textarea.addEventListener('blur', function() {
+        this.style.minHeight = '180px';
+        this.style.height = '180px';
+      });
+      
+      textarea.addEventListener('input', function() {
+        this.style.minHeight = '180px';
+        this.style.height = '180px';
+      });
+    };
+    
+    // Run textarea fix
+    fixTextareaHeight();
+    
     // Function to ensure equal heights
     function equalizeHeights() {
       if (window.innerWidth >= 1024) {
@@ -537,6 +729,15 @@
     
     setVhProperty();
     window.addEventListener('resize', setVhProperty);
+    
+    // Check if success message exists and scroll to it
+    const successMessage = document.querySelector('.form-status--success');
+    if (successMessage) {
+      // Scroll to success message after a small delay to ensure everything is loaded
+      setTimeout(function() {
+        successMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
   });
 </script>
 
