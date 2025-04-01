@@ -1,9 +1,7 @@
 <style>
-
   .heading-title {
     font-weight: 700;
   }
-  
 </style>
 
 {% comment %} Featured Collection Assets {% endcomment %}
@@ -90,7 +88,7 @@
   "selectedAttraction": 0.08,
   "friction": 0.5,
   "groupCells": 1,
-  "pageDots": {{ enough_to_wrap }},
+  "pageDots": false,
   "accessibility": true,
   "contain": true,
   "percentPosition": true,
@@ -109,7 +107,7 @@
   "friction": 0.6,
   "cellSelector": ".product-loop__item",
   "prevNextButtons": false,
-  "pageDots": true,
+  "pageDots": false,
   "accessibility": true,
   "groupCells": 1,
   "snapToAlignment": true
@@ -126,7 +124,7 @@
     "friction": 0.6,
     "cellSelector": ".product-loop__item",
     "prevNextButtons": false,
-    "pageDots": true,
+    "pageDots": false,
     "accessibility": true,
     "groupCells": 1,
     "snapToAlignment": true
@@ -220,6 +218,7 @@
         }
       {% endif %}
     }
+    
     {% if section.settings.text_position == 'right' %}
       @media (max-width: 767px) {
         .featured-collection-{{ section.id }} .featured-collection__text-wrapper {
@@ -227,6 +226,25 @@
         }
       }
     {% endif %}
+    
+    /* Ensure proper button positioning */
+    .section-featured-collection__outer-wrapper {
+      position: relative;
+      overflow: visible;
+    }
+    
+    /* Hide page dots on all devices */
+    .featured-collection__wrapper--loop .flickity-page-dots,
+    .section-featured-collection__wrapper--carousel .flickity-page-dots {
+      display: none !important;
+    }
+    
+    /* Hide navigation buttons on mobile */
+    @media (max-width: 767px) {
+      .section-featured-collection__wrapper--carousel .flickity-button {
+        display: none !important;
+      }
+    }
   {% endstyle %}
 </div>
 
@@ -248,7 +266,37 @@
         
       // Add the groupCells setting to ensure single item movement
       config.groupCells = false;  // This ensures we move one cell at a time
+      
+      // Make sure page dots are always disabled
+      config.pageDots = false;
+      
       flkty = new Flickity(carousel, config);
+      
+      // Check for button spacing and prevent overflow
+      setTimeout(function() {
+        const prevButton = carousel.querySelector('.flickity-button.previous');
+        const nextButton = carousel.querySelector('.flickity-button.next');
+        
+        if (prevButton && nextButton) {
+          const container = carousel.closest('.section-featured-collection__outer-wrapper');
+          const containerRect = container.getBoundingClientRect();
+          const containerWidth = containerRect.width;
+          const viewportWidth = window.innerWidth;
+          
+          // Calculate available space for buttons
+          const leftSpace = containerRect.left;
+          const rightSpace = viewportWidth - (containerRect.left + containerWidth);
+          
+          // If not enough space on either side, hide both buttons
+          if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1600) {
+            prevButton.style.display = 'none';
+            nextButton.style.display = 'none';
+          } else {
+            prevButton.style.display = '';
+            nextButton.style.display = '';
+          }
+        }
+      }, 100);
     }
     
     // Add direct click handlers to the buttons
@@ -270,6 +318,9 @@
         flkty.next(true); // true ensures we move only one cell
       });
     }
+    
+    // Show carousel after initialization
+    carousel.classList.remove('is-hidden');
   }
 
   // Initialize on load
@@ -283,6 +334,35 @@
   document.addEventListener('shopify:section:load', function(event) {
     if (event.target.classList.contains('featured-collection-{{ section.id }}')) {
       setTimeout(initCarousel, 0);
+    }
+  });
+  
+  // Handle window resize to check button visibility
+  window.addEventListener('resize', function() {
+    const carousel = document.querySelector('.featured-collection-{{ section.id }} .js-carousel');
+    if (!carousel) return;
+    
+    const prevButton = carousel.querySelector('.flickity-button.previous');
+    const nextButton = carousel.querySelector('.flickity-button.next');
+    
+    if (prevButton && nextButton) {
+      const container = carousel.closest('.section-featured-collection__outer-wrapper');
+      const containerRect = container.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const viewportWidth = window.innerWidth;
+      
+      // Calculate available space for buttons
+      const leftSpace = containerRect.left;
+      const rightSpace = viewportWidth - (containerRect.left + containerWidth);
+      
+      // If not enough space on either side, hide both buttons
+      if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1600) {
+        prevButton.style.display = 'none';
+        nextButton.style.display = 'none';
+      } else {
+        prevButton.style.display = '';
+        nextButton.style.display = '';
+      }
     }
   });
 })();
