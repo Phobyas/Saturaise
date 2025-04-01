@@ -185,6 +185,14 @@
             "link": "shopify://collections/travis-scott",
             "image": "shopify://shop_images/air-jordan-1-low-og-sp-travis-scott-olive-1.webp"
           }
+        },
+        "category_43Wq8j": {
+          "type": "category",
+          "settings": {
+            "title": "Handball Spezial",
+            "link": "shopify://collections/handball-spezial",
+            "image": "shopify://shop_images/adidas-handball-spezial-sporty-rich-brown4-copie.webp"
+          }
         }
       },
       "block_order": [
@@ -198,9 +206,12 @@
         "category_MRKK9a",
         "category_kcDV4c",
         "category_JimxB9",
-        "category_7gnDcc"
+        "category_7gnDcc",
+        "category_43Wq8j"
       ],
-      "settings": {}
+      "settings": {
+        "scroll_amount": 200
+      }
     },
     "featured_collection_jRewn3": {
       "type": "featured-collection",
