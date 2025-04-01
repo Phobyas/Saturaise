@@ -588,26 +588,108 @@
       
       // Handle form submission
       contactForm.addEventListener('submit', function(event) {
+        // Prevent default form submission
+        event.preventDefault();
+        
         // Clear any existing error messages first
         const allErrorMessages = document.querySelectorAll('.validation-message');
         allErrorMessages.forEach(msg => msg.parentNode.removeChild(msg));
         
+        // Form validation
+        let isValid = true;
+        
         // Check email validity
         if (emailInput.value.trim() === '') {
           // Email is empty
-          event.preventDefault();
+          isValid = false;
           showErrorMessage(emailInput, 'Wypełnij to pole.');
         } else if (!isValidEmail(emailInput.value.trim())) {
           // Email format is invalid
-          event.preventDefault();
+          isValid = false;
           showErrorMessage(emailInput, 'Uwzględnij znak „@" w adresie e-mail. W adresie „' + emailInput.value + '" brakuje znaku „@".');
         }
         
         // Check message field (required)
         const messageInput = document.getElementById('ContactForm-body');
         if (messageInput && messageInput.value.trim() === '') {
-          event.preventDefault();
+          isValid = false;
           showErrorMessage(messageInput, 'Wypełnij to pole.');
+        }
+        
+        if (isValid) {
+          // Get form data
+          const formData = new FormData(contactForm);
+          
+          // Add required Shopify params
+          formData.append('form_type', 'contact');
+          formData.append('utf8', '✓');
+          
+          // Submit the form via AJAX
+          fetch('/contact', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'text/html, application/xhtml+xml, application/xml'
+            }
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(html => {
+            // Check if the response contains error messages
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const errors = doc.querySelector('.form-status--error');
+            
+            if (errors) {
+              // Show the errors on the page
+              const formContainer = contactForm.closest('.contact-form-container');
+              if (formContainer) {
+                // Remove any existing error or success messages
+                const existingMessages = formContainer.querySelectorAll('.form-status');
+                existingMessages.forEach(msg => msg.remove());
+                
+                // Insert the error message at the top of the form
+                formContainer.insertBefore(errors, formContainer.firstChild);
+              }
+            } else {
+              // Success! Show success message
+              // Create a hidden "success message" container if it doesn't exist yet
+              let successContainer = document.querySelector('.form-status--success');
+              if (!successContainer) {
+                successContainer = document.createElement('div');
+                successContainer.className = 'form-status form-status-list form-status--success';
+                successContainer.innerHTML = `
+                  <span class="success-icon">✓</span>
+                  <h3>Wiadomość wysłana</h3>
+                  <p>Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.</p>
+                `;
+                
+                // Insert at the beginning of the form
+                const formContainer = contactForm.closest('.contact-form-container');
+                if (formContainer && formContainer.querySelector('h2')) {
+                  formContainer.insertBefore(successContainer, formContainer.querySelector('h2').nextSibling);
+                } else {
+                  contactForm.insertBefore(successContainer, contactForm.firstChild);
+                }
+              } else {
+                // Make sure it's visible if it exists
+                successContainer.style.display = 'block';
+              }
+              
+              // Reset the form on success
+              contactForm.reset();
+              
+              // Scroll to success message
+              successContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          })
+          .catch(error => {
+            console.error('Error submitting form:', error);
+          });
         }
       });
       
