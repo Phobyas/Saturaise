@@ -19,7 +19,7 @@
     "main": {
       "type": "main-cart",
       "settings": {
-        "link": ""
+        "link": "shopify://collections/buty"
       }
     },
     "product-recommendations": {
