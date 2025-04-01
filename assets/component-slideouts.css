@@ -213,6 +213,10 @@ aside.slideout.slideout--active.slideout__drawer-top {
   border: none !important;
 }
 
+.slideout__trigger-ajax-cart {
+  padding: 0 8px !important;
+}
+
 @media (max-width: 1023px) {
   .slideout__trigger-ajax-cart {
     border: none !important;

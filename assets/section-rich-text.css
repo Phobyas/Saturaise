@@ -46,3 +46,7 @@
   background: var(--scheme-1-hover) !important;
   color: var(--scheme-1-bg) !important;
 }
+
+.section-richtext a strong:hover {
+  color: white;
+}

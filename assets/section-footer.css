@@ -29,10 +29,10 @@
   color: var(--footer-text);
 }
 
-.section-footer a:hover,
+/* .section-footer a:hover,
 .section-footer .disclosure-list a:hover {
   color: var(--footer-hover) !important;
-}
+} */
 
 .section-footer .disclosure-list {
   background-color: var(--footer-text);
