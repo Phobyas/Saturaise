@@ -1,19 +1,21 @@
 {%- liquid
+  # Dynamic color scheme configuration
   assign text_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-text)'
   assign bg_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-bg)'
   assign hover_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-hover)'
 
-  if section.settings.enable_sticky
-    assign sticky = 'stickynav'
-    assign sticky_js = 'js-stickynav'
-  endif
-
+  # Header layout determination
   if section.settings.header_layout == 'logo_left'
    assign mob_lay = 'left'
   else
    assign mob_lay = 'right'
   endif
 
+  # Sticky header configuration
+  if section.settings.enable_sticky
+    assign sticky = 'stickynav'
+    assign sticky_js = 'js-stickynav'
+  endif
 -%}
 
 {% comment %} Mobile Header Assets {% endcomment %}
@@ -44,8 +46,7 @@
   }
 
   .close-menu-btn {
-
-
+    /* Placeholder for close menu button styles */
   }
 
   #mobile-slideout {
@@ -56,7 +57,6 @@
   .mobile-nav__img-wrapper{
     width: 60% !important;
   }
-
 {% endstyle %}
 
 {% comment %} Mobile Header {% endcomment %}
@@ -154,8 +154,6 @@
         {{ mobile_cart_link }}
       </ul>
     {%- endif -%}
-
-    
   </article>
 </section>
 <div class="clear js-clear-element"></div>
@@ -212,11 +210,7 @@
 {% comment %} Mobile Navigation Slideout {% endcomment %}
 <aside id="mobile-slideout" class="slideout slideout__drawer-left" data-wau-overlay="false" data-wau-slideout="mobile-navigation" id="slideout-mobile-navigation">
   <div class="slideout__trigger--close mobile-header--close">
-
-
     <div class="flex px-6">
-
-    
     {% if section.settings.menu_image != blank %}
       <div class="grid__wrapper pt-12 pb-2 mt-3">
         <div class="mobile-nav__img-wrapper span-6 auto relative">
@@ -233,7 +227,7 @@
         </div>
       </div>
       
-      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  pt-2" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
+      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  mt-12" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
         {% render 'snip-icons',
            wrapper: '.section-header__mobile',
            type: 'theme',
@@ -243,21 +237,14 @@
            fill: 'var(--header-text)',
            hover: 'var(--header-hover)' %}
       </button>
-
-      </div>
     {% endif %}
-
+    </div>
   </div>
   <div
   class="mobile-nav__wrapper no-section-animation">
-
     <div class="mobile-nav__menu-blocks pt0">
-
-
-
       {% if section.settings.main_nav != blank %}
         <div class="mobile-nav__mobile-menu-wrapper px6">
-
           {% assign unique_id = section.id | slice: 0, 7 %}
           {% assign mobile_menu_allow_multiple = false %}
 
@@ -292,7 +279,6 @@
 
         </div>
       {% endif %}
-
     </div>
     {% style %}
       #slideout-mobile-navigation,
@@ -304,29 +290,35 @@
       body.slideout-mobile-navigation--open #mobile-search {
         background-color: {{ bg_color }} !important;
       }
+
       #slideout-mobile-navigation .mobile-nav__mobile-header svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile_search--form svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg .hover-fill {
         fill: {{ text_color }} !important;
       }
+
       .section-header__mobile_search--form {
         border-color: {{ text_color }} !important;
       }
+
       #slideout-mobile-navigation .mobile-nav__mobile-header svg:hover .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg:hover .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg:hover .hover-fill {
         fill: {{ hover_color }} !important;
       }
+
       .mobile-nav__wrapper input::placeholder,
       .slideout-mobile-navigation--open .section-header__mobile_search--input::placeholder  {
         color: {{ text_color }} !important;
         opacity: 1;
       }
+
       .mobile-nav__wrapper input:-ms-input-placeholder {
         color: {{ text_color }} !important;
         opacity: 1;
       }
+
       .mobile-nav__wrapper input::-ms-input-placeholder {
         color: {{ text_color }} !important;
         opacity: 1;
@@ -338,6 +330,7 @@
       .slideout-mobile-navigation--open .section-header__mobile_search--input {
         color: {{ text_color }} !important;
       }
+
       .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
 
         color: {{ bg_color }} !important;
@@ -345,6 +338,7 @@
       .mobile-nav__wrapper .c-accordion__top-level  {
         border-bottom: 2px solid #ccc !important;
       }
+
       .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
       .slideout-mobile-navigation--open .section-header__mobile_search--input {
         border-color: {{ text_color }};
@@ -496,4 +490,3 @@
   ]
 }
 {% endschema %}
-
