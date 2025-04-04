@@ -359,7 +359,7 @@ input[type="search"]#Search::-webkit-search-results-decoration {
 #predictiveSearch .searchbox__input {
   width: 96%;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* #predictive-search-results {

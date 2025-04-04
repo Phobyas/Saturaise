@@ -475,84 +475,100 @@
   </style>
   
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Determine the actual drawer direction
-      const filterDrawer = document.querySelector('.slideout--collection-filters, #slideout-collection-filters');
-      const drawerDirection = filterDrawer && filterDrawer.classList.contains('slideout__drawer-right') ? 'right' : 'left';
-      
-      // Function to initialize filter drawer
-      function initFilterDrawer() {
-        // Mark if the drawer is currently open
-        if (filterDrawer && filterDrawer.classList.contains('is-visible')) {
-          localStorage.setItem('filterDrawerOpen', 'true');
-        }
-        
-        // Add click handlers to all filter links
-        const filterLinks = document.querySelectorAll('.js-collection-side-filter, .js-current-filter');
-        filterLinks.forEach(link => {
-          if (!link.hasAttribute('data-filter-handler')) {
-            link.setAttribute('data-filter-handler', 'true');
-            link.addEventListener('click', function(e) {
-              // Store that the drawer was open
-              localStorage.setItem('filterDrawerOpen', 'true');
-              localStorage.setItem('filterDrawerTimestamp', Date.now());
-              
-              // Let the default action proceed (page will reload)
-            });
-          }
-        });
-        
-        // Check if we should open the drawer (from previous filter action)
-        if (localStorage.getItem('filterDrawerOpen') === 'true') {
-          const timestamp = localStorage.getItem('filterDrawerTimestamp');
-          const now = Date.now();
+  document.addEventListener('DOMContentLoaded', function() {
+    // Override filter behavior to prevent page reload
+    function setupFilterLinks() {
+      // First capture all the filter links
+      document.querySelectorAll('.js-collection-side-filter, .js-current-filter').forEach(function(link) {
+        if (!link.hasAttribute('data-ajax-filter')) {
+          link.setAttribute('data-ajax-filter', 'true');
           
-          // Only use the stored state if it's recent (within 2 seconds)
-          if (timestamp && (now - timestamp) < 2000) {
-            // Open the drawer if it's not already open
-            if (filterDrawer && !filterDrawer.classList.contains('is-visible')) {
-              // Find the correct trigger button based on the actual drawer direction
-              const filterTrigger = document.querySelector('[data-wau-slideout-target="collection-filters"]');
-              if (filterTrigger) {
-                // Update the data-slideout-direction attribute to match the actual drawer
-                filterTrigger.setAttribute('data-slideout-direction', drawerDirection);
-                
-                setTimeout(function() {
-                  filterTrigger.click();
-                }, 10);
-              }
-            }
-          }
-          
-          // Clear the stored state
-          localStorage.removeItem('filterDrawerOpen');
-          localStorage.removeItem('filterDrawerTimestamp');
-        }
-        
-        // Also open the drawer automatically if there are active filters
-        const hasActiveFilters = document.querySelector('.filter-drawer__filtering__results') !== null;
-        if (hasActiveFilters && !filterDrawer?.classList.contains('is-visible')) {
-          const filterTrigger = document.querySelector('[data-wau-slideout-target="collection-filters"]');
-          if (filterTrigger) {
-            // Update the data-slideout-direction attribute to match the actual drawer
-            filterTrigger.setAttribute('data-slideout-direction', drawerDirection);
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            setTimeout(function() {
-              filterTrigger.click();
-            }, 10);
-          }
-        }
-      }
-      
-      // Initialize on page load
-      initFilterDrawer();
-      
-      // Re-initialize after any AJAX loads (for Shopify's infinite scroll or quick view features)
-      document.addEventListener('shopify:section:load', function(event) {
-        if (event.detail && event.detail.sectionId && event.detail.sectionId.includes('collection')) {
-          initFilterDrawer();
+            // Get URL from the link
+            const url = this.getAttribute('href');
+            if (!url) return;
+            
+            // Add loading state
+            const filterDrawer = document.querySelector('.filter-drawer__wrapper');
+            if (filterDrawer) {
+              filterDrawer.classList.add('is-loading');
+            }
+            
+            // Add loading state to collection grid
+            const productGrid = document.getElementById('CollectionProductGrid');
+            if (productGrid) {
+              productGrid.style.opacity = '0.5';
+            }
+            
+            // Fetch the new page content
+            fetch(url)
+              .then(response => response.text())
+              .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Update the product grid
+                const newProductGrid = doc.getElementById('CollectionProductGrid');
+                if (newProductGrid && productGrid) {
+                  productGrid.innerHTML = newProductGrid.innerHTML;
+                }
+                
+                // Update filter content EXCEPT for the drawer itself
+                const newFilterForm = doc.getElementById('CollectionFiltersForm');
+                const currentFilterForm = document.getElementById('CollectionFiltersForm');
+                
+                if (newFilterForm && currentFilterForm) {
+                  const newFilterContent = newFilterForm.querySelector('.filter-drawer__wrapper');
+                  const currentFilterContent = currentFilterForm.querySelector('.filter-drawer__wrapper');
+                  
+                  if (newFilterContent && currentFilterContent) {
+                    currentFilterContent.innerHTML = newFilterContent.innerHTML;
+                  }
+                }
+                
+                // Update the URL without refreshing
+                window.history.pushState({}, '', url);
+                
+                // Remove loading states
+                if (filterDrawer) {
+                  filterDrawer.classList.remove('is-loading');
+                }
+                if (productGrid) {
+                  productGrid.style.opacity = '1';
+                }
+                
+                // Set up filter links again
+                setTimeout(setupFilterLinks, 100);
+              })
+              .catch(error => {
+                console.error('Error updating filters:', error);
+                // Fallback to normal page navigation if fetch fails
+                window.location.href = url;
+              });
+          });
         }
       });
+    }
+    
+    // Set up filter links on initial load
+    setupFilterLinks();
+    
+    // Re-setup filter links after any dynamic content changes
+    const observer = new MutationObserver(function(mutations) {
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          setTimeout(setupFilterLinks, 100);
+        }
+      }
     });
+    
+    // Start observing the filter form for changes
+    const filterForm = document.getElementById('CollectionFiltersForm');
+    if (filterForm) {
+      observer.observe(filterForm, { childList: true, subtree: true });
+    }
+  });
   </script>
 </div>

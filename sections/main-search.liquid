@@ -7,10 +7,10 @@
     font-size: 16px !important;
     font-weight: bold;
     margin-bottom: 10px;
-  }
+  } 
 
   /* Filter and Sort Button Styles */
-  .search__page--topbar .button {
+  .collection__page--topbar .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -24,24 +24,24 @@
     letter-spacing: 0.5px;
   }
 
-  .search__page--topbar .button:hover {
+  .collection__page--topbar .button:hover {
     background: #eee;
     color: var(--bg-color);
   }
 
-  .search__page--topbar .button .no-pe {
+  .collection__page--topbar .button .no-pe {
     font-weight: 700;
     text-transform: uppercase;
   }
 
-  .search__page--topbar .button svg {
+  .collection__page--topbar .button svg {
     margin-left: 8px;
     width: 12px;
     height: 12px;
     transition: transform 0.3s ease;
   }
 
-  .search__page--topbar .button:hover svg {
+  .collection__page--topbar .button:hover svg {
     transform: translateY(2px);
     fill: var(--bg-color);
   }
@@ -62,26 +62,26 @@
   }
 
   .search__page--bar-wrapper .button {
-  background: white !important;
-  border: 1px solid #ddd !important;
-  border-radius: 4px !important;
-  height: 44px !important;
-  width: 44px !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
+    background: white !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    height: 44px !important;
+    width: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
-.search__page--bar-wrapper .button svg {
-  width: 18px !important;
-  height: 18px !important;
-  fill: #333 !important;
-}
+  .search__page--bar-wrapper .button svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: #333 !important;
+  }
 
-.search__page--bar-wrapper .button:hover {
-  background: #f5f5f5 !important;
-}
+  .search__page--bar-wrapper .button:hover {
+    background: #f5f5f5 !important;
+  }
 
  .form.form-vertical {
    width: 100% !important;
@@ -96,7 +96,7 @@
  }
 
   @media screen and (max-width: 768px) {
-    .search__page--topbar .button {
+    .collection__page--topbar .button {
       min-height: 36px;
       padding: 6px 12px;
       font-size: 13px;
@@ -116,58 +116,56 @@
 
 {% comment %} Search Page Logic {% endcomment %}
 {%- liquid
-  if settings.section_title_align == 'left'
-    assign heading_align = 'a-left'
+  assign page_limit = section.settings.items_per_page | default: 24
+
+  assign has_sortby = false
+  assign has_filter = false
+  for block in section.blocks
+    if block.type == 'sort_by'
+      assign has_sortby = true
+    endif
+    if block.type == 'filter'
+      assign has_filter = true
+    endif
+  endfor
+
+  assign filter_count = 0
+  for filter in search.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign filter_count = 1
+      endif
+    endif
+
+    assign filter_count = filter_count | plus: filter.active_values.size
+  endfor
+
+  if settings.varying_grid
+    assign grid_type = 'reverse cg6 sm-cg4 rg6 sm-rg6'
   else
-    assign heading_align = 'a-center'
+    assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
   endif
 
-  assign product_info_align =  'a-center'
-
-  assign has_products = false
-  assign has_articles = false
-  assign has_pages = false
-
-  if section.settings.show_filters
-   assign show_filters = true
- endif
-
- assign filter_count = 0
- for filter in search.filters
-   if filter.type == 'price_range'
-     if filter.min_value.value != nil or filter.max_value.value != nil
-       assign filter_count = 1
-     endif
-   endif
-
-   assign filter_count = filter_count | plus: filter.active_values.size
- endfor
-
- if settings.varying_grid
- assign grid_type = 'reverse cg6 sm-cg4 rg6 sm-rg6'
-else
- assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
-endif
-
-case section.settings.items_per_row
-when 4
- assign items_per_row = 'span-3 sm-span-6 auto'
-when 3
- assign items_per_row = 'span-4 sm-span-6 auto'
-when 2
- assign items_per_row = 'span-6 sm-span-6 auto'
-when 1
- assign items_per_row = 'span-12 sm-span-12'
-endcase
+  case section.settings.items_per_row
+  when 4
+    assign items_per_row = 'span-3 sm-span-6 auto'
+  when 3
+    assign items_per_row = 'span-4 sm-span-6 auto'
+  when 2
+    assign items_per_row = 'span-6 sm-span-6 auto'
+  when 1
+    assign items_per_row = 'span-12 sm-span-12'
+  endcase
 -%}
 
-{% comment %} Search Page Template {% endcomment %}
-<section class="search-template search__page--wrapper no-section-animation pt-16 mb-12"
+<section
+  class="search-template search__page--wrapper collection-template no-section-animation mt6 pb9"
   data-section-id="{{ section.id }}"
-  data-asset-url="{{ 'section-main-search.js' | asset_url }}"
-  data-section-type="search-template">
-  <div id="searchResultsWrapper" class="grid__wrapper">
-    {% paginate search.results by 24 %}
+  data-section-type="search-template"
+  data-asset-url="{{ 'section-main-search.js' | asset_url }}">
+
+  {% paginate search.results by page_limit %}
+    <div id="SearchProductGrid" class="grid__wrapper">
       <div id="search-bar" class="search__page--bar-wrapper span-12 auto ">
         <form action="{{ routes.search_url }}" method="get">
           <div class="a-left text-search">
@@ -185,6 +183,7 @@ endcase
               type="text"
               name="q"
               id="q"
+              value="{{ search.terms }}"
               placeholder="{{ 'general.search.placeholder' | t }}"/>
               <button type="submit" class="button">
                 {% render 'saturaise-icons', 
@@ -195,100 +194,91 @@ endcase
       </div>
 
       {% if search.performed %}
-        {%- if show_filters -%}
-          <div class="search__page--topbar span-12 auto grid__wrapper edge rg0">
-            <div class="span-5 sm-span-12 auto a-left v-end">
-              <button class="button js-slideout-open js-menu-toggle mr3"
-                data-wau-slideout-target="search-filters"
-                data-slideout-direction="left"
-                data-toggle-menu="filter"
-                aria-label="Open filters"
-                tabindex="0" type="button" name="button">
-                <span class="no-pe mr5">{{ 'collections.filter.filter' | t }}</span>
-               {% render 'snip-icons',
-                   wrapper: '.search__page--topbar',
-                   classes: 'a-right'
-                   type: 'theme',
-                   icon: 'filter',
-                   size: '5px',
-                   fill: 'var(--text-color)',
-                   hover: 'var(--text-color)' %}
-              </button>
-              <button class="button js-slideout-open js-menu-toggle mr3"
-                data-wau-slideout-target="search-filters"
-                data-slideout-direction="left"
-                data-toggle-menu="sort"
-                aria-label="Open filters"
-                tabindex="0" type="button" name="button">
-                <span class="no-pe mr5">{{ 'collections.filter.sort_title' | t }}</span>
-                {% render 'snip-icons',
-                   wrapper: '.search__page--topbar',
-                   classes: 'a-right'
-                   type: 'apollo',
-                   icon: 'down-carrot',
-                   size: '5px',
-                   fill: 'var(--text-color)',
-                   hover: 'var(--text-color)' %}
-              </button>
-            </div>
-            <div class="span-7 sm-hide auto a-right v-end">
-              <p class="topbar__count mb0 sm-caps">{{ 'collections.general.item_count.other' | t: count: search.results_count }}</p>
-            </div>
-            {%- if filter_count > 0 -%}
-              <div class="filter-drawer__filtering__results js-filters-reset span-12 auto">
-                <h3 class="visually-hidden">{{ 'collections.filter.filtering_by_label' | t }}</h3>
-                <ul class="current_filters mb0 mt4">
-                  {%- for filter in search.filters -%}
-                    {%- for value in filter.active_values -%}
+        <div class="collection__page--topbar span-12 auto grid__wrapper edge rg0">
+          <div class="span-5 sm-span-12 auto a-left v-end">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'filter' -%}
+                  <button class="button js-slideout-open js-menu-toggle mr3"
+                    data-wau-slideout-target="search-filters"
+                    data-slideout-direction="left"
+                    data-toggle-menu="filter"
+                    aria-label="{{ 'collections.filter.filter' | t }}"
+                    tabindex="0" type="button" name="button">
+                    <span class="no-pe">{{ 'collections.filter.filter' | t }}</span>
+                    {% render 'snip-icons',
+                      wrapper: '.collection__page--topbar',
+                      classes: 'icon-filter'
+                      type: 'theme',
+                      icon: 'filter',
+                      size: '14px',
+                      fill: 'currentColor',
+                      hover: 'currentColor' %}
+                  </button>
+                {%- when 'sort_by' -%}
+                  <button class="button js-slideout-open js-menu-toggle mr3"
+                    data-wau-slideout-target="search-filters"
+                    data-slideout-direction="left"
+                    data-toggle-menu="sort"
+                    aria-label="{{ 'collections.filter.sort_title' | t }}"
+                    tabindex="0" type="button" name="button">
+                    <span class="no-pe">{{ 'collections.filter.sort_title' | t }}</span>
+                    {% render 'snip-icons',
+                      wrapper: '.collection__page--topbar',
+                      classes: 'icon-sort'
+                      type: 'apollo',
+                      icon: 'down-carrot',
+                      size: '12px',
+                      fill: 'currentColor',
+                      hover: 'currentColor' %}
+                  </button>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+          <div class="span-7 sm-hide auto a-right v-end">
+            <p class="topbar__count mb0 count">{{ 'collections.general.item_count.other' | t: count: search.results_count }}</p>
+          </div>
+          
+          {%- if filter_count > 0 -%}
+            <div class="filter-drawer__filtering__results js-filters-reset span-12 auto">
+              <h3 class="visually-hidden">{{ 'collections.filter.filtering_by_label' | t }}</h3>
+              <ul class="current_filters mb0 mt4">
+                {%- for filter in search.filters -%}
+                  {%- for value in filter.active_values -%}
+                    <li class="current_filters--filter">
+                      <a class="js-current-filter" href="{{ value.url_to_remove }}">
+                        {{ value.label | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                  {% if filter.type == "price_range" %}
+                    {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
                       <li class="current_filters--filter">
-                        <a class="js-current-filter" href="{{ value.url_to_remove }}">
-                          {{ value.label | escape }}
+                        <a class="js-current-filter" href="{{ filter.url_to_remove }}">
+                          {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
                         </a>
                       </li>
-                    {%- endfor -%}
-                    {% if filter.type == "price_range" %}
-                      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
-                        <li class="current_filters--filter">
-                          <a class="js-current-filter" href="{{ filter.url_to_remove }}">
-                            {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
-                          </a>
-                        </li>
-                      {%- endif -%}
-                    {% endif %}
-                  {%- endfor -%}
-                  <li><a class="current_filters--clear js-current-filter ml4" href="{{ routes.search_url }}">{{ 'collections.filter.clear_all' | t }}</a></li>
-                </ul>
-              </div>
-            {%- endif -%}
-          </div>
+                    {%- endif -%}
+                  {% endif %}
+                {%- endfor -%}
+                <li><a class="current_filters--clear js-current-filter ml4" href="{{ routes.search_url }}">{{ 'collections.filter.clear_all' | t }}</a></li>
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
 
-          <aside class="slideout slideout__drawer-left py8 px7"
+        {%- if has_sortby or has_filter -%}
+          <aside class="slideout slideout__drawer-right py8 px7"
             data-wau-slideout="search-filters" id="slideout-search-filters">
             <form id="SearchFiltersForm" data-filters>
               {% render 'snip-filter-drawer',
-                has_sortby: true,
-                has_filter: true,
+                has_sortby: has_sortby,
+                has_filter: has_filter,
                 type: search,
                 filter_count: filter_count %}
             </form>
           </aside>
         {%- endif -%}
-
-        {%- liquid
-
-          for item in search.results
-            if item.object_type == 'product'
-             assign has_products = true
-            endif
-            if item.object_type == 'article'
-             assign has_articles = true
-            endif
-            if item.object_type == 'page'
-             assign has_pages = true
-            endif
-          endfor
-
-        -%}
 
         {%- if search.results_count < 1 -%}
           <div id="main-search-results"
@@ -300,147 +290,85 @@ endcase
              </div>
           </div>
         {%- else -%}
-           <div id="main-search-results"
-            class="span-12 auto"
-            data-id="{{ section.id }}">
-            {% if settings.search_show_products_only == false and has_pages %}
-             <div class="span-12 auto">
-               <div id="search-pages" class="grid__wrapper pt5">
-                 {% render 'snip-headings', align: heading_align, grid: 'span-12 mt3', translation: 'general.search.pages' %}
-                 <ul class="bullet span-12">
-                   {% for item in search.results %}
-                     {% if item.object_type == 'page' %}
-                      <li>
-                        <small class="block mb1 mt2 caps"><a class="m0" href="{{ item.url }}">{{ item.title }}</a></small>
-                        {%- if item.content -%}
-                        <p>{{ item.content | strip_html | truncatewords: 12 }}</p>
-                        {%- endif -%}
-                    </li>
-                     {% endif %}
-                   {% endfor %}
-                 </ul>
-               </div>
-             </div>
-            {% endif %}
-
-            {% if settings.search_show_products_only == false and has_articles %}
-             <div class="span-12 auto">
-               <div id="search-pages" class="grid__wrapper pt5">
-                 {% render 'snip-headings', align: heading_align, grid: 'span-12 mt3', translation: 'general.search.articles' %}
-
-                 {% for item in search.results %}
-                   {% if item.object_type == 'article' %}
-                     <article class="span-4 sm-span-12 auto relative">
-                       <div class="mb6">
-                         {% if item.image %}
-                           {% liquid
-                             assign articles_has_images = true
-                             if section.index == 1 and forloop.index <= 3
-                               assign loading = 'eager'
-                               assign fetch_priority = 'high'
-                             endif
-                            %}
-                           <a href="{{ item.url }}">
-                             {% render 'helper-image',
-                              type: item.image,
-                              sm_render: '100vw'
-                              md_render: 'calc((100vw / 12) * 4)',
-                              lg_render: 'calc((1600px / 12) * 4)',
-                              loading: loading,
-                              fetchpriority: fetch_priority %}
-                           </a>
-                         {% endif %}
-                       </div>
-                       <div class="rte excerpt">
-                         <h3 class="post-title mb5">
-                           <a href="{{ item.url }}">
-                             {{ item.title }}
-                           </a>
-                         </h3>
-                         <div class="article-headline">
-                           <p class="rte">
-                             {{ item.content | strip_html | truncatewords: 30 }}
-                           </p>
-                           <small>
-                             <a class="button" href="{{ item.url }}">{{ 'blogs.article.read_more' | t }}</a>
-                           </small>
-                         </div>
-                       </div>
-                     </article>
-                   {% endif %}
-                 {% endfor %}
-               </div>
-             </div>
-            {% endif %}
-
-            {% if has_products %}
-              {% comment %} <h3 class="{{ grid | default: 'span-12 mb4' }} pl-3 font-bold">
-                {{ 'general.search.products' | t }}
-              </h3> {% endcomment %}
-              <div class="span-12 px-3">
-                <div class="product-loop grid__wrapper {{ grid_type }} edge">
-                  {% for item in search.results %}
-                    {% if item.object_type == 'product' %}
-                      {% liquid
-                        assign articles_has_images = true
-                        if section.index == 1 and articles_has_images == false and forloop.index <= 3
-                          assign loading = 'eager'
-                          assign fetch_priority = 'high'
-                        endif
-                       %}
-                       {% render 'product-loop',
-                       product: item,
-                       grid_items: section.settings.items_per_row,
-                       product_info_align: 'a-center',
-                       items_per_row: items_per_row,
-                       varying_grid: settings.varying_grid,
-                       index: forloop.index,
-                       loading: loading,
-                       fetchpriority: fetch_priority %}
-                    {% endif %}
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
-
-            {% if search.results_count >= 24 %}
-               <div class="span-12 mb8">
-                 {% render 'snip-pagination', paginate: paginate %}
-               </div>
-            {% endif %}
+          <div class="collection span-12" id="main-search-product-grid" data-id="{{ section.id }}">
+            <div class="product-loop grid__wrapper {{ grid_type }} edge">
+              {% for item in search.results %}
+                {% if item.object_type == 'product' %}
+                  {% liquid
+                    assign loading = 'lazy'
+                    assign fetch_priority = 'auto'
+                    if section.index == 1
+                      if settings.varying_grid and forloop.index <= 3
+                        assign loading = 'eager'
+                        assign fetch_priority = 'high'
+                      elsif forloop.index <= section.settings.items_per_row
+                        assign loading = 'eager'
+                        assign fetch_priority = 'high'
+                      endif
+                    endif
+                   %}
+                  {% render 'product-loop',
+                    product: item,
+                    grid_items: section.settings.items_per_row,
+                    product_info_align: 'a-center',
+                    items_per_row: items_per_row,
+                    varying_grid: settings.varying_grid,
+                    index: forloop.index,
+                    loading: loading,
+                    fetchpriority: fetch_priority %}
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
+
+          {% if search.results_count >= page_limit %}
+            <div class="span-12 auto">
+              {% render 'snip-pagination', paginate: paginate %}
+            </div>
+          {% endif %}
         {%- endif -%}
       {% endif %}
-
-    {% endpaginate %}
-  </div>
+    </div>
+  {% endpaginate %}
 </section>
 
 {% schema %}
-  {
-    "name": "Search",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "show_filters",
-        "label": "Show search filters",
-        "info": "Learn how to add storefront filters [here](https://help.shopify.com/en/manual/online-store/themes/os20/customize/filters)"
-      },
-      {
-        "type": "range",
-        "id": "items_per_row",
-        "min": 2,
-        "max": 4,
-        "step": 1,
-        "label": "Products per row",
-        "default": 4
-      },
-      {
-        "type": "checkbox",
-        "id": "show_count",
-        "label": "Show product count",
-        "default": true
-      }
-    ]
-  }
-  {% endschema %}
+{
+  "name": "Search page",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "range",
+      "id": "items_per_page",
+      "min": 2,
+      "max": 48,
+      "step": 1,
+      "label": "Products per page",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "items_per_row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Products per row",
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sort_by",
+      "name": "Sort by",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "filter",
+      "name": "Filters",
+      "limit": 1,
+      "settings": []
+    }
+  ]
+}
+{% endschema %}
