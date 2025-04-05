@@ -69,7 +69,7 @@
     "product_variants": "swatches",
     "color_swatch_shape": "square",
     "color_swatch_style": "variant-image",
-    "product_show_payment_button": false,
+    "product_show_payment_button": true,
     "cart_added_event": "product_page",
     "enable_metal_swatches": true,
     "gold_gradient": "",
