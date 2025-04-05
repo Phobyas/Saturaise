@@ -1689,3 +1689,64 @@ textarea {
   background-color: var(--button-bg);
   color: var(--button-text);
 }
+
+body gravity-button.accelerated-checkout-button,
+body .shopify-payment-button__button {
+  height: 100px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+body gravity-button.accelerated-checkout-button .button-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 72px !important;
+}
+
+shop-pay-wallet-button,
+.shopify-payment-button__button,
+.accelerated-checkout-button {
+  height: 72px !important;
+  min-height: 72px !important;
+  max-height: 72px !important;
+  border-radius: 16px !important;
+}
+
+shop-pay-wallet-button {
+  display: block !important;
+  width: 100% !important;
+}
+
+shop-pay-wallet-button::part(button) {
+  height: 72px !important;
+  min-height: 72px !important;
+  border-radius: 16px !important;
+}
+
+shop-pay-wallet-button,
+shop-pay-wallet-button::part(button) {
+  height: 72px !important;
+  min-height: 72px !important;
+  max-height: 72px !important;
+  border-radius: 16px !important;
+  line-height: 72px !important;
+  width: 100% !important;
+}
+
+@media screen and (max-width: 768px) {
+  shop-pay-wallet-button,
+  shop-pay-wallet-button::part(button) {
+    height: 60px !important;
+    min-height: 60px !important;
+    max-height: 60px !important;
+    line-height: 60px !important;
+  }
+}
+
+shop-pay-wallet-button {
+  display: block !important;
+  width: 100% !important;
+}

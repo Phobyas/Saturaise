@@ -871,15 +871,22 @@
   margin-right: var(--space-2);
 }
 
+.gravity-button {
+  height: 200px !important;
+  background-color: red !important;
+}
+
 /* Forge Custom */
 .ajax-submit,
 .product-additional-buttons,
 .product-additional-buttons .shopify-payment-button__button--unbranded {
   display: block;
   height: 72px !important;
-  font-size: 20px !important;
-  font-weight: 600 !important;
+  background: #323232 !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
   border-radius: 8px;
+  margin-bottom: 16px !important;
 }
 
 .ajax-submit:hover {

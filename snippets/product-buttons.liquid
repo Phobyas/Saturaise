@@ -1,3 +1,11 @@
+<style>
+
+.gravity-button{
+  border-radius: 16px !important;
+}
+
+</style>
+
 {%- liquid
   if product.template_suffix == 'pre-order'
     assign call_to_action = 'products.product.pre_order' | t
@@ -83,7 +91,7 @@
     <input class="formQty" type="hidden" name="quantity" value="1">
   {% endif %}
   <div
-    class="product-form__buttons product__add-container mt4 w-full animate--text delay--{{ index }}"
+    class="product-form__buttons product__add-container mt-4 mb-16 w-full animate--text delay--{{ index }}"
     {{ block.shopify_attributes }}
   >
 

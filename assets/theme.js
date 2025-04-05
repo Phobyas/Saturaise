@@ -2381,3 +2381,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  requestAnimationFrame(() => {
+    const buttons = document.querySelectorAll("shop-pay-wallet-button");
+    if (buttons.length) {
+      const styleTag = document.createElement("style");
+      styleTag.textContent = `
+        shop-pay-wallet-button,
+        shop-pay-wallet-button::part(button) {
+          height: 72px !important;
+          min-height: 72px !important;
+          max-height: 72px !important;
+          border-radius: 16px !important;
+          line-height: 72px !important;
+          width: 100% !important;
+        }
+        @media screen and (max-width: 768px) {
+          shop-pay-wallet-button,
+          shop-pay-wallet-button::part(button) {
+            height: 60px !important;
+            min-height: 60px !important;
+            max-height: 60px !important;
+            line-height: 60px !important;
+          }
+        }
+      `;
+      document.head.appendChild(styleTag);
+    }
+  });
+});
