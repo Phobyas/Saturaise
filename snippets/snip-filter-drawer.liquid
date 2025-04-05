@@ -473,102 +473,197 @@
       to {transform: rotate(360deg);}
     }
   </style>
-  
-  <script>
+<script>
+  // Replace the existing script with this version
   document.addEventListener('DOMContentLoaded', function() {
-    // Override filter behavior to prevent page reload
-    function setupFilterLinks() {
-      // First capture all the filter links
-      document.querySelectorAll('.js-collection-side-filter, .js-current-filter').forEach(function(link) {
-        if (!link.hasAttribute('data-ajax-filter')) {
-          link.setAttribute('data-ajax-filter', 'true');
-          
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Get URL from the link
-            const url = this.getAttribute('href');
-            if (!url) return;
-            
-            // Add loading state
-            const filterDrawer = document.querySelector('.filter-drawer__wrapper');
-            if (filterDrawer) {
-              filterDrawer.classList.add('is-loading');
+    // Add CSS to force drawer to stay visible
+    const style = document.createElement('style');
+    style.textContent = `
+      .filter-applied [data-wau-slideout="collection-filters"] {
+        display: block !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+      }
+      
+      /* When drawer is closed but filter was applied */
+      body:not(.slideout-left--open) .js-slideout-overlay {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important; /* Critical: prevents clicks */
+        z-index: -1 !important; /* Move below content */
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Setup observer to permanently keep drawer open after filtering
+    function setupPermanentDrawerObserver() {
+      const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+      if (!drawer) return;
+      
+      const drawerObserver = new MutationObserver(function(mutations) {
+        if (document.body.classList.contains('filter-applied')) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class' && 
+                !drawer.classList.contains('slideout--active')) {
+              // Force drawer to stay open
+              drawer.classList.add('slideout--active');
+              drawer.classList.remove('slideout--close');
+              drawer.setAttribute('aria-hidden', 'false');
+              
+              // Also make sure wrapper shows drawer is open
+              const wrapper = document.querySelector('.js-slideout-toggle-wrapper');
+              if (wrapper) {
+                wrapper.classList.add('slideout-left--open');
+              }
             }
-            
-            // Add loading state to collection grid
-            const productGrid = document.getElementById('CollectionProductGrid');
-            if (productGrid) {
-              productGrid.style.opacity = '0.5';
-            }
-            
-            // Fetch the new page content
-            fetch(url)
-              .then(response => response.text())
-              .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Update the product grid
-                const newProductGrid = doc.getElementById('CollectionProductGrid');
-                if (newProductGrid && productGrid) {
-                  productGrid.innerHTML = newProductGrid.innerHTML;
-                }
-                
-                // Update filter content EXCEPT for the drawer itself
-                const newFilterForm = doc.getElementById('CollectionFiltersForm');
-                const currentFilterForm = document.getElementById('CollectionFiltersForm');
-                
-                if (newFilterForm && currentFilterForm) {
-                  const newFilterContent = newFilterForm.querySelector('.filter-drawer__wrapper');
-                  const currentFilterContent = currentFilterForm.querySelector('.filter-drawer__wrapper');
-                  
-                  if (newFilterContent && currentFilterContent) {
-                    currentFilterContent.innerHTML = newFilterContent.innerHTML;
-                  }
-                }
-                
-                // Update the URL without refreshing
-                window.history.pushState({}, '', url);
-                
-                // Remove loading states
-                if (filterDrawer) {
-                  filterDrawer.classList.remove('is-loading');
-                }
-                if (productGrid) {
-                  productGrid.style.opacity = '1';
-                }
-                
-                // Set up filter links again
-                setTimeout(setupFilterLinks, 100);
-              })
-              .catch(error => {
-                console.error('Error updating filters:', error);
-                // Fallback to normal page navigation if fetch fails
-                window.location.href = url;
-              });
           });
+        }
+      });
+      
+      // Start observing drawer for class changes
+      drawerObserver.observe(drawer, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+    
+    // Run the drawer observer setup
+    setupPermanentDrawerObserver();
+    
+    // Add click event listeners to filter items
+    function setupFilterClickHandlers() {
+      document.querySelectorAll('.js-filter, .js-collection-side-filter').forEach(function(filter) {
+        filter.addEventListener('click', function() {
+          // Mark that a filter has been applied
+          document.body.classList.add('filter-applied');
+        });
+      });
+    }
+    
+    // Listen for intentional drawer close actions
+    function setupCloseHandlers() {
+      // When backdrop is clicked
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('js-slideout-overlay')) {
+          // Properly clean up when overlay is clicked
+          document.body.classList.remove('filter-applied');
+          properlyCloseDrawer();
+        }
+      });
+      
+      // When close button is clicked
+      document.querySelectorAll('.js-slideout-close').forEach(function(closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          // Properly clean up when close button is clicked
+          document.body.classList.remove('filter-applied');
+          properlyCloseDrawer();
+        });
+      });
+      
+      // When ESC key is pressed
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          // Properly clean up when ESC is pressed
+          document.body.classList.remove('filter-applied');
+          properlyCloseDrawer();
         }
       });
     }
     
-    // Set up filter links on initial load
-    setupFilterLinks();
-    
-    // Re-setup filter links after any dynamic content changes
-    const observer = new MutationObserver(function(mutations) {
-      for (const mutation of mutations) {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          setTimeout(setupFilterLinks, 100);
-        }
+    // Function to properly close the drawer and clean up overlay
+    function properlyCloseDrawer() {
+      // Get the drawer and overlay
+      const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+      const overlay = document.querySelector('.js-slideout-overlay');
+      const wrapper = document.querySelector('.js-slideout-toggle-wrapper');
+      
+      if (drawer) {
+        // Remove active classes
+        drawer.classList.remove('slideout--active');
+        drawer.classList.add('slideout--close');
+        drawer.setAttribute('aria-hidden', 'true');
       }
+      
+      if (wrapper) {
+        // Remove open class from wrapper
+        wrapper.classList.remove('slideout-left--open');
+        wrapper.classList.add('slideout-left--closed');
+      }
+      
+      if (overlay) {
+        // Completely disable overlay
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.zIndex = '-1';
+      }
+      
+      // Remove filter-applied class from body
+      document.body.classList.remove('filter-applied');
+      
+      // Also remove slideout classes from body
+      document.body.classList.remove('slideout-left--open');
+      document.body.classList.add('slideout-left--closed');
+      
+      // Enable scrolling
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+    
+    // Listen for filter button clicks to reset overlay
+    function setupFilterButtonListeners() {
+      document.querySelectorAll('[data-wau-slideout-target="collection-filters"]').forEach(function(button) {
+        button.addEventListener('click', function() {
+          // Reset overlay when filter button is clicked
+          resetOverlay();
+        });
+      });
+    }
+    
+    // Function to completely reset overlay to its original state
+    function resetOverlay() {
+      const overlay = document.querySelector('.js-slideout-overlay');
+      if (overlay) {
+        // Remove any inline styles
+        overlay.removeAttribute('style');
+      }
+    }
+    
+    // Initial setup of all handlers
+    setupFilterClickHandlers();
+    setupCloseHandlers();
+    setupFilterButtonListeners();
+    
+    // Set up observer to re-add click handlers when filter content changes
+    const filterFormObserver = new MutationObserver(function() {
+      setupFilterClickHandlers();
     });
     
-    // Start observing the filter form for changes
+    // Start observing filter form for changes
     const filterForm = document.getElementById('CollectionFiltersForm');
     if (filterForm) {
-      observer.observe(filterForm, { childList: true, subtree: true });
+      filterFormObserver.observe(filterForm, {
+        childList: true,
+        subtree: true
+      });
     }
+    
+    // Also observe the open filter buttons to ensure they stay functional
+    const filterButtons = document.querySelectorAll('[data-wau-slideout-target="collection-filters"]');
+    filterButtons.forEach(function(button) {
+      // Observe changes to this button
+      const buttonObserver = new MutationObserver(function() {
+        setupFilterButtonListeners();
+      });
+      
+      buttonObserver.observe(button, { 
+        attributes: true,
+        childList: true,
+        subtree: true
+      });
+    });
   });
-  </script>
+</script>
 </div>

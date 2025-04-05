@@ -93,7 +93,7 @@ aside.slideout[aria-hidden="false"] {
   aside.slideout.slideout--active.slideout__drawer-left {
     transform: translateX(0);
   }
-} 
+}
 
 /* Slideout width devices */
 @media (max-width: 1023px) {
@@ -223,4 +223,15 @@ aside.slideout.slideout--active.slideout__drawer-top {
     padding: 0 !important;
     line-height: 28px !important;
   }
+}
+
+.slideout--active {
+  z-index: 1001; /* Ensure it's above the backdrop */
+}
+
+/* If backdrop gets stuck, add this to your CSS */
+body:not(.slideout-left--open, .slideout-right--open) .site-overlay {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease-out, visibility 0s linear 0.3s;
 }

@@ -272,3 +272,112 @@ document.addEventListener("shopify:section:load", function (event) {
     }
   }
 });
+
+// Add this at the end of section-main-collection.js
+(function patchFilterDrawerVisibility() {
+  // Wait for DOM to be ready
+  document.addEventListener("DOMContentLoaded", function () {
+    // Store original methods to preserve functionality
+    if (window.WAU && window.WAU.Slideout) {
+      const originalRenderPage = CollectionFilters.renderPage;
+
+      // Override the renderPage method to preserve drawer state
+      CollectionFilters.renderPage = function (
+        searchParams,
+        updateURLHash = true
+      ) {
+        // Save drawer state before update
+        const drawer = document.querySelector(
+          '[data-wau-slideout="collection-filters"]'
+        );
+        const drawerWasActive =
+          drawer && drawer.classList.contains("slideout--active");
+
+        // Call original method
+        originalRenderPage.call(this, searchParams, updateURLHash);
+
+        // If drawer was active, force it to stay active after update
+        if (drawerWasActive && drawer) {
+          setTimeout(function () {
+            // Force drawer to stay open
+            drawer.classList.add("slideout--active");
+            drawer.classList.remove("slideout--close");
+            drawer.setAttribute("aria-hidden", "false");
+
+            // Ensure wrapper shows drawer is open
+            const wrapper = document.querySelector(
+              ".js-slideout-toggle-wrapper"
+            );
+            if (wrapper) {
+              wrapper.classList.add("slideout-left--open");
+              wrapper.classList.remove("slideout-left--closed");
+
+              // Ensure overlay is visible
+              const overlay = document.querySelector(".js-slideout-overlay");
+              if (overlay) {
+                overlay.removeAttribute("style");
+              }
+            }
+          }, 100); // Small delay to ensure this happens after the AJAX update
+        }
+      };
+
+      // Override the renderFilters method to ensure drawer state consistency
+      const originalRenderFilters = CollectionFilters.renderFilters;
+
+      CollectionFilters.renderFilters = function () {
+        // Save drawer state before update
+        const drawer = document.querySelector(
+          '[data-wau-slideout="collection-filters"]'
+        );
+        const drawerWasActive =
+          drawer && drawer.classList.contains("slideout--active");
+
+        // Call original method
+        originalRenderFilters.call(this);
+
+        // If drawer was active, force it to stay active after update
+        if (drawerWasActive && drawer) {
+          setTimeout(function () {
+            // Force drawer to stay open
+            drawer.classList.add("slideout--active");
+            drawer.classList.remove("slideout--close");
+            drawer.setAttribute("aria-hidden", "false");
+
+            // Ensure wrapper shows drawer is open
+            const wrapper = document.querySelector(
+              ".js-slideout-toggle-wrapper"
+            );
+            if (wrapper) {
+              wrapper.classList.add("slideout-left--open");
+              wrapper.classList.remove("slideout-left--closed");
+
+              // Ensure overlay is visible
+              const overlay = document.querySelector(".js-slideout-overlay");
+              if (overlay) {
+                overlay.removeAttribute("style");
+              }
+            }
+          }, 100); // Small delay to ensure this happens after filters are updated
+        }
+      };
+
+      // Fix for reopening drawer after it's been closed
+      const filterButtons = document.querySelectorAll(
+        '[data-wau-slideout-target="collection-filters"]'
+      );
+      filterButtons.forEach(function (button) {
+        // Add click handler that runs alongside WAU.Slideout
+        button.addEventListener("click", function () {
+          // Reset overlay if it has inline styles
+          setTimeout(function () {
+            const overlay = document.querySelector(".js-slideout-overlay");
+            if (overlay && overlay.hasAttribute("style")) {
+              overlay.removeAttribute("style");
+            }
+          }, 50);
+        });
+      });
+    }
+  });
+})();
