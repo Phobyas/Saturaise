@@ -461,3 +461,45 @@ ul.header--country_list {
 .section-header span.localization-form__currency.small {
   font-size: var(--font-size-sm);
 }
+
+/* New sticky header styles */
+.section-header__main-bar.stickynav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  max-width: unset;
+  z-index: 9;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
+
+/* Remove the fixed position styles and replace with sticky */
+.section-header__main-bar.sticky--active {
+  /* Overwriting the fixed position style */
+  position: sticky;
+  top: 0;
+  width: 100%;
+  max-width: unset;
+  z-index: 9;
+}
+
+/* Visibility classes for header show/hide on scroll */
+.section-header__main-bar.sticky-enabled {
+  /* Ensure the header is properly sticky */
+  position: sticky;
+  top: 0;
+}
+
+.section-header__main-bar.sticky--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.section-header__main-bar.sticky--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Ensure smooth transitions */
+.section-header__main-bar {
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
