@@ -5,23 +5,28 @@
 
 /* iOS-specific styles */
 @supports (-webkit-touch-callout: none) {
-  /* Hide all dynamic checkout buttons on iOS */
-  .shopify-payment-button {
+  /* Hide Google Pay on iOS */
+  shopify-google-pay-button,
+  .shopify-payment-button__button--google-pay,
+  button[aria-label*="Google Pay"] {
     display: none !important;
-  }
-  
-  /* Show our custom iOS button */
-  #ios-buy-now-button {
-    display: block !important;
   }
 }
 
 /* Non-iOS styles */
 @supports not (-webkit-touch-callout: none) {
-  /* Hide our custom iOS button */
-  #ios-buy-now-button {
+  /* Hide Apple Pay on non-iOS */
+  shopify-apple-pay-button,
+  .shopify-payment-button__button--apple-pay,
+  button[aria-label*="Apple Pay"] {
     display: none !important;
   }
+}
+
+/* Always hide Shop Pay if needed */
+.shopify-payment-button__button--shopify-pay,
+button[aria-label*="Shop Pay"] {
+  display: none !important;
 }
 </style>
 
@@ -134,71 +139,6 @@
       <div class="product-additional-buttons mb2">
         {{ form | payment_button }}
       </div>
-      
-      <!-- Custom iOS Buy Now button -->
-      <div id="ios-buy-now-button" style="display: none; margin-top: 10px;">
-        <button 
-          type="button" 
-          style="background-color: black; color: white; border-radius: 16px; height: 48px; width: 100%; font-size: 16px; font-weight: 500; border: none; cursor: pointer;">
-          Buy Now
-        </button>
-      </div>
-      
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          // Check if this is an iOS device
-          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-          
-          if (isIOS) {
-            // Show iOS Buy Now button
-            const iosBuyNowButton = document.getElementById('ios-buy-now-button');
-            if (iosBuyNowButton) {
-              iosBuyNowButton.style.display = 'block';
-              
-              // Add click handler
-              const button = iosBuyNowButton.querySelector('button');
-              if (button) {
-                button.addEventListener('click', function() {
-                  // Get form data
-                  const variantId = document.getElementById('formVariantId').value;
-                  const quantity = document.querySelector('input[name="quantity"]') ? 
-                                  document.querySelector('input[name="quantity"]').value : '1';
-                  
-                  // Create a form to submit directly to checkout
-                  const form = document.createElement('form');
-                  form.method = 'post';
-                  form.action = '/cart/add';
-                  
-                  // Add variant ID
-                  const idInput = document.createElement('input');
-                  idInput.type = 'hidden';
-                  idInput.name = 'id';
-                  idInput.value = variantId;
-                  form.appendChild(idInput);
-                  
-                  // Add quantity
-                  const qtyInput = document.createElement('input');
-                  qtyInput.type = 'hidden';
-                  qtyInput.name = 'quantity';
-                  qtyInput.value = quantity;
-                  form.appendChild(qtyInput);
-                  
-                  // Add checkout redirect
-                  const checkoutInput = document.createElement('input');
-                  checkoutInput.type = 'hidden';
-                  checkoutInput.name = 'checkout';
-                  checkoutInput.value = '';
-                  form.appendChild(checkoutInput);
-                  
-                  // Submit the form
-                  document.body.appendChild(form);
-                  form.submit();
-                });
-              }
-            }
-          }
-        });
-      </script>
     {% endif %}
   </div>
 {%- endform -%}
