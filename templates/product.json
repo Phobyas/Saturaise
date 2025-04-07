@@ -44,6 +44,31 @@
             "show_gift_card_recipient": false
           }
         },
+        "mega_payment_icons_mega_payment_icons_DQPRFi": {
+          "type": "shopify://apps/mega-payment-icons/blocks/mega-payment-icons/49fa0619-ee53-453c-8537-63726831b297",
+          "settings": {
+            "block_align": "center",
+            "border": 0,
+            "icon_color": "linear-gradient(77deg, rgba(128, 58, 47, 1), rgba(254, 91, 124, 1) 49%, rgba(255, 140, 162, 1) 100%)",
+            "size": 90,
+            "items_count": 1,
+            "horizontal_gap": 4,
+            "vertical_gap": 0,
+            "items_count_mobile": 1,
+            "horizontal_gap_mobile": 6,
+            "vertical_gap_mobile": 0,
+            "icon_1": "klarna",
+            "icon_2": "blank",
+            "icon_3": "blank",
+            "icon_4": "blank",
+            "icon_5": "blank",
+            "icon_6": "blank",
+            "icon_7": "blank",
+            "icon_8": "blank",
+            "icon_9": "blank",
+            "icon_10": "blank"
+          }
+        },
         "ab17f510-012b-488a-97e2-a6ebf60e7732": {
           "type": "text_metafield",
           "settings": {
@@ -91,6 +116,7 @@
         "e6875fb5-148a-4e09-8072-5d5b4b2a1765",
         "35d7ec12-af12-4b47-9421-dd981a44a735",
         "2e477d4a-8c5a-4bda-9e1a-c5ab8d560e84",
+        "mega_payment_icons_mega_payment_icons_DQPRFi",
         "ab17f510-012b-488a-97e2-a6ebf60e7732",
         "6de531da-e00e-4bb6-bda9-87b7d806e825",
         "1623dfe7-5ea9-47ab-a679-594538b7e404",
