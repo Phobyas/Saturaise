@@ -1,34 +1,4 @@
-<style>
-.gravity-button{
-  border-radius: 16px !important;
-}
 
-/* iOS-specific styles */
-@supports (-webkit-touch-callout: none) {
-  /* Hide Google Pay on iOS */
-  shopify-google-pay-button,
-  .shopify-payment-button__button--google-pay,
-  button[aria-label*="Google Pay"] {
-    display: none !important;
-  }
-}
-
-/* Non-iOS styles */
-@supports not (-webkit-touch-callout: none) {
-  /* Hide Apple Pay on non-iOS */
-  shopify-apple-pay-button,
-  .shopify-payment-button__button--apple-pay,
-  button[aria-label*="Apple Pay"] {
-    display: none !important;
-  }
-}
-
-/* Always hide Shop Pay if needed */
-.shopify-payment-button__button--shopify-pay,
-button[aria-label*="Shop Pay"] {
-  display: none !important;
-}
-</style>
 
 {%- liquid
   if product.template_suffix == 'pre-order'
