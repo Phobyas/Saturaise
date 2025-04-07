@@ -74,7 +74,7 @@
   color: var(--text-color-light);
 }
 .price-item {
-  font-size: 18px;
+  font-size: 20px;
   line-height: var(--h3-size);
   color: var(--text-color);
   font-family: var(--heading-family);

@@ -1,9 +1,21 @@
 <style>
-
 .gravity-button{
   border-radius: 16px !important;
 }
 
+/* iOS-specific styles - hide non-Apple Pay buttons */
+@supports (-webkit-touch-callout: none) {
+  shopify-google-pay-button,
+  button:not([aria-label*="Apple"]) {
+    display: none !important;
+  }
+  
+  /* If we can't get Apple Pay to show, at least show the Buy Now button on iOS */
+  shopify-buy-it-now-button,
+  .shopify-payment-button__button--unbranded {
+    display: block !important;
+  }
+}
 </style>
 
 {%- liquid
@@ -114,6 +126,87 @@
     {% if settings.product_show_payment_button %}
       <div class="product-additional-buttons mb2">
         {{ form | payment_button }}
+        
+        {% comment %} Fallback iOS checkout button in case Apple Pay doesn't initialize {% endcomment %}
+        <div id="ios-checkout-button" style="display: none; margin-top: 10px;">
+          <button 
+            type="button" 
+            class="shopify-payment-button__button shopify-payment-button__button--buy-now"
+            style="background-color: black; color: white; border-radius: 4px;"
+          >
+            Buy Now
+          </button>
+        </div>
+        
+        <script>
+          window.addEventListener('load', function() {
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            if (isIOS) {
+              console.log("iOS device detected, initializing Apple Pay");
+              
+              // Check if Apple Pay is initialized after a delay
+              setTimeout(function() {
+                const applePayButtons = document.querySelectorAll('shopify-apple-pay-button, button[aria-label*="Apple"]');
+                const hasApplePay = applePayButtons.length > 0;
+                
+                console.log("Apple Pay buttons found:", hasApplePay);
+                
+                if (!hasApplePay) {
+                  // If no Apple Pay buttons are found, show fallback
+                  const iosCheckoutButton = document.getElementById('ios-checkout-button');
+                  if (iosCheckoutButton) {
+                    iosCheckoutButton.style.display = 'block';
+                    console.log("Showing iOS fallback checkout button");
+                    
+                    // Add click handler to go directly to checkout
+                    const fallbackButton = iosCheckoutButton.querySelector('button');
+                    if (fallbackButton) {
+                      fallbackButton.addEventListener('click', function() {
+                        // Add to cart and go to checkout
+                        const form = document.querySelector('#{{ product_form_id }}');
+                        if (form) {
+                          const tempForm = document.createElement('form');
+                          tempForm.method = 'post';
+                          tempForm.action = '/cart/add';
+                          
+                          // Get product info
+                          const variantId = document.getElementById('formVariantId').value;
+                          const quantity = document.querySelector('input[name="quantity"]') ? 
+                                           document.querySelector('input[name="quantity"]').value : '1';
+                          
+                          // Create inputs
+                          const variantInput = document.createElement('input');
+                          variantInput.type = 'hidden';
+                          variantInput.name = 'id';
+                          variantInput.value = variantId;
+                          tempForm.appendChild(variantInput);
+                          
+                          const quantityInput = document.createElement('input');
+                          quantityInput.type = 'hidden';
+                          quantityInput.name = 'quantity';
+                          quantityInput.value = quantity;
+                          tempForm.appendChild(quantityInput);
+                          
+                          // Add checkout parameter
+                          const checkoutParam = document.createElement('input');
+                          checkoutParam.type = 'hidden';
+                          checkoutParam.name = 'checkout';
+                          checkoutParam.value = '';
+                          tempForm.appendChild(checkoutParam);
+                          
+                          // Submit the form
+                          document.body.appendChild(tempForm);
+                          tempForm.submit();
+                        }
+                      });
+                    }
+                  }
+                }
+              }, 2000);
+            }
+          });
+        </script>
       </div>
     {% endif %}
   </div>
