@@ -1,10 +1,23 @@
 function setupDrawer() {
   let mobileHeader = document.getElementById("shopify-section-mobile-header"),
     mobileNav = document.querySelector(".js-mobile-header"),
-    mobileSearch = document.getElementById("mobile-search");
+    mobileSearch = document.getElementById("mobile-search"),
+    announcementBar = document.getElementById("announcement-bar");
 
-  const headerHeight = mobileHeader.offsetHeight + "px";
-  document.documentElement.style.setProperty("--header-height", headerHeight);
+  // Set header height and announcement bar height
+  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 0;
+  const announcementBarHeight = announcementBar
+    ? announcementBar.offsetHeight
+    : 0;
+
+  document.documentElement.style.setProperty(
+    "--header-height",
+    `${headerHeight}px`
+  );
+  document.documentElement.style.setProperty(
+    "--announcement-bar-height",
+    `${announcementBarHeight}px`
+  );
 
   function getHeight(element) {
     element = element.cloneNode(true);
@@ -21,6 +34,7 @@ function setupDrawer() {
       if (mobileNav) mobileNav.style.zIndex = "14";
     }, 200);
   });
+
   Events.on("slideout:close:mobile-navigation", function (slideout) {
     setTimeout(function () {
       if (mobileSearch) mobileSearch.style.zIndex = "0";
@@ -82,12 +96,49 @@ function setupMobileSearch() {
   }
 }
 
+function handleMobileHeaderScroll() {
+  const announcementBar = document.getElementById("announcement-bar");
+  const mobileHeader = document.querySelector(".mobile-nav__mobile-header");
+
+  if (!announcementBar || !mobileHeader) return;
+
+  const announcementBarHeight = announcementBar.offsetHeight;
+  document.documentElement.style.setProperty(
+    "--announcement-bar-height",
+    `${announcementBarHeight}px`
+  );
+
+  let lastScrollTop = 0;
+  const scrollThreshold = 10; // Amount of scroll needed to trigger the change
+
+  const handleScroll = () => {
+    const currentScrollTop =
+      window.pageYOffset || document.documentElement.scrollTop;
+
+    // If we've scrolled past the threshold, hide announcement bar and adjust header
+    if (currentScrollTop > scrollThreshold) {
+      announcementBar.classList.add("is-hidden");
+      mobileHeader.classList.add("announcement-hidden");
+    } else {
+      // At the top of the page - show announcement bar and position header below it
+      announcementBar.classList.remove("is-hidden");
+      mobileHeader.classList.remove("announcement-hidden");
+    }
+
+    lastScrollTop = currentScrollTop;
+  };
+
+  window.removeEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+}
+
 document
   .querySelectorAll('[data-section-type="mobile-header"]')
   .forEach(function (container) {
     WAU.Slideout.init("mobile-navigation");
     setupDrawer();
     setupMobileSearch();
+    handleMobileHeaderScroll();
 
     if (
       document.querySelector(".mobile-nav__mobile-header .js-mini-cart-trigger")

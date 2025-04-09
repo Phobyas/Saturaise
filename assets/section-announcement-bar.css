@@ -7,6 +7,7 @@
   height: 40px;
   color: white;
   z-index: 20;
+  transition: transform 0.3s ease;
 }
 
 .announcement-bar .marquee-track {
@@ -29,9 +30,17 @@
 
 @media (max-width: 767px) {
   .announcement-bar.wrapper {
-    position: absolute;
-    top: 0px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
   }
+
+  .announcement-bar.wrapper.is-hidden {
+    transform: translateY(-100%);
+  }
+
   .announcement-bar .marquee-content {
     width: 50%;
   }
