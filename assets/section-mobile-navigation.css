@@ -180,7 +180,7 @@
   }
 
   /* Add padding to body to account for fixed header and announcement bar */
-  /* body {
+  body {
     padding-top: calc(
       var(--header-height, 60px) + var(--announcement-bar-height, 40px)
     );
@@ -190,9 +190,9 @@
       #shopify-section-announcement-bar
     ) {
     padding-top: calc(
-      var(--header-height, 60px) + var(--announcement-bar-height, 40px) + 20px
+      var(--header-height, 60px) + var(--announcement-bar-height, 40px)
     ) !important;
-  } */
+  }
 }
 
 @media (min-width: 768px) {
