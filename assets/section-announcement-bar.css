@@ -6,7 +6,7 @@
   position: relative;
   height: 40px;
   color: white;
-  z-index: 20;
+  z-index: 1001; /* Increased z-index to ensure visibility */
   transition: transform 0.3s ease;
 }
 
@@ -34,7 +34,9 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1001; /* Ensure it's above everything else */
+    display: block !important; /* Force display */
+    visibility: visible !important; /* Ensure visibility */
   }
 
   .announcement-bar.wrapper.is-hidden {

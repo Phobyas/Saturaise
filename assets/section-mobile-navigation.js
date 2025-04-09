@@ -5,11 +5,12 @@ function setupDrawer() {
     announcementBar = document.getElementById("announcement-bar");
 
   // Set header height and announcement bar height
-  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 0;
+  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60; // Default 60px
   const announcementBarHeight = announcementBar
     ? announcementBar.offsetHeight
-    : 0;
+    : 40; // Default 40px
 
+  // Make sure we're setting these CSS variables
   document.documentElement.style.setProperty(
     "--header-height",
     `${headerHeight}px`
@@ -18,6 +19,16 @@ function setupDrawer() {
     "--announcement-bar-height",
     `${announcementBarHeight}px`
   );
+
+  // Force the header to position correctly on page load
+  if (mobileHeader && announcementBar) {
+    const headerElement = mobileHeader.querySelector(
+      ".mobile-nav__mobile-header"
+    );
+    if (headerElement) {
+      headerElement.style.top = `${announcementBarHeight}px`;
+    }
+  }
 
   function getHeight(element) {
     element = element.cloneNode(true);
@@ -102,7 +113,7 @@ function handleMobileHeaderScroll() {
 
   if (!announcementBar || !mobileHeader) return;
 
-  const announcementBarHeight = announcementBar.offsetHeight;
+  const announcementBarHeight = announcementBar.offsetHeight || 40; // Default to 40px if can't get height
   document.documentElement.style.setProperty(
     "--announcement-bar-height",
     `${announcementBarHeight}px`
@@ -115,12 +126,12 @@ function handleMobileHeaderScroll() {
     const currentScrollTop =
       window.pageYOffset || document.documentElement.scrollTop;
 
-    // If we've scrolled past the threshold, hide announcement bar and adjust header
+    // If we've scrolled past the threshold, hide announcement bar and move header up
     if (currentScrollTop > scrollThreshold) {
       announcementBar.classList.add("is-hidden");
       mobileHeader.classList.add("announcement-hidden");
     } else {
-      // At the top of the page - show announcement bar and position header below it
+      // At the top of the page - show announcement bar and reset header position
       announcementBar.classList.remove("is-hidden");
       mobileHeader.classList.remove("announcement-hidden");
     }
