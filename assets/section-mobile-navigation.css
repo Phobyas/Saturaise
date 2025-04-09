@@ -204,13 +204,13 @@
   }
 }
 
-/* @media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(
       #shopify-section-announcement-bar
     ) {
     padding-top: calc(60px + var(--announcement-bar-height, 40px)) !important;
   }
-} */
+}
 
 #shopify-section-mobile-header {
   position: sticky;
