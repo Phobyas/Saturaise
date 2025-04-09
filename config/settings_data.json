@@ -80,7 +80,7 @@
         "settings": {
           "header_layout": "logo_center",
           "show_searchbox": true,
-          "enable_sticky": true,
+          "enable_sticky": false,
           "logo": "shopify://shop_images/logo-new-saturaise2.png",
           "logo_max_width": 100,
           "logo_size": 25,
