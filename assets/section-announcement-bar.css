@@ -6,7 +6,7 @@
   position: relative;
   height: 40px;
   color: white;
-  z-index: 1001; /* Increased z-index to ensure visibility */
+  z-index: 20;
   transition: transform 0.3s ease;
 }
 
@@ -34,12 +34,10 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1001; /* Ensure it's above everything else */
-    display: block !important; /* Force display */
-    visibility: visible !important; /* Ensure visibility */
+    transform: translateY(0);
   }
 
-  .announcement-bar.wrapper.is-hidden {
+  .announcement-bar.is-hidden {
     transform: translateY(-100%);
   }
 
