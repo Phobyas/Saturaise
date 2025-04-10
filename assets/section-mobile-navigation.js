@@ -1,3 +1,32 @@
+// Create a header spacer element to ensure correct positioning
+function createHeaderSpacer() {
+  // Check if the spacer already exists
+  if (document.querySelector(".header-spacer")) return;
+
+  // Create the spacer
+  const spacer = document.createElement("div");
+  spacer.className = "header-spacer";
+
+  // Find the main content area to insert the spacer
+  const pageWrap = document.querySelector(".page-wrap");
+  if (pageWrap && pageWrap.firstElementChild) {
+    pageWrap.insertBefore(spacer, pageWrap.firstElementChild);
+  } else if (document.body.firstElementChild) {
+    // If page-wrap doesn't exist, insert after the header
+    const header = document.querySelector(".mobile-nav__mobile-header");
+    if (
+      header &&
+      header.parentElement &&
+      header.parentElement.nextElementSibling
+    ) {
+      document.body.insertBefore(
+        spacer,
+        header.parentElement.nextElementSibling
+      );
+    }
+  }
+}
+
 function setupDrawer() {
   let mobileHeader = document.getElementById("shopify-section-mobile-header"),
     mobileNav = document.querySelector(".js-mobile-header"),
@@ -19,21 +48,13 @@ function setupDrawer() {
     `${announcementBarHeight}px`
   );
 
-  // Make sure the header is positioned correctly
-  if (mobileHeader) {
-    const headerElement = mobileHeader.querySelector(
-      ".mobile-nav__mobile-header"
-    );
-    if (headerElement) {
-      headerElement.style.top = `${announcementBarHeight}px`;
-    }
-  }
-
-  // Ensure announcement bar visibility
+  // Ensure announcement bar is visible
   if (announcementBar) {
     announcementBar.style.display = "block";
     announcementBar.style.visibility = "visible";
     announcementBar.style.opacity = "1";
+    announcementBar.style.position = "fixed";
+    announcementBar.style.top = "0";
   }
 
   function getHeight(element) {
@@ -149,6 +170,11 @@ function handleMobileHeaderScroll() {
   window.addEventListener("scroll", handleScroll, { passive: true });
 }
 
+// Wait for DOM to be ready then create the spacer
+document.addEventListener("DOMContentLoaded", function () {
+  createHeaderSpacer();
+});
+
 document
   .querySelectorAll('[data-section-type="mobile-header"]')
   .forEach(function (container) {
@@ -156,6 +182,7 @@ document
     setupDrawer();
     setupMobileSearch();
     handleMobileHeaderScroll();
+    createHeaderSpacer();
 
     if (
       document.querySelector(".mobile-nav__mobile-header .js-mini-cart-trigger")
@@ -194,4 +221,15 @@ document.addEventListener("shopify:block:select", function (event) {
     WAU.Slideout._openByName("mobile-navigation");
     setupDrawer();
   }
+});
+
+// Cleanup any problematic inline styles
+document.addEventListener("DOMContentLoaded", function () {
+  // Find slider images with inline padding styles and remove them
+  const sliderImages = document.querySelectorAll(".slideshow__slide-image");
+  sliderImages.forEach((slide) => {
+    if (slide.style.paddingBottom) {
+      slide.style.paddingBottom = "";
+    }
+  });
 });

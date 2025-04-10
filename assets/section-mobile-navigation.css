@@ -1,3 +1,7 @@
+#mobile-menu {
+  height: 66px !important;
+}
+
 /* Mobile Navigation */
 .mobile-nav__mobile-header {
   position: fixed !important;
@@ -171,28 +175,23 @@
 }
 
 /* Media Queries */
-@media (max-width: 767px) {
-  /* Create a container for our fixed elements at the top */
-  body::before {
-    content: "";
-    display: block;
-    height: calc(
-      var(--header-height, 60px) + var(--announcement-bar-height, 40px)
-    );
-    width: 100%;
-    position: static;
-    pointer-events: none;
-  }
-
+@media (max-width: 1023px) {
   #shopify-section-mobile-header {
     margin-top: 0;
   }
 
-  /* Space for the fixed elements at the top */
-  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(
-      #shopify-section-announcement-bar
-    ):not(.shopify-section-group-header-group) {
-    margin-top: 20px !important;
+  /* Add a header spacer div */
+  .header-spacer {
+    height: calc(
+      var(--header-height, 60px) + var(--announcement-bar-height, 40px)
+    );
+    width: 100%;
+    display: block;
+  }
+
+  /* Override any specific slider padding styles */
+  .slideshow__slide-image {
+    padding-bottom: unset !important;
   }
 }
 
@@ -205,13 +204,6 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
-  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(
-      #shopify-section-announcement-bar
-    ):not(.shopify-section-group-header-group) {
-    padding-top: calc(60px + var(--announcement-bar-height, 40px)) !important;
-  }
-}
 
 #shopify-section-mobile-header {
   position: sticky;
