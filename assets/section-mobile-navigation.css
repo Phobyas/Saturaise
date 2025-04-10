@@ -20,7 +20,9 @@
 }
 
 .mobile-nav__mobile-header.announcement-hidden {
-  transform: translateY(calc(-1 * var(--announcement-bar-height, 40px))) !important;
+  transform: translateY(
+    calc(-1 * var(--announcement-bar-height, 40px))
+  ) !important;
 }
 
 .mobile-nav__mobile-header .header__cart-links--login,
@@ -31,7 +33,9 @@
 
 #mobile-search {
   position: fixed !important;
-  top: calc(var(--header-height, 60px) + var(--announcement-bar-height, 40px)) !important;
+  top: calc(
+    var(--header-height, 60px) + var(--announcement-bar-height, 40px)
+  ) !important;
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
@@ -47,7 +51,9 @@
 
 .mobile-search-backdrop {
   position: fixed !important;
-  top: calc(var(--header-height, 60px) + var(--announcement-bar-height, 40px)) !important;
+  top: calc(
+    var(--header-height, 60px) + var(--announcement-bar-height, 40px)
+  ) !important;
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
@@ -166,17 +172,27 @@
 
 /* Media Queries */
 @media (max-width: 767px) {
+  /* Create a container for our fixed elements at the top */
+  body::before {
+    content: "";
+    display: block;
+    height: calc(
+      var(--header-height, 60px) + var(--announcement-bar-height, 40px)
+    );
+    width: 100%;
+    position: static;
+    pointer-events: none;
+  }
+
   #shopify-section-mobile-header {
     margin-top: 0;
   }
-  
-  /* Add padding to body to account for fixed header and announcement bar */
-  body {
-    padding-top: calc(var(--header-height, 60px) + var(--announcement-bar-height, 40px));
-  }
-  
-  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(#shopify-section-announcement-bar):not(.shopify-section-group-header-group) {
-    padding-top: calc(var(--header-height, 60px) + var(--announcement-bar-height, 40px) + 20px) !important;
+
+  /* Space for the fixed elements at the top */
+  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(
+      #shopify-section-announcement-bar
+    ):not(.shopify-section-group-header-group) {
+    margin-top: 20px !important;
   }
 }
 
@@ -190,7 +206,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(#shopify-section-announcement-bar):not(.shopify-section-group-header-group) {
+  .shopify-section:first-of-type:not(#shopify-section-mobile-header):not(
+      #shopify-section-announcement-bar
+    ):not(.shopify-section-group-header-group) {
     padding-top: calc(60px + var(--announcement-bar-height, 40px)) !important;
   }
 }

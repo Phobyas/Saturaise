@@ -1,48 +1,15 @@
-// Function to ensure announcement bar visibility
-function ensureAnnouncementBarVisibility() {
-  const announcementBar = document.getElementById("announcement-bar");
-
-  if (announcementBar) {
-    // Force visibility
-    announcementBar.style.display = "block";
-    announcementBar.style.visibility = "visible";
-    announcementBar.style.opacity = "1";
-
-    // Apply background color if using CSS var
-    const computedStyle = window.getComputedStyle(announcementBar);
-    const bgColor = computedStyle.backgroundColor;
-
-    // If bgcolor is transparent or not set, apply a fallback
-    if (bgColor === "transparent" || bgColor === "rgba(0, 0, 0, 0)") {
-      announcementBar.style.backgroundColor = "#000"; // Fallback color
-    }
-
-    // Force reflow
-    void announcementBar.offsetHeight;
-  }
-}
-
-// Call this function early in the page load
-document.addEventListener("DOMContentLoaded", function () {
-  ensureAnnouncementBarVisibility();
-});
-
-// Then also call it after a small delay to ensure it works after other scripts
-setTimeout(ensureAnnouncementBarVisibility, 100);
-
 function setupDrawer() {
   let mobileHeader = document.getElementById("shopify-section-mobile-header"),
     mobileNav = document.querySelector(".js-mobile-header"),
     mobileSearch = document.getElementById("mobile-search"),
-    announcementBar = document.getElementById("announcement-bar");
+    announcementBar = document.querySelector(".announcement-bar.wrapper");
 
   // Set header height and announcement bar height
-  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60; // Default 60px
+  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60;
   const announcementBarHeight = announcementBar
     ? announcementBar.offsetHeight || 40
-    : 40; // Default 40px, or use 40 if offsetHeight is 0
+    : 40;
 
-  // Make sure we're setting these CSS variables
   document.documentElement.style.setProperty(
     "--header-height",
     `${headerHeight}px`
@@ -52,7 +19,7 @@ function setupDrawer() {
     `${announcementBarHeight}px`
   );
 
-  // Force the header to position correctly on page load
+  // Make sure the header is positioned correctly
   if (mobileHeader) {
     const headerElement = mobileHeader.querySelector(
       ".mobile-nav__mobile-header"
@@ -60,6 +27,13 @@ function setupDrawer() {
     if (headerElement) {
       headerElement.style.top = `${announcementBarHeight}px`;
     }
+  }
+
+  // Ensure announcement bar visibility
+  if (announcementBar) {
+    announcementBar.style.display = "block";
+    announcementBar.style.visibility = "visible";
+    announcementBar.style.opacity = "1";
   }
 
   function getHeight(element) {
@@ -140,19 +114,19 @@ function setupMobileSearch() {
 }
 
 function handleMobileHeaderScroll() {
-  const announcementBar = document.getElementById("announcement-bar");
+  const announcementBar = document.querySelector(".announcement-bar.wrapper");
   const mobileHeader = document.querySelector(".mobile-nav__mobile-header");
 
   if (!announcementBar || !mobileHeader) return;
 
-  const announcementBarHeight = announcementBar.offsetHeight || 40; // Default to 40px if can't get height
+  const announcementBarHeight = announcementBar.offsetHeight || 40;
   document.documentElement.style.setProperty(
     "--announcement-bar-height",
     `${announcementBarHeight}px`
   );
 
   let lastScrollTop = 0;
-  const scrollThreshold = 10; // Amount of scroll needed to trigger the change
+  const scrollThreshold = 10;
 
   const handleScroll = () => {
     const currentScrollTop =
