@@ -51,6 +51,9 @@ const Header = {
       Header.doubleTapToGo(doubleTapToGoItems);
     }
 
+    // Initialize scroll-aware behavior for desktop header
+    Header.handleDesktopHeaderScroll();
+
     // Aria support
     WAU.a11yHelpers.setUpAriaExpansion();
     WAU.a11yHelpers.setUpAccessibleNavigationMenus();
@@ -102,8 +105,61 @@ const Header = {
       "--announcement-bar-height",
       `${announcementBarHeight}px`
     );
+  },
 
-    // No additional scroll handling needed - CSS does the work
+  // New method to handle desktop header scroll behavior
+  handleDesktopHeaderScroll: function handleDesktopHeaderScroll() {
+    // Only apply this to desktop
+    if (window.innerWidth < 768) return;
+
+    const announcementBar = document.querySelector(".announcement-bar.wrapper");
+    const headerSection = document.querySelector(
+      ".shopify-section-group-header-group"
+    );
+
+    if (!announcementBar || !headerSection) return;
+
+    let scrollTimeout;
+    const scrollThreshold = 10; // Amount of scroll needed to trigger hiding
+
+    function onScroll() {
+      if (scrollTimeout) return;
+
+      scrollTimeout = setTimeout(() => {
+        const currentScrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScrollTop > scrollThreshold) {
+          // Scrolling down - hide announcement bar
+          announcementBar.classList.add("is-hidden");
+        } else {
+          // At top or scrolling up to the top - show announcement bar
+          announcementBar.classList.remove("is-hidden");
+        }
+
+        scrollTimeout = null;
+      }, 10);
+    }
+
+    // Add scroll listener with throttling for performance
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Handle resize events
+    window.addEventListener(
+      "resize",
+      function () {
+        if (window.innerWidth >= 768) {
+          // We're on desktop, make sure handler is active
+          window.removeEventListener("scroll", onScroll);
+          window.addEventListener("scroll", onScroll, { passive: true });
+        } else {
+          // We're on mobile, remove desktop handler
+          window.removeEventListener("scroll", onScroll);
+          announcementBar.classList.remove("is-hidden");
+        }
+      },
+      { passive: true }
+    );
   },
 
   doubleTapToGo: function doubleTapToGo(items) {
