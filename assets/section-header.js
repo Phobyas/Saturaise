@@ -23,6 +23,16 @@ const Header = {
           "--header-height",
           `${headerHeight}px`
         );
+
+        // Update body padding ONLY on desktop
+        if (window.innerWidth >= 768) {
+          document.body.style.paddingTop = `${
+            announcementBarHeight + headerHeight
+          }px`;
+        } else {
+          // Reset padding on mobile
+          document.body.style.paddingTop = "0";
+        }
       };
 
       // Initial setup
