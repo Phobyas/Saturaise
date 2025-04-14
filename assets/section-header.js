@@ -23,6 +23,16 @@ const Header = {
           "--header-height",
           `${headerHeight}px`
         );
+
+        // Update body padding ONLY on desktop
+        if (window.innerWidth >= 768) {
+          document.body.style.paddingTop = `${
+            announcementBarHeight + headerHeight
+          }px`;
+        } else {
+          // Reset padding on mobile
+          document.body.style.paddingTop = "0";
+        }
       };
 
       // Initial setup
@@ -103,7 +113,22 @@ const Header = {
       `${announcementBarHeight}px`
     );
 
-    // No additional scroll handling needed - CSS does the work
+    // Ensure the header height is also calculated
+    const themeHeader = document.querySelector(".js-theme-header");
+    if (themeHeader) {
+      const headerHeight = themeHeader.offsetHeight;
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${headerHeight}px`
+      );
+
+      // Update body padding ONLY on desktop
+      if (window.innerWidth >= 768) {
+        document.body.style.paddingTop = `${
+          announcementBarHeight + headerHeight
+        }px`;
+      }
+    }
   },
 
   doubleTapToGo: function doubleTapToGo(items) {
