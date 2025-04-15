@@ -180,12 +180,6 @@
     margin-top: 0;
   }
 
-  /* Add a header spacer div */
-  .header-spacer {
-    height: 106px;
-    width: 100%;
-    display: block;
-  }
 
   /* Override any specific slider padding styles */
   .slideshow__slide-image {

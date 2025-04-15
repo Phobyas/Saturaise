@@ -487,9 +487,3 @@ ul.header--country_list {
   position: static !important;
   z-index: 20;
 }
-
-.header-spacer {
-  height: 106px;
-  width: 100%;
-  display: block;
-}
