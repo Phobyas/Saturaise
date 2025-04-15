@@ -109,7 +109,7 @@ data-section-type="carousel">
         "pageDots":{% if section.settings.pager == 'dots' and enough_to_wrap %}true{% else %}false{% endif %},
         "prevNextButtons":{% if section.settings.pager == 'arrows' and enough_to_wrap %}true{% else %}false{% endif %}
      }{% endcapture %}
-
+ 
       {% if section.blocks.size > 0 %}
       <div class="slideshow flickity__section js-carousel{% if fixed_height %} is-fixed_height{% endif %}" id="slideshow--{{ section.id }}" data-flickity='{{ slideshow_config }}'>
         {% for block in section.blocks %}

@@ -12,8 +12,8 @@ const Header = {
     const announcementBar = document.getElementById("announcement-bar");
     if (announcementBar && themeHeader) {
       const setHeightVariables = () => {
-        const announcementBarHeight = announcementBar.offsetHeight;
-        const headerHeight = themeHeader.offsetHeight;
+        const announcementBarHeight = announcementBar.offsetHeight || 40;
+        const headerHeight = themeHeader.offsetHeight || 60;
 
         document.documentElement.style.setProperty(
           "--announcement-bar-height",
@@ -24,14 +24,13 @@ const Header = {
           `${headerHeight}px`
         );
 
-        // Update body padding ONLY on desktop
-        if (window.innerWidth >= 768) {
-          document.body.style.paddingTop = `${
+        // Update header-spacer height if it exists
+        // This is better than creating the element with JS
+        const headerSpacer = document.querySelector(".header-spacer");
+        if (headerSpacer) {
+          headerSpacer.style.height = `${
             announcementBarHeight + headerHeight
           }px`;
-        } else {
-          // Reset padding on mobile
-          document.body.style.paddingTop = "0";
         }
       };
 
@@ -40,6 +39,9 @@ const Header = {
 
       // Recalculate on window resize
       window.addEventListener("resize", setHeightVariables);
+
+      // Recalculate after all images and resources are loaded
+      window.addEventListener("load", setHeightVariables);
     }
 
     if (container.querySelector(".js-stickynav")) {
@@ -110,18 +112,15 @@ const Header = {
     if (!announcementBar || !headerSection) return;
 
     // Set announcement bar height
-    const announcementBarHeight = announcementBar.offsetHeight;
+    const announcementBarHeight = announcementBar.offsetHeight || 40;
     document.documentElement.style.setProperty(
       "--announcement-bar-height",
       `${announcementBarHeight}px`
     );
   },
 
-  // New method to handle desktop header scroll behavior
+  // Updated method to handle desktop header scroll behavior
   handleDesktopHeaderScroll: function handleDesktopHeaderScroll() {
-    // Only apply this to desktop
-    if (window.innerWidth < 768) return;
-
     const announcementBar = document.querySelector(".announcement-bar.wrapper");
     const headerSection = document.querySelector(
       ".shopify-section-group-header-group"
@@ -139,12 +138,16 @@ const Header = {
         const currentScrollTop =
           window.pageYOffset || document.documentElement.scrollTop;
 
-        if (currentScrollTop > scrollThreshold) {
-          // Scrolling down - hide announcement bar
-          announcementBar.classList.add("is-hidden");
-        } else {
-          // At top or scrolling up to the top - show announcement bar
-          announcementBar.classList.remove("is-hidden");
+        // For desktop: We'll keep both announcement bar and header visible
+        // We're adjusting only mobile behavior now
+        if (window.innerWidth < 768) {
+          if (currentScrollTop > scrollThreshold) {
+            // Scrolling down - hide announcement bar on mobile only
+            announcementBar.classList.add("is-hidden");
+          } else {
+            // At top or scrolling up to the top - show announcement bar
+            announcementBar.classList.remove("is-hidden");
+          }
         }
 
         scrollTimeout = null;
@@ -158,15 +161,8 @@ const Header = {
     window.addEventListener(
       "resize",
       function () {
-        if (window.innerWidth >= 768) {
-          // We're on desktop, make sure handler is active
-          window.removeEventListener("scroll", onScroll);
-          window.addEventListener("scroll", onScroll, { passive: true });
-        } else {
-          // We're on mobile, remove desktop handler
-          window.removeEventListener("scroll", onScroll);
-          announcementBar.classList.remove("is-hidden");
-        }
+        // Need to reapply appropriate behavior based on screen size
+        onScroll();
       },
       { passive: true }
     );

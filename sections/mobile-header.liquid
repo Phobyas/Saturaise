@@ -19,33 +19,43 @@
 -%}
 
 {% comment %} Mobile Header Assets {% endcomment %}
-<link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="preload" href="{{ 'section-mobile-navigation.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-accordions.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-accordions.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-slideouts.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-slideouts.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-modals.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-modals.css' | asset_url }}"></noscript>
 
 {% style %}
-  :root {
-    --mobile-menu-height: 66px;
-  }
   .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
     font-size: {{ section.settings.logo_size }}px !important;
     word-break: break-word;
-    font-family: var(--heading-family);
-    font-weight: var(--heading-weight);
+    font-family:  var(--heading-family);
+    font-weight:  var(--heading-weight);
   }
   .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
     max-width: {{ section.settings.logo_max_width }}% !important;
   }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+       max-width: 80% !important;
+    }
+  }
+
+  .close-menu-btn {
+    /* Placeholder for close menu button styles */
+  }
+
   #mobile-slideout {
     background-color: {{ bg_color }};
     z-index: 15;
   }
-  .mobile-nav__img-wrapper {
+
+  .mobile-nav__img-wrapper{
     width: 60% !important;
-  }
-  #mobile-menu {
-    height: var(--mobile-menu-height);
-    display: flex;
-    align-items: center;
   }
 {% endstyle %}
 
@@ -170,6 +180,29 @@
              hover: hover_color %}
         </button>
       </form>
+
+      <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.c-accordion__top-level');
+    menuItems.forEach((item, index) => {
+      item.style.setProperty('--item-index', index);
+    });
+    
+    const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
+    slideoutTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        document.body.classList.add('slideout-mobile-navigation--open');
+      });
+    });
+    
+    const closeButtons = document.querySelectorAll('.js-slideout-close');
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        document.body.classList.remove('slideout-mobile-navigation--open');
+      });
+    });
+  });
+</script>
     </section>
   {%- endunless -%}
 {%- endif -%}
@@ -184,7 +217,7 @@
           {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
             {% render 'helper-image',
              type: section.settings.menu_image,
-             sm_render: '360px',
+             sm_render: '360px'
              md_render: '360px',
              lg_render: '360px' %}
             {%- if section.settings.menu_image_text -%}
@@ -194,7 +227,7 @@
         </div>
       </div>
       
-      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link mt-12" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
+      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  mt-12" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
         {% render 'snip-icons',
            wrapper: '.section-header__mobile',
            type: 'theme',
@@ -207,7 +240,8 @@
     {% endif %}
     </div>
   </div>
-  <div class="mobile-nav__wrapper no-section-animation">
+  <div
+  class="mobile-nav__wrapper no-section-animation">
     <div class="mobile-nav__menu-blocks pt0">
       {% if section.settings.main_nav != blank %}
         <div class="mobile-nav__mobile-menu-wrapper px6">
@@ -242,6 +276,7 @@
             {% endif %}
           {% endif %}
         </ul>
+
         </div>
       {% endif %}
     </div>
@@ -249,39 +284,43 @@
       #slideout-mobile-navigation,
       #slideout-mobile-navigation .mobile-nav__mobile-header,
       .mobile-nav__wrapper .c-accordion__second-level-wrapper {
-        background-color: {{ bg_color }};
+        background-color: {{ bg_color }} !important;
       }
       body.slideout-mobile-navigation--open .section-header__mobile,
       body.slideout-mobile-navigation--open #mobile-search {
-        background-color: {{ bg_color }};
+        background-color: {{ bg_color }} !important;
       }
 
       #slideout-mobile-navigation .mobile-nav__mobile-header svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile_search--form svg .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg .hover-fill {
-        fill: {{ text_color }};
+        fill: {{ text_color }} !important;
       }
 
       .section-header__mobile_search--form {
-        border-color: {{ text_color }};
+        border-color: {{ text_color }} !important;
       }
 
       #slideout-mobile-navigation .mobile-nav__mobile-header svg:hover .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg:hover .hover-fill,
       .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg:hover .hover-fill {
-        fill: {{ hover_color }};
+        fill: {{ hover_color }} !important;
       }
 
       .mobile-nav__wrapper input::placeholder,
       .slideout-mobile-navigation--open .section-header__mobile_search--input::placeholder  {
-        color: {{ text_color }};
+        color: {{ text_color }} !important;
         opacity: 1;
       }
 
-      .mobile-nav__wrapper input:-ms-input-placeholder,
+      .mobile-nav__wrapper input:-ms-input-placeholder {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
       .mobile-nav__wrapper input::-ms-input-placeholder {
-        color: {{ text_color }};
+        color: {{ text_color }} !important;
         opacity: 1;
       }
 
@@ -289,15 +328,15 @@
       .mobile-nav__wrapper .c-accordion__link,
       .slideout-mobile-navigation--open .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo,
       .slideout-mobile-navigation--open .section-header__mobile_search--input {
-        color: {{ text_color }};
+        color: {{ text_color }} !important;
       }
 
       .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
-        color: {{ bg_color }};
+
+        color: {{ bg_color }} !important;
       }
-      
-      .mobile-nav__wrapper .c-accordion__top-level {
-        border-bottom: 2px solid #ccc;
+      .mobile-nav__wrapper .c-accordion__top-level  {
+        border-bottom: 2px solid #ccc !important;
       }
 
       .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
@@ -305,36 +344,13 @@
         border-color: {{ text_color }};
         text-transform: uppercase;
       }
-      
       .mobile-nav__wrapper .c-accordion__link:hover {
-        color: {{ hover_color }};
+        color: {{ hover_color }} !important;
       }
     {% endstyle %}
   </div>
 </aside>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const menuItems = document.querySelectorAll('.c-accordion__top-level');
-  menuItems.forEach((item, index) => {
-    item.style.setProperty('--item-index', index);
-  });
-  
-  const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
-  slideoutTriggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      document.body.classList.add('slideout-mobile-navigation--open');
-    });
-  });
-  
-  const closeButtons = document.querySelectorAll('.js-slideout-close');
-  closeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      document.body.classList.remove('slideout-mobile-navigation--open');
-    });
-  });
-});
-</script>
 
 {% schema %}
 {

@@ -88,6 +88,8 @@
     {% section 'mobile-header' %}
 
     {% sections 'header-group' %}
+    
+    <div class="header-spacer"></div>
 
     <div class="page-wrap">
       {{ content_for_layout }}
@@ -135,6 +137,8 @@
     var jsFormat = {
       "money": {{ shop.money_format | json }}
     }
+
+    
   </script>
 
   <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>

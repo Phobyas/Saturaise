@@ -10,6 +10,12 @@ ul.header__navigation li.dropdown ul.submenu .nested,
 
 .section-header__main-bar {
   border-bottom: 3px solid #efefef;
+  position: fixed;
+  top: var(--announcement-bar-height, 40px);
+  left: 0;
+  right: 0;
+  z-index: 999;
+  width: 100%;
 }
 
 .mobile-nav__mobile-header .header__cart-links--search {
@@ -131,11 +137,27 @@ ul.header__navigation li.dropdown ul.submenu li a:hover,
     padding-top: var(--space-4);
     padding-bottom: var(--space-4);
   }
+
+  /* Add padding to main content to prevent overlap with fixed elements */
+  body:not(.template-index) .page-content,
+  body:not(.template-index) main {
+    padding-top: calc(
+      var(--announcement-bar-height, 40px) + var(--header-height, 60px)
+    );
+  }
+
+  /* Special handling for homepage */
+  body.template-index .page-content > .shopify-section:first-child {
+    margin-top: calc(
+      var(--announcement-bar-height, 40px) + var(--header-height, 60px)
+    );
+  }
 }
 
 .section-header__main-bar.sticky--active {
   width: 100%;
-  position: relative; /* Changed from fixed to relative */
+  position: fixed;
+  top: var(--announcement-bar-height, 40px);
   max-width: unset;
   z-index: 9;
 }
@@ -461,63 +483,13 @@ ul.header--country_list {
   font-size: var(--font-size-sm);
 }
 
-/* Desktop header style - fixed at the top */
-@media (min-width: 768px) {
-  .shopify-section-group-header-group {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: var(--header-bg);
-  }
-
-  body {
-    padding-top: calc(
-      var(--announcement-bar-height, 40px) + var(--header-height, 80px)
-    );
-  }
+.shopify-section-group-header-group {
+  position: static !important;
+  z-index: 20;
 }
 
-/* Mobile header style - announcement bar hides on scroll */
-@media (max-width: 767px) {
-  .shopify-section-group-header-group {
-    position: relative;
-    top: auto;
-  }
-
-  body {
-    padding-top: 0;
-  }
-
-  .announcement-bar.wrapper {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    transition: transform 0.3s ease;
-  }
-
-  .announcement-bar.wrapper.is-hidden {
-    transform: translateY(-40px);
-  }
-
-  .mobile-nav__mobile-header {
-    position: fixed;
-    top: var(--announcement-bar-height, 40px);
-    left: 0;
-    right: 0;
-    z-index: 12;
-    transition: top 0.3s ease;
-  }
-
-  .mobile-nav__mobile-header.announcement-hidden {
-    top: 0;
-  }
-
-  /* Add spacing for mobile content */
-  .header-spacer {
-    height: 106px;
-    display: block;
-  }
+.header-spacer {
+  height: 106px;
+  width: 100%;
+  display: block;
 }

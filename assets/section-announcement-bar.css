@@ -3,36 +3,46 @@
   background-color: var(--announcement-bg, #000) !important;
   padding: 0 10px;
   overflow: hidden;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   height: 40px;
   color: white;
-  z-index: 1001;
-  transform: translateZ(0);
-  will-change: transform;
+  z-index: 1001 !important;
+  transition: transform 0.3s ease;
 }
 
 .announcement-bar .marquee-track {
+  list-style: none;
   display: flex;
   margin: 0;
   padding: 0;
   position: absolute;
   width: 100%;
-  list-style: none;
+  margin-left: 0;
 }
 
 .announcement-bar .marquee-content {
-  flex: 0 0 auto;
+  flex-grow: 0;
+  flex-shrink: 0;
   padding: 10px;
   text-align: center;
   width: 20%;
 }
 
-@media (max-width: 767px) {
-  .announcement-bar .marquee-content {
-    width: 50%;
+@media (max-width: 1023px) {
+  .announcement-bar.wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
-  /* Mobile-specific styles for the announcement bar */
-  .announcement-bar.wrapper.is-hidden {
-    transform: translateY(-40px);
+  .announcement-bar.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .announcement-bar .marquee-content {
+    width: 50%;
   }
 }
