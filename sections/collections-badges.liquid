@@ -58,30 +58,44 @@
   }
 {% endschema %}
 
-<!-- Immediate height styles to prevent CLS -->
-<style id="cls-prevention-{{ section.id }}">
-  #shopify-section-{{ section.id }} {
-    min-height: 80px;
-    overflow: visible;
-    contain: layout;
-  }
-  
-  @media (max-width: 767px) {
-    #shopify-section-{{ section.id }} {
-      min-height: 70px;
-    }
-  }
-  
-  #badgeScroller {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  #badgeScroller::-webkit-scrollbar {
-    display: none;
-  }
+<!-- Force immediate style application to prevent CLS -->
+<script>
+// Critical dimensions script - executes before any DOM parsing
+(function() {
+  document.write('<style>' +
+    // Section container
+    '#shopify-section-{{ section.id }} {' +
+      'min-height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
+      'height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
+      'max-height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
+      'width: 100%;' +
+      'position: relative;' +
+      'overflow: visible;' +
+      'contain: layout;' +
+      'margin-top: 12px;' +
+      'margin-bottom: 12px;' +
+    '}' +
+    // Badge scroller
+    '#badgeScroller {' +
+      'height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
+      'width: 100%;' +
+      'overflow-x: auto;' +
+      'overflow-y: hidden;' +
+      'scrollbar-width: none;' +
+      '-ms-overflow-style: none;' +
+      '-webkit-overflow-scrolling: touch;' +
+    '}' +
+    '#badgeScroller::-webkit-scrollbar { display: none; }' +
+    // Arrow buttons - maintain visibility
+    '.badge-arrows { display: flex; }' +
+    '@media (max-width: 767px) { .badge-arrows { display: none; } }' +
+  '</style>');
+})();
+</script>
 
+<!-- Immediate height styles to prevent CLS -->
+<style>
+  /* Badge item styles */
   .badge-arrow-btn {
     display: flex;
     align-items: center;
@@ -114,20 +128,51 @@
     min-height: 16px;
   }
   
-  @media (max-width: 767px) {
-    .badge-arrows {
-      display: none;
-    }
+  /* Badge items with fixed dimensions */
+  .badge-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    height: 64px;
+    min-height: 64px;
+  }
+  
+  .badge-item:hover {
+    background-color: #F5F5F5;
+  }
+  
+  /* Badge image container with fixed dimensions */
+  .badge-image-container {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 48px;
+    max-height: 48px;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
-<div class="w-full flex justify-center mt-3">
-  <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
-    <!-- Header with arrows -->
+<div class="w-full flex justify-center">
+  <div class="w-full max-w-[1600px] pt-3 pl-3 md:pl-0 relative">
+    <!-- Header with arrows - maintaining original position -->
     <div class="flex justify-between items-center">
       <div></div>
       <div class="badge-arrows flex gap-3">
-        <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories">
+        <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories" disabled>
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
           </svg>
@@ -142,22 +187,23 @@
     
     <!-- Badge scroller with fixed dimensions to prevent CLS -->
     <div class="relative">
-      <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
+      <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto">
         <div class="flex flex-shrink gap-3 md:gap-4">
           {% for block in section.blocks %}
             {% if block.settings.title != blank and block.settings.link != blank %}
               <a href="{{ block.settings.link }}" 
-                 class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
+                 class="badge-item"
                  {{ block.shopify_attributes }}>
                 {% if block.settings.image %}
-                  <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50" style="aspect-ratio: 1;">
+                  <div class="badge-image-container">
                     {{ block.settings.image | image_url: width: 96 | image_tag: 
                       class: 'w-full h-full object-contain',
                       loading: 'eager',
                       fetchpriority: 'high',
-                      width: 96,
-                      height: 96,
-                      alt: block.settings.title
+                      width: 48,
+                      height: 48,
+                      alt: block.settings.title,
+                      style: "aspect-ratio: 1/1; width: 48px; height: 48px;"
                     }}
                   </div>
                 {% endif %}
@@ -171,17 +217,8 @@
   </div>
 </div>
 
+<!-- Initialize scroller functionality -->
 <script>
-// Early pre-calculation script to prevent CLS
-(function() {
-  // Create and inject styles immediately to reserve space
-  document.getElementById('cls-prevention-{{ section.id }}').textContent += `
-    #shopify-section-{{ section.id }} {
-      min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
-    }
-  `;
-})();
-
 document.addEventListener('DOMContentLoaded', function() {
   const scroller = document.getElementById('badgeScroller');
   const prevBtn = document.getElementById('badgePrev');
@@ -190,6 +227,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Skip initialization if elements don't exist
   if (!scroller || !prevBtn || !nextBtn) return;
+  
+  // Ensure dimensions are applied
+  scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
   
   // Simple drag handling variables
   let isDragging = false;

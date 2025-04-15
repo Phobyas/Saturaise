@@ -2646,11 +2646,6 @@ a.no-hover:hover {
   .site-wrap{overflow-x:hidden;}
 }
 
-@media (min-width: 768px) and (max-width: 1600px) {
-  .page-wrap{
-    padding: 0 12px !important;
-  }
-}
 
 @media (min-width: 768px) {
   .r-span-1.auto {
