@@ -88,7 +88,7 @@
         "pager": "dots",
         "slideshow_size": "fixed_height",
         "desktop_height": 650,
-        "mobile_height": 650,
+        "mobile_height": 500,
         "caption_below": false,
         "slide_heading_size": 32,
         "subheading_size": 18,
