@@ -1,4 +1,4 @@
-{% comment %} Slideshow Assets {% endcomment %}
+{% comment %} Slideshow Assets with preload {% endcomment %}
 <link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}"></noscript>
 
@@ -43,6 +43,107 @@
   assign mobile_height = section.settings.mobile_height
 
 -%}
+
+{% comment %} Early inline styles to prevent CLS {% endcomment %}
+<style id="slideshow-cls-prevention-{{ section.id }}">
+  /* Critical styles to prevent layout shifts */
+  #shopify-section-{{ section.id }} {
+    min-height: {{ desktop_height }}px;
+    {% if fixed_height %}
+    height: {{ desktop_height }}px;
+    {% endif %}
+    position: relative;
+    overflow: hidden;
+    visibility: visible !important;
+    {% if fixed_height %}
+    contain: layout size;
+    content-visibility: auto;
+    contain-intrinsic-size: 1600px {{ desktop_height }}px;
+    {% endif %}
+  }
+  
+  #slideshow--{{ section.id }} {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    {% if fixed_height %}
+    height: {{ desktop_height }}px;
+    min-height: {{ desktop_height }}px;
+    {% endif %}
+  }
+  
+  {% if fixed_height %}
+  #slideshow--{{ section.id }}.flickity__section {
+    min-height: {{ desktop_height }}px;
+    height: {{ desktop_height }}px;
+  }
+  
+  #slideshow--{{ section.id }}.flickity__section .flickity-viewport {
+    min-height: {{ desktop_height }}px;
+    height: {{ desktop_height }}px !important;
+  }
+  
+  #slideshow--{{ section.id }} .slideshow__slide-image {
+    height: {{ desktop_height }}px;
+    min-height: {{ desktop_height }}px;
+  }
+  
+  #slideshow--{{ section.id }} .slideshow__slide-image img {
+    height: {{ desktop_height }}px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  #slideshow--{{ section.id }} .slideshow__slide-image picture {
+    height: {{ desktop_height }}px;
+    display: block;
+  }
+  
+  #slideshow--{{ section.id }} .slideshow__slide-image picture img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  {% endif %}
+  
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      min-height: {{ mobile_height }}px;
+      {% if fixed_height %}
+      height: {{ mobile_height }}px;
+      contain-intrinsic-size: 100vw {{ mobile_height }}px;
+      {% endif %}
+    }
+    
+    {% if fixed_height %}
+    #slideshow--{{ section.id }} {
+      height: {{ mobile_height }}px;
+      min-height: {{ mobile_height }}px;
+    }
+    
+    #slideshow--{{ section.id }}.flickity__section {
+      min-height: {{ mobile_height }}px;
+      height: {{ mobile_height }}px;
+    }
+    
+    #slideshow--{{ section.id }}.flickity__section .flickity-viewport {
+      min-height: {{ mobile_height }}px;
+      height: {{ mobile_height }}px !important;
+    }
+    
+    #slideshow--{{ section.id }} .slideshow__slide-image {
+      height: {{ mobile_height }}px;
+      min-height: {{ mobile_height }}px;
+    }
+    
+    #slideshow--{{ section.id }} .slideshow__slide-image img,
+    #slideshow--{{ section.id }} .slideshow__slide-image picture,
+    #slideshow--{{ section.id }} .slideshow__slide-image picture img {
+      height: {{ mobile_height }}px;
+    }
+    {% endif %}
+  }
+</style>
 
 {% style %}
 
@@ -90,6 +191,39 @@
 
 {% endstyle %}
 
+<script>
+// Immediate script execution to prevent CLS
+(function() {
+  // Force dimensions before any content loads
+  var isMobile = window.innerWidth <= 768;
+  var slideHeight = isMobile ? {{ mobile_height }} : {{ desktop_height }};
+  
+  // Create and inject critical styles
+  var style = document.createElement('style');
+  style.textContent = 
+    '#shopify-section-{{ section.id }} {' +
+    '  min-height: ' + slideHeight + 'px;' +
+    '  height: ' + slideHeight + 'px;' +
+    '  position: relative;' +
+    '  overflow: hidden;' +
+    '  visibility: visible !important;' +
+    '}' +
+    '#slideshow--{{ section.id }}, ' +
+    '#slideshow--{{ section.id }}.flickity__section, ' +
+    '#slideshow--{{ section.id }}.flickity__section .flickity-viewport {' +
+    '  height: ' + slideHeight + 'px !important;' +
+    '  min-height: ' + slideHeight + 'px;' +
+    '}' +
+    '#slideshow--{{ section.id }} .slideshow__slide-image, ' +
+    '#slideshow--{{ section.id }} .slideshow__slide-image img, ' +
+    '#slideshow--{{ section.id }} .slideshow__slide-image picture {' +
+    '  height: ' + slideHeight + 'px;' +
+    '  min-height: ' + slideHeight + 'px;' +
+    '}';
+  document.head.appendChild(style);
+})();
+</script>
+
 {% comment %} Slideshow Template {% endcomment %}
 <div
 class="global__section section-slideshow {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
@@ -105,7 +239,7 @@ data-section-type="carousel">
         "pauseAutoPlayOnHover":false,
         "autoPlay": {{ slider_speed }},
         "fade": true,
-        "adaptiveHeight": true,
+        "adaptiveHeight": false,
         "pageDots":{% if section.settings.pager == 'dots' and enough_to_wrap %}true{% else %}false{% endif %},
         "prevNextButtons":{% if section.settings.pager == 'arrows' and enough_to_wrap %}true{% else %}false{% endif %}
      }{% endcapture %}
@@ -155,8 +289,17 @@ data-section-type="carousel">
 
           assign main_image = block.settings.image
           assign mobile_image = block.settings.mobile_image
-          assign image_box_ratio = main_image.height | append: ".0" | times: 1 | divided_by: main_image.width | times: 100 | append: "%"
-          assign mobile_image_box_ratio = mobile_image.height | append: ".0" | times: 1 | divided_by: mobile_image.width | times: 100 | append: "%"
+          
+          assign desktop_image_aspect = 1
+          assign mobile_image_aspect = 1
+          
+          if main_image != blank
+            assign desktop_image_aspect = main_image.height | times: 1.0 | divided_by: main_image.width
+          endif
+          
+          if mobile_image != blank
+            assign mobile_image_aspect = mobile_image.height | times: 1.0 | divided_by: mobile_image.width
+          endif
 
           if mobile_image != blank
             assign mobile_class = 'sm-hide'
@@ -192,24 +335,40 @@ data-section-type="carousel">
                 {% if has_image %}
                   {% if mobile_image != blank %}
                     <picture>
-                      <source media="(max-width: 1024px)" srcset="{{ block.settings.mobile_image | image_url: width: 800 }}">
-                      <source media="(min-width: 1025px)" srcset="{{ block.settings.image | image_url: width: 1600 }}">
-                      <img src="{{ block.settings.image | image_url: width: 1600 }}" alt="{{ block.settings.heading | escape }}">
+                      <source 
+                        media="(max-width: 1024px)" 
+                        srcset="{{ mobile_image | image_url: width: 800 }}"
+                        width="{{ mobile_image.width }}"
+                        height="{{ mobile_image.height }}">
+                      <source 
+                        media="(min-width: 1025px)" 
+                        srcset="{{ main_image | image_url: width: 1600 }}"
+                        width="{{ main_image.width }}"
+                        height="{{ main_image.height }}">
+                      <img 
+                        src="{{ main_image | image_url: width: 1600 }}" 
+                        alt="{{ block.settings.heading | escape }}"
+                        width="{{ main_image.width }}"
+                        height="{{ main_image.height }}"
+                        loading="{{ loading }}"
+                        fetchpriority="{{ fetch_priority }}"
+                        style="width: 100%; {% if fixed_height %}height: 100%; object-fit: cover;{% endif %}"
+                        {% if fixed_height %}importance="high"{% endif %}>
                     </picture>
                   {% else %}
-                    {% render 'helper-image',
-                       type: block.settings.image,
-                       sm_render: '100vw'
-                       md_render: '100vw',
-                       lg_render: '100vw',
-                       class: mobile_class,
-                       loading: loading,
-                       fetchpriority: fetch_priority %}
+                    {{ main_image | image_url: width: 1600 | image_tag: 
+                      loading: loading,
+                      fetchpriority: fetch_priority,
+                      width: main_image.width,
+                      height: main_image.height,
+                      class: mobile_class,
+                      style: "width: 100%; " | append: fixed_height | replace: "true", "height: 100%; object-fit: cover;" | replace: "false", ""
+                    }}
                   {% endif %}
                 {% else %}
                   {% capture current %}{% cycle 1, 2 %}{% endcapture %}
                   {%- assign placeholder = 'lifestyle-' | append: current -%}
-                  <div class="demo-1 color-1 placeholder-image onboard">
+                  <div class="demo-1 color-1 placeholder-image onboard" style="{% if fixed_height %}height: {{ desktop_height }}px;{% endif %}">
                     {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
                 {% endif %}
@@ -259,19 +418,33 @@ data-section-type="carousel">
                 {% if mobile_image != blank %}
                   .slide--{{ block.id }} .slideshow__slide-image {
                     {% if fixed_height %}
-                      padding-bottom: var(--mobile-section-height) !important;
+                      height: var(--mobile-section-height) !important;
+                      min-height: var(--mobile-section-height) !important;
+                    {% endif %}
+                  }
+                  
+                  .slide--{{ block.id }} .slideshow__slide-image picture,
+                  .slide--{{ block.id }} .slideshow__slide-image picture img {
+                    {% if fixed_height %}
+                      height: var(--mobile-section-height) !important;
+                      min-height: var(--mobile-section-height) !important;
                     {% endif %}
                   }
                 {% else %}
-                  .slide--{{ block.id }} .slideshow__slide-image .box-ratio {
-                    padding-bottom: {{ image_box_ratio }} !important;
-                  }
                   .slide--{{ block.id }} .slideshow__slide-image img {
                     object-fit: cover;
                     object-position: center;
+                    {% if fixed_height %}
+                    height: var(--mobile-section-height) !important;
+                    min-height: var(--mobile-section-height) !important;
+                    {% endif %}
                   }
                   .slide--{{ block.id }} .slideshow__slide-image {
                     display: block;
+                    {% if fixed_height %}
+                    height: var(--mobile-section-height) !important;
+                    min-height: var(--mobile-section-height) !important;
+                    {% endif %}
                   }
                 {% endif %}
                 {% if caption_below %}

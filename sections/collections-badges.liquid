@@ -58,44 +58,39 @@
   }
 {% endschema %}
 
-<!-- Force immediate style application to prevent CLS -->
-<script>
-// Critical dimensions script - executes before any DOM parsing
-(function() {
-  document.write('<style>' +
-    // Section container
-    '#shopify-section-{{ section.id }} {' +
-      'min-height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
-      'height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
-      'max-height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
-      'width: 100%;' +
-      'position: relative;' +
-      'overflow: visible;' +
-      'contain: layout;' +
-      'margin-top: 12px;' +
-      'margin-bottom: 12px;' +
-    '}' +
-    // Badge scroller
-    '#badgeScroller {' +
-      'height: ' + (window.innerWidth < 768 ? '70px' : '80px') + ';' +
-      'width: 100%;' +
-      'overflow-x: auto;' +
-      'overflow-y: hidden;' +
-      'scrollbar-width: none;' +
-      '-ms-overflow-style: none;' +
-      '-webkit-overflow-scrolling: touch;' +
-    '}' +
-    '#badgeScroller::-webkit-scrollbar { display: none; }' +
-    // Arrow buttons - maintain visibility
-    '.badge-arrows { display: flex; }' +
-    '@media (max-width: 767px) { .badge-arrows { display: none; } }' +
-  '</style>');
-})();
-</script>
-
 <!-- Immediate height styles to prevent CLS -->
-<style>
-  /* Badge item styles */
+<style id="cls-prevention-{{ section.id }}">
+  /* Fixed dimensions for section container to prevent layout shifts */
+  #shopify-section-{{ section.id }} {
+    min-height: 110px;
+    overflow: visible;
+    contain: layout;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      min-height: 80px;
+    }
+  }
+  
+  #badgeScroller {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    height: 80px;
+  }
+  
+  @media (max-width: 767px) {
+    #badgeScroller {
+      height: 70px;
+    }
+  }
+  
+  #badgeScroller::-webkit-scrollbar {
+    display: none;
+  }
+
   .badge-arrow-btn {
     display: flex;
     align-items: center;
@@ -128,7 +123,13 @@
     min-height: 16px;
   }
   
-  /* Badge items with fixed dimensions */
+  @media (max-width: 767px) {
+    .badge-arrows {
+      display: none;
+    }
+  }
+  
+  /* Fixed dimensions for badge items */
   .badge-item {
     display: flex;
     align-items: center;
@@ -140,21 +141,11 @@
     transition: background-color 0.2s;
     white-space: nowrap;
     height: 64px;
-    min-height: 64px;
   }
   
-  .badge-item:hover {
-    background-color: #F5F5F5;
-  }
-  
-  /* Badge image container with fixed dimensions */
   .badge-image-container {
     width: 48px;
     height: 48px;
-    min-width: 48px;
-    min-height: 48px;
-    max-width: 48px;
-    max-height: 48px;
     aspect-ratio: 1/1;
     overflow: hidden;
     border-radius: 50%;
@@ -166,8 +157,8 @@
   }
 </style>
 
-<div class="w-full flex justify-center">
-  <div class="w-full max-w-[1600px] pt-3 pl-3 md:pl-0 relative">
+<div class="w-full flex justify-center mt-3">
+  <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
     <!-- Header with arrows - maintaining original position -->
     <div class="flex justify-between items-center">
       <div></div>
@@ -217,8 +208,24 @@
   </div>
 </div>
 
-<!-- Initialize scroller functionality -->
+<!-- Early initialization script to prevent CLS -->
 <script>
+// Early pre-calculation script to prevent CLS
+(function() {
+  // Reserve space before the DOM is fully loaded
+  const styleTag = document.getElementById('cls-prevention-{{ section.id }}');
+  if (styleTag) {
+    styleTag.textContent += `
+      #shopify-section-{{ section.id }} {
+        min-height: ${window.innerWidth < 768 ? '90px' : '110px'};
+      }
+      #badgeScroller {
+        height: ${window.innerWidth < 768 ? '70px' : '80px'};
+      }
+    `;
+  }
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
   const scroller = document.getElementById('badgeScroller');
   const prevBtn = document.getElementById('badgePrev');
@@ -227,9 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Skip initialization if elements don't exist
   if (!scroller || !prevBtn || !nextBtn) return;
-  
-  // Ensure dimensions are applied
-  scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
   
   // Simple drag handling variables
   let isDragging = false;
