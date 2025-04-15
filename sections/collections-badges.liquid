@@ -56,287 +56,270 @@
       }
     ]
   }
-  {% endschema %}
+{% endschema %}
+
+<!-- Immediate height styles to prevent CLS -->
+<style id="cls-prevention-{{ section.id }}">
+  #shopify-section-{{ section.id }} {
+    min-height: 80px;
+    overflow: visible;
+    contain: layout;
+  }
   
-  <!-- Minimal inline style to prevent CLS while maintaining original height -->
-  <style id="cls-prevention-{{ section.id }}">
+  @media (max-width: 767px) {
     #shopify-section-{{ section.id }} {
-      min-height: 80px;
-      overflow: visible;
-      contain: layout;
+      min-height: 70px;
     }
-    
-    @media (max-width: 767px) {
-      #shopify-section-{{ section.id }} {
-        min-height: 70px;
-      }
-    }
-  </style>
+  }
   
-  <div class="w-full flex justify-center mt-3">
-    <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
-      <!-- Header with arrows -->
-      <div class="flex justify-between items-center">
-        <div></div>
-        <div class="badge-arrows flex gap-3">
-          <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
-              <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-            </svg>
-          </button>
-          <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
-              <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-            </svg>
-          </button>
-        </div>
+  #badgeScroller {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #badgeScroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .badge-arrow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #323232;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .badge-arrow-btn:hover {
+    background-color: #333333;
+  }
+  
+  .badge-arrow-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .badge-arrow-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .badge-arrow-btn svg {
+    min-width: 16px;
+    min-height: 16px;
+  }
+  
+  @media (max-width: 767px) {
+    .badge-arrows {
+      display: none;
+    }
+  }
+</style>
+
+<div class="w-full flex justify-center mt-3">
+  <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
+    <!-- Header with arrows -->
+    <div class="flex justify-between items-center">
+      <div></div>
+      <div class="badge-arrows flex gap-3">
+        <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
+            <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+          </svg>
+        </button>
+        <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
+            <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </button>
       </div>
-      
-      <!-- Badge scroller -->
-      <div class="relative">
-        <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
-          <div class="flex flex-shrink gap-3 md:gap-4">
-            {% for block in section.blocks %}
-              {% if block.settings.title != blank and block.settings.link != blank %}
-                <a href="{{ block.settings.link }}" 
-                   class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
-                   {{ block.shopify_attributes }}>
-                  {% if block.settings.image %}
-                    <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
-                      {{ block.settings.image | image_url: width: 96 | image_tag: 
-                        class: 'w-full h-full object-contain',
-                        loading: 'eager',
-                        fetchpriority: 'high',
-                        width: 96,
-                        height: 96,
-                        alt: block.settings.title
-                      }}
-                    </div>
-                  {% endif %}
-                  <span class="text-base font-medium">{{ block.settings.title }}</span>
-                </a>
-              {% endif %}
-            {% endfor %}
-          </div>
+    </div>
+    
+    <!-- Badge scroller with fixed dimensions to prevent CLS -->
+    <div class="relative">
+      <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
+        <div class="flex flex-shrink gap-3 md:gap-4">
+          {% for block in section.blocks %}
+            {% if block.settings.title != blank and block.settings.link != blank %}
+              <a href="{{ block.settings.link }}" 
+                 class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
+                 {{ block.shopify_attributes }}>
+                {% if block.settings.image %}
+                  <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50" style="aspect-ratio: 1;">
+                    {{ block.settings.image | image_url: width: 96 | image_tag: 
+                      class: 'w-full h-full object-contain',
+                      loading: 'eager',
+                      fetchpriority: 'high',
+                      width: 96,
+                      height: 96,
+                      alt: block.settings.title
+                    }}
+                  </div>
+                {% endif %}
+                <span class="text-base font-medium">{{ block.settings.title }}</span>
+              </a>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<script>
+// Early pre-calculation script to prevent CLS
+(function() {
+  // Create and inject styles immediately to reserve space
+  document.getElementById('cls-prevention-{{ section.id }}').textContent += `
+    #shopify-section-{{ section.id }} {
+      min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
+    }
+  `;
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+  const scroller = document.getElementById('badgeScroller');
+  const prevBtn = document.getElementById('badgePrev');
+  const nextBtn = document.getElementById('badgeNext');
+  const scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
   
-  <style>
-    #badgeScroller {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-    }
-    
-    #badgeScroller::-webkit-scrollbar {
-      display: none;
-    }
+  // Skip initialization if elements don't exist
+  if (!scroller || !prevBtn || !nextBtn) return;
   
-    .badge-arrow-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: opacity 0.2s, background-color 0.2s;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: #323232;
-      border: none;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    
-    .badge-arrow-btn:hover {
-      background-color: #333333;
-    }
-    
-    .badge-arrow-btn:active {
-      transform: scale(0.95);
-    }
-    
-    .badge-arrow-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .badge-arrow-btn svg {
-      min-width: 16px;
-      min-height: 16px;
-    }
-    
-    @media (max-width: 767px) {
-      .badge-arrows {
-        display: none;
-      }
-    }
-  </style>
+  // Simple drag handling variables
+  let isDragging = false;
+  let startX = 0;
+  let startScrollLeft = 0;
   
-  <script>
-  // Simple script to ensure minimum height is set and CSS is injected early
-  (function() {
-    // Create a style element
-    var style = document.createElement('style');
-    style.textContent = `
-      #shopify-section-{{ section.id }} {
-        min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
-        contain: layout;
-      }
-    `;
-    
-    // Insert the style at the top of the head to ensure it takes precedence
-    if (document.head.firstChild) {
-      document.head.insertBefore(style, document.head.firstChild);
-    } else {
-      document.head.appendChild(style);
-    }
-    
-    // Also set min-height directly on the section element
-    document.addEventListener('DOMContentLoaded', function() {
-      var section = document.getElementById('shopify-section-{{ section.id }}');
-      if (section) {
-        section.style.minHeight = window.innerWidth < 768 ? '70px' : '80px';
-      }
-    });
-  })();
+  // Basic arrow button functionality
+  function updateArrowState() {
+    prevBtn.disabled = scroller.scrollLeft <= 0;
+    nextBtn.disabled = scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 5;
+  }
   
-  document.addEventListener('DOMContentLoaded', function() {
-    const scroller = document.getElementById('badgeScroller');
-    const prevBtn = document.getElementById('badgePrev');
-    const nextBtn = document.getElementById('badgeNext');
-    const scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
-    
-    // Super simplified drag variables
-    let isDragging = false;
-    let startX = 0;
-    let startScrollLeft = 0;
-    
-    // Basic arrow button functionality
-    function updateArrowState() {
-      prevBtn.disabled = scroller.scrollLeft <= 0;
-      nextBtn.disabled = scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 5;
-    }
-    
-    // Button click handlers
-    prevBtn.addEventListener('click', function() {
-      scroller.scrollTo({
-        left: scroller.scrollLeft - scrollAmount,
-        behavior: 'smooth'
-      });
-      setTimeout(updateArrowState, 300);
+  // Button click handlers
+  prevBtn.addEventListener('click', function() {
+    scroller.scrollTo({
+      left: scroller.scrollLeft - scrollAmount,
+      behavior: 'smooth'
     });
-    
-    nextBtn.addEventListener('click', function() {
-      scroller.scrollTo({
-        left: scroller.scrollLeft + scrollAmount,
-        behavior: 'smooth'
-      });
-      setTimeout(updateArrowState, 300);
-    });
-    
-    // Initialize button state
-    updateArrowState();
-    
-    // Update button state on scroll
-    scroller.addEventListener('scroll', updateArrowState);
-    
-    // Ultra-simple mouse drag handling - prioritizing responsiveness
-    scroller.addEventListener('mousedown', function(e) {
-      isDragging = true;
-      startX = e.pageX;
-      startScrollLeft = scroller.scrollLeft;
-      
-      // Disable the scroll animation for dragging
-      scroller.style.scrollBehavior = 'auto';
-      scroller.style.cursor = 'grabbing';
-      
-      // Prevent default behaviors that might interfere
-      e.preventDefault();
-    });
-    
-    // When mouse moves, scroll the container directly
-    document.addEventListener('mousemove', function(e) {
-      if (!isDragging) return;
-      
-      // Simple, direct calculation - no multipliers or complex math
-      const x = e.pageX;
-      const distance = x - startX;
-      scroller.scrollLeft = startScrollLeft - distance;
-      
-      // Prevent any other events
-      e.preventDefault();
-    });
-    
-    // End dragging on mouse up or leave
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('mouseleave', endDrag);
-    
-    function endDrag() {
-      if (!isDragging) return;
-      
-      isDragging = false;
-      scroller.style.cursor = '';
-      
-      // Re-enable smooth scrolling
-      setTimeout(function() {
-        scroller.style.scrollBehavior = '';
-      }, 50);
-    }
-    
-    // Simple touch handling
-    scroller.addEventListener('touchstart', function(e) {
-      isDragging = true;
-      startX = e.touches[0].pageX;
-      startScrollLeft = scroller.scrollLeft;
-      
-      // Disable the scroll animation for dragging
-      scroller.style.scrollBehavior = 'auto';
-    }, { passive: true });
-    
-    scroller.addEventListener('touchmove', function(e) {
-      if (!isDragging) return;
-      
-      const x = e.touches[0].pageX;
-      const distance = x - startX;
-      scroller.scrollLeft = startScrollLeft - distance;
-      
-      // Prevent page scrolling when dragging horizontally
-      if (Math.abs(distance) > 10) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-    
-    scroller.addEventListener('touchend', function() {
-      isDragging = false;
-      
-      // Re-enable smooth scrolling
-      setTimeout(function() {
-        scroller.style.scrollBehavior = '';
-      }, 50);
-    });
-    
-    // Handle click prevention on drag
-    let dragStartTime = 0;
-    let hasMoved = false;
-    
-    scroller.addEventListener('mousedown', function() {
-      dragStartTime = Date.now();
-      hasMoved = false;
-    }, { passive: true });
-    
-    scroller.addEventListener('mousemove', function() {
-      if (isDragging) {
-        hasMoved = true;
-      }
-    }, { passive: true });
-    
-    // Prevent clicks after dragging
-    scroller.addEventListener('click', function(e) {
-      if (hasMoved && (Date.now() - dragStartTime > 100)) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, true);
+    setTimeout(updateArrowState, 300);
   });
-  </script>
+  
+  nextBtn.addEventListener('click', function() {
+    scroller.scrollTo({
+      left: scroller.scrollLeft + scrollAmount,
+      behavior: 'smooth'
+    });
+    setTimeout(updateArrowState, 300);
+  });
+  
+  // Initialize button state
+  updateArrowState();
+  
+  // Update button state on scroll
+  scroller.addEventListener('scroll', updateArrowState);
+  
+  // Simple mouse drag handling
+  scroller.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    startX = e.pageX;
+    startScrollLeft = scroller.scrollLeft;
+    
+    // Disable the scroll animation for dragging
+    scroller.style.scrollBehavior = 'auto';
+    scroller.style.cursor = 'grabbing';
+    
+    // Prevent default behaviors
+    e.preventDefault();
+  });
+  
+  // Scroll the container when mouse moves
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    
+    // Direct calculation without complex math
+    const x = e.pageX;
+    const distance = x - startX;
+    scroller.scrollLeft = startScrollLeft - distance;
+    
+    // Prevent other events
+    e.preventDefault();
+  });
+  
+  // End dragging on mouse up or leave
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('mouseleave', endDrag);
+  
+  function endDrag() {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    scroller.style.cursor = '';
+    
+    // Re-enable smooth scrolling
+    setTimeout(function() {
+      scroller.style.scrollBehavior = '';
+    }, 50);
+  }
+  
+  // Touch handling for mobile
+  scroller.addEventListener('touchstart', function(e) {
+    isDragging = true;
+    startX = e.touches[0].pageX;
+    startScrollLeft = scroller.scrollLeft;
+    
+    // Disable scroll animation
+    scroller.style.scrollBehavior = 'auto';
+  }, { passive: true });
+  
+  scroller.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    
+    const x = e.touches[0].pageX;
+    const distance = x - startX;
+    scroller.scrollLeft = startScrollLeft - distance;
+    
+    // Prevent page scrolling when dragging horizontally
+    if (Math.abs(distance) > 10) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  scroller.addEventListener('touchend', function() {
+    isDragging = false;
+    
+    // Re-enable smooth scrolling
+    setTimeout(function() {
+      scroller.style.scrollBehavior = '';
+    }, 50);
+  });
+  
+  // Prevent click after drag
+  let dragStartTime = 0;
+  let hasMoved = false;
+  
+  scroller.addEventListener('mousedown', function() {
+    dragStartTime = Date.now();
+    hasMoved = false;
+  }, { passive: true });
+  
+  scroller.addEventListener('mousemove', function() {
+    if (isDragging) {
+      hasMoved = true;
+    }
+  }, { passive: true });
+  
+  scroller.addEventListener('click', function(e) {
+    if (hasMoved && (Date.now() - dragStartTime > 100)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+});
+</script>

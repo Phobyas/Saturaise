@@ -9,24 +9,67 @@
     <link rel="canonical" href="{{ canonical_url }}">
   {%- endif -%}
 
-  <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-/>
-
+  <!-- Preconnect to necessary domains -->
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {%- unless settings.main_font.system? and settings.heading_font.system? and settings.nav_font.system? -%}
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {%- endunless -%}
 
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- Preload onDomain stylesheets and script libraries -->
-  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
-  <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
-
-  
+  <!-- Inline critical CSS to prevent layout shifting -->
+  <style>
+    /* Critical CSS to prevent CLS */
+    .site-wrap {
+      width: 100%;
+    }
+    
+    .collection-badges-section {
+      min-height: 80px;
+      overflow: visible;
+      contain: layout;
+    }
+    
+    @media (max-width: 767px) {
+      .collection-badges-section {
+        min-height: 70px;
+      }
+    }
+    
+    img {
+      max-width: 100%;
+    }
+    
+    /* Ensure images maintain aspect ratio while loading */
+    img[width][height] {
+      aspect-ratio: attr(width) / attr(height);
+    }
+    
+    /* Prevent layout shift from header */
+    .header-spacer {
+      height: var(--header-height, 80px);
+      display: block;
+    }
+    
+    /* Hide elements before JS loads */
+    .no-js .js-slideout-toggle-wrapper,
+    .no-js .js-modal-toggle-wrapper {
+      opacity: 0;
+    }
+    
+    /* Site overlay style to prevent flashing */
+    .site-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
 
   {% if settings.favicon %}
     <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png" />
@@ -44,20 +87,7 @@
   {% render 'snip-social-meta-tags' %}
   {% render 'snip-structured-data' %}
 
-  <script src="{{ 'theme.js' | asset_url }}" defer></script>
-
-  {{ content_for_header }}
-
-  {% render 'css-variables' %}
-
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
-
-  {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-  {{ 'swiper-bundle.min.js' | asset_url | script_tag }}
-
-  {{ 'size-chart.css' | asset_url | stylesheet_tag }}
-  {{ 'size-chart.js' | asset_url | script_tag }}
-
+  <!-- Preload critical fonts -->
   {%- unless settings.main_font.system? -%}
     <link rel="preload" as="font" href="{{ settings.main_font | font_url }}" type="font/woff2" crossorigin>
   {%- endunless -%}
@@ -68,7 +98,53 @@
     <link rel="preload" as="font" href="{{ settings.nav_font | font_url }}" type="font/woff2" crossorigin>
   {%- endunless -%}
 
-  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
+  <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+  <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+  <link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
+  
+  <!-- Load Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">
+
+  <!-- JS -->
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'size-chart.js' | asset_url }}" defer></script>
+
+  {{ content_for_header }}
+
+  {% render 'css-variables' %}
+
+  <!-- Script to prevent CLS -->
+  <script>
+    // Set JavaScript flag immediately
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    
+    // Calculate and set header height to prevent layout shift
+    (function() {
+      var headerHeight = window.innerWidth < 768 ? '60px' : '80px';
+      document.documentElement.style.setProperty('--header-height', headerHeight);
+      
+      // Set minimum heights for sections that cause CLS
+      var style = document.createElement('style');
+      style.textContent = `
+        #shopify-section-template--24156831154469__collections_badges_pWqmae {
+          min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
+          contain: layout;
+        }
+        
+        .header-spacer {
+          height: ${headerHeight};
+        }
+      `;
+      document.head.appendChild(style);
+    })();
+  </script>
 </head>
 
 <body id="{{ page_title | handle }}"
@@ -151,7 +227,7 @@
 
   <aside class="slideout slideout__drawer-right" data-wau-slideout="store-availability" id="slideout-store-availability"></aside>
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
+  <!-- Load non-critical scripts at the end -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 </body>
 </html>
