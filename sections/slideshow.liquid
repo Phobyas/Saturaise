@@ -48,9 +48,9 @@
 <style id="slideshow-cls-prevention-{{ section.id }}">
   /* Critical styles to prevent layout shifts */
   #shopify-section-{{ section.id }} {
-    min-height: {{ desktop_height }}px;
+    min-height: {{ mobile_height }}px;
     {% if fixed_height %}
-    height: {{ desktop_height }}px;
+    height: {{ mobile_height }}px;
     {% endif %}
     position: relative;
     overflow: hidden;
@@ -58,7 +58,7 @@
     {% if fixed_height %}
     contain: layout size;
     content-visibility: auto;
-    contain-intrinsic-size: 1600px {{ desktop_height }}px;
+    contain-intrinsic-size: 100vw {{ mobile_height }}px;
     {% endif %}
   }
   
@@ -67,35 +67,35 @@
     max-width: 1600px;
     margin: 0 auto;
     {% if fixed_height %}
-    height: {{ desktop_height }}px;
-    min-height: {{ desktop_height }}px;
+    height: {{ mobile_height }}px;
+    min-height: {{ mobile_height }}px;
     {% endif %}
   }
   
   {% if fixed_height %}
   #slideshow--{{ section.id }}.flickity__section {
-    min-height: {{ desktop_height }}px;
-    height: {{ desktop_height }}px;
+    min-height: {{ mobile_height }}px;
+    height: {{ mobile_height }}px;
   }
   
   #slideshow--{{ section.id }}.flickity__section .flickity-viewport {
-    min-height: {{ desktop_height }}px;
-    height: {{ desktop_height }}px !important;
+    min-height: {{ mobile_height }}px;
+    height: {{ mobile_height }}px !important;
   }
   
   #slideshow--{{ section.id }} .slideshow__slide-image {
-    height: {{ desktop_height }}px;
-    min-height: {{ desktop_height }}px;
+    height: {{ mobile_height }}px;
+    min-height: {{ mobile_height }}px;
   }
   
   #slideshow--{{ section.id }} .slideshow__slide-image img {
-    height: {{ desktop_height }}px;
+    height: {{ mobile_height }}px;
     object-fit: cover;
     width: 100%;
   }
   
   #slideshow--{{ section.id }} .slideshow__slide-image picture {
-    height: {{ desktop_height }}px;
+    height: {{ mobile_height }}px;
     display: block;
   }
   
@@ -106,40 +106,41 @@
   }
   {% endif %}
   
-  @media screen and (max-width: 768px) {
+  /* Desktop styles apply above 768px */
+  @media screen and (min-width: 769px) {
     #shopify-section-{{ section.id }} {
-      min-height: {{ mobile_height }}px;
+      min-height: {{ desktop_height }}px;
       {% if fixed_height %}
-      height: {{ mobile_height }}px;
-      contain-intrinsic-size: 100vw {{ mobile_height }}px;
+      height: {{ desktop_height }}px;
+      contain-intrinsic-size: 1600px {{ desktop_height }}px;
       {% endif %}
     }
     
     {% if fixed_height %}
     #slideshow--{{ section.id }} {
-      height: {{ mobile_height }}px;
-      min-height: {{ mobile_height }}px;
+      height: {{ desktop_height }}px;
+      min-height: {{ desktop_height }}px;
     }
     
     #slideshow--{{ section.id }}.flickity__section {
-      min-height: {{ mobile_height }}px;
-      height: {{ mobile_height }}px;
+      min-height: {{ desktop_height }}px;
+      height: {{ desktop_height }}px;
     }
     
     #slideshow--{{ section.id }}.flickity__section .flickity-viewport {
-      min-height: {{ mobile_height }}px;
-      height: {{ mobile_height }}px !important;
+      min-height: {{ desktop_height }}px;
+      height: {{ desktop_height }}px !important;
     }
     
     #slideshow--{{ section.id }} .slideshow__slide-image {
-      height: {{ mobile_height }}px;
-      min-height: {{ mobile_height }}px;
+      height: {{ desktop_height }}px;
+      min-height: {{ desktop_height }}px;
     }
     
     #slideshow--{{ section.id }} .slideshow__slide-image img,
     #slideshow--{{ section.id }} .slideshow__slide-image picture,
     #slideshow--{{ section.id }} .slideshow__slide-image picture img {
-      height: {{ mobile_height }}px;
+      height: {{ desktop_height }}px;
     }
     {% endif %}
   }
@@ -336,20 +337,20 @@ data-section-type="carousel">
                   {% if mobile_image != blank %}
                     <picture>
                       <source 
-                        media="(max-width: 1024px)" 
-                        srcset="{{ mobile_image | image_url: width: 800 }}"
-                        width="{{ mobile_image.width }}"
-                        height="{{ mobile_image.height }}">
-                      <source 
-                        media="(min-width: 1025px)" 
+                        media="(min-width: 769px)" 
                         srcset="{{ main_image | image_url: width: 1600 }}"
                         width="{{ main_image.width }}"
                         height="{{ main_image.height }}">
+                      <source 
+                        media="(max-width: 768px)" 
+                        srcset="{{ mobile_image | image_url: width: 800 }}"
+                        width="{{ mobile_image.width }}"
+                        height="{{ mobile_image.height }}">
                       <img 
-                        src="{{ main_image | image_url: width: 1600 }}" 
+                        src="{{ mobile_image | image_url: width: 800 }}" 
                         alt="{{ block.settings.heading | escape }}"
-                        width="{{ main_image.width }}"
-                        height="{{ main_image.height }}"
+                        width="{{ mobile_image.width }}"
+                        height="{{ mobile_image.height }}"
                         loading="{{ loading }}"
                         fetchpriority="{{ fetch_priority }}"
                         style="width: 100%; {% if fixed_height %}height: 100%; object-fit: cover;{% endif %}"
@@ -368,7 +369,7 @@ data-section-type="carousel">
                 {% else %}
                   {% capture current %}{% cycle 1, 2 %}{% endcapture %}
                   {%- assign placeholder = 'lifestyle-' | append: current -%}
-                  <div class="demo-1 color-1 placeholder-image onboard" style="{% if fixed_height %}height: {{ desktop_height }}px;{% endif %}">
+                  <div class="demo-1 color-1 placeholder-image onboard" style="{% if fixed_height %}height: {{ mobile_height }}px;{% endif %}">
                     {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
                 {% endif %}
@@ -414,60 +415,90 @@ data-section-type="carousel">
                 -o-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
                 transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
               }
-              @media only screen and (max-width: 768px) {
-                {% if mobile_image != blank %}
-                  .slide--{{ block.id }} .slideshow__slide-image {
+              
+              /* Mobile styles - default for all */
+              .slide--{{ block.id }} .slideshow__slide-image {
+                {% if fixed_height %}
+                  height: var(--mobile-section-height) !important;
+                  min-height: var(--mobile-section-height) !important;
+                {% endif %}
+              }
+              
+              .slide--{{ block.id }} .slideshow__slide-image picture,
+              .slide--{{ block.id }} .slideshow__slide-image picture img {
+                {% if fixed_height %}
+                  height: var(--mobile-section-height) !important;
+                  min-height: var(--mobile-section-height) !important;
+                {% endif %}
+              }
+              
+              .slide--{{ block.id }} .slideshow__slide-image img {
+                object-fit: cover;
+                object-position: center;
+                {% if fixed_height %}
+                height: var(--mobile-section-height) !important;
+                min-height: var(--mobile-section-height) !important;
+                {% endif %}
+              }
+              
+              /* Desktop-specific overrides */
+              @media only screen and (min-width: 769px) {
+                .slide--{{ block.id }} .slideshow__slide-image {
+                  {% if fixed_height %}
+                    height: var(--desktop-section-height) !important;
+                    min-height: var(--desktop-section-height) !important;
+                  {% endif %}
+                }
+                
+                .slide--{{ block.id }} .slideshow__slide-image picture,
+                .slide--{{ block.id }} .slideshow__slide-image picture img {
+                  {% if fixed_height %}
+                    height: var(--desktop-section-height) !important;
+                    min-height: var(--desktop-section-height) !important;
+                  {% endif %}
+                }
+                
+                .slide--{{ block.id }} .slideshow__slide-image img {
+                  object-fit: cover;
+                  object-position: center;
+                  {% if fixed_height %}
+                  height: var(--desktop-section-height) !important;
+                  min-height: var(--desktop-section-height) !important;
+                  {% endif %}
+                }
+              }
+              
+              {% if caption_below %}
+                .slideshow__slide .slideshow__caption.slide-{{ block.id }} {
+                  position: relative;
+                  width: 100%;
+                  top: unset;
+                  left: unset;
+                  transform: translate(0, 0);
+                }
+                .slideshow__slide.image .slideshow__caption.slide-{{ block.id }} .slideshow__caption-wrapper {
+                  width: 100%;
+                }
+                {% if has_image == false and mobile_image == blank %}
+                  .slideshow__slide-image svg {
                     {% if fixed_height %}
-                      height: var(--mobile-section-height) !important;
-                      min-height: var(--mobile-section-height) !important;
+                    height: var(--mobile-section-height) !important;
+                    {% else %}
+                    height: 400px !important;
                     {% endif %}
                   }
                   
-                  .slide--{{ block.id }} .slideshow__slide-image picture,
-                  .slide--{{ block.id }} .slideshow__slide-image picture img {
-                    {% if fixed_height %}
-                      height: var(--mobile-section-height) !important;
-                      min-height: var(--mobile-section-height) !important;
-                    {% endif %}
-                  }
-                {% else %}
-                  .slide--{{ block.id }} .slideshow__slide-image img {
-                    object-fit: cover;
-                    object-position: center;
-                    {% if fixed_height %}
-                    height: var(--mobile-section-height) !important;
-                    min-height: var(--mobile-section-height) !important;
-                    {% endif %}
-                  }
-                  .slide--{{ block.id }} .slideshow__slide-image {
-                    display: block;
-                    {% if fixed_height %}
-                    height: var(--mobile-section-height) !important;
-                    min-height: var(--mobile-section-height) !important;
-                    {% endif %}
-                  }
-                {% endif %}
-                {% if caption_below %}
-                  .slideshow__slide .slideshow__caption.slide-{{ block.id }} {
-                    position: relative;
-                    width: 100%;
-                    top: unset;
-                    left: unset;
-                    transform: translate(0, 0);
-                  }
-                  .slideshow__slide.image .slideshow__caption.slide-{{ block.id }} .slideshow__caption-wrapper {
-                    width: 100%;
-                  }
-                  {% if has_image == false and mobile_image == blank %}
+                  @media only screen and (min-width: 769px) {
                     .slideshow__slide-image svg {
                       {% if fixed_height %}
-                      height: var(--mobile-section-height) !important;
+                      height: var(--desktop-section-height) !important;
                       {% else %}
                       height: 400px !important;
                       {% endif %}
                     }
-                  {% endif %}
+                  }
                 {% endif %}
+              {% endif %}
             {% endstyle %}
           </div>
         {% endfor %}
