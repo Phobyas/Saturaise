@@ -57,8 +57,21 @@
     ]
   }
   {% endschema %}
-      
-  <div class="w-full flex justify-center mt-3">
+  
+  <!-- Simple inline style to prevent CLS -->
+  <style>
+    .badges-outer-container-{{ section.id }} {
+      min-height: 120px;
+    }
+    
+    @media (max-width: 767px) {
+      .badges-outer-container-{{ section.id }} {
+        min-height: 100px;
+      }
+    }
+  </style>
+  
+  <div class="w-full flex justify-center mt-3 badges-outer-container-{{ section.id }}">
     <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
       <!-- Header with arrows -->
       <div class="flex justify-between items-center">
@@ -79,20 +92,17 @@
       
       <!-- Badge scroller -->
       <div class="relative">
-        <div id="badgeScroller" class="w-full flex py-2 overflow-x-auto scrollbar-hide badge-scroll-wrapper">
+        <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
           <div class="flex flex-nowrap gap-3 md:gap-4">
             {% for block in section.blocks %}
               {% if block.settings.title != blank and block.settings.link != blank %}
                 <a href="{{ block.settings.link }}" 
-                   class="flex flex-shrink-0 items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap badge-item"
+                   class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0"
                    {{ block.shopify_attributes }}>
                   {% if block.settings.image %}
-                    <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50 badge-image-container">
+                    <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
                       {{ block.settings.image | image_url: width: 96 | image_tag: 
                         class: 'w-full h-full object-contain',
-                        loading: 'eager',
-                        width: 96,
-                        height: 96,
                         alt: block.settings.title
                       }}
                     </div>
@@ -108,30 +118,10 @@
   </div>
   
   <style>
-    /* Container CSS to prevent CLS but maintain visibility */
-    .collection-badges-section {
-      min-height: 100px;
-      position: relative;
-      overflow: visible;
-    }
-    
-    .badge-image-container {
-      aspect-ratio: 1/1;
-      width: 48px;
-      height: 48px;
-    }
-    
-    .badge-item {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-    }
-    
     #badgeScroller {
       -ms-overflow-style: none;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-      min-height: 80px;
     }
     
     #badgeScroller::-webkit-scrollbar {
@@ -174,25 +164,16 @@
       .badge-arrows {
         display: none;
       }
-      
-      .collection-badges-section {
-        min-height: 80px;
-      }
-      
-      .badge-image-container {
-        width: 36px;
-        height: 36px;
-      }
     }
   </style>
   
   <script>
+  // IIFE to fix CLS immediately
   (function() {
-    // Execute immediately to avoid CLS due to script loading delay
-    const badgeSection = document.currentScript.closest('.collection-badges-section');
-    if (badgeSection) {
-      // Set initial height to the section container to prevent CLS
-      badgeSection.style.minHeight = '100px';
+    // Set min-height on the container immediately
+    const container = document.currentScript.closest('.badges-outer-container-{{ section.id }}');
+    if (container) {
+      container.style.minHeight = window.innerWidth < 768 ? '100px' : '120px';
     }
   })();
   
