@@ -13,17 +13,6 @@
         "unit": "px",
         "label": "Scroll amount",
         "default": 200
-      },
-      {
-        "type": "range",
-        "id": "min_height",
-        "min": 80,
-        "max": 200,
-        "step": 10,
-        "unit": "px",
-        "label": "Container height",
-        "default": 150,
-        "info": "Adjust this value if you experience layout shifts"
       }
     ],
     "blocks": [
@@ -69,81 +58,33 @@
   }
   {% endschema %}
   
-  <!-- Pre-define essential styles to prevent CLS -->
-  <style id="badges-cls-fix-{{ section.id }}">
-    /* Set pre-determined height with a CSS variable for easy adjustment */
-    :root {
-      --badges-container-height: {{ section.settings.min_height | default: 150 }}px;
-      --badges-mobile-height: {{ section.settings.min_height | minus: 20 | default: 130 }}px;
-    }
-    
-    /* Main container - this will reserve space before content loads */
-    .badges-section-wrapper-{{ section.id }} {
-      position: relative;
-      width: 100%;
-      min-height: var(--badges-container-height);
-      margin-top: 12px;
-      display: block;
-      overflow: hidden;
+  <!-- Minimal inline style to prevent CLS while maintaining original height -->
+  <style id="cls-prevention-{{ section.id }}">
+    #shopify-section-{{ section.id }} {
+      min-height: 80px;
+      overflow: visible;
       contain: layout;
     }
     
-    /* Fix for inner container to maintain proper position */
-    .badges-inner-container-{{ section.id }} {
-      position: relative;
-      width: 100%;
-      max-width: 1600px;
-      min-height: var(--badges-container-height);
-      margin: 0 auto;
-      padding-top: 12px;
-      padding-left: 12px;
-    }
-    
-    /* Make sure scroller has proper height */
-    .badges-scroller-{{ section.id }} {
-      min-height: calc(var(--badges-container-height) - 50px);
-      width: 100%;
-      overflow-x: auto;
-      padding: 8px 0;
-      display: flex;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    .badges-scroller-{{ section.id }}::-webkit-scrollbar {
-      display: none;
-    }
-    
-    /* Mobile adjustments */
     @media (max-width: 767px) {
-      .badges-section-wrapper-{{ section.id }} {
-        min-height: var(--badges-mobile-height);
-      }
-      
-      .badges-inner-container-{{ section.id }} {
-        min-height: var(--badges-mobile-height);
-      }
-      
-      .badges-scroller-{{ section.id }} {
-        min-height: calc(var(--badges-mobile-height) - 40px);
+      #shopify-section-{{ section.id }} {
+        min-height: 70px;
       }
     }
   </style>
   
-  <!-- Main container with pre-defined height -->
-  <div class="badges-section-wrapper-{{ section.id }}">
-    <div class="badges-inner-container-{{ section.id }} relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
+  <div class="w-full flex justify-center mt-3">
+    <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
       <!-- Header with arrows -->
       <div class="flex justify-between items-center">
         <div></div>
         <div class="badge-arrows flex gap-3">
-          <button id="badgePrev-{{ section.id }}" class="badge-arrow-btn" aria-label="Previous categories">
+          <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
               <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
             </svg>
           </button>
-          <button id="badgeNext-{{ section.id }}" class="badge-arrow-btn" aria-label="Next categories">
+          <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
               <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
             </svg>
@@ -151,14 +92,14 @@
         </div>
       </div>
       
-      <!-- Badge scroller with fixed height -->
+      <!-- Badge scroller -->
       <div class="relative">
-        <div id="badgeScroller-{{ section.id }}" class="badges-scroller-{{ section.id }} w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
-          <div class="flex flex-nowrap gap-3 md:gap-4">
+        <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto scrollbar-hide">
+          <div class="flex flex-shrink gap-3 md:gap-4">
             {% for block in section.blocks %}
               {% if block.settings.title != blank and block.settings.link != blank %}
                 <a href="{{ block.settings.link }}" 
-                   class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0"
+                   class="flex items-center gap-3 px-3 py-2 bg-[#EEEEEE] rounded-lg shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap"
                    {{ block.shopify_attributes }}>
                   {% if block.settings.image %}
                     <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gray-50">
@@ -183,12 +124,13 @@
   </div>
   
   <style>
-    #badgeScroller-{{ section.id }} {
+    #badgeScroller {
       -ms-overflow-style: none;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
     }
     
-    #badgeScroller-{{ section.id }}::-webkit-scrollbar {
+    #badgeScroller::-webkit-scrollbar {
       display: none;
     }
   
@@ -232,49 +174,38 @@
   </style>
   
   <script>
-  // IIFE to immediately set heights before any content loads
+  // Simple script to ensure minimum height is set and CSS is injected early
   (function() {
-    // Create and inject a style tag with critical CSS for CLS prevention
-    function injectCriticalCSS() {
-      const height = {{ section.settings.min_height | default: 150 }};
-      const mobileHeight = {{ section.settings.min_height | minus: 20 | default: 130 }};
-      const isMobile = window.innerWidth < 768;
-      
-      const containerHeight = isMobile ? mobileHeight : height;
-      const sectionId = "{{ section.id }}";
-      
-      // Apply height directly to ensure immediate effect
-      const sectionWrapper = document.querySelector('.badges-section-wrapper-' + sectionId);
-      if (sectionWrapper) {
-        sectionWrapper.style.minHeight = containerHeight + 'px';
+    // Create a style element
+    var style = document.createElement('style');
+    style.textContent = `
+      #shopify-section-{{ section.id }} {
+        min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
+        contain: layout;
       }
-      
-      const innerContainer = document.querySelector('.badges-inner-container-' + sectionId);
-      if (innerContainer) {
-        innerContainer.style.minHeight = containerHeight + 'px';
-      }
-      
-      const scroller = document.querySelector('.badges-scroller-' + sectionId);
-      if (scroller) {
-        scroller.style.minHeight = (containerHeight - (isMobile ? 40 : 50)) + 'px';
-      }
+    `;
+    
+    // Insert the style at the top of the head to ensure it takes precedence
+    if (document.head.firstChild) {
+      document.head.insertBefore(style, document.head.firstChild);
+    } else {
+      document.head.appendChild(style);
     }
     
-    // Execute immediately
-    injectCriticalCSS();
-    
-    // Also execute on resize to handle orientation changes
-    window.addEventListener('resize', injectCriticalCSS);
+    // Also set min-height directly on the section element
+    document.addEventListener('DOMContentLoaded', function() {
+      var section = document.getElementById('shopify-section-{{ section.id }}');
+      if (section) {
+        section.style.minHeight = window.innerWidth < 768 ? '70px' : '80px';
+      }
+    });
   })();
   
   document.addEventListener('DOMContentLoaded', function() {
-    const sectionId = "{{ section.id }}";
-    const scroller = document.getElementById('badgeScroller-' + sectionId);
-    const prevBtn = document.getElementById('badgePrev-' + sectionId);
-    const nextBtn = document.getElementById('badgeNext-' + sectionId);
+    const scroller = document.getElementById('badgeScroller');
+    const prevBtn = document.getElementById('badgePrev');
+    const nextBtn = document.getElementById('badgeNext');
     const scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
-    
-    if (!scroller || !prevBtn || !nextBtn) return;
     
     // Super simplified drag variables
     let isDragging = false;
