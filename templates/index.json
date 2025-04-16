@@ -86,7 +86,7 @@
         "enable_autoplay": true,
         "slider_speed": 5,
         "pager": "dots",
-        "slideshow_size": "fixed_height",
+        "slideshow_size": "natural",
         "desktop_height": 650,
         "mobile_height": 600,
         "caption_below": false,
