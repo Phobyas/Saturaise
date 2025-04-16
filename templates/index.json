@@ -349,9 +349,7 @@
         "40f2ec0c-4c6f-4492-aa5c-6c17db35147e",
         "16425204605bb47af2-2"
       ],
-      "custom_css": [
-        "div {background-color: ;}"
-      ],
+      "custom_css": [],
       "settings": {
         "title": "",
         "icon_size": 35,
