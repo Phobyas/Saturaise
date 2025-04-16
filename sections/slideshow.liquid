@@ -224,13 +224,15 @@ data-section-type="carousel">
                     <picture>
                       <source 
                         media="(min-width: 768px)" 
-                        srcset="{{ main_image | image_url: width: 1600 }}">
+                        srcset="{{ main_image | image_url: width: 1920 }}"
+                        sizes="100vw">
                       <source 
                         media="(max-width: 767px)" 
-                        srcset="{{ mobile_image | image_url: width: 800 }}">
+                        srcset="{{ mobile_image | image_url: width: 800 }}"
+                        sizes="100vw">
                       <img 
-                        src="{{ mobile_image | image_url: width: 800 }}" 
-                        alt="{{ block.settings.heading | escape }}"
+                        src="{{ forloop.first | ternary: main_image | image_url: width: 1920, mobile_image | image_url: width: 800 }}" 
+                        alt="{{ block.settings.heading | escape | default: main_image.alt | escape }}"
                         width="{{ mobile_image.width }}"
                         height="{{ mobile_image.height }}"
                         loading="{{ loading }}"
@@ -239,7 +241,7 @@ data-section-type="carousel">
                   {% else %}
                     {% render 'helper-image',
                        type: block.settings.image,
-                       sm_render: '100vw'
+                       sm_render: '100vw',
                        md_render: '100vw',
                        lg_render: '100vw',
                        class: mobile_class,
@@ -349,26 +351,36 @@ data-section-type="carousel">
 </div>
 
 <script>
-// Simple script to help with CLS - runs after styles are loaded
+// Simple script to help with LCP - runs after styles are loaded
 document.addEventListener('DOMContentLoaded', function() {
   var slideshow = document.getElementById('slideshow--{{ section.id }}');
-  if (slideshow && slideshow.classList.contains('is-fixed_height')) {
+  if (!slideshow) return;
+  
+  // Make first slide visible immediately (before Flickity initializes)
+  var firstSlide = slideshow.querySelector('.slideshow__slide');
+  if (firstSlide) {
+    firstSlide.style.opacity = '1';
+  }
+  
+  // Ensure proper height on fixed height slideshows
+  if (slideshow.classList.contains('is-fixed_height')) {
     var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
     slideshow.style.minHeight = height + 'px';
     
-    // Ensure proper image ratio on resize
-    window.addEventListener('resize', function() {
-      var newHeight = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
-      slideshow.style.minHeight = newHeight + 'px';
-    });
+    // Priority handling for first slide image
+    var firstSlideImg = slideshow.querySelector('.slideshow__slide-image img');
+    if (firstSlideImg && window.IntersectionObserver) {
+      var observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          firstSlideImg.fetchPriority = 'high';
+          firstSlideImg.loading = 'eager';
+          observer.disconnect();
+        }
+      }, {rootMargin: '200px 0px'});
+      
+      observer.observe(slideshow);
+    }
   }
-  
-  // Ensure images are fully visible
-  var slideImages = document.querySelectorAll('.slideshow__slide-image img');
-  slideImages.forEach(function(img) {
-    img.style.objectFit = 'contain';
-    img.style.objectPosition = 'center';
-  });
 });
 </script>
 

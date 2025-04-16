@@ -76,537 +76,259 @@
   <section class="section-header__main-bar main-bar w100 devices-hide js-theme-header {{ sticky }} {{ sticky_js }}">
     <div class="grid__wrapper {{ layout_style }} {% if section.settings.enable_header_overlay and template == 'index' %}absolute{% endif %}">
       {% if section.settings.header_layout == 'inline_layout_center' or section.settings.header_layout == 'inline_layout_left' %}
-        {% comment %} Inline Header Layout {% endcomment %}
-        <div class="site-logo header__logo-wrapper {{ logo_width }} {{ logo_align }} v-center shrink-wrap">
-          {% if section.settings.logo != blank %}
-            <a class="header__logo-wrapper__img-link inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
-              {{ section.settings.logo | image_url: width: 500 | image_tag: 
-                loading: 'eager', 
-                fetchpriority: 'high',
-                width: 500,
-                height: 101,
-                class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image',
-                style: 'aspect-ratio: 500/101;' 
-              }}
-            </a>
-          {% else %}
-            <a class="header__logo-wrapper__text-link inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
+        {%
+          render 'header-inline',
+          use_icons: use_icons,
+          nav_align: nav_align,
+          nav_width: nav_width,
+          logo_align: logo_align,
+          cartlink_width: cartlink_width,
+          logo_width: logo_width,
+          has_language: has_language,
+          has_currency: has_currency
+        %}
+      {% else %}
+        {%
+          render 'header-block',
+          use_icons: use_icons,
+          nav_align: nav_align,
+          nav_width: nav_width,
+          logo_align: logo_align,
+          cartlink_width: cartlink_width,
+          logo_width: logo_width,
+          has_language: has_language,
+          has_currency: has_currency
+        %}
+      {% endif %}
+    </div>
+  </section>
+
+  <aside class="slideout slideout__drawer-right  section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
+    <article class="span-10 push-1 auto v-stretch v-center">
+      <div class="slideout__trigger--close slideout__trigger-search">
+        <button class="js-slideout-close" aria-label="Close search slideout" data-slideout-direction="right" tabindex="0" type="button" name="button">
+          {% render 'snip-icons',
+          wrapper: '.section-header__mobile',
+          type: 'theme',
+          icon: 'close',
+          size: '18px',
+          classes: 'mt0 mr0 mb0 ml0',
+          fill: 'var(--header-text)',
+          hover: 'var(--header-hover)' %}
+        </button>
+      </div>
+      {%- if settings.predictive_search_enabled -%}
+      <div
+        id="predictiveSearch"
+        data-section-type="predictive-search"
+        data-asset-url="{{ 'section-predictive-search.js' | asset_url }}"
+        data-routes="{{ routes.predictive_search_url | default: '/search/suggest' }}"
+        data-input-selector='input[name="q"]'
+        data-results-selector="#predictive-search"
+        data-results-per-resource="10"
+        >
+      {%- endif -%}
+        <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get">
+          <label class="visually-hidden" for="q">{{ 'general.search.title' | t }}</label>
+          <input class="searchbox__input mb0 mt5 no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" />
+          <input name="options[prefix]" type="hidden" value="last">
+
+          {% if settings.search_show_products_only %}
+            <input type="hidden" name="type" value="product">
           {% endif %}
-        </div>
-        
-        <nav class="navigation {{ nav_width }} {{ nav_align }}">
-          <ul class="header__navigation">
-            {% for link in linklists[section.settings.main_nav].links %}
-              {% render 'header-nav-item', link: link, forloop: forloop %}
-            {% endfor %}
+
+          {%- if settings.predictive_search_enabled -%}
+            <div id="predictive-search"
+              class="predictive-search"
+              tabindex="-1"></div>
+          {%- endif -%}
+        </form>
+      {%- if settings.predictive_search_enabled -%}
+      </div>
+      {%- endif -%}
+      {%- if settings.search_linklist == blank -%}
+        <div class="searchbox_featured-linklist py4 px6">
+          <ul class="js-accordion c-accordion c-accordion--searchbox c-accordion--outer__wrapper c-accordion--search"
+            id="c-accordion--mobile">
+            <li>Type to search...</li>
+            {%- render 'snip-linklist', menu: settings.search_linklist -%}
           </ul>
-        </nav>
+        </div>
+      {%- endif -%}
+    </article>
+  </aside>
 
-        <div class="header__cart-links {{ cartlink_width }} a-right v-center">
-          <ul class="header__cart-links__wrapper cart-link-topbar-false inline-block list-style-none mb0">
-            {% if shop.customer_accounts_enabled %}
-              {% if customer %}
-                <li class="header__cart-links--account mr4">
-                  <a href="{{ routes.account_url }}">
-                    {% render 'snip-icons',
-                      wrapper: '.header__cart-links--account',
-                      type: 'theme',
-                      icon: 'account',
-                      size: '16px',
-                      classes: 'mr1',
-                      fill: 'var(--header-text)',
-                      hover: 'var(--header-hover)' %}
-                    <span>{{ 'general.header.account' | t }}</span>
-                  </a>
-                </li>
-                <li class="header__cart-links--logout mr4">
-                  <a href="{{ routes.account_logout_url }}">
-                    <span>{{ 'general.header.logout' | t }}</span>
-                  </a>
-                </li>
-              {% else %}
-                <li class="header__cart-links--login mr4">
-                  <a href="{{ routes.account_login_url }}">
-                    {% render 'snip-icons',
-                      wrapper: '.header__cart-links--login',
-                      type: 'theme',
-                      icon: 'account',
-                      size: '16px',
-                      classes: 'mr1',
-                      fill: 'var(--header-text)',
-                      hover: 'var(--header-hover)' %}
-                    <span>{{ 'general.header.login' | t }}</span>
-                  </a>
-                </li>
-              {% endif %}
-            {% endif %}
+  {% style %}
+  .header__logo-wrapper a {
+    font-size: {{ section.settings.logo_size }}px;
+    word-break: break-word;
+  }
+  .header__logo-wrapper a img {
+    max-width: {{ section.settings.logo_max_width }}px;
+  }
+  .navigation {
+    text-align: {{ nav_alignment }};
+  }
 
-            <li class="header__cart-links--search mr4">
-              <a class="slideout__trigger--open js-search-toggle js-slideout-open" data-wau-slideout-target="searchbox" data-slideout-direction="right" aria-label="Search" href="{{ routes.search_url }}">
-                {% render 'snip-icons',
-                  wrapper: '.header__cart-links--search',
-                  type: 'theme',
-                  icon: 'search',
-                  size: '16px',
-                  classes: 'mr1',
-                  fill: 'var(--header-text)',
-                  hover: 'var(--header-hover)' %}
-                <span>{{ 'general.header.search' | t }}</span>
-              </a>
-            </li>
-
-            <li class="header__cart-links--cart cart-link relative">
-              {%- liquid
-                if settings.cart_type == 'drawer'
-                  assign cart_classes = 'js-slideout-open'
-                  assign cart_settings = 'data-wau-slideout-target="ajax-cart" data-slideout-direction="right"'
-                elsif settings.cart_type == 'modal_cart'
-                  assign cart_classes = 'js-modal-open'
-                  assign cart_settings = 'data-wau-modal-target="ajax-cart"'
-                else
-                  assign cart_classes = ''
-                  assign cart_settings = ''
-               endif
-             -%}
-             <div class="slideout__trigger--open lh0 cart-trigger-wrapper">
-               <a class="js-mini-cart-trigger {{ cart_classes }}"
-                 {{ cart_settings }}
-                 aria-label="Open cart"
-                 href="{{ routes.cart_url }}">
-                 {% render 'snip-icons',
-                   wrapper: '.header__cart-links--cart',
-                   type: 'theme',
-                   icon: 'cart',
-                   size: '18px',
-                   classes: 'mr1',
-                   fill: 'var(--header-text)',
-                   hover: 'var(--header-hover)' %}
-                 <span>{{ 'general.header.cart' | t }} ({{ cart.item_count }})</span>
-               </a>
-             </div>
-           </li>
-
-           {% if has_currency or has_language %}
-             <li class="header__cart-links--localization relative inline-block ml4 mr0">
-               <div class="localization">
-                 {%- form 'localization', class: 'localization-form', data-disclosure-form: true -%}
-                   {%- if has_language or has_currency -%}
-                     <div class="localization-form__wrapper main-font">
-                       {% if has_currency %}
-                         {% render 'currency-popover',
-                           input_name: 'country_code',
-                           button_id: 'HeaderCountryLabel',
-                           disclosure_id: 'HeaderCountryList',
-                           currency_iso_code: localization.country.iso_code,
-                           form: form,
-                           show_flag: section.settings.show_flag
-                         %}
-                       {% endif %}
-
-                       {% if has_language %}
-                         {% render 'language-popover',
-                           input_name: 'locale_code',
-                           button_id: 'HeaderLanguageLabel',
-                           disclosure_id: 'HeaderLanguageList',
-                           locale_code: localization.language.iso_code,
-                           form: form
-                         %}
-                       {% endif %}
-                     </div>
-                   {%- endif -%}
-                 {%- endform -%}
-               </div>
-             </li>
-           {% endif %}
-         </ul>
-       </div>
-     {% else %}
-       {% comment %} Block Header Layout {% endcomment %}
-       <div class="site-logo header__logo-wrapper {{ logo_width }} {{ logo_align }} v-center shrink-wrap">
-         {% if section.settings.logo != blank %}
-           <a class="header__logo-wrapper__img-link inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
-             {{ section.settings.logo | image_url: width: 500 | image_tag: 
-               loading: 'eager', 
-               fetchpriority: 'high',
-               width: 500,
-               height: 101,
-               class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image',
-               style: 'aspect-ratio: 500/101;' 
-             }}
-           </a>
-         {% else %}
-           <a class="header__logo-wrapper__text-link inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
-         {% endif %}
-       </div>
-
-       <nav class="navigation {{ nav_width }} {{ nav_align }}">
-         <ul class="header__navigation">
-           {% for link in linklists[section.settings.main_nav].links %}
-             {% render 'header-nav-item', link: link, forloop: forloop %}
-           {% endfor %}
-         </ul>
-       </nav>
-
-       <div class="header__cart-links {{ cartlink_width }} a-right v-center">
-         <ul class="header__cart-links__wrapper cart-link-topbar-false inline-block list-style-none mb0">
-           {% if shop.customer_accounts_enabled %}
-             {% if customer %}
-               <li class="header__cart-links--account mr4">
-                 <a href="{{ routes.account_url }}">
-                   {% render 'snip-icons',
-                     wrapper: '.header__cart-links--account',
-                     type: 'theme',
-                     icon: 'account',
-                     size: '16px',
-                     classes: 'mr1',
-                     fill: 'var(--header-text)',
-                     hover: 'var(--header-hover)' %}
-                   <span>{{ 'general.header.account' | t }}</span>
-                 </a>
-               </li>
-               <li class="header__cart-links--logout mr4">
-                 <a href="{{ routes.account_logout_url }}">
-                   <span>{{ 'general.header.logout' | t }}</span>
-                 </a>
-               </li>
-             {% else %}
-               <li class="header__cart-links--login mr4">
-                 <a href="{{ routes.account_login_url }}">
-                   {% render 'snip-icons',
-                     wrapper: '.header__cart-links--login',
-                     type: 'theme',
-                     icon: 'account',
-                     size: '16px',
-                     classes: 'mr1',
-                     fill: 'var(--header-text)',
-                     hover: 'var(--header-hover)' %}
-                   <span>{{ 'general.header.login' | t }}</span>
-                 </a>
-               </li>
-             {% endif %}
-           {% endif %}
-
-           <li class="header__cart-links--search mr4">
-             <a class="slideout__trigger--open js-search-toggle js-slideout-open" data-wau-slideout-target="searchbox" data-slideout-direction="right" aria-label="Search" href="{{ routes.search_url }}">
-               {% render 'snip-icons',
-                 wrapper: '.header__cart-links--search',
-                 type: 'theme',
-                 icon: 'search',
-                 size: '16px',
-                 classes: 'mr1',
-                 fill: 'var(--header-text)',
-                 hover: 'var(--header-hover)' %}
-               <span>{{ 'general.header.search' | t }}</span>
-             </a>
-           </li>
-
-           <li class="header__cart-links--cart cart-link relative">
-             {%- liquid
-               if settings.cart_type == 'drawer'
-                 assign cart_classes = 'js-slideout-open'
-                 assign cart_settings = 'data-wau-slideout-target="ajax-cart" data-slideout-direction="right"'
-               elsif settings.cart_type == 'modal_cart'
-                 assign cart_classes = 'js-modal-open'
-                 assign cart_settings = 'data-wau-modal-target="ajax-cart"'
-               else
-                 assign cart_classes = ''
-                 assign cart_settings = ''
-               endif
-             -%}
-             <div class="slideout__trigger--open lh0 cart-trigger-wrapper">
-               <a class="js-mini-cart-trigger {{ cart_classes }}"
-                 {{ cart_settings }}
-                 aria-label="Open cart"
-                 href="{{ routes.cart_url }}">
-                 {% render 'snip-icons',
-                   wrapper: '.header__cart-links--cart',
-                   type: 'theme',
-                   icon: 'cart',
-                   size: '18px',
-                   classes: 'mr1',
-                   fill: 'var(--header-text)',
-                   hover: 'var(--header-hover)' %}
-                 <span>{{ 'general.header.cart' | t }} ({{ cart.item_count }})</span>
-               </a>
-             </div>
-           </li>
-
-           {% if has_currency or has_language %}
-             <li class="header__cart-links--localization relative inline-block ml4 mr0">
-               <div class="localization">
-                 {%- form 'localization', class: 'localization-form', data-disclosure-form: true -%}
-                   {%- if has_language or has_currency -%}
-                     <div class="localization-form__wrapper main-font">
-                       {% if has_currency %}
-                         {% render 'currency-popover',
-                           input_name: 'country_code',
-                           button_id: 'HeaderCountryLabel',
-                           disclosure_id: 'HeaderCountryList',
-                           currency_iso_code: localization.country.iso_code,
-                           form: form,
-                           show_flag: section.settings.show_flag
-                         %}
-                       {% endif %}
-
-                       {% if has_language %}
-                         {% render 'language-popover',
-                           input_name: 'locale_code',
-                           button_id: 'HeaderLanguageLabel',
-                           disclosure_id: 'HeaderLanguageList',
-                           locale_code: localization.language.iso_code,
-                           form: form
-                         %}
-                       {% endif %}
-                     </div>
-                   {%- endif -%}
-                 {%- endform -%}
-               </div>
-             </li>
-           {% endif %}
-         </ul>
-       </div>
-     {% endif %}
-   </div>
- </section>
-
- <aside class="slideout slideout__drawer-right  section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
-   <article class="span-10 push-1 auto v-stretch v-center">
-     <div class="slideout__trigger--close slideout__trigger-search">
-       <button class="js-slideout-close" aria-label="Close search slideout" data-slideout-direction="right" tabindex="0" type="button" name="button">
-         {% render 'snip-icons',
-         wrapper: '.section-header__mobile',
-         type: 'theme',
-         icon: 'close',
-         size: '18px',
-         classes: 'mt0 mr0 mb0 ml0',
-         fill: 'var(--header-text)',
-         hover: 'var(--header-hover)' %}
-       </button>
-     </div>
-     {%- if settings.predictive_search_enabled -%}
-     <div
-       id="predictiveSearch"
-       data-section-type="predictive-search"
-       data-asset-url="{{ 'section-predictive-search.js' | asset_url }}"
-       data-routes="{{ routes.predictive_search_url | default: '/search/suggest' }}"
-       data-input-selector='input[name="q"]'
-       data-results-selector="#predictive-search"
-       data-results-per-resource="10"
-       >
-     {%- endif -%}
-       <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get">
-         <label class="visually-hidden" for="q">{{ 'general.search.title' | t }}</label>
-         <input class="searchbox__input mb0 mt5 no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" />
-         <input name="options[prefix]" type="hidden" value="last">
-
-         {% if settings.search_show_products_only %}
-           <input type="hidden" name="type" value="product">
-         {% endif %}
-
-         {%- if settings.predictive_search_enabled -%}
-           <div id="predictive-search"
-             class="predictive-search"
-             tabindex="-1"></div>
-         {%- endif -%}
-       </form>
-     {%- if settings.predictive_search_enabled -%}
-     </div>
-     {%- endif -%}
-     {%- if settings.search_linklist == blank -%}
-       <div class="searchbox_featured-linklist py4 px6">
-         <ul class="js-accordion c-accordion c-accordion--searchbox c-accordion--outer__wrapper c-accordion--search"
-           id="c-accordion--mobile">
-           <li>Type to search...</li>
-           {%- render 'snip-linklist', menu: settings.search_linklist -%}
-         </ul>
-       </div>
-     {%- endif -%}
-   </article>
- </aside>
-
- {% style %}
- .header__logo-wrapper a {
-   font-size: {{ section.settings.logo_size }}px;
-   word-break: break-word;
- }
- .header__logo-wrapper a img {
-   max-width: {{ section.settings.logo_max_width }}px;
- }
- .navigation {
-   text-align: {{ nav_alignment }};
- }
-
- /* Logo CLS prevention */
- .header__logo-wrapper a img.logo-image {
-   width: {{ section.settings.logo_max_width }}px;
-   height: auto;
-   aspect-ratio: 500/101;
-   object-fit: contain;
- }
- 
- /* Set minimum heights to reserve space */
- .header__logo-wrapper {
-   min-height: {{ section.settings.logo_max_width | divided_by: 5 }}px;
-   contain: layout;
- }
- {% endstyle %}
+   
+  {% endstyle %}
 </header>
 <div class="clear js-clear-element js-desktop-clear-element"></div>
 {% schema %}
 {
- "name": "Header",
- "settings": [
-   {
-     "type": "header",
-     "content": "Announcement bar"
-   },
-   {
-     "type": "paragraph",
-     "content": "Only shown on desktop."
-   },
-   {
-     "type": "richtext",
-     "id": "announcement_text",
-     "label": "Shop announcement",
-     "default": "<p>Share a shop announcement or message</p>"
-   },
-   {
-     "type": "richtext",
-     "id": "megamenu__link-text",
-     "label": "Megamenu Link Label",
-     "default": "<p>ZOBACZ WSZYSTKIE</p>"
-   },
-   {
-     "type": "range",
-     "id": "announcement_text_size",
-     "min": 12,
-     "max": 18,
-     "step": 1,
-     "unit": "px",
-     "label": "Text size",
-     "default": 13
-   },
-   {
-     "type": "header",
-     "content": "Language Selector",
-     "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
-   },
-   {
-     "type": "checkbox",
-     "id": "show_locale_selector",
-     "label": "Enable language selector",
-     "default": true
-   },
-   {
-       "type": "header",
-       "content": "Country/Region Selector",
-       "info": "To add a country/region, go to your [payment settings.](/admin/settings/payments)"
-   },
-   {
-     "type": "checkbox",
-     "id": "show_country_selector",
-     "label": "Enable country/region selector",
-     "default": true
-   },
-   {
-     "type": "checkbox",
-     "id": "show_flag",
-     "label": "Show country flags",
-     "default": true
-   },
-   {
-     "type": "header",
-     "content": "Header"
-   },
-   {
-     "type": "select",
-     "id": "header_layout",
-     "label": "Layout",
-     "default": "block_layout_center",
-     "options": [
-       {
-         "value": "inline_layout_left",
-         "label": "Logo left inline with nav"
-       },
-       {
-         "value": "inline_layout_center",
-         "label": "Logo center inline with nav"
-       },
-       {
-         "value": "block_layout_left",
-         "label": "Logo left above nav"
-       },
-       {
-         "value": "block_layout_center",
-         "label": "Logo center above nav"
-       }
-     ]
-   },
-   {
-     "type": "checkbox",
-     "id": "enable_sticky",
-     "default": false,
-     "label": "Enable sticky header"
-   },
-   {
-     "type": "checkbox",
-     "id": "enable_header_overlay",
-     "default": false,
-     "label": "Enable header overlay"
-   },
-   {
-     "type": "header",
-     "content": "Logo"
-   },
-   {
-     "type": "image_picker",
-     "id": "logo",
-     "label": "Logo image"
-   },
-   {
-     "type": "range",
-     "id": "logo_max_width",
-     "min": 50,
-     "max": 500,
-     "step": 5,
-     "unit": "px",
-     "label": "Logo width",
-     "default": 200
-   },
-   {
-     "type": "range",
-     "id": "logo_size",
-     "min": 12,
-     "max": 36,
-     "step": 1,
-     "unit": "px",
-     "label": "Logo text",
-     "default": 18
-   },
-   {
-     "type": "header",
-     "content": "Navigation"
-   },
-   {
-     "type": "link_list",
-     "id": "main_nav",
-     "label": "Choose main menu",
-     "default": "main-menu",
-     "info": "It is best practice to select the same menu used in the Mobile Nav. [Learn More](https://developers.google.com/search/mobile-sites/mobile-first-indexing)"
-   }
- ],
- "blocks": [
+  "name": "Header",
+  "settings": [
     {
-      "name": "Announcement Bar",
-      "type": "announcement_bar_content",
-      "settings": [
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "paragraph",
+      "content": "Only shown on desktop."
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_text",
+      "label": "Shop announcement",
+      "default": "<p>Share a shop announcement or message</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "megamenu__link-text",
+      "label": "Megamenu Link Label",
+      "default": "<p>ZOBACZ WSZYSTKIE</p>"
+    },
+    {
+      "type": "range",
+      "id": "announcement_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Language Selector",
+      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Enable language selector",
+      "default": true
+    },
+    {
+        "type": "header",
+        "content": "Country/Region Selector",
+        "info": "To add a country/region, go to your [payment settings.](/admin/settings/payments)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Enable country/region selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_flag",
+      "label": "Show country flags",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Layout",
+      "default": "block_layout_center",
+      "options": [
         {
-          "type": "text",
-          "id": "announcement_text",
-          "label": "Text"
+          "value": "inline_layout_left",
+          "label": "Logo left inline with nav"
+        },
+        {
+          "value": "inline_layout_center",
+          "label": "Logo center inline with nav"
+        },
+        {
+          "value": "block_layout_left",
+          "label": "Logo left above nav"
+        },
+        {
+          "value": "block_layout_center",
+          "label": "Logo center above nav"
         }
       ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "default": false,
+      "label": "Enable sticky header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_header_overlay",
+      "default": false,
+      "label": "Enable header overlay"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 50,
+      "max": 500,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo width",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Logo text",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_nav",
+      "label": "Choose main menu",
+      "default": "main-menu",
+      "info": "It is best practice to select the same menu used in the Mobile Nav. [Learn More](https://developers.google.com/search/mobile-sites/mobile-first-indexing)"
     }
-  ]
+  ],
+  "blocks": [
+     {
+       "name": "Announcement Bar",
+       "type": "announcement_bar_content",
+       "settings": [
+         {
+           "type": "text",
+           "id": "announcement_text",
+           "label": "Text"
+         }
+       ]
+     }
+   ]
 }
 {% endschema %}

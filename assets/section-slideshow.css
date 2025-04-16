@@ -70,7 +70,7 @@
 .slideshow__slide-image {
   position: relative;
 }
- 
+
 .slideshow__slide-image:before {
   position: absolute;
   top: 0;
