@@ -57,6 +57,26 @@
   .mobile-nav__img-wrapper{
     width: 60% !important;
   }
+  
+  /* Mobile Logo CLS prevention */
+  .mobile-nav__logo-wrapper a img.logo-image-mobile {
+    max-width: {{ section.settings.logo_max_width }}%;
+    height: auto;
+    aspect-ratio: 500/101;
+    object-fit: contain;
+  }
+  
+  .site-logo.mobile-nav__logo-wrapper {
+    min-height: 50px;
+    contain: layout;
+    display: flex;
+    align-items: center;
+  }
+  
+  .site-logo.mobile-nav__logo-wrapper a {
+    display: block;
+    width: {{ section.settings.logo_max_width }}%;
+  }
 {% endstyle %}
 
 {% comment %} Mobile Header {% endcomment %}
@@ -130,7 +150,16 @@
     {%- if section.settings.header_layout == 'logo_left' -%}
       <div class="site-logo mobile-nav__logo-wrapper span-8 md-span-8 sm-span-8 auto a-left v-center shrink-wrap">
         {% if section.settings.logo != blank %}
-          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">{{ section.settings.logo | image_url: width: 800 | image_tag: loading: 'eager', fetchpriority: 'high' }}</a>
+          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
+            {{ section.settings.logo | image_url: width: 500 | image_tag: 
+              loading: 'eager', 
+              fetchpriority: 'high',
+              width: 500, 
+              height: 101,
+              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
+              style: 'aspect-ratio: 500/101;'
+            }}
+          </a>
         {% else %}
           <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
         {% endif %}
@@ -145,7 +174,16 @@
       </ul>
       <div class="site-logo mobile-nav__logo-wrapper span-4 md-span-4 sm-span-4 auto a-center v-center shrink-wrap">
         {% if section.settings.logo != blank %}
-          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">{{ section.settings.logo | image_url: width: 800 | image_tag: loading: 'eager', fetchpriority: 'high' }}</a>
+          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
+            {{ section.settings.logo | image_url: width: 500 | image_tag: 
+              loading: 'eager', 
+              fetchpriority: 'high',
+              width: 500, 
+              height: 101,
+              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
+              style: 'aspect-ratio: 500/101;'
+            }}
+          </a>
         {% else %}
           <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
         {% endif %}
