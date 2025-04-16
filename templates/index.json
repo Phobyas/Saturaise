@@ -12,32 +12,30 @@
     "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
       "type": "slideshow",
       "blocks": {
-        "template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0": {
+        "image_zzb938": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/SATURAISE_-_BANNE_2_AUTENTYCZNOSC_NO_TEXT.jpg",
-            "mobile_image": "shopify://shop_images/cortez-mobile-v1.jpg",
-            "heading": "",
-            "subheading": "",
-            "link": "shopify://collections/bestsellery",
-            "button_text": "",
+            "heading": "Slide image title",
+            "subheading": "<p>Slide image subheading</p>",
+            "link": "",
+            "button_text": "Button",
             "second_link": "",
-            "second_button_text": "",
+            "second_button_text": "Button 2 text",
             "overlay_color": "#000000",
             "overlay_opacity": 0,
-            "slide_text_color": "#000000",
-            "caption_background": "#000000",
+            "slide_text_color": "#ffffff",
+            "caption_background": "transparent",
             "hide_caption_background": false,
-            "caption_horizontal": 10,
+            "caption_horizontal": 50,
             "caption_vertical": 50,
-            "text_align": "left"
+            "text_align": "center"
           }
         },
         "image_Xq6gGW": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/cortez-desktop-v1_kopia.jpg",
-            "mobile_image": "shopify://shop_images/SATURAISE_-_BANNER_MOBILE_3_NO_TEXT.jpg",
+            "mobile_image": "shopify://shop_images/cortez-mobile-v1.jpg",
             "heading": "",
             "subheading": "",
             "link": "shopify://collections/new-balance",
@@ -53,33 +51,11 @@
             "caption_vertical": 50,
             "text_align": "center"
           }
-        },
-        "image_3DF64Q": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/SATURAISE_-_BANNER_1_AJ4_MIL_BLUE_NO_TEXT.jpg",
-            "mobile_image": "shopify://shop_images/SATURAISE_-_BANNER_MOBILE_1_kopia.jpg",
-            "heading": "",
-            "subheading": "",
-            "link": "shopify://collections/adidas",
-            "button_text": "",
-            "second_link": "",
-            "second_button_text": "",
-            "overlay_color": "#000000",
-            "overlay_opacity": 0,
-            "slide_text_color": "#000000",
-            "caption_background": "#efefef",
-            "hide_caption_background": false,
-            "caption_horizontal": 65,
-            "caption_vertical": 54,
-            "text_align": "center"
-          }
         }
       },
       "block_order": [
-        "template--15986753863850__7773d85e-29d5-49cb-80bc-bf840c5e1664-1667577564f8f77732-0",
-        "image_Xq6gGW",
-        "image_3DF64Q"
+        "image_zzb938",
+        "image_Xq6gGW"
       ],
       "settings": {
         "full_width": true,
