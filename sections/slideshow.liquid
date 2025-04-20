@@ -75,6 +75,18 @@
     width: 100%;
   }
   
+  /* Add aspect ratio to prevent layout shift */
+  .slideshow__slide-image picture {
+    display: block;
+    aspect-ratio: 1920/800;
+  }
+
+  @media (max-width: 767px) {
+    .slideshow__slide-image picture {
+      aspect-ratio: 800/1000;
+    }
+  }
+  
   @media (max-width: 740px) {
      #shopify-section-{{ section.id }} {
        --font-size: calc({{ section.settings.subheading_size }}px - ({{ section.settings.subheading_size }}px * 0.15));
@@ -224,19 +236,24 @@ data-section-type="carousel">
                     <picture>
                       <source 
                         media="(min-width: 768px)" 
-                        srcset="{{ main_image | image_url: width: 1920 }}"
+                        srcset="{{ main_image | image_url: width: 1600 }}"
                         sizes="100vw">
                       <source 
                         media="(max-width: 767px)" 
-                        srcset="{{ mobile_image | image_url: width: 800 }}"
+                        srcset="{{ mobile_image | image_url: width: 640 }}"
                         sizes="100vw">
                       <img 
-                        src="{{ forloop.first | ternary: main_image | image_url: width: 1920, mobile_image | image_url: width: 800 }}" 
+                        {% if forloop.first %}
+                          src="{{ mobile_image | image_url: width: 640 }}"
+                        {% else %}
+                          src="{{ mobile_image | image_url: width: 640 }}"
+                        {% endif %}
                         alt="{{ block.settings.heading | escape | default: main_image.alt | escape }}"
                         width="{{ mobile_image.width }}"
                         height="{{ mobile_image.height }}"
                         loading="{{ loading }}"
-                        fetchpriority="{{ fetch_priority }}">
+                        fetchpriority="{{ fetch_priority }}"
+                        {% if forloop.first %}style="display: block; visibility: visible;"{% endif %}>
                     </picture>
                   {% else %}
                     {% render 'helper-image',
@@ -351,37 +368,82 @@ data-section-type="carousel">
 </div>
 
 <script>
-// Simple script to help with LCP - runs after styles are loaded
+// Create a minimal slideshow experience for first paint
 document.addEventListener('DOMContentLoaded', function() {
   var slideshow = document.getElementById('slideshow--{{ section.id }}');
   if (!slideshow) return;
   
-  // Make first slide visible immediately (before Flickity initializes)
+  // Temporarily remove Flickity to prevent layout shifts
+  var flickityConfig = slideshow.getAttribute('data-flickity');
+  slideshow.setAttribute('data-flickity', '');
+  
+  // Show first slide immediately
   var firstSlide = slideshow.querySelector('.slideshow__slide');
   if (firstSlide) {
     firstSlide.style.opacity = '1';
+    firstSlide.style.display = 'block';
+    firstSlide.classList.add('is-selected');
+    
+    // Force immediate rendering of the image
+    var img = firstSlide.querySelector('img');
+    if (img) {
+      img.style.display = 'block';
+      img.style.visibility = 'visible';
+    }
+    
+    // Hide other slides initially
+    var otherSlides = slideshow.querySelectorAll('.slideshow__slide:not(:first-child)');
+    otherSlides.forEach(function(slide) {
+      slide.style.display = 'none';
+    });
   }
   
   // Ensure proper height on fixed height slideshows
   if (slideshow.classList.contains('is-fixed_height')) {
     var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
     slideshow.style.minHeight = height + 'px';
-    
-    // Priority handling for first slide image
-    var firstSlideImg = slideshow.querySelector('.slideshow__slide-image img');
-    if (firstSlideImg && window.IntersectionObserver) {
-      var observer = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) {
-          firstSlideImg.fetchPriority = 'high';
-          firstSlideImg.loading = 'eager';
-          observer.disconnect();
-        }
-      }, {rootMargin: '200px 0px'});
-      
-      observer.observe(slideshow);
-    }
   }
+  
+  // Initialize Flickity after a short delay to ensure first paint happens
+  setTimeout(function() {
+    // Re-add Flickity configuration
+    slideshow.setAttribute('data-flickity', flickityConfig);
+    
+    // Show all slides again
+    var slides = slideshow.querySelectorAll('.slideshow__slide');
+    slides.forEach(function(slide) {
+      slide.style.display = '';
+    });
+    
+    // Initialize Flickity
+    var Flickity = window.Flickity;
+    if (typeof Flickity !== 'undefined') {
+      new Flickity(slideshow, JSON.parse(flickityConfig));
+    } else {
+      // If Flickity is not available yet, wait for it to load
+      window.addEventListener('load', function() {
+        if (typeof window.Flickity !== 'undefined') {
+          new window.Flickity(slideshow, JSON.parse(flickityConfig));
+        }
+      });
+    }
+    
+    // Mark section as loaded
+    var section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (section) {
+      section.setAttribute('data-section-loaded', 'true');
+    }
+  }, 1000); // 1-second delay to ensure first paint happens
 });
+
+// Force immediate visibility of first slide image
+(function() {
+  var firstSlideImage = document.querySelector('.slideshow__slide:first-child img');
+  if (firstSlideImage) {
+    firstSlideImage.style.display = 'block';
+    firstSlideImage.style.visibility = 'visible';
+  }
+})();
 </script>
 
 {% schema %}

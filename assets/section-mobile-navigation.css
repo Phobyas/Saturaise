@@ -1,5 +1,6 @@
 #mobile-menu {
   height: 66px !important;
+  contain: layout size;
 }
 
 /* Mobile Navigation */
@@ -134,6 +135,34 @@
   justify-content: center;
 }
 
+/* Fix for the search button CLS */
+.mobile-header__cart-links--search {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+
+.mobile-header__cart-links--search .js-mobile-search-toggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-header__cart-links--search .js-mobile-search-toggle svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
 .mobile-header__cart-links--cart a {
   position: absolute;
   top: 50%;
@@ -180,7 +209,6 @@
     margin-top: 0;
   }
 
-
   /* Override any specific slider padding styles */
   .slideshow__slide-image {
     padding-bottom: unset !important;
@@ -209,6 +237,9 @@
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
+  height: 66px !important; /* Explicit height to match #mobile-menu */
   z-index: 999 !important;
   background: var(--mobile-header-bg) !important;
+  contain: layout; /* Add containment */
+  transition: transform 0.3s ease !important;
 }

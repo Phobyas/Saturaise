@@ -20,6 +20,28 @@
 
   <!-- Inline critical CSS to prevent layout shifting -->
   <style>
+
+:root {
+      --announcement-bar-height: 40px;
+      --header-height: 66px;
+    }
+    
+    /* Critical header spacing to prevent CLS */
+    .header-spacer {
+      height: calc(var(--announcement-bar-height) + var(--header-height));
+      display: block;
+      width: 100%;
+      contain: strict;
+    }
+    
+    /* Stabilize the page layout immediately */
+    .page-wrap {
+      width: 100%;
+      margin-top: 0; /* We already have header-spacer, so no margin needed */
+      contain: layout;
+    }
+  
+
     /* Critical CSS to prevent CLS */
     .site-wrap {
       width: 100%;
@@ -71,6 +93,10 @@
     }
   </style>
 
+  {%- if canonical_url != blank -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+  {%- endif -%}
+
   {% if settings.favicon %}
     <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png" />
   {% endif %}
@@ -108,9 +134,6 @@
   <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
   
-  <!-- Load Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">
-
   <!-- JS -->
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
