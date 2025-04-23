@@ -13,7 +13,6 @@
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {%- unless settings.main_font.system? and settings.heading_font.system? and settings.nav_font.system? -%}
-    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {%- endunless -%}
@@ -131,12 +130,12 @@
   <!-- CSS -->
   <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
-  <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
   
   <!-- JS -->
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
-  <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
   <script src="{{ 'size-chart.js' | asset_url }}" defer></script>
 
   {{ content_for_header }}
@@ -240,7 +239,7 @@
 
   <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
   <script src='{{ 'announcement-bar.js' | asset_url }}' defer></script>
-  <script src='{{ 'product-accordion.js' | asset_url }}' defer></script>
+  <!-- Removed reference to missing product-accordion.js -->
 
   {%- if settings.product_grid_video -%}
     <script src="{{ 'vendor-video.js' | asset_url }}" defer></script>
@@ -249,8 +248,5 @@
   {%- render 'snip-photoswipe' -%}
 
   <aside class="slideout slideout__drawer-right" data-wau-slideout="store-availability" id="slideout-store-availability"></aside>
-
-  <!-- Load non-critical scripts at the end -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 </body>
 </html>

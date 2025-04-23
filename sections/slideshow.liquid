@@ -415,17 +415,35 @@ document.addEventListener('DOMContentLoaded', function() {
       slide.style.display = '';
     });
     
-    // Initialize Flickity
-    var Flickity = window.Flickity;
-    if (typeof Flickity !== 'undefined') {
-      new Flickity(slideshow, JSON.parse(flickityConfig));
-    } else {
-      // If Flickity is not available yet, wait for it to load
-      window.addEventListener('load', function() {
-        if (typeof window.Flickity !== 'undefined') {
-          new window.Flickity(slideshow, JSON.parse(flickityConfig));
+    // Initialize Flickity safely
+    var initializeFlickity = function() {
+      try {
+        if (typeof Flickity !== 'undefined') {
+          new Flickity(slideshow, JSON.parse(flickityConfig || '{}'));
+        } else {
+          // Load Flickity if not available yet
+          var script = document.createElement('script');
+          script.src = jsAssets.flickity;
+          script.onload = function() {
+            if (typeof Flickity !== 'undefined') {
+              new Flickity(slideshow, JSON.parse(flickityConfig || '{}'));
+            }
+          };
+          document.head.appendChild(script);
         }
-      });
+      } catch (error) {
+        console.error("Error initializing slideshow:", error);
+      }
+    };
+    
+    if (typeof Flickity !== 'undefined') {
+      initializeFlickity();
+    } else if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
+      // Load Flickity from jsAssets
+      var script = document.createElement('script');
+      script.src = jsAssets.flickity;
+      script.onload = initializeFlickity;
+      document.head.appendChild(script);
     }
     
     // Mark section as loaded
