@@ -32,8 +32,8 @@
   .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
     font-size: {{ section.settings.logo_size }}px !important;
     word-break: break-word;
-    font-family:  var(--heading-family);
-    font-weight:  var(--heading-weight);
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight);
   }
   .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
     max-width: {{ section.settings.logo_max_width }}% !important;
@@ -76,6 +76,80 @@
   .site-logo.mobile-nav__logo-wrapper a {
     display: block;
     width: {{ section.settings.logo_max_width }}%;
+  }
+
+  /* Mobile search positioning fixes */
+  #mobile-search {
+    position: fixed !important;
+    top: calc(var(--header-height) + var(--announcement-bar-height, 0px)) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 998 !important;
+    background: {{ bg_color }} !important;
+    padding: 20px 12px !important;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+  }
+  
+  #mobile-search.mobile-search--visible {
+    display: block !important;
+  }
+  
+  .mobile-search-backdrop {
+    position: fixed !important;
+    top: calc(var(--header-height) + var(--announcement-bar-height, 0px) + 60px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 997 !important;
+    display: none;
+  }
+  
+  .mobile-search-backdrop.is-active {
+    display: block !important;
+  }
+  
+  /* When announcement bar is hidden, adjust search position */
+  .mobile-nav__mobile-header.announcement-hidden ~ #mobile-search {
+    top: var(--header-height) !important;
+  }
+  
+  .mobile-nav__mobile-header.announcement-hidden ~ .mobile-search-backdrop {
+    top: calc(var(--header-height) + 60px) !important;
+  }
+  
+  .section-header__mobile_search--form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid {{ text_color }};
+    border-radius: 9999px;
+    padding: 0 10px;
+    margin: 0;
+  }
+  
+  .section-header__mobile_search--input {
+    flex: 1;
+    border: none;
+    padding: 15px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    background: transparent;
+    color: {{ text_color }};
+    width: 100% !important;
+  }
+  
+  .section-header__mobile_search--submit {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 {% endstyle %}
 
@@ -199,7 +273,7 @@
 {% comment %} Mobile Search {% endcomment %}
 {%- if section.settings.show_searchbox -%}
   {%- unless template contains 'search' -%}
-    <section id="mobile-search" class="grid__wrapper narrow lg-hide py3 relative">
+    <section id="mobile-search" class="grid__wrapper narrow lg-hide relative">
       <form class="section-header__mobile_search--form span-12 auto" action="{{ routes.search_url }}" method="get">
         <input
           class="section-header__mobile_search--input mb0 no-bg-color"
@@ -218,30 +292,8 @@
              hover: hover_color %}
         </button>
       </form>
-
-      <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.c-accordion__top-level');
-    menuItems.forEach((item, index) => {
-      item.style.setProperty('--item-index', index);
-    });
-    
-    const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
-    slideoutTriggers.forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        document.body.classList.add('slideout-mobile-navigation--open');
-      });
-    });
-    
-    const closeButtons = document.querySelectorAll('.js-slideout-close');
-    closeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        document.body.classList.remove('slideout-mobile-navigation--open');
-      });
-    });
-  });
-</script>
     </section>
+    <div class="mobile-search-backdrop"></div>
   {%- endunless -%}
 {%- endif -%}
 
@@ -389,6 +441,110 @@
   </div>
 </aside>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Menu item animations
+  const menuItems = document.querySelectorAll('.c-accordion__top-level');
+  menuItems.forEach((item, index) => {
+    item.style.setProperty('--item-index', index);
+  });
+  
+  // Slideout triggers
+  const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
+  slideoutTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      document.body.classList.add('slideout-mobile-navigation--open');
+    });
+  });
+  
+  // Close buttons
+  const closeButtons = document.querySelectorAll('.js-slideout-close');
+  closeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      document.body.classList.remove('slideout-mobile-navigation--open');
+    });
+  });
+  
+  // Mobile search handling
+  const searchToggle = document.querySelector('.js-mobile-search-toggle');
+  const mobileSearch = document.getElementById('mobile-search');
+  const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+  const backdrop = document.querySelector('.mobile-search-backdrop');
+  
+  if (searchToggle && mobileSearch && backdrop) {
+    searchToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      mobileSearch.classList.toggle('mobile-search--visible');
+      backdrop.classList.toggle('is-active');
+      
+      if (mobileSearch.classList.contains('mobile-search--visible')) {
+        // Focus search input
+        const searchInput = mobileSearch.querySelector('.section-header__mobile_search--input');
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 50);
+        }
+      }
+    });
+    
+    // Close search when clicking backdrop
+    backdrop.addEventListener('click', function() {
+      mobileSearch.classList.remove('mobile-search--visible');
+      backdrop.classList.remove('is-active');
+    });
+    
+    // Close search on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileSearch.classList.contains('mobile-search--visible')) {
+        mobileSearch.classList.remove('mobile-search--visible');
+        backdrop.classList.remove('is-active');
+      }
+    });
+  }
+  
+  // Update search position on scroll to keep it below header
+  let lastScrollTop = 0;
+  window.addEventListener('scroll', function() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+    const mobileSearch = document.getElementById('mobile-search');
+    const backdrop = document.querySelector('.mobile-search-backdrop');
+    
+    if (mobileSearch && mobileSearch.classList.contains('mobile-search--visible')) {
+      if (mobileHeader && mobileHeader.classList.contains('announcement-hidden')) {
+        mobileSearch.style.top = `${mobileHeader.offsetHeight}px`;
+        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + 60}px`;
+      } else {
+        const announcementHeight = document.querySelector('.announcement-bar.wrapper')?.offsetHeight || 0;
+        mobileSearch.style.top = `${mobileHeader.offsetHeight + announcementHeight}px`;
+        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + announcementHeight + 60}px`;
+      }
+    }
+    
+    lastScrollTop = currentScrollTop;
+  }, { passive: true });
+  
+  // Set initial CSS variables for fixed dimensions
+  const setHeaderDimensions = function() {
+    const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+    const announcementBar = document.querySelector('.announcement-bar.wrapper');
+    
+    if (mobileHeader) {
+      const headerHeight = mobileHeader.offsetHeight || 66;
+      const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
+      
+      document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+      document.documentElement.style.setProperty('--announcement-bar-height', `${announcementHeight}px`);
+    }
+  };
+  
+  // Run on load and resize
+  setHeaderDimensions();
+  window.addEventListener('resize', setHeaderDimensions);
+  window.addEventListener('load', setHeaderDimensions);
+});
+</script>
 
 {% schema %}
 {

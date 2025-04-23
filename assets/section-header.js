@@ -55,10 +55,7 @@ const Header = {
       Header.initSearch(container, searchSlideout);
     }
 
-    if (
-      menuItemsWithNestedDropdowns &&
-      menuItemsWithNestedDropdowns.length > 0
-    ) {
+    if (menuItemsWithNestedDropdowns) {
       Header.nestedDropdowns(menuItemsWithNestedDropdowns);
     }
 
@@ -85,65 +82,6 @@ const Header = {
         Header.clearSticky();
         Header.prepareSticky();
       }, 1000);
-    });
-  },
-
-  // Add the missing nestedDropdowns function
-  nestedDropdowns: function nestedDropdowns(items) {
-    if (!items || items.length === 0) return;
-
-    items.forEach(function (item) {
-      const button = item.querySelector("button, .dropdown__link");
-      const menu = item.querySelector(".dropdown__menu");
-
-      if (button && menu) {
-        // Set initial states
-        button.setAttribute("aria-expanded", "false");
-        menu.setAttribute("aria-hidden", "true");
-
-        // Handle clicks on the button
-        button.addEventListener("click", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          const expanded = button.getAttribute("aria-expanded") === "true";
-
-          // Close other dropdowns
-          items.forEach(function (otherItem) {
-            if (otherItem !== item) {
-              const otherButton = otherItem.querySelector(
-                "button, .dropdown__link"
-              );
-              const otherMenu = otherItem.querySelector(".dropdown__menu");
-
-              if (otherButton && otherMenu) {
-                otherButton.setAttribute("aria-expanded", "false");
-                otherMenu.setAttribute("aria-hidden", "true");
-                otherItem.classList.remove("dropdown__menuitem--active");
-              }
-            }
-          });
-
-          // Toggle current dropdown
-          button.setAttribute("aria-expanded", (!expanded).toString());
-          menu.setAttribute("aria-hidden", expanded.toString());
-
-          if (expanded) {
-            item.classList.remove("dropdown__menuitem--active");
-          } else {
-            item.classList.add("dropdown__menuitem--active");
-          }
-        });
-
-        // Close when clicking outside
-        document.addEventListener("click", function (event) {
-          if (!item.contains(event.target)) {
-            button.setAttribute("aria-expanded", "false");
-            menu.setAttribute("aria-hidden", "true");
-            item.classList.remove("dropdown__menuitem--active");
-          }
-        });
-      }
     });
   },
 
@@ -179,19 +117,6 @@ const Header = {
       "--announcement-bar-height",
       `${announcementBarHeight}px`
     );
-  },
-
-  // Initialize search functionality
-  initSearch: function initSearch(container, searchSlideout) {
-    if (!container || !searchSlideout) return;
-
-    const searchToggles = container.querySelectorAll(".js-search-toggle");
-    searchToggles.forEach((toggle) => {
-      toggle.addEventListener("click", function (e) {
-        e.preventDefault();
-        WAU.Slideout._openByName("searchbox");
-      });
-    });
   },
 
   // Updated method to handle desktop header scroll behavior

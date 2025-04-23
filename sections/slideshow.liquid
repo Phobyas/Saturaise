@@ -1,6 +1,6 @@
-{% comment %} Slideshow Assets with preload {% endcomment %}
-<link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}"></noscript>
+{% comment %} Slideshow Assets with proper preloading {% endcomment %}
+<link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style">
+<link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}">
 
 {% comment %} Slideshow Logic {% endcomment %}
 {%- liquid
@@ -41,11 +41,9 @@
 
   assign desktop_height = section.settings.desktop_height
   assign mobile_height = section.settings.mobile_height
-
 -%}
 
 {% style %}
-
   #shopify-section-{{ section.id }} {
     --font-size:  {{ section.settings.subheading_size }}px;
     --h2-size:  {{ section.settings.slide_heading_size }}px;
@@ -55,10 +53,11 @@
     {% endif %}
   }
   
+  /* Prevent layout shift with fixed dimensions */
   {% if fixed_height %}
-  /* Simple CLS fixes */
   #shopify-section-{{ section.id }} {
     min-height: var(--mobile-section-height);
+    contain: layout size;
   }
   
   @media (min-width: 768px) {
@@ -66,16 +65,24 @@
       min-height: var(--desktop-section-height);
     }
   }
+  
+  /* Initial slide visibility before JS loads */
+  #shopify-section-{{ section.id }} .slideshow__slide:first-child {
+    opacity: 1 !important;
+    z-index: 1;
+    transition: none !important;
+  }
   {% endif %}
   
   /* Ensure images maintain proper aspect ratio */
   .section-slideshow .slideshow.is-fixed_height .slideshow__slide-image img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     width: 100%;
+    height: 100%;
   }
   
-  /* Add aspect ratio to prevent layout shift */
+  /* Add explicit dimensions to prevent layout shift */
   .slideshow__slide-image picture {
     display: block;
     aspect-ratio: 1920/800;
@@ -111,6 +118,7 @@
     }
   {% endif %}
 
+  /* Add explicit styles for each slide */
   {% for block in section.blocks %}
   {% assign block_opacity = block.settings.overlay_opacity | plus: 0 | divided_by: 100.0%}
     #slide--{{ block.id }} {
@@ -119,8 +127,16 @@
         --text-color: {{ block.settings.slide_text_color }};
         --button-text: {{ block.settings.slide_text_color }};
     }
+    
+    /* First slide optimization */
+    {% if forloop.first %}
+    #slide--{{ block.id }} {
+        display: block !important;
+        opacity: 1 !important;
+        z-index: 1;
+    }
+    {% endif %}
   {% endfor %}
-
 {% endstyle %}
 
 {% comment %} Slideshow Template {% endcomment %}
@@ -128,7 +144,7 @@
 class="global__section section-slideshow {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
 data-section-id="{{ section.id }}"
 data-asset-url="{{ 'carousel.js' | asset_url }}"
-data-section-loaded="false"
+data-section-loaded="true"
 data-section-type="carousel">
   <div class="grid__wrapper {{ full_width }}">
     <div class="main-carousel span-12">
@@ -148,7 +164,6 @@ data-section-type="carousel">
         {% for block in section.blocks %}
 
         {% liquid
-
           assign has_image = false
           assign has_image_link = false
           assign has_button = false
@@ -212,20 +227,27 @@ data-section-type="carousel">
 
           assign loading = 'lazy'
           assign fetch_priority = 'auto'
+          assign preload_link = false
+          assign display_style = ''
 
-          if section.index == 1 and forloop.first
+          if forloop.first
             assign loading = 'eager'
             assign fetch_priority = 'high'
+            assign preload_link = true
+            assign display_style = 'style="display: block; visibility: visible; opacity: 1;"'
+            assign slide_class = 'is-selected'
+          else
+            assign slide_class = ''
           endif
-
         -%}
 
           <div
             id="slide--{{ block.id }}"
             data-block-id="{{ block.id }}"
-            class="slide--{{ block.id }} slideshow__slide{% if has_image == false %} slideshow__slide-onboard{% endif %}"
+            class="slide--{{ block.id }} slideshow__slide {{ slide_class }} {% if has_image == false %}slideshow__slide-onboard{% endif %}"
             data-slider-index="{{ forloop.index0 }}"
             data-slide-index="{{ forloop.index0 }}"
+            {% if forloop.first %}{{ display_style }}{% endif %}
             {{ block.shopify_attributes }}
           >
 
@@ -233,29 +255,45 @@ data-section-type="carousel">
               <div class="slideshow__slide-image">
                 {% if has_image %}
                   {% if mobile_image != blank %}
+                    {% if preload_link %}
+                    <link rel="preload" as="image" 
+                          href="{{ mobile_image | image_url: width: 640 }}" 
+                          media="(max-width: 767px)">
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 1600 }}" 
+                          media="(min-width: 768px)">
+                    {% endif %}
                     <picture>
                       <source 
                         media="(min-width: 768px)" 
                         srcset="{{ main_image | image_url: width: 1600 }}"
+                        width="{{ main_image.width }}"
+                        height="{{ main_image.height }}"
                         sizes="100vw">
                       <source 
                         media="(max-width: 767px)" 
                         srcset="{{ mobile_image | image_url: width: 640 }}"
+                        width="{{ mobile_image.width }}"
+                        height="{{ mobile_image.height }}"
                         sizes="100vw">
                       <img 
-                        {% if forloop.first %}
-                          src="{{ mobile_image | image_url: width: 640 }}"
-                        {% else %}
-                          src="{{ mobile_image | image_url: width: 640 }}"
-                        {% endif %}
+                        src="{{ mobile_image | image_url: width: 640 }}"
                         alt="{{ block.settings.heading | escape | default: main_image.alt | escape }}"
                         width="{{ mobile_image.width }}"
                         height="{{ mobile_image.height }}"
                         loading="{{ loading }}"
                         fetchpriority="{{ fetch_priority }}"
-                        {% if forloop.first %}style="display: block; visibility: visible;"{% endif %}>
+                        {% if forloop.first %}style="display: block; visibility: visible; opacity: 1;"{% endif %}>
                     </picture>
                   {% else %}
+                    {% if preload_link %}
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 640 }}" 
+                          media="(max-width: 767px)">
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 1600 }}" 
+                          media="(min-width: 768px)">
+                    {% endif %}
                     {% render 'helper-image',
                        type: block.settings.image,
                        sm_render: '100vw',
@@ -309,11 +347,9 @@ data-section-type="carousel">
                 top: {{ block.settings.caption_vertical }}%;
                 left: {{ block.settings.caption_horizontal }}%;
                 -webkit-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
-                -ms-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
-                -moz-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
-                -o-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
                 transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
               }
+              
               @media only screen and (max-width: 767px) {
                 {% if mobile_image != blank %}
                   .slide--{{ block.id }} .slideshow__slide-image {
@@ -323,7 +359,7 @@ data-section-type="carousel">
                   }
                 {% else %}
                   .slide--{{ block.id }} .slideshow__slide-image .box-ratio {
-                    padding-bottom: {{ image_box_ratio }} !important;
+                    padding-bottom: {{ desktop_image_aspect | times: 100 }}% !important;
                   }
                   .slide--{{ block.id }} .slideshow__slide-image img {
                     object-fit: contain;
@@ -368,17 +404,10 @@ data-section-type="carousel">
 </div>
 
 <script>
-// Create a minimal slideshow experience for first paint
-document.addEventListener('DOMContentLoaded', function() {
-  var slideshow = document.getElementById('slideshow--{{ section.id }}');
-  if (!slideshow) return;
-  
-  // Temporarily remove Flickity to prevent layout shifts
-  var flickityConfig = slideshow.getAttribute('data-flickity');
-  slideshow.setAttribute('data-flickity', '');
-  
-  // Show first slide immediately
-  var firstSlide = slideshow.querySelector('.slideshow__slide');
+// Optimized slideshow initialization
+(function() {
+  // First, make sure the first slide is visible immediately
+  var firstSlide = document.querySelector('#slideshow--{{ section.id }} .slideshow__slide:first-child');
   if (firstSlide) {
     firstSlide.style.opacity = '1';
     firstSlide.style.display = 'block';
@@ -389,77 +418,57 @@ document.addEventListener('DOMContentLoaded', function() {
     if (img) {
       img.style.display = 'block';
       img.style.visibility = 'visible';
+      img.style.opacity = '1';
     }
-    
-    // Hide other slides initially
-    var otherSlides = slideshow.querySelectorAll('.slideshow__slide:not(:first-child)');
-    otherSlides.forEach(function(slide) {
-      slide.style.display = 'none';
-    });
   }
   
-  // Ensure proper height on fixed height slideshows
-  if (slideshow.classList.contains('is-fixed_height')) {
+  // Set proper height immediately to prevent CLS
+  var slideshow = document.getElementById('slideshow--{{ section.id }}');
+  if (slideshow && slideshow.classList.contains('is-fixed_height')) {
     var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
     slideshow.style.minHeight = height + 'px';
   }
   
-  // Initialize Flickity after a short delay to ensure first paint happens
-  setTimeout(function() {
-    // Re-add Flickity configuration
-    slideshow.setAttribute('data-flickity', flickityConfig);
-    
-    // Show all slides again
-    var slides = slideshow.querySelectorAll('.slideshow__slide');
-    slides.forEach(function(slide) {
-      slide.style.display = '';
-    });
-    
-    // Initialize Flickity safely
-    var initializeFlickity = function() {
-      try {
-        if (typeof Flickity !== 'undefined') {
-          new Flickity(slideshow, JSON.parse(flickityConfig || '{}'));
-        } else {
-          // Load Flickity if not available yet
-          var script = document.createElement('script');
-          script.src = jsAssets.flickity;
-          script.onload = function() {
-            if (typeof Flickity !== 'undefined') {
-              new Flickity(slideshow, JSON.parse(flickityConfig || '{}'));
-            }
-          };
-          document.head.appendChild(script);
-        }
-      } catch (error) {
-        console.error("Error initializing slideshow:", error);
+  // Initialize Flickity with a small delay to ensure first paint is complete
+  // This improves LCP by showing content before JavaScript runs
+  function initFlickity() {
+    if (typeof Flickity === 'undefined') {
+      // If Flickity is not loaded yet, load it
+      if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
+        var script = document.createElement('script');
+        script.src = jsAssets.flickity;
+        script.onload = function() {
+          if (typeof Flickity !== 'undefined') {
+            setTimeout(function() {
+              try {
+                new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
+              } catch (e) {
+                console.error('Failed to initialize slideshow:', e);
+              }
+            }, 100);
+          }
+        };
+        document.head.appendChild(script);
       }
-    };
-    
-    if (typeof Flickity !== 'undefined') {
-      initializeFlickity();
-    } else if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
-      // Load Flickity from jsAssets
-      var script = document.createElement('script');
-      script.src = jsAssets.flickity;
-      script.onload = initializeFlickity;
-      document.head.appendChild(script);
+    } else {
+      // If Flickity is already loaded, initialize directly
+      setTimeout(function() {
+        try {
+          new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
+        } catch (e) {
+          console.error('Failed to initialize slideshow:', e);
+        }
+      }, 100);
     }
-    
-    // Mark section as loaded
-    var section = document.querySelector('[data-section-id="{{ section.id }}"]');
-    if (section) {
-      section.setAttribute('data-section-loaded', 'true');
-    }
-  }, 1000); // 1-second delay to ensure first paint happens
-});
-
-// Force immediate visibility of first slide image
-(function() {
-  var firstSlideImage = document.querySelector('.slideshow__slide:first-child img');
-  if (firstSlideImage) {
-    firstSlideImage.style.display = 'block';
-    firstSlideImage.style.visibility = 'visible';
+  }
+  
+  // Use requestIdleCallback if available, otherwise use setTimeout
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(function() {
+      initFlickity();
+    }, { timeout: 2000 });
+  } else {
+    setTimeout(initFlickity, 800);
   }
 })();
 </script>
