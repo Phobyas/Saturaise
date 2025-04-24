@@ -19,16 +19,17 @@
 -%}
 
 {% comment %} Mobile Header Assets {% endcomment %}
-<link rel="preload" href="{{ 'section-mobile-navigation.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}"></noscript>
-<link rel="preload" href="{{ 'component-accordions.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'component-accordions.css' | asset_url }}"></noscript>
-<link rel="preload" href="{{ 'component-slideouts.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'component-slideouts.css' | asset_url }}"></noscript>
-<link rel="preload" href="{{ 'component-modals.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'component-modals.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'section-mobile-navigation.css' | asset_url }}" as="style">
+<link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'component-accordions.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'component-slideouts.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'component-modals.css' | asset_url }}">
 
 {% style %}
+  :root {
+    --header-mobile-height: 66px;
+  }
+
   .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
     font-size: {{ section.settings.logo_size }}px !important;
     word-break: break-word;
@@ -43,10 +44,6 @@
     .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
        max-width: 80% !important;
     }
-  }
-
-  .close-menu-btn {
-    /* Placeholder for close menu button styles */
   }
 
   #mobile-slideout {
@@ -88,14 +85,21 @@
     z-index: 998 !important;
     background: {{ bg_color }} !important;
     padding: 20px 12px !important;
-    display: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transform: translateY(0);
-    transition: transform 0.3s ease;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
   
   #mobile-search.mobile-search--visible {
+    opacity: 1;
+    visibility: visible;
     display: block !important;
+  }
+  
+  #mobile-search.mobile-search--hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
   }
   
   .mobile-search-backdrop {
@@ -150,6 +154,77 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  /* CLS Fixes - Icon Dimensions */
+  .mobile-header__cart-links--search,
+  .mobile-header__cart-links--cart,
+  .mobile-header__cart-links--nav {
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    contain: layout size style;
+  }
+  
+  /* Improve icon alignment */
+  #mobile-menu .span-4 ul {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+
+  /* Remove icon animations that cause CLS */
+  .slideout__trigger-mobile-menu svg,
+  .js-mobile-search-toggle svg,
+  .mobile-header__cart-links--cart svg,
+  .slideout__trigger-mobile-navigation svg {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* Set fixed dimensions for interactive elements */
+  .slideout__trigger--open,
+  .js-mobile-search-toggle,
+  .slideout__trigger-mobile-menu {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    contain: layout size;
+  }
+
+  /* Prevent button shift on tap/click */
+  button.btn-as-link:active {
+    transform: none !important;
+  }
+
+  /* Prevent SVG icons from scaling on hover */
+  svg, svg .hover-fill {
+    transform: none !important;
+    transition: fill 0.2s !important;
+  }
+
+  /* Add dimension to cart count to prevent shifts */
+  .cart-count-bubble {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    contain: layout size;
+  }
+  
+  /* Fixed header dimensions */
+  .section-header__mobile {
+    height: var(--header-mobile-height);
+    min-height: var(--header-mobile-height);
+    contain: layout size;
   }
 {% endstyle %}
 
@@ -210,6 +285,7 @@
         aria-label="Open navigation" 
         type="button">
         {% render 'saturaise-icons',
+           wrapper: '.section-header__mobile',
            type: 'theme',
            icon: 'menu-new',
            size: '32px',
@@ -262,7 +338,7 @@
           <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
         {% endif %}
       </div>
-      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 inline-block">
+      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 flex justify-end ">
         {{ mobile_cart_link }}
       </ul>
     {%- endif -%}
@@ -273,7 +349,7 @@
 {% comment %} Mobile Search {% endcomment %}
 {%- if section.settings.show_searchbox -%}
   {%- unless template contains 'search' -%}
-    <section id="mobile-search" class="grid__wrapper narrow lg-hide relative">
+    <section id="mobile-search" class="grid__wrapper narrow lg-hide relative mobile-search--hidden">
       <form class="section-header__mobile_search--form span-12 auto" action="{{ routes.search_url }}" method="get">
         <input
           class="section-header__mobile_search--input mb0 no-bg-color"
@@ -442,12 +518,68 @@
 </aside>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Menu item animations
-  const menuItems = document.querySelectorAll('.c-accordion__top-level');
-  menuItems.forEach((item, index) => {
-    item.style.setProperty('--item-index', index);
+// Set initial dimensions to prevent layout shifts
+(function() {
+  // Set CSS variables for fixed dimensions
+  document.documentElement.style.setProperty('--header-mobile-height', '66px');
+  
+  // Fix dimensions for icon containers immediately
+  const iconContainers = document.querySelectorAll(
+    '.mobile-header__cart-links--search, .mobile-header__cart-links--cart, .mobile-header__cart-links--nav'
+  );
+  
+  iconContainers.forEach(container => {
+    if (container) {
+      container.style.width = '32px';
+      container.style.height = '32px';
+    }
   });
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Mobile search handling
+  const searchToggle = document.querySelector('.js-mobile-search-toggle');
+  const mobileSearch = document.getElementById('mobile-search');
+  const backdrop = document.querySelector('.mobile-search-backdrop');
+  
+  if (searchToggle && mobileSearch && backdrop) {
+    searchToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (mobileSearch.classList.contains('mobile-search--hidden')) {
+        mobileSearch.classList.remove('mobile-search--hidden');
+        mobileSearch.classList.add('mobile-search--visible');
+        backdrop.classList.add('is-active');
+        
+        // Focus search input
+        const searchInput = mobileSearch.querySelector('.section-header__mobile_search--input');
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 50);
+        }
+      } else {
+        mobileSearch.classList.remove('mobile-search--visible');
+        mobileSearch.classList.add('mobile-search--hidden');
+        backdrop.classList.remove('is-active');
+      }
+    });
+    
+    // Close search when clicking backdrop
+    backdrop.addEventListener('click', function() {
+      mobileSearch.classList.remove('mobile-search--visible');
+      mobileSearch.classList.add('mobile-search--hidden');
+      backdrop.classList.remove('is-active');
+    });
+    
+    // Close search on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileSearch.classList.contains('mobile-search--visible')) {
+        mobileSearch.classList.remove('mobile-search--visible');
+        mobileSearch.classList.add('mobile-search--hidden');
+        backdrop.classList.remove('is-active');
+      }
+    });
+  }
   
   // Slideout triggers
   const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
@@ -465,67 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Mobile search handling
-  const searchToggle = document.querySelector('.js-mobile-search-toggle');
-  const mobileSearch = document.getElementById('mobile-search');
-  const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
-  const backdrop = document.querySelector('.mobile-search-backdrop');
-  
-  if (searchToggle && mobileSearch && backdrop) {
-    searchToggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      mobileSearch.classList.toggle('mobile-search--visible');
-      backdrop.classList.toggle('is-active');
-      
-      if (mobileSearch.classList.contains('mobile-search--visible')) {
-        // Focus search input
-        const searchInput = mobileSearch.querySelector('.section-header__mobile_search--input');
-        if (searchInput) {
-          setTimeout(() => searchInput.focus(), 50);
-        }
-      }
-    });
-    
-    // Close search when clicking backdrop
-    backdrop.addEventListener('click', function() {
-      mobileSearch.classList.remove('mobile-search--visible');
-      backdrop.classList.remove('is-active');
-    });
-    
-    // Close search on ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && mobileSearch.classList.contains('mobile-search--visible')) {
-        mobileSearch.classList.remove('mobile-search--visible');
-        backdrop.classList.remove('is-active');
-      }
-    });
-  }
-  
-  // Update search position on scroll to keep it below header
-  let lastScrollTop = 0;
-  window.addEventListener('scroll', function() {
-    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
-    const mobileSearch = document.getElementById('mobile-search');
-    const backdrop = document.querySelector('.mobile-search-backdrop');
-    
-    if (mobileSearch && mobileSearch.classList.contains('mobile-search--visible')) {
-      if (mobileHeader && mobileHeader.classList.contains('announcement-hidden')) {
-        mobileSearch.style.top = `${mobileHeader.offsetHeight}px`;
-        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + 60}px`;
-      } else {
-        const announcementHeight = document.querySelector('.announcement-bar.wrapper')?.offsetHeight || 0;
-        mobileSearch.style.top = `${mobileHeader.offsetHeight + announcementHeight}px`;
-        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + announcementHeight + 60}px`;
-      }
-    }
-    
-    lastScrollTop = currentScrollTop;
-  }, { passive: true });
-  
-  // Set initial CSS variables for fixed dimensions
+  // Set header dimensions
   const setHeaderDimensions = function() {
     const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
     const announcementBar = document.querySelector('.announcement-bar.wrapper');
@@ -541,8 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Run on load and resize
   setHeaderDimensions();
-  window.addEventListener('resize', setHeaderDimensions);
-  window.addEventListener('load', setHeaderDimensions);
+  window.addEventListener('resize', setHeaderDimensions, { passive: true });
 });
 </script>
 
@@ -683,4 +754,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   ]
 }
-{% endschema %}
+{% endschema %} 

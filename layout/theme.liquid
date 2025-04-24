@@ -20,18 +20,12 @@
 
   <!-- Inline critical CSS to prevent layout shifting -->
   <style>
-
-:root {
-      --announcement-bar-height: 40px;
-      --header-height: 66px;
-    }
-    
-    /* Critical header spacing to prevent CLS */
+    /* Fixed header spacer height to prevent CLS */
     .header-spacer {
-      height: calc(var(--announcement-bar-height) + var(--header-height));
+      height: 106px !important; /* Fixed height: announcement (40px) + header (66px) */
       display: block;
       width: 100%;
-      contain: strict;
+      contain: layout;
     }
     
     /* Stabilize the page layout immediately */
@@ -41,7 +35,6 @@
       contain: layout;
     }
   
-
     /* Critical CSS to prevent CLS */
     .site-wrap {
       width: 100%;
@@ -54,6 +47,11 @@
     }
     
     @media (max-width: 767px) {
+      /* Keep the same fixed height for mobile to prevent CLS */
+      .header-spacer {
+        height: 106px !important;
+      }
+      
       .collection-badges-section {
         min-height: 70px;
       }
@@ -66,12 +64,6 @@
     /* Ensure images maintain aspect ratio while loading */
     img[width][height] {
       aspect-ratio: attr(width) / attr(height);
-    }
-    
-    /* Prevent layout shift from header */
-    .header-spacer {
-      height: var(--header-height, 80px);
-      display: block;
     }
     
     /* Hide elements before JS loads */
@@ -148,21 +140,14 @@
     // Set JavaScript flag immediately
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
     
-    // Calculate and set header height to prevent layout shift
+    // Set fixed header spacer height to prevent CLS
     (function() {
-      var headerHeight = window.innerWidth < 768 ? '60px' : '80px';
-      document.documentElement.style.setProperty('--header-height', headerHeight);
-      
       // Set minimum heights for sections that cause CLS
       var style = document.createElement('style');
       style.textContent = `
         #shopify-section-template--24156831154469__collections_badges_pWqmae {
           min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
           contain: layout;
-        }
-        
-        .header-spacer {
-          height: ${headerHeight};
         }
       `;
       document.head.appendChild(style);
