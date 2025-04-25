@@ -3,6 +3,50 @@
 <noscript><link rel="stylesheet" href="{{ 'section-announcement-bar.css' | asset_url }}"></noscript>
 <script src='{{ 'announcement-bar.js' | asset_url }}' defer></script>
 
+{% style %}
+/* Critical inline CSS to prevent layout shifts without changing appearance */
+#announcement-bar {
+  height: 40px !important;
+  min-height: 40px !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 10 !important;
+  
+  /* Preserve original colors */
+
+}
+
+#marquee-track {
+  position: relative !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: 40px !important;
+  
+  /* Preserve original colors */
+
+}
+
+.marquee-content {
+  
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 40px !important;
+  white-space: nowrap !important;
+  
+  /* Preserve original styles */
+  color: inherit;
+  padding: 0 20px !important;
+  font-weight: var(--font-weight-body);
+  letter-spacing: var(--letter-spacing-body);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+{% endstyle %}
+
 <div class="announcement-bar wrapper" id="announcement-bar" role="region" {{ block.shopify_attributes }}>
   <ul class="marquee-track" id="marquee-track">
     {% for block in section.blocks %}
@@ -11,4 +55,17 @@
       {% endif %}
     {% endfor %}
 	</ul>
-</div> 
+</div>
+
+<script>
+  // Set critical CSS variables immediately
+  (function() {
+    document.documentElement.style.setProperty('--announcement-bar-height', '40px');
+    
+    // Ensure header elements are positioned correctly
+    const headerSpacer = document.querySelector('.header-spacer');
+    if (headerSpacer) {
+      headerSpacer.style.height = '106px'; // 40px announcement + 66px header
+    }
+  })();
+</script>

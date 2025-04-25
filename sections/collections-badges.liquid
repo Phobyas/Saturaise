@@ -66,11 +66,12 @@
     overflow: visible;
     contain: layout;
     margin-bottom: 20px;
+    will-change: contents;
   }
   
   @media (max-width: 767px) {
     #shopify-section-{{ section.id }} {
-      min-height: 80px;
+      min-height: 90px;
     }
   }
   
@@ -79,6 +80,10 @@
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     height: 80px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    contain: layout;
   }
   
   @media (max-width: 767px) {
@@ -96,31 +101,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: opacity 0.2s, background-color 0.2s;
+    transition: opacity 0.2s;
     width: 32px;
     height: 32px;
     border-radius: 50%;
     background-color: #323232;
     border: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-  
-  .badge-arrow-btn:hover {
-    background-color: #333333;
-  }
-  
-  .badge-arrow-btn:active {
-    transform: scale(0.95);
-  }
-  
-  .badge-arrow-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
   }
   
   .badge-arrow-btn svg {
-    min-width: 16px;
-    min-height: 16px;
+    width: 16px;
+    height: 16px;
+    fill: #ffffff;
   }
   
   @media (max-width: 767px) {
@@ -131,7 +126,7 @@
   
   /* Fixed dimensions for badge items */
   .badge-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 12px;
     padding: 8px 12px;
@@ -141,19 +136,27 @@
     transition: background-color 0.2s;
     white-space: nowrap;
     height: 64px;
+    min-width: 120px;
+    margin-right: 12px;
+    contain: layout;
   }
   
   .badge-image-container {
     width: 48px;
     height: 48px;
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    border-radius: 50%;
-    background-color: #f5f5f5;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    overflow: hidden;
+  }
+  
+  .badge-image-container img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
   }
 </style>
 
@@ -213,16 +216,12 @@
 // Early pre-calculation script to prevent CLS
 (function() {
   // Reserve space before the DOM is fully loaded
-  const styleTag = document.getElementById('cls-prevention-{{ section.id }}');
-  if (styleTag) {
-    styleTag.textContent += `
-      #shopify-section-{{ section.id }} {
-        min-height: ${window.innerWidth < 768 ? '90px' : '110px'};
-      }
-      #badgeScroller {
-        height: ${window.innerWidth < 768 ? '70px' : '80px'};
-      }
-    `;
+  document.documentElement.style.setProperty('--badge-section-height', 
+    window.innerWidth < 768 ? '90px' : '110px');
+
+  const sectionElement = document.getElementById('shopify-section-{{ section.id }}');
+  if (sectionElement) {
+    sectionElement.style.minHeight = window.innerWidth < 768 ? '90px' : '110px';
   }
 })();
 
@@ -267,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateArrowState();
   
   // Update button state on scroll
-  scroller.addEventListener('scroll', updateArrowState);
+  scroller.addEventListener('scroll', updateArrowState, { passive: true });
   
   // Simple mouse drag handling
   scroller.addEventListener('mousedown', function(e) {

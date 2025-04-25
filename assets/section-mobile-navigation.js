@@ -1,16 +1,34 @@
-// Mobile Navigation JS - Updated to improve performance
-function setupDrawer() {
-  let mobileHeader = document.getElementById("shopify-section-mobile-header"),
-    mobileNav = document.querySelector(".js-mobile-header"),
-    mobileSearch = document.getElementById("mobile-search"),
-    announcementBar = document.querySelector(".announcement-bar.wrapper");
+// Mobile Navigation JS - Updated to improve performance and prevent CLS
+// Set initial CSS variables to prevent layout shift
+(function () {
+  document.documentElement.style.setProperty("--header-mobile-height", "66px");
+  document.documentElement.style.setProperty("--header-height", "66px");
+  document.documentElement.style.setProperty(
+    "--announcement-bar-height",
+    "40px"
+  );
 
-  // Set header height and announcement bar height
-  const headerHeight = mobileHeader ? mobileHeader.offsetHeight : 60;
+  // Pre-set fixed dimensions for critical elements
+  const headerSpacer = document.querySelector(".header-spacer");
+  if (headerSpacer) {
+    headerSpacer.style.height = "106px"; // 40px + 66px
+  }
+})();
+
+function setupDrawer() {
+  // Find key elements
+  const mobileHeader = document.getElementById("shopify-section-mobile-header");
+  const mobileNav = document.querySelector(".js-mobile-header");
+  const mobileSearch = document.getElementById("mobile-search");
+  const announcementBar = document.querySelector(".announcement-bar.wrapper");
+
+  // Set header height and announcement bar height with fixed values to prevent CLS
+  const headerHeight = 66; // Fixed height
   const announcementBarHeight = announcementBar
     ? announcementBar.offsetHeight || 40
     : 40;
 
+  // Update CSS variables
   document.documentElement.style.setProperty(
     "--header-height",
     `${headerHeight}px`
@@ -20,7 +38,7 @@ function setupDrawer() {
     `${announcementBarHeight}px`
   );
 
-  // Update the header-spacer (which was added in the HTML template)
+  // Update the header-spacer
   const headerSpacer = document.querySelector(".header-spacer");
   if (headerSpacer && window.innerWidth < 768) {
     headerSpacer.style.height = `${announcementBarHeight + headerHeight}px`;
@@ -33,19 +51,35 @@ function setupDrawer() {
     announcementBar.style.opacity = "1";
     announcementBar.style.position = "fixed";
     announcementBar.style.top = "0";
+    announcementBar.style.height = `${announcementBarHeight}px`;
   }
 
-  Events.on("slideout:open:mobile-navigation", function (slideout) {
-    setTimeout(function () {
-      if (mobileNav) mobileNav.style.zIndex = "14";
-    }, 200);
-  });
+  // Handle slideout events if WAU is available
+  if (typeof Events !== "undefined") {
+    Events.on("slideout:open:mobile-navigation", function () {
+      setTimeout(function () {
+        if (mobileNav) mobileNav.style.zIndex = "14";
+      }, 200);
+    });
 
-  Events.on("slideout:close:mobile-navigation", function (slideout) {
-    setTimeout(function () {
-      if (mobileSearch) mobileSearch.style.zIndex = "0";
-      if (mobileNav) mobileNav.style.zIndex = "12";
-    }, 200);
+    Events.on("slideout:close:mobile-navigation", function () {
+      setTimeout(function () {
+        if (mobileSearch) mobileSearch.style.zIndex = "0";
+        if (mobileNav) mobileNav.style.zIndex = "12";
+      }, 200);
+    });
+  }
+
+  // Fix dimensions for icon containers
+  const iconContainers = document.querySelectorAll(
+    ".mobile-header__cart-links--search, .mobile-header__cart-links--cart, .mobile-header__cart-links--nav"
+  );
+
+  iconContainers.forEach((container) => {
+    if (container) {
+      container.style.width = "32px";
+      container.style.height = "32px";
+    }
   });
 }
 
@@ -56,48 +90,52 @@ function setupMobileSearch() {
   const backdrop = document.querySelector(".mobile-search-backdrop");
 
   if (searchToggle && mobileSearch && mobileHeader) {
-    const updateHeaderHeight = () => {
-      const headerHeight = mobileHeader.offsetHeight;
-      document.documentElement.style.setProperty(
-        "--header-height",
-        `${headerHeight}px`
-      );
-    };
+    // Create a fixed position handler for the search
+    const positionSearchAndBackdrop = () => {
+      const headerHeight = 66; // Fixed height to prevent CLS
+      const announcementHeight =
+        document.querySelector(".announcement-bar.wrapper")?.offsetHeight || 40;
 
-    updateHeaderHeight();
-    window.addEventListener("resize", updateHeaderHeight);
-
-    // Create a MutationObserver to watch for style changes
-    const observer = new MutationObserver((mutations) => {
-      if (mobileSearch.classList.contains("mobile-search--visible")) {
-        mobileHeader.style.zIndex = "15";
-        mobileHeader.style.opacity = "1";
-        mobileHeader.style.top = "0px";
+      if (mobileHeader.classList.contains("announcement-hidden")) {
+        mobileSearch.style.top = `${headerHeight}px`;
+        if (backdrop) backdrop.style.top = `${headerHeight + 60}px`;
+      } else {
+        mobileSearch.style.top = `${headerHeight + announcementHeight}px`;
+        if (backdrop)
+          backdrop.style.top = `${headerHeight + announcementHeight + 60}px`;
       }
-    });
-
-    // Start observing the header for style changes
-    observer.observe(mobileHeader, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
+    };
 
     searchToggle.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
+
       mobileSearch.classList.toggle("mobile-search--visible");
       backdrop.classList.toggle("is-active");
 
+      positionSearchAndBackdrop();
+
       if (mobileSearch.classList.contains("mobile-search--visible")) {
         mobileHeader.style.zIndex = "15";
-        mobileHeader.style.opacity = "1";
-        mobileHeader.style.top = "0px";
+
+        // Focus search input
+        const searchInput = mobileSearch.querySelector(
+          ".section-header__mobile_search--input"
+        );
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 50);
+        }
       }
     });
 
     backdrop.addEventListener("click", function () {
       mobileSearch.classList.remove("mobile-search--visible");
       backdrop.classList.remove("is-active");
+    });
+
+    // Update search position on scroll for smoother experience
+    window.addEventListener("scroll", positionSearchAndBackdrop, {
+      passive: true,
     });
   }
 }
@@ -116,22 +154,29 @@ function handleMobileHeaderScroll() {
 
   let lastScrollTop = 0;
   const scrollThreshold = 10;
+  let scrollTimeout;
 
   const handleScroll = () => {
-    const currentScrollTop =
-      window.pageYOffset || document.documentElement.scrollTop;
+    // Skip if there's an active timeout to improve performance
+    if (scrollTimeout) return;
 
-    // If we've scrolled past the threshold, hide announcement bar and move header up
-    if (currentScrollTop > scrollThreshold) {
-      announcementBar.classList.add("is-hidden");
-      mobileHeader.classList.add("announcement-hidden");
-    } else {
-      // At the top of the page - show announcement bar and reset header position
-      announcementBar.classList.remove("is-hidden");
-      mobileHeader.classList.remove("announcement-hidden");
-    }
+    scrollTimeout = setTimeout(() => {
+      const currentScrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
 
-    lastScrollTop = currentScrollTop;
+      // If we've scrolled past the threshold, hide announcement bar and move header up
+      if (currentScrollTop > scrollThreshold) {
+        announcementBar.classList.add("is-hidden");
+        mobileHeader.classList.add("announcement-hidden");
+      } else {
+        // At the top of the page - show announcement bar and reset header position
+        announcementBar.classList.remove("is-hidden");
+        mobileHeader.classList.remove("announcement-hidden");
+      }
+
+      lastScrollTop = currentScrollTop;
+      scrollTimeout = null;
+    }, 10);
   };
 
   window.removeEventListener("scroll", handleScroll);
@@ -140,36 +185,42 @@ function handleMobileHeaderScroll() {
 
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
-  // We're not creating spacers with JS anymore, just updating CSS variables
-});
+  document
+    .querySelectorAll('[data-section-type="mobile-header"]')
+    .forEach(function () {
+      if (typeof WAU !== "undefined" && WAU.Slideout) {
+        WAU.Slideout.init("mobile-navigation");
+      }
+      setupDrawer();
+      setupMobileSearch();
+      handleMobileHeaderScroll();
 
-document
-  .querySelectorAll('[data-section-type="mobile-header"]')
-  .forEach(function (container) {
-    WAU.Slideout.init("mobile-navigation");
-    setupDrawer();
-    setupMobileSearch();
-    handleMobileHeaderScroll();
-
-    if (
-      document.querySelector(".mobile-nav__mobile-header .js-mini-cart-trigger")
-    ) {
-      document
-        .querySelector(".mobile-nav__mobile-header .js-mini-cart-trigger")
-        .addEventListener("click", function () {
+      // Setup mini-cart trigger
+      const miniCartTrigger = document.querySelector(
+        ".mobile-nav__mobile-header .js-mini-cart-trigger"
+      );
+      if (miniCartTrigger && typeof WAU !== "undefined" && WAU.Slideout) {
+        miniCartTrigger.addEventListener("click", function () {
           WAU.Slideout._closeByName("mobile-navigation");
         });
-    }
-  });
+      }
+    });
+});
 
+// Handle Shopify section events
 document.addEventListener("shopify:section:select", function (event) {
   if (event.target.querySelector('[data-section-type="mobile-header"]')) {
     var container = event.target.querySelector(
       '[data-section-type="mobile-header"]'
     );
 
-    if (WAU.Helpers.isTouch() || WAU.Helpers.isMobile()) {
-      WAU.Slideout._openByName("mobile-navigation");
+    if (
+      (typeof WAU !== "undefined" && WAU.Helpers && WAU.Helpers.isTouch()) ||
+      (typeof WAU !== "undefined" && WAU.Helpers && WAU.Helpers.isMobile())
+    ) {
+      if (typeof WAU !== "undefined" && WAU.Slideout) {
+        WAU.Slideout._openByName("mobile-navigation");
+      }
       setupDrawer();
     }
   }
@@ -177,15 +228,22 @@ document.addEventListener("shopify:section:select", function (event) {
 
 document.addEventListener("shopify:section:deselect", function (event) {
   if (event.target.querySelector('[data-section-type="mobile-header"]')) {
-    WAU.Slideout._closeByName("mobile-navigation");
+    if (typeof WAU !== "undefined" && WAU.Slideout) {
+      WAU.Slideout._closeByName("mobile-navigation");
+    }
   }
 });
 
 document.addEventListener("shopify:block:select", function (event) {
   if (!event.target.querySelector('[data-section-type="mobile-header"]'))
     return false;
-  if (WAU.Helpers.isTouch() || WAU.Helpers.isMobile()) {
-    WAU.Slideout._openByName("mobile-navigation");
+  if (
+    (typeof WAU !== "undefined" && WAU.Helpers && WAU.Helpers.isTouch()) ||
+    (typeof WAU !== "undefined" && WAU.Helpers && WAU.Helpers.isMobile())
+  ) {
+    if (typeof WAU !== "undefined" && WAU.Slideout) {
+      WAU.Slideout._openByName("mobile-navigation");
+    }
     setupDrawer();
   }
 });
@@ -199,4 +257,17 @@ document.addEventListener("DOMContentLoaded", function () {
       slide.style.paddingBottom = "";
     }
   });
+
+  // Fix any mobile nav dimensions
+  const mobileMenu = document.getElementById("mobile-menu");
+  if (mobileMenu) {
+    mobileMenu.style.height = "66px";
+    mobileMenu.style.contain = "layout size";
+  }
+
+  const mobileHeader = document.querySelector(".mobile-nav__mobile-header");
+  if (mobileHeader) {
+    mobileHeader.style.height = "66px";
+    mobileHeader.style.contain = "layout";
+  }
 });

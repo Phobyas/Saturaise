@@ -1,56 +1,91 @@
-.announcement-bar.wrapper {
+/*
+* Announcement Bar CSS
+* Optimized to prevent Cumulative Layout Shift (CLS)
+*/
+
+.announcement-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  background-color: var(--announcement-bg, #000) !important;
-  padding: 0 10px;
+  z-index: 10;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
   overflow: hidden;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 40px !important; /* Fixed height */
-  contain: layout size paint; /* Containment for performance */
-  color: white;
-  z-index: 1001 !important;
-  transition: transform 0.3s ease;
-}
-
-.announcement-bar .marquee-track {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  height: 100%; /* Ensure it takes full height */
-  contain: layout; /* Add containment */
-  will-change: transform; /* Optimize for animations */
-  transition: opacity 0.2s ease; /* Smooth fade in */
-}
-
-.announcement-bar .marquee-content {
-  flex-grow: 0;
-  flex-shrink: 0;
-  padding: 10px;
-  text-align: center;
+  contain: layout;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: max-content; /* Prevent text wrapping */
+  justify-content: flex-start;
 }
 
-@media (max-width: 1023px) {
-  .announcement-bar.wrapper {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+.announcement-bar.wrapper {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  background-color: var(--announcement-bg, #000) !important;
+  color: white;
+}
+
+.marquee-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+  min-height: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  will-change: transform;
+  contain: layout;
+}
+
+.marquee-content {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 40px;
+  min-height: 40px;
+  white-space: nowrap;
+  font-weight: var(--font-weight-body);
+  letter-spacing: var(--letter-spacing-body);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* Ensure content remains visible while scrolling */
+.marquee-content:last-child {
+  padding-right: 40px;
+}
+
+/* Adjust elements that depend on announcement bar */
+@media screen and (min-width: 768px) {
+  .section-header__main-bar {
+    top: 40px;
   }
 
+  .header-spacer {
+    height: 106px; /* 40px announcement + 66px header */
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .mobile-nav__mobile-header {
+    top: 40px;
+  }
+
+  .header-spacer {
+    height: 106px; /* 40px announcement + 66px header */
+  }
+
+  /* Allow announcement bar to be hidden on scroll on mobile */
   .announcement-bar.is-hidden {
-    transform: translateY(-100%);
+    transform: translateY(-40px);
+    transition: transform 0.3s ease;
   }
+}
 
-  .announcement-bar .marquee-content {
-    min-width: auto;
-    width: auto; /* Remove fixed width to prevent layout shifts */
-    padding: 10px 20px; /* Add more padding instead */
-  }
+/* State management - for accessibility and screen readers */
+.announcement-bar[aria-hidden="true"] {
+  display: none;
 }

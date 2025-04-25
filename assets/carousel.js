@@ -1,5 +1,17 @@
 // Ensure Flickity is available when needed
 (function () {
+  // Set minimum heights for carousels to prevent CLS
+  document
+    .querySelectorAll('[data-section-type="carousel"]')
+    .forEach(function (carousel) {
+      const carouselElement = carousel.querySelector(".js-carousel");
+      if (carouselElement) {
+        carouselElement.style.minHeight =
+          window.innerWidth < 768 ? "350px" : "400px";
+        carouselElement.style.opacity = "1";
+      }
+    });
+
   // Check if Flickity is loaded
   function ensureFlickityLoaded(callback) {
     if (typeof Flickity !== "undefined") {
@@ -23,9 +35,8 @@
     .querySelectorAll('[data-section-type="carousel"]')
     .forEach(function (container) {
       ensureFlickityLoaded(function () {
-        setTimeout(function () {
-          carouselInit(container);
-        }, 200);
+        // Immediate initialization to prevent CLS
+        carouselInit(container);
       });
     });
 
@@ -35,18 +46,16 @@
       return false;
 
     ensureFlickityLoaded(function () {
-      setTimeout(function () {
-        carouselInit(event.target);
+      carouselInit(event.target);
 
-        // If testimonials section
-        if (
-          event.target
-            .querySelector("[data-section-type]")
-            ?.matches(".section-testimonials")
-        ) {
-          carouselSlideLast(event.target);
-        }
-      }, 200);
+      // If testimonials section
+      if (
+        event.target
+          .querySelector("[data-section-type]")
+          ?.matches(".section-testimonials")
+      ) {
+        carouselSlideLast(event.target);
+      }
     });
   });
 
@@ -57,9 +66,7 @@
       container.getAttribute("data-section-type") === "carousel"
     ) {
       ensureFlickityLoaded(function () {
-        setTimeout(function () {
-          carouselSlideEdit(event.target);
-        }, 200);
+        carouselSlideEdit(event.target);
       });
     }
   });
@@ -128,6 +135,9 @@ function carouselInit(container) {
     return false;
   }
 
+  // Set minimum height immediately to prevent CLS
+  carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "400px";
+
   if (carousel.classList.contains("carousel-loaded--false")) {
     carousel.classList.remove("carousel-loaded--false");
     carousel.classList.add("carousel-loaded--true");
@@ -151,6 +161,14 @@ function carouselInit(container) {
       flktyOptions = JSON.parse(flktyData);
     }
 
+    // Add options to prevent CLS
+    flktyOptions.pageDots = false;
+    flktyOptions.adaptiveHeight = false;
+    flktyOptions.resize = true;
+    flktyOptions.watchCSS = false;
+    flktyOptions.dragThreshold = 10;
+
+    // Initialize Flickity with a specific height
     new Flickity(carousel, flktyOptions);
     carousel.classList.remove("is-hidden");
 
@@ -176,10 +194,15 @@ function carouselInit(container) {
         document.ontouchmove = () => true;
       });
     }
+
+    // Set section as loaded
+    container.setAttribute("data-section-loaded", "true");
   } catch (e) {
     console.error("Error initializing carousel:", e);
     // Try to recover by displaying the carousel content without Flickity
     carousel.classList.remove("is-hidden");
+    carousel.setAttribute("data-section-loaded", "true");
+
     const slides = carousel.querySelectorAll(".slideshow__slide");
     if (slides && slides.length) {
       slides[0].style.display = "block";
@@ -276,3 +299,26 @@ function carouselPagination(carousel, pagination) {
     });
   }
 }
+
+// Handle window resize to adjust min-height for responsive layouts
+window.addEventListener(
+  "resize",
+  function () {
+    document
+      .querySelectorAll('[data-section-type="carousel"] .js-carousel')
+      .forEach(function (carousel) {
+        carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "400px";
+
+        // Resize Flickity instance if it exists
+        if (typeof Flickity !== "undefined") {
+          const flkty = Flickity.data(carousel);
+          if (flkty) {
+            setTimeout(function () {
+              flkty.resize();
+            }, 100);
+          }
+        }
+      });
+  },
+  { passive: true }
+);

@@ -8,7 +8,7 @@ const Header = {
       doubleTapToGoItems = document.querySelectorAll(".js-doubletap-to-go"),
       searchSlideout = container.querySelector(".searchbox");
 
-    // Dynamic height calculation for announcement bar and header
+    // Dynamic height calculation for announcement bar and header - set early to prevent CLS
     const announcementBar = document.getElementById("announcement-bar");
     if (announcementBar && themeHeader) {
       const setHeightVariables = () => {
@@ -25,7 +25,6 @@ const Header = {
         );
 
         // Update header-spacer height if it exists
-        // This is better than creating the element with JS
         const headerSpacer = document.querySelector(".header-spacer");
         if (headerSpacer) {
           headerSpacer.style.height = `${
@@ -34,21 +33,27 @@ const Header = {
         }
       };
 
-      // Initial setup
+      // Initial setup as early as possible
       setHeightVariables();
 
-      // Recalculate on window resize
-      window.addEventListener("resize", setHeightVariables);
+      // Recalculate on window resize (debounced)
+      let resizeTimeout;
+      window.addEventListener(
+        "resize",
+        function () {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(setHeightVariables, 100);
+        },
+        { passive: true }
+      );
 
       // Recalculate after all images and resources are loaded
       window.addEventListener("load", setHeightVariables);
     }
 
     if (container.querySelector(".js-stickynav")) {
-      setTimeout(() => {
-        Header.clearSticky();
-        Header.prepareSticky();
-      }, 1000);
+      Header.clearSticky();
+      Header.prepareSticky();
     }
 
     if (document.querySelectorAll(".js-search-toggle").length > 0) {
@@ -67,25 +72,34 @@ const Header = {
     Header.handleDesktopHeaderScroll();
 
     // Aria support
-    WAU.a11yHelpers.setUpAriaExpansion();
-    WAU.a11yHelpers.setUpAccessibleNavigationMenus();
+    if (typeof WAU !== "undefined" && WAU.a11yHelpers) {
+      WAU.a11yHelpers.setUpAriaExpansion();
+      WAU.a11yHelpers.setUpAccessibleNavigationMenus();
+    }
 
-    window.addEventListener("resize", () => {
-      setTimeout(() => {
+    // Optimize resize handling
+    let resizeTimer;
+    window.addEventListener(
+      "resize",
+      function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          Header.clearSticky();
+          Header.prepareSticky();
+        }, 250);
+      },
+      { passive: true }
+    );
+
+    document.addEventListener("shopify:section:select", function () {
+      setTimeout(function () {
         Header.clearSticky();
         Header.prepareSticky();
-      }, 1000);
-    });
-
-    document.addEventListener("shopify:section:select", () => {
-      setTimeout(() => {
-        Header.clearSticky();
-        Header.prepareSticky();
-      }, 1000);
+      }, 100);
     });
   },
 
-  // Added the missing nestedDropdowns function
+  // Nested dropdowns function
   nestedDropdowns: function nestedDropdowns(menuItems) {
     if (!menuItems || menuItems.length === 0) return;
 
@@ -126,7 +140,6 @@ const Header = {
     const clearEls = document.querySelectorAll(".js-clear-element");
 
     if (!headerEl) {
-      console.warn("Warning. Did not find an element to clear.");
       return false;
     }
 
@@ -155,7 +168,7 @@ const Header = {
     );
   },
 
-  // Updated method to handle desktop header scroll behavior
+  // Updated method to handle desktop header scroll behavior with improved performance
   handleDesktopHeaderScroll: function handleDesktopHeaderScroll() {
     const announcementBar = document.querySelector(".announcement-bar.wrapper");
     const headerSection = document.querySelector(
@@ -165,9 +178,11 @@ const Header = {
     if (!announcementBar || !headerSection) return;
 
     let scrollTimeout;
+    let lastScrollTop = 0;
     const scrollThreshold = 10; // Amount of scroll needed to trigger hiding
 
     function onScroll() {
+      // Skip if there's an active timeout
       if (scrollTimeout) return;
 
       scrollTimeout = setTimeout(() => {
@@ -177,15 +192,22 @@ const Header = {
         // For desktop: We'll keep both announcement bar and header visible
         // We're adjusting only mobile behavior now
         if (window.innerWidth < 768) {
-          if (currentScrollTop > scrollThreshold) {
+          if (
+            currentScrollTop > scrollThreshold &&
+            currentScrollTop > lastScrollTop
+          ) {
             // Scrolling down - hide announcement bar on mobile only
             announcementBar.classList.add("is-hidden");
-          } else {
+          } else if (
+            currentScrollTop <= scrollThreshold ||
+            currentScrollTop < lastScrollTop
+          ) {
             // At top or scrolling up to the top - show announcement bar
             announcementBar.classList.remove("is-hidden");
           }
         }
 
+        lastScrollTop = currentScrollTop;
         scrollTimeout = null;
       }, 10);
     }
@@ -193,12 +215,13 @@ const Header = {
     // Add scroll listener with throttling for performance
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    // Handle resize events
+    // Handle resize events efficiently
+    let resizeTimer;
     window.addEventListener(
       "resize",
       function () {
-        // Need to reapply appropriate behavior based on screen size
-        onScroll();
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(onScroll, 100);
       },
       { passive: true }
     );
@@ -211,9 +234,11 @@ const Header = {
 
       const activeClass = doubleTapItem.getAttribute("data-active-class");
 
-      Events.on("device:touchstart", function () {
-        preventClick = true;
-      });
+      if (typeof Events !== "undefined") {
+        Events.on("device:touchstart", function () {
+          preventClick = true;
+        });
+      }
 
       doubleTapItem.addEventListener("click", function (event) {
         if (preventClick) {
@@ -249,7 +274,7 @@ const Header = {
       });
   },
 
-  // Add initSearch method which was missing
+  // Init search method
   initSearch: function initSearch(container, searchSlideout) {
     if (!container || !searchSlideout) return;
 
@@ -258,21 +283,48 @@ const Header = {
     searchToggles.forEach(function (toggle) {
       toggle.addEventListener("click", function (e) {
         e.preventDefault();
-        WAU.Slideout._openByName("searchbox");
 
-        // Focus the search input after a slight delay
-        setTimeout(function () {
-          const searchInput = document.querySelector(".searchbox__input");
-          if (searchInput) searchInput.focus();
-        }, 300);
+        if (typeof WAU !== "undefined" && WAU.Slideout) {
+          WAU.Slideout._openByName("searchbox");
+
+          // Focus the search input after a slight delay
+          setTimeout(function () {
+            const searchInput = document.querySelector(".searchbox__input");
+            if (searchInput) searchInput.focus();
+          }, 300);
+        }
       });
     });
   },
 };
 
-// Initialize header for all header sections
-document
-  .querySelectorAll('[data-section-type="header"]')
-  .forEach(function (container) {
-    Header.init(container);
+// Initialize header as soon as DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .querySelectorAll('[data-section-type="header"]')
+      .forEach(function (container) {
+        Header.init(container);
+      });
   });
+} else {
+  document
+    .querySelectorAll('[data-section-type="header"]')
+    .forEach(function (container) {
+      Header.init(container);
+    });
+}
+
+// Set initial CSS variables to prevent CLS
+(function () {
+  document.documentElement.style.setProperty(
+    "--announcement-bar-height",
+    "40px"
+  );
+  document.documentElement.style.setProperty("--header-height", "60px");
+
+  const headerSpacer = document.querySelector(".header-spacer");
+  if (headerSpacer) {
+    headerSpacer.style.height = "100px"; // 40px + 60px
+  }
+})();

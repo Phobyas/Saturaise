@@ -27,9 +27,40 @@
   <link rel="preload" href="{{ 'vendor-flickity.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" as="script">
+  
+  <!-- Preload critical fonts -->
+  {%- unless settings.main_font.system? -%}
+    <link rel="preload" as="font" href="{{ settings.main_font | font_url }}" type="font/woff2" crossorigin>
+  {%- endunless -%}
+  {%- unless settings.heading_font.system? -%}
+    <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
+  {%- endunless -%}
+  {%- unless settings.nav_font.system? -%}
+    <link rel="preload" as="font" href="{{ settings.nav_font | font_url }}" type="font/woff2" crossorigin>
+  {%- endunless -%}
+  
+  <!-- Preload logo if available -->
+  {% if settings.logo != blank %}
+    <link rel="preload" as="image" href="{{ settings.logo | image_url: width: 300 }}" media="(min-width: 768px)">
+    <link rel="preload" as="image" href="{{ settings.logo | image_url: width: 200 }}" media="(max-width: 767px)">
+  {% endif %}
 
+  {% if settings.favicon %}
+    <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png" />
+  {% endif %}
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  <meta name="description" content="{{ page_description | escape }}">
+
+  {% render 'snip-social-meta-tags' %}
+  {% render 'snip-structured-data' %}
+  
   <!-- Inline critical CSS to prevent layout shifting -->
   <style>
     /* Fixed header spacer height to prevent CLS */
@@ -52,6 +83,17 @@
       width: 100%;
     }
     
+    /* Stabilize logo containers */
+    .site-logo, 
+    .mobile-nav__logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 60px;
+      contain: layout;
+    }
+    
+    /* Collection badges section stabilization */
     .collection-badges-section {
       min-height: 80px;
       overflow: visible;
@@ -69,13 +111,39 @@
       }
     }
     
+    /* Navigation containers */
+    .section-header__main-bar {
+      position: fixed;
+      top: var(--announcement-bar-height, 40px);
+      left: 0;
+      right: 0;
+      height: var(--header-height, 66px);
+      z-index: 999;
+      contain: layout;
+    }
+    
+    .mobile-nav__mobile-header {
+      position: fixed !important;
+      top: var(--announcement-bar-height, 40px) !important;
+      height: var(--header-height, 66px) !important;
+      contain: layout style;
+    }
+    
+    /* Ensure images maintain aspect ratio while loading */
     img {
       max-width: 100%;
     }
     
-    /* Ensure images maintain aspect ratio while loading */
     img[width][height] {
       aspect-ratio: attr(width) / attr(height);
+    }
+    
+    /* Logo image sizing */
+    .header__img-logo img,
+    .mobile-nav__img-logo img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
     
     /* Hide elements before JS loads */
@@ -100,70 +168,77 @@
     @font-face {
       font-display: swap;
     }
+    
+    /* Featured collection stabilization */
+    .section-featured-collection__wrapper--carousel {
+      position: relative;
+      contain: layout;
+      min-height: 400px;
+    }
+    
+    .product-loop__item {
+      min-height: 350px;
+      contain: layout;
+    }
+    
+    /* Prevent layout shift from carousels during initialization */
+    .carousel-loaded--false,
+    .carousel-loaded--true,
+    .featured-collection__wrapper--loop.js-carousel {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+    
+    /* Fix for Flickity initialization */
+    .flickity-viewport {
+      min-height: 400px; /* Adjust based on your product card height */
+      transform: none !important;
+    }
   </style>
 
-  {% if settings.favicon %}
-    <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png" />
-  {% endif %}
-
-  <title>
-    {{ page_title }}
-    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-  </title>
-
-  <meta name="description" content="{{ page_description | escape }}">
-
-  {% render 'snip-social-meta-tags' %}
-  {% render 'snip-structured-data' %}
-
-  <!-- Preload critical fonts -->
-  {%- unless settings.main_font.system? -%}
-    <link rel="preload" as="font" href="{{ settings.main_font | font_url }}" type="font/woff2" crossorigin>
-  {%- endunless -%}
-  {%- unless settings.heading_font.system? -%}
-    <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
-  {%- endunless -%}
-  {%- unless settings.nav_font.system? -%}
-    <link rel="preload" as="font" href="{{ settings.nav_font | font_url }}" type="font/woff2" crossorigin>
-  {%- endunless -%}
-  
   <!-- CSS -->
   <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  <link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
   
   <!-- JS -->
-  <script src="{{ 'theme.js' | asset_url }}" defer></script>
-  <script src="{{ 'vendor-flickity.js' | asset_url }}" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-  <script src="{{ 'size-chart.js' | asset_url }}" defer></script>
-
-  {{ content_for_header }}
-
-  {% render 'css-variables' %}
-
-  <!-- Script to prevent CLS -->
   <script>
     // Set JavaScript flag immediately
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
     
-    // Set fixed header spacer height to prevent CLS
+    // Set announcement bar and header heights early to prevent layout shifts
     (function() {
+      document.documentElement.style.setProperty('--announcement-bar-height', '40px');
+      document.documentElement.style.setProperty('--header-height', '66px');
+      
       // Set minimum heights for sections that cause CLS
       var style = document.createElement('style');
       style.textContent = `
-        #shopify-section-template--24156831154469__collections_badges_pWqmae {
+        .collection-badges-section {
           min-height: ${window.innerWidth < 768 ? '70px' : '80px'};
+          contain: layout;
+        }
+        
+        .featured-collection__wrapper--loop {
+          min-height: ${window.innerWidth < 768 ? '350px' : '400px'};
           contain: layout;
         }
       `;
       document.head.appendChild(style);
     })();
+    
+    // Define jsAssets early
+    var jsAssets = {
+      "zoom": {{ 'vendor-zoom.js' | asset_url | json }},
+      "flickity": {{ 'vendor-flickity.js' | asset_url | json }},
+      "product": {{ 'product.js' | asset_url | json }},
+      "productModel": {{ 'product-model.js' | asset_url | json }},
+      "productVideo": {{ 'product-video.js' | asset_url | json }},
+      "productPickupAvailability": {{ 'pickup-availability.js' | asset_url | json }},
+      "productComplementaryProducts": {{ 'complementary-products.js' | asset_url | json }},
+      "parallax": {{ 'vendor-parallax.js' | asset_url | json }}
+    };
     
     // Fix for Monorail Edge errors in Lighthouse
     if (navigator.userAgent.includes('Chrome-Lighthouse')) {
@@ -175,6 +250,13 @@
       }, true);
     }
   </script>
+  
+  <script src="{{ 'vendor-flickity.js' | asset_url }}" defer></script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+  {{ content_for_header }}
+
+  {% render 'css-variables' %}
 </head>
 
 <body id="{{ page_title | handle }}"
@@ -190,9 +272,7 @@
   <div class="js-modal-overlay site-overlay"></div>
 
   <main id="main-content" class="site-wrap" role="main" tabindex="-1">
-
     {% section 'mobile-header' %}
-
     {% sections 'header-group' %}
     
     <div class="header-spacer"></div>
@@ -245,9 +325,13 @@
     }
   </script>
 
+  <!-- Load secondary scripts -->
   <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
   <script src='{{ 'announcement-bar.js' | asset_url }}' defer></script>
   <script src='{{ 'product-accordion.js' | asset_url }}' defer></script>
+  <script src='{{ 'section-header.js' | asset_url }}' defer></script>
+  <script src='{{ 'section-mobile-navigation.js' | asset_url }}' defer></script>
+  <script src='{{ 'carousel.js' | asset_url }}' defer></script>
 
   {%- if settings.product_grid_video -%}
     <script src="{{ 'vendor-video.js' | asset_url }}" defer></script>
@@ -260,6 +344,10 @@
   <!-- Error handler for console errors -->
   <script>
     window.addEventListener('DOMContentLoaded', function() {
+      // Set fixed dimensions for header and announcement bar
+      document.documentElement.style.setProperty('--announcement-bar-height', '40px');
+      document.documentElement.style.setProperty('--header-height', '66px');
+      
       // Fix for missing functions or resources
       if (typeof Flickity === 'undefined') {
         console.warn('Flickity not loaded properly. Attempting to load again.');
