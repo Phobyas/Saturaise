@@ -10,6 +10,11 @@
   {%- endif -%}
 
   <!-- Preconnect to necessary domains -->
+
+  <link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.min.css" as="style">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.min.js" as="script">
+
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {%- unless settings.main_font.system? and settings.heading_font.system? and settings.nav_font.system? -%}
@@ -238,4 +243,4 @@
   <!-- Load non-critical scripts at the end -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 </body>
-</html>
+</html> 

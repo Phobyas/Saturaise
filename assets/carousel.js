@@ -1,50 +1,60 @@
-document.querySelectorAll('[data-section-type="carousel"]').forEach(function(container){
-  const loader = new WAU.Helpers.scriptLoader();
-  loader.load([jsAssets.flickity]).finally(() => {
-    setTimeout(function() {
-      carouselInit(container);
-    }, 200);
+document
+  .querySelectorAll('[data-section-type="carousel"]')
+  .forEach(function (container) {
+    const loader = new WAU.Helpers.scriptLoader();
+    loader.load([jsAssets.flickity]).finally(() => {
+      setTimeout(function () {
+        carouselInit(container);
+      }, 200);
+    });
   });
-});
 
-document.addEventListener("shopify:section:load", function(event) {
-  if ( !event.target.querySelector('[data-section-type="carousel"]') ) return false;
-  setTimeout(function() {
+document.addEventListener("shopify:section:load", function (event) {
+  if (!event.target.querySelector('[data-section-type="carousel"]'))
+    return false;
+  setTimeout(function () {
     carouselInit(event.target);
 
     // If testimonials section.
-    if (event.target.querySelector('[data-section-type]')?.matches('.section-testimonials')) {
+    if (
+      event.target
+        .querySelector("[data-section-type]")
+        ?.matches(".section-testimonials")
+    ) {
       carouselSlideLast(event.target);
     }
   }, 200);
 });
 
-document.addEventListener("shopify:block:select", function(event) {
-  var container = event.target.closest('[data-section-type]');
-  if ( container.getAttribute('data-section-type') === 'carousel' ) {
-    setTimeout(function() {
+document.addEventListener("shopify:block:select", function (event) {
+  var container = event.target.closest("[data-section-type]");
+  if (container.getAttribute("data-section-type") === "carousel") {
+    setTimeout(function () {
       carouselSlideEdit(event.target);
     }, 200);
   }
 });
 
-document.addEventListener("shopify:block:deselect", function(event) {
-  var container = event.target.closest('[data-section-type]');
-  if ( container.getAttribute('data-section-type') === 'carousel' ) {
-    if (container.classList.contains('section-image-carousel-text')) {
+document.addEventListener("shopify:block:deselect", function (event) {
+  var container = event.target.closest("[data-section-type]");
+  if (container.getAttribute("data-section-type") === "carousel") {
+    if (container.classList.contains("section-image-carousel-text")) {
       carouselSlideReset(event.target);
     }
     // If testimonials section.
-    if (event.target.closest('[data-section-type]')?.matches('.section-testimonials')) {
+    if (
+      event.target
+        .closest("[data-section-type]")
+        ?.matches(".section-testimonials")
+    ) {
       carouselSlideFirst(event.target);
     }
     carouselSlideRestart(event.target);
   }
-
 });
 
 function carouselSlideFirst(container) {
-  let carousel = container.closest('.js-carousel');
+  let carousel = container.closest(".js-carousel");
 
   if (!carousel) return false;
 
@@ -54,7 +64,7 @@ function carouselSlideFirst(container) {
 }
 
 function carouselSlideLast(container) {
-  let carousel = container.querySelector('.js-carousel');
+  let carousel = container.querySelector(".js-carousel");
 
   if (!carousel) return false;
 
@@ -64,63 +74,120 @@ function carouselSlideLast(container) {
 }
 
 function carouselInit(container) {
-  var carousel = container.querySelector('.js-carousel');
+  var carousel = container.querySelector(".js-carousel");
 
-  if ( !carousel ) return false;
+  if (!carousel) return false;
 
-  if ( carousel.classList.contains('carousel-loaded--false') ) {
-    carousel.classList.remove('carousel-loaded--false');
-    carousel.classList.add('carousel-loaded--true');
+  if (carousel.classList.contains("carousel-loaded--false")) {
+    carousel.classList.remove("carousel-loaded--false");
+    carousel.classList.add("carousel-loaded--true");
   }
 
   var flktyOptions;
 
   // Carousel on mobile only
-  if (container.querySelector('[data-flickity-mobile]') && WAU.Helpers.isMobile()) {
-    const flktyData = carousel.getAttribute('data-flickity-mobile');
+  if (
+    container.querySelector("[data-flickity-mobile]") &&
+    WAU.Helpers.isMobile()
+  ) {
+    const flktyData = carousel.getAttribute("data-flickity-mobile");
     flktyOptions = JSON.parse(flktyData);
-  } else if (container.querySelector('[data-flickity-other]')) {
-    const flktyData = carousel.getAttribute('data-flickity-other');
+  } else if (container.querySelector("[data-flickity-other]")) {
+    const flktyData = carousel.getAttribute("data-flickity-other");
     flktyOptions = JSON.parse(flktyData);
   } else {
-    const flktyData = carousel.getAttribute('data-flickity');
+    const flktyData = carousel.getAttribute("data-flickity");
     flktyOptions = JSON.parse(flktyData);
   }
 
   new Flickity(carousel, flktyOptions);
-  carousel.classList.remove('is-hidden');
+  carousel.classList.remove("is-hidden");
 
   carouselResize(carousel);
   carouselAccesibility(carousel);
 
-  var flkty = Flickity.data( carousel );
-  flkty.offsetHeight
+  var flkty = Flickity.data(carousel);
+  flkty.offsetHeight;
 
   // Bail if a testimonials container
-  if (!carousel.classList.contains('section-testimonials__inner-wrapper')) {
-
+  if (!carousel.classList.contains("section-testimonials__inner-wrapper")) {
     // Carousel pagination
-    var carouselPag = container.querySelector('.js-carousel-pagination');
-    if ( carouselPag ) carouselPagination(carousel, carouselPag);
+    var carouselPag = container.querySelector(".js-carousel-pagination");
+    if (carouselPag) carouselPagination(carousel, carouselPag);
   }
-  
+
   // Carousel Drag Fix on Mobile
-  flkty.on( 'dragStart', function( index ) { document.ontouchmove = e => e.preventDefault() });
-  flkty.on( 'dragEnd', function( index ) { document.ontouchmove = () => true });
+  flkty.on("dragStart", function (index) {
+    document.ontouchmove = (e) => e.preventDefault();
+  });
+  flkty.on("dragEnd", function (index) {
+    document.ontouchmove = () => true;
+  });
 }
 
 function carouselAccesibility(carousel) {
   var flkty = Flickity.data(carousel);
 
-  if ( flkty.nextButton ) {
+  // First, make sure all hidden slides' links are not focusable
+  carousel
+    .querySelectorAll(
+      '.carousel-cell:not(.is-selected) a, article[aria-hidden="true"] a'
+    )
+    .forEach(function (link) {
+      link.setAttribute("tabindex", "-1");
+      // Store original tabindex for later restoration
+      if (!link.hasAttribute("data-original-tabindex")) {
+        link.setAttribute(
+          "data-original-tabindex",
+          link.getAttribute("tabindex") || "0"
+        );
+      }
+    });
+
+  // Make sure visible slides' links are focusable
+  carousel
+    .querySelectorAll(
+      '.carousel-cell.is-selected a, article:not([aria-hidden="true"]) a'
+    )
+    .forEach(function (link) {
+      link.setAttribute(
+        "tabindex",
+        link.getAttribute("data-original-tabindex") || "0"
+      );
+    });
+
+  // When slide changes, update tabindex
+  flkty.on("change", function (index) {
+    // Remove tabindex from all links first
+    carousel
+      .querySelectorAll(".carousel-cell a, article a")
+      .forEach(function (link) {
+        link.setAttribute("tabindex", "-1");
+      });
+
+    // Add tabindex only to links in visible slides
+    carousel
+      .querySelectorAll(
+        '.carousel-cell.is-selected a, article:not([aria-hidden="true"]) a'
+      )
+      .forEach(function (link) {
+        link.setAttribute(
+          "tabindex",
+          link.getAttribute("data-original-tabindex") || "0"
+        );
+      });
+  });
+
+  // Move navigation buttons for better a11y
+  if (flkty.nextButton) {
     flkty.handles[0].before(flkty.nextButton.element);
     flkty.nextButton.element.before(flkty.prevButton.element);
   }
 }
 
 function carouselSlideEdit(container) {
-  var carousel = container.closest('.js-carousel');
-  if ( !carousel ) return false;
+  var carousel = container.closest(".js-carousel");
+  if (!carousel) return false;
 
   var flkty = Flickity.data(carousel);
   var slide = container.getAttribute("data-slide-index");
@@ -130,18 +197,18 @@ function carouselSlideEdit(container) {
 }
 
 function carouselSlideRestart(container) {
-  var carousel = container.closest('.js-carousel');
+  var carousel = container.closest(".js-carousel");
 
-  if ( !carousel ) return false;
+  if (!carousel) return false;
 
   const flkty = Flickity.data(carousel);
   flkty.unpausePlayer();
 }
 
 function carouselSlideReset(container) {
-  var carousel = container.closest('.js-carousel');
+  var carousel = container.closest(".js-carousel");
 
-  if ( !carousel ) return false;
+  if (!carousel) return false;
 
   const flkty = Flickity.data(carousel);
   flkty.select(0);
@@ -155,23 +222,25 @@ function carouselResize(carousel) {
 function carouselPagination(carousel, pagination) {
   var flkty = Flickity.data(carousel);
 
-  document.addEventListener('click', event => {
-    if (event.target.classList.contains('js-nav-item')) {
+  document.addEventListener("click", (event) => {
+    if (event.target.classList.contains("js-nav-item")) {
       removeClasses();
-      event.target.classList.add('is-nav-selected');
+      event.target.classList.add("is-nav-selected");
       flkty.select(event.target.dataset.slideIndex);
     }
   });
 
-  flkty.on( 'change', function( index ) {
-    let item = pagination.querySelector(`[data-slide-index="${index}"].js-nav-item`);
+  flkty.on("change", function (index) {
+    let item = pagination.querySelector(
+      `[data-slide-index="${index}"].js-nav-item`
+    );
     removeClasses();
-    item.classList.add('is-nav-selected');
+    item.classList.add("is-nav-selected");
   });
 
   function removeClasses() {
-     pagination.querySelectorAll('.js-nav-item').forEach((item) => {
-      item.classList.remove('is-nav-selected');
+    pagination.querySelectorAll(".js-nav-item").forEach((item) => {
+      item.classList.remove("is-nav-selected");
     });
   }
 }

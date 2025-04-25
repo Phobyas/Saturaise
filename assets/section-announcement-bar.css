@@ -8,7 +8,7 @@
   left: 0 !important;
   right: 0 !important;
   height: 40px !important; /* Fixed height */
-  contain: layout size paint; /* Add containment */
+  contain: layout size paint; /* Containment for performance */
   color: white;
   z-index: 1001 !important;
   transition: transform 0.3s ease;
@@ -20,20 +20,10 @@
   margin: 0;
   padding: 0;
   position: absolute;
-  width: 100%;
-  margin-left: 0;
   height: 100%; /* Ensure it takes full height */
   contain: layout; /* Add containment */
-}
-
-.announcement-bar .marquee-track {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  width: 100%;
-  margin-left: 0;
+  will-change: transform; /* Optimize for animations */
+  transition: opacity 0.2s ease; /* Smooth fade in */
 }
 
 .announcement-bar .marquee-content {
@@ -41,7 +31,10 @@
   flex-shrink: 0;
   padding: 10px;
   text-align: center;
-  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: max-content; /* Prevent text wrapping */
 }
 
 @media (max-width: 1023px) {
@@ -56,6 +49,8 @@
   }
 
   .announcement-bar .marquee-content {
-    width: 50%;
+    min-width: auto;
+    width: auto; /* Remove fixed width to prevent layout shifts */
+    padding: 10px 20px; /* Add more padding instead */
   }
 }

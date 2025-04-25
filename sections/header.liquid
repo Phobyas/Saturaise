@@ -103,7 +103,7 @@
     </div>
   </section>
 
-  <aside class="slideout slideout__drawer-right  section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
+  <aside class="slideout slideout__drawer-right section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
     <article class="span-10 push-1 auto v-stretch v-center">
       <div class="slideout__trigger--close slideout__trigger-search">
         <button class="js-slideout-close" aria-label="Close search slideout" data-slideout-direction="right" tabindex="0" type="button" name="button">
@@ -128,9 +128,9 @@
         data-results-per-resource="10"
         >
       {%- endif -%}
-        <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get">
+        <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get" role="search">
           <label class="visually-hidden" for="q">{{ 'general.search.title' | t }}</label>
-          <input class="searchbox__input mb0 mt5 no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" />
+          <input class="searchbox__input mb0 mt5 no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" />
           <input name="options[prefix]" type="hidden" value="last">
 
           {% if settings.search_show_products_only %}
@@ -140,7 +140,8 @@
           {%- if settings.predictive_search_enabled -%}
             <div id="predictive-search"
               class="predictive-search"
-              tabindex="-1"></div>
+              tabindex="-1"
+              aria-live="polite"></div>
           {%- endif -%}
         </form>
       {%- if settings.predictive_search_enabled -%}
@@ -165,12 +166,34 @@
   }
   .header__logo-wrapper a img {
     max-width: {{ section.settings.logo_max_width }}px;
+    width: auto;
+    height: auto;
+    aspect-ratio: 5/1;
   }
   .navigation {
     text-align: {{ nav_alignment }};
   }
 
-   
+  /* Accessibility improvements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--header-text) !important;
+    outline-offset: 2px !important;
+  }
+
+  [aria-hidden="true"] a,
+  [aria-hidden="true"] button, 
+  [aria-hidden="true"] input,
+  [aria-hidden="true"] select,
+  [aria-hidden="true"] textarea,
+  [aria-hidden="true"] [tabindex]:not([tabindex="-1"]) {
+    pointer-events: none !important;
+    tabindex: -1 !important;
+  }
   {% endstyle %}
 </header>
 <div class="clear js-clear-element js-desktop-clear-element"></div>

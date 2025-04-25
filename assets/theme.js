@@ -2410,5 +2410,241 @@ document.addEventListener("DOMContentLoaded", function () {
 //     }
 //   });
 // });
- 
 
+// Add this to your theme.js file in the DOMContentLoaded event
+document.addEventListener("DOMContentLoaded", function () {
+  // Fix iframes without titles
+  document.querySelectorAll("iframe:not([title])").forEach(function (iframe) {
+    // Check if it's the Preview Bar iframe
+    if (iframe.id === "PBarNextFrame" || iframe.src.includes("preview-bar")) {
+      iframe.setAttribute("title", "Shopify Preview Bar");
+    } else {
+      // Generic title for other iframes
+      iframe.setAttribute("title", "Embedded content");
+    }
+  });
+
+  // Add A11y Helper Functions
+  window.A11yHelpers = (function () {
+    /**
+     * Ensures that all elements with aria-hidden="true" don't have focusable elements inside
+     */
+    function fixAriaHiddenElements() {
+      document
+        .querySelectorAll('[aria-hidden="true"]')
+        .forEach(function (element) {
+          // Find all focusable elements inside
+          const focusableElements = element.querySelectorAll(
+            'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+
+          // Add tabindex="-1" to make them not focusable
+          focusableElements.forEach(function (focusableElement) {
+            // Store original value to restore later if needed
+            if (!focusableElement.hasAttribute("data-original-tabindex")) {
+              focusableElement.setAttribute(
+                "data-original-tabindex",
+                focusableElement.getAttribute("tabindex") || "0"
+              );
+            }
+            focusableElement.setAttribute("tabindex", "-1");
+          });
+        });
+    }
+
+    /**
+     * Adds or improves accessibility for images
+     */
+    function improveImageAccessibility() {
+      // Add missing alt attributes
+      document.querySelectorAll("img:not([alt])").forEach(function (img) {
+        // If there's a sibling or parent text that describes the image, use empty alt
+        const parentText = img.parentNode.textContent.trim();
+        if (
+          parentText &&
+          parentText.length > 0 &&
+          !img.parentNode.querySelector("img:not(" + img + ")")
+        ) {
+          img.setAttribute("alt", "");
+        } else {
+          // Check if image is inside a link with text
+          if (
+            img.closest("a") &&
+            img.closest("a").textContent.trim().length > 0
+          ) {
+            img.setAttribute("alt", "");
+          } else {
+            // Default to filename as last resort
+            const filename = img.src.split("/").pop().split("?")[0];
+            img.setAttribute(
+              "alt",
+              filename.replace(/[_-]/g, " ").replace(/\.\w+$/, "")
+            );
+          }
+        }
+      });
+
+      // Fix redundant alt text in product grid and collections
+      document.querySelectorAll("img[alt]").forEach(function (img) {
+        const altText = img.getAttribute("alt");
+
+        // Check if there's a nearby element with the same text as the alt
+        const parent = img.closest("div, li, article");
+        if (parent) {
+          const textElements = parent.querySelectorAll(
+            "h1, h2, h3, h4, h5, h6, p, span"
+          );
+
+          for (let i = 0; i < textElements.length; i++) {
+            const element = textElements[i];
+            if (element.textContent.trim() === altText) {
+              // If we find matching text nearby, the alt text is redundant
+              img.setAttribute("alt", "");
+              break;
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * Adds missing iframe titles
+     */
+    function addIframeTitles() {
+      document
+        .querySelectorAll("iframe:not([title])")
+        .forEach(function (iframe) {
+          // Try to determine the iframe content
+          if (iframe.src.includes("youtube.com")) {
+            iframe.setAttribute("title", "YouTube video player");
+          } else if (iframe.src.includes("vimeo.com")) {
+            iframe.setAttribute("title", "Vimeo video player");
+          } else if (iframe.src.includes("google.com/maps")) {
+            iframe.setAttribute("title", "Google Maps");
+          } else if (
+            iframe.id === "PBarNextFrame" ||
+            iframe.src.includes("preview-bar")
+          ) {
+            iframe.setAttribute("title", "Shopify Preview Bar");
+          } else {
+            iframe.setAttribute("title", "Embedded content");
+          }
+        });
+    }
+
+    /**
+     * Improves link accessibility by adding descriptive text
+     * for links that only contain images or icons
+     */
+    function improveLinkAccessibility() {
+      // Find links with only images or icons (no text)
+      document.querySelectorAll("a").forEach(function (link) {
+        // Skip links that already have aria-label
+        if (link.hasAttribute("aria-label")) return;
+
+        // Get visible text content
+        const visibleText = link.textContent.trim();
+
+        // Check if link has no text but has images
+        if (!visibleText && link.querySelector("img, svg")) {
+          // Try to use alt text from image if available
+          const img = link.querySelector("img");
+          if (img && img.alt) {
+            link.setAttribute("aria-label", img.alt);
+          }
+          // If it's a cart link
+          else if (
+            link.classList.contains("js-mini-cart-trigger") ||
+            link.classList.contains("cart-link") ||
+            link.href.includes("/cart")
+          ) {
+            const cartCount = link.querySelector(".cart-count-bubble");
+            const count = cartCount ? cartCount.textContent.trim() : "0";
+            link.setAttribute(
+              "aria-label",
+              `Shopping cart with ${count} items`
+            );
+          }
+          // Logo link
+          else if (
+            link.closest(".site-logo") ||
+            link.closest(".mobile-nav__logo-wrapper")
+          ) {
+            link.setAttribute("aria-label", "Go to homepage");
+          }
+          // Search link
+          else if (
+            link.querySelector('[data-icon="search"]') ||
+            link.classList.contains("js-search-toggle")
+          ) {
+            link.setAttribute("aria-label", "Search the store");
+          }
+          // Other icon links - use href as fallback
+          else {
+            const path = link
+              .getAttribute("href")
+              .split("/")
+              .filter(Boolean)
+              .pop();
+            if (path) {
+              link.setAttribute(
+                "aria-label",
+                "Go to " + path.replace(/[-_]/g, " ")
+              );
+            } else {
+              link.setAttribute("aria-label", "Link");
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * Initialize all accessibility improvements
+     */
+    function init() {
+      fixAriaHiddenElements();
+      improveImageAccessibility();
+      addIframeTitles();
+      improveLinkAccessibility();
+
+      // Rerun on DOM changes
+      if (window.MutationObserver) {
+        const observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.type === "childList" && mutation.addedNodes.length) {
+              fixAriaHiddenElements();
+              improveImageAccessibility();
+              addIframeTitles();
+              improveLinkAccessibility();
+            }
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      }
+
+      // Rerun when Shopify sections reload
+      document.addEventListener("shopify:section:load", function () {
+        fixAriaHiddenElements();
+        improveImageAccessibility();
+        addIframeTitles();
+        improveLinkAccessibility();
+      });
+    }
+
+    return {
+      init: init,
+      fixAriaHiddenElements: fixAriaHiddenElements,
+      improveImageAccessibility: improveImageAccessibility,
+      addIframeTitles: addIframeTitles,
+      improveLinkAccessibility: improveLinkAccessibility,
+    };
+  })();
+
+  // Initialize accessibility helpers
+  window.A11yHelpers.init();
+});
