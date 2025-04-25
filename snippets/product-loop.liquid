@@ -284,39 +284,42 @@
           {%- endif -%}
 
           {% render 'helper-image',
-             type: product.featured_media.preview_image,
+          type: product.featured_media.preview_image,
+          sm_render: sm_render,
+          md_render: md_render,
+          lg_render: lg_render,
+          img_width: '100%',
+          img_height: '100%',
+          alt: product.title | escape,
+          additional_classes: 'product-image--contain main-image',
+          loading: loading,
+          fetchpriority: fetchpriority %}
+       
+       {% if product.media.size > 1 and product.media[1].media_type == 'image' %}
+         <div class="hover-image">
+           {% render 'helper-image',
+             type: product.media[1],
              sm_render: sm_render,
              md_render: md_render,
              lg_render: lg_render,
              img_width: '100%',
              img_height: '100%',
-             additional_classes: 'product-image--contain main-image',
-             loading: loading,
-             fetchpriority: fetchpriority %}
-
-          {% if product.media.size > 1 and product.media[1].media_type == 'image' %}
-            <div class="hover-image">
-              {% render 'helper-image',
-                type: product.media[1],
-                sm_render: sm_render,
-                md_render: md_render,
-                lg_render: lg_render,
-                img_width: '100%',
-                img_height: '100%',
-                additional_classes: 'product-image--contain' %}
-            </div>
-          {% elsif product.media.size > 1 %}
-            <div class="hover-image">
-              {% render 'helper-image',
-                type: product.media[1].preview_image,
-                sm_render: sm_render,
-                md_render: md_render,
-                lg_render: lg_render,
-                img_width: '100%',
-                img_height: '100%',
-                additional_classes: 'product-image--contain' %}
-            </div>
-          {% endif %}
+             alt: product.title | append: ' - ' | append: product.media[1].alt | default: product.title | escape,
+             additional_classes: 'product-image--contain' %}
+         </div>
+       {% elsif product.media.size > 1 %}
+         <div class="hover-image">
+           {% render 'helper-image',
+             type: product.media[1].preview_image,
+             sm_render: sm_render,
+             md_render: md_render,
+             lg_render: lg_render,
+             img_width: '100%',
+             img_height: '100%',
+             alt: product.title | append: ' - ' | append: product.media[1].alt | default: product.title | escape,
+             additional_classes: 'product-image--contain' %}
+         </div>
+       {% endif %}
         {%- endif -%}
       </a>
     </div>

@@ -1,6 +1,7 @@
-{% comment %} Optimized Slideshow for Better LCP {% endcomment %}
+{% comment %} Slideshow Assets with proper preloading {% endcomment %}
 <link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style">
 <link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}">
+<link rel="preload" href="{{ 'vendor-flickity.js' | asset_url }}" as="script">
 
 {% comment %} Slideshow Logic {% endcomment %}
 {%- liquid
@@ -41,13 +42,6 @@
 
   assign desktop_height = section.settings.desktop_height
   assign mobile_height = section.settings.mobile_height
-
-  # Get first slide for preloading
-  if section.blocks.size > 0
-    assign first_block = section.blocks[0]
-    assign first_image = first_block.settings.image
-    assign first_mobile_image = first_block.settings.mobile_image
-  endif
 -%}
 
 {% style %}
@@ -77,15 +71,7 @@
   #shopify-section-{{ section.id }} .slideshow__slide:first-child {
     opacity: 1 !important;
     z-index: 1;
-    visibility: visible !important;
-    display: block !important;
-  }
-  
-  /* Force the first image to be visible immediately */
-  #shopify-section-{{ section.id }} .slideshow__slide:first-child img {
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: block !important;
+    transition: none !important;
   }
   {% endif %}
   
@@ -100,22 +86,12 @@
   /* Add explicit dimensions to prevent layout shift */
   .slideshow__slide-image picture {
     display: block;
-    {% if first_image != blank %}
-      {% assign desktop_ratio = first_image.height | times: 1.0 | divided_by: first_image.width %}
-      aspect-ratio: {{ first_image.width }}/{{ first_image.height }};
-    {% else %}
-      aspect-ratio: 1920/800;
-    {% endif %}
+    aspect-ratio: 1920/800;
   }
 
   @media (max-width: 767px) {
     .slideshow__slide-image picture {
-      {% if first_mobile_image != blank %}
-        {% assign mobile_ratio = first_mobile_image.height | times: 1.0 | divided_by: first_mobile_image.width %}
-        aspect-ratio: {{ first_mobile_image.width }}/{{ first_mobile_image.height }};
-      {% else %}
-        aspect-ratio: 800/1000;
-      {% endif %}
+      aspect-ratio: 800/1000;
     }
   }
   
@@ -159,32 +135,10 @@
         display: block !important;
         opacity: 1 !important;
         z-index: 1;
-        visibility: visible !important;
     }
     {% endif %}
   {% endfor %}
 {% endstyle %}
-
-{% comment %} Critical preloads for first slide images {% endcomment %}
-{% if first_mobile_image != blank %}
-  <link rel="preload" as="image" 
-        href="{{ first_mobile_image | image_url: width: 640 }}" 
-        media="(max-width: 767px)"
-        fetchpriority="high">
-  <link rel="preload" as="image" 
-        href="{{ first_image | image_url: width: 1600 }}" 
-        media="(min-width: 768px)"
-        fetchpriority="high">
-{% elsif first_image != blank %}
-  <link rel="preload" as="image" 
-        href="{{ first_image | image_url: width: 640 }}" 
-        media="(max-width: 767px)"
-        fetchpriority="high">
-  <link rel="preload" as="image" 
-        href="{{ first_image | image_url: width: 1600 }}" 
-        media="(min-width: 768px)"
-        fetchpriority="high">
-{% endif %}
 
 {% comment %} Slideshow Template {% endcomment %}
 <div
@@ -302,19 +256,26 @@ data-section-type="carousel">
               <div class="slideshow__slide-image">
                 {% if has_image %}
                   {% if mobile_image != blank %}
+                    {% if preload_link %}
+                    <link rel="preload" as="image" 
+                          href="{{ mobile_image | image_url: width: 640 }}" 
+                          media="(max-width: 767px)">
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 1600 }}" 
+                          media="(min-width: 768px)">
+                    {% endif %}
                     <picture>
                       <source 
                         media="(min-width: 768px)" 
-                        srcset="{{ main_image | image_url: width: 400 }} 400w, 
-                                {{ main_image | image_url: width: 800 }} 800w, 
-                                {{ main_image | image_url: width: 1200 }} 1200w, 
-                                {{ main_image | image_url: width: 1600 }} 1600w"
+                        srcset="{{ main_image | image_url: width: 1600 }}"
+                        width="{{ main_image.width }}"
+                        height="{{ main_image.height }}"
                         sizes="100vw">
                       <source 
                         media="(max-width: 767px)" 
-                        srcset="{{ mobile_image | image_url: width: 320 }} 320w, 
-                                {{ mobile_image | image_url: width: 480 }} 480w, 
-                                {{ mobile_image | image_url: width: 640 }} 640w"
+                        srcset="{{ mobile_image | image_url: width: 640 }}"
+                        width="{{ mobile_image.width }}"
+                        height="{{ mobile_image.height }}"
                         sizes="100vw">
                       <img 
                         src="{{ mobile_image | image_url: width: 640 }}"
@@ -326,29 +287,22 @@ data-section-type="carousel">
                         {% if forloop.first %}style="display: block; visibility: visible; opacity: 1;"{% endif %}>
                     </picture>
                   {% else %}
-                    <picture>
-                      <source 
-                        media="(min-width: 768px)" 
-                        srcset="{{ main_image | image_url: width: 400 }} 400w, 
-                                {{ main_image | image_url: width: 800 }} 800w, 
-                                {{ main_image | image_url: width: 1200 }} 1200w, 
-                                {{ main_image | image_url: width: 1600 }} 1600w"
-                        sizes="100vw">
-                      <source 
-                        media="(max-width: 767px)" 
-                        srcset="{{ main_image | image_url: width: 320 }} 320w, 
-                                {{ main_image | image_url: width: 480 }} 480w, 
-                                {{ main_image | image_url: width: 640 }} 640w"
-                        sizes="100vw">
-                      <img 
-                        src="{{ main_image | image_url: width: 640 }}"
-                        alt="{{ block.settings.heading | escape | default: main_image.alt | escape }}"
-                        width="{{ main_image.width }}"
-                        height="{{ main_image.height }}"
-                        loading="{{ loading }}"
-                        fetchpriority="{{ fetch_priority }}"
-                        {% if forloop.first %}style="display: block; visibility: visible; opacity: 1;"{% endif %}>
-                    </picture>
+                    {% if preload_link %}
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 640 }}" 
+                          media="(max-width: 767px)">
+                    <link rel="preload" as="image" 
+                          href="{{ main_image | image_url: width: 1600 }}" 
+                          media="(min-width: 768px)">
+                    {% endif %}
+                    {% render 'helper-image',
+                       type: block.settings.image,
+                       sm_render: '100vw',
+                       md_render: '100vw',
+                       lg_render: '100vw',
+                       class: mobile_class,
+                       loading: loading,
+                       fetchpriority: fetch_priority %}
                   {% endif %}
                 {% else %}
                   {% capture current %}{% cycle 1, 2 %}{% endcapture %}
@@ -476,46 +430,51 @@ data-section-type="carousel">
     slideshow.style.minHeight = height + 'px';
   }
   
-  // Initialize Flickity with a small delay to ensure first paint is complete
-  // This improves LCP by showing content before JavaScript runs
-  function initFlickity() {
-    if (typeof Flickity === 'undefined') {
-      // If Flickity is not loaded yet, load it
-      if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
-        var script = document.createElement('script');
-        script.src = jsAssets.flickity;
-        script.onload = function() {
-          if (typeof Flickity !== 'undefined') {
-            setTimeout(function() {
-              try {
-                new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
-              } catch (e) {
-                console.error('Failed to initialize slideshow:', e);
-              }
-            }, 100);
-          }
-        };
-        document.head.appendChild(script);
+  // We'll use a promise to handle Flickity loading/initialization
+  function loadFlickity() {
+    return new Promise((resolve) => {
+      if (typeof Flickity !== 'undefined') {
+        resolve();
+        return;
       }
-    } else {
-      // If Flickity is already loaded, initialize directly
-      setTimeout(function() {
-        try {
-          new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
-        } catch (e) {
-          console.error('Failed to initialize slideshow:', e);
+      
+      // Try to load Flickity from various sources
+      if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
+        var flickityScript = document.createElement('script');
+        flickityScript.src = jsAssets.flickity;
+        flickityScript.onload = resolve;
+        document.head.appendChild(flickityScript);
+      } else {
+        // As a fallback, try to load from CDN
+        var cdnScript = document.createElement('script');
+        cdnScript.src = 'https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js';
+        cdnScript.onload = resolve;
+        document.head.appendChild(cdnScript);
+      }
+    });
+  }
+  
+  // Initialize Flickity with a small delay
+  function initSlideshow() {
+    loadFlickity().then(() => {
+      try {
+        new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
+      } catch (e) {
+        console.error('Slideshow initialization error:', e);
+        // Make sure at least the first slide is visible if Flickity fails
+        if (firstSlide) {
+          firstSlide.style.opacity = '1';
+          firstSlide.style.display = 'block';
         }
-      }, 100);
-    }
+      }
+    });
   }
   
   // Use requestIdleCallback if available, otherwise use setTimeout
   if ('requestIdleCallback' in window) {
-    requestIdleCallback(function() {
-      initFlickity();
-    }, { timeout: 2000 });
+    requestIdleCallback(() => initSlideshow(), { timeout: 1000 });
   } else {
-    setTimeout(initFlickity, 800);
+    setTimeout(initSlideshow, 500);
   }
 })();
 </script>

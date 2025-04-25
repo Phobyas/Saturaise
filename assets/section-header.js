@@ -85,6 +85,42 @@ const Header = {
     });
   },
 
+  // Added the missing nestedDropdowns function
+  nestedDropdowns: function nestedDropdowns(menuItems) {
+    if (!menuItems || menuItems.length === 0) return;
+
+    menuItems.forEach(function (menuItem) {
+      const submenu = menuItem.querySelector(".submenu");
+
+      menuItem.addEventListener("mouseover", function () {
+        if (submenu) {
+          submenu.classList.add("is-active");
+        }
+        this.classList.add("is-active");
+      });
+
+      menuItem.addEventListener("mouseleave", function () {
+        if (submenu) {
+          submenu.classList.remove("is-active");
+        }
+        this.classList.remove("is-active");
+      });
+
+      // For touch devices
+      menuItem.addEventListener(
+        "touchstart",
+        function (e) {
+          if (submenu && !submenu.classList.contains("is-active")) {
+            e.preventDefault();
+            submenu.classList.add("is-active");
+            this.classList.add("is-active");
+          }
+        },
+        { passive: false }
+      );
+    });
+  },
+
   clearSticky: function clearSticky() {
     const headerEl = document.querySelector(".js-theme-header");
     const clearEls = document.querySelectorAll(".js-clear-element");
@@ -211,6 +247,26 @@ const Header = {
       .forEach(function (activeMenu) {
         activeMenu.classList.remove(activeClass);
       });
+  },
+
+  // Add initSearch method which was missing
+  initSearch: function initSearch(container, searchSlideout) {
+    if (!container || !searchSlideout) return;
+
+    const searchToggles = container.querySelectorAll(".js-search-toggle");
+
+    searchToggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        WAU.Slideout._openByName("searchbox");
+
+        // Focus the search input after a slight delay
+        setTimeout(function () {
+          const searchInput = document.querySelector(".searchbox__input");
+          if (searchInput) searchInput.focus();
+        }, 300);
+      });
+    });
   },
 };
 
