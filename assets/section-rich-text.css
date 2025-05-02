@@ -20,7 +20,7 @@
   margin-bottom: 12px;
 }
 
-.section-richtext a {
+/* .section-richtext a {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -45,8 +45,8 @@
 .section-richtext a:hover {
   background: var(--scheme-1-hover) !important;
   color: var(--scheme-1-bg) !important;
-}
+} */
 
-.section-richtext a strong:hover {
+/* .section-richtext a strong:hover {
   color: white;
-}
+} */

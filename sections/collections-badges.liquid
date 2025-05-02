@@ -65,7 +65,7 @@
     min-height: 110px;
     overflow: visible;
     contain: layout;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     will-change: contents;
   }
   
@@ -113,9 +113,16 @@
   }
   
   .badge-arrow-btn svg {
-    width: 16px;
-    height: 16px;
-    fill: #ffffff;
+    width: 16px !important;
+    height: 16px !important;
+    fill: #ffffff !important;
+    display: block !important;
+    min-width: 16px;
+    min-height: 16px;
+  }
+  
+  .badge-arrow-btn:disabled svg {
+    opacity: 0.5;
   }
   
   @media (max-width: 767px) {
@@ -167,12 +174,12 @@
       <div></div>
       <div class="badge-arrows flex gap-3">
         <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories" disabled>
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
           </svg>
         </button>
         <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#ffffff" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
           </svg>
         </button>

@@ -678,7 +678,7 @@ body {
 
 p, a, .rte {
   line-height: calc((var(--font-size) * .3750) + var(--font-size));
-  margin-bottom: calc(var(--font-size) * 1.5)
+  /* margin-bottom: calc(var(--font-size) * 1.5) */
 }
 
 .rte p:last-child {
@@ -2447,7 +2447,7 @@ body {
 
 p, a, .rte {
   line-height: calc((var(--font-size) * .3750) + var(--font-size));
-  margin-bottom: calc(var(--font-size) * 1.5)
+  /* margin-bottom: calc(var(--font-size) * 1.5) */
 }
 
 .rte p:last-child {
@@ -3562,3 +3562,4 @@ section#shopify-section-template--24156831154469__3a259e86-1d8c-4b1e-b9b4-342fc4
   width: 100%;
   background-color: var(--placeholder-background, #f6f6f6);
 }
+

@@ -4,7 +4,6 @@
 
 {% comment %} Editorial Columns Logic {% endcomment %}
 {%- liquid
-
   assign section_padding = ''
   if section.settings.section_padding == 'top'
     assign section_padding = 'pb0'
@@ -53,7 +52,6 @@
     assign loading = 'eager'
     assign fetch_priority = 'high'
   endif
-
 -%}
 
 {% comment %} Editorial Columns Template {% endcomment %}
@@ -61,181 +59,247 @@
   class="section-txt-cols pl-3 md:pl-0 mb-5 text-columns-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="editorial-columns"
-  data-section-loaded="false">
+  data-section-loaded="false"
+  style="max-width: 1600px; margin: 0 auto;">
   <div class="grid__wrapper">
     <h2 class="section-txt-cols__section-heading {{ heading_align }} mb-3 grid-span-12 no-wrap">{{ section.settings.title }}</h2>
   </div>
-  <div class="section-txt-cols__inner-wrapper grid__wrapper">
+  
+  <div class="section-txt-cols__inner-wrapper">
     {% for block in section.blocks %}
-      <article class="section-txt-cols__item text-promo-{{ block.id }} {{ block_width }} {{ text_align }}" {{ block.shopify_attributes }}>
+      <article class="section-txt-cols__item text-promo-{{ block.id }} {{ text_align }}" {{ block.shopify_attributes }}>
         {% if block.settings.link != blank %}<a href="{{ block.settings.link }}">{% endif %}
           <div class="section-txt-cols__image mb4">
             {% if block.settings.image != blank %}
               {% render 'helper-image',
                  type: block.settings.image,
-                 sm_render: sm_render
+                 sm_render: sm_render,
                  md_render: md_render,
                  lg_render: lg_render,
                  loading: loading,
                  fetchpriority: fetch_priority %}
             {% else %}
-              <div class="demo-1  onboard">
+              <div class="demo-1 onboard">
                 {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
               </div>
             {% endif %}
           </div>
         {% if block.settings.link != blank %}</a>{% endif %}
 
-          <div class="section-txt-cols__content mb2 animate--text delay--{{ forloop.index0 }}">
-            {% if block.settings.title != blank %}
-              <h3 class="section-txt-cols__block-heading mb2">{{ block.settings.title }}</h3>
-            {% endif %}
+        <div class="section-txt-cols__content mb2 animate--text delay--{{ forloop.index0 }}">
+          {% if block.settings.title != blank %}
+            <h3 class="section-txt-cols__block-heading mb2">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          <div class="section-txt-cols__text-container">
             {% if block.settings.subheading != blank %}
-              <div class="section-txt-cols__block-subheading mb2">
+              <div class="section-txt-cols__block-subheading mb2 content-wrapper" id="content-{{ block.id }}">
                 {{ block.settings.subheading }}
+              </div>
+              <div class="read-more-container" data-for-content="content-{{ block.id }}">
+                <button class="read-more-btn" aria-expanded="false" aria-controls="content-{{ block.id }}">Więcej</button>
               </div>
             {% endif %}
           </div>
+        </div>
       </article>
     {% endfor %}
-    <style type="text/css">
-      {% if section.blocks.size == 5 %}
-        .text-columns-{{ section.id }} .grid__wrapper {
-          grid-template-columns: repeat(5, 1fr) !important;
-        }
-      {% endif %}
+  </div>
 
-      @media (max-width: 767px) {
-        .section-txt-cols__section-heading.no-wrap {
-          font-size: 24px !important;
-          white-space: nowrap;
-        }
-        
-        .section-txt-cols__inner-wrapper {
-          display: flex !important;
-          flex-wrap: nowrap !important;
-          overflow-x: auto !important;
-          -webkit-overflow-scrolling: touch;
-          padding-bottom: 20px; /* Add space for scrollbar */
-          scroll-padding: 0 20px;
-          scroll-snap-type: x mandatory;
-        }
-        
-        .section-txt-cols__item {
-          flex: 0 0 auto;
-          width: 270px !important;
-          margin-right: 15px !important;
-          scroll-snap-align: start;
-          position: relative;
-        }
-        
-        .section-txt-cols__block-subheading {
-          position: relative;
-        }
-        
-        .section-txt-cols__item.collapsed .section-txt-cols__block-subheading {
-          max-height: 120px; /* Limit height of content */
-          overflow: hidden;
-          margin-bottom: 30px;
-        }
-        
-        .section-txt-cols__item.collapsed .section-txt-cols__block-subheading::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 40px;
-          background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
-          pointer-events: none;
-        }
-        
-        .read-more-btn {
-          display: inline-block;
-          padding: 5px 10px;
-          margin-top: 5px;
-          font-size: 12px;
-          color: #333;
-          background: transparent;
-          border: 1px solid #333;
-          border-radius: 4px;
-          cursor: pointer;
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 2;
-        }
+  <style type="text/css">
+    /* Section and Column Styling */
+    .section-txt-cols__inner-wrapper {
+      display: grid;
+      grid-template-columns: repeat({{ section.blocks.size }}, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+    
+    {% if section.blocks.size == 5 %}
+      .section-txt-cols__inner-wrapper {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    {% endif %}
+    
+    /* Column Structure */
+    .section-txt-cols__item {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+    
+    .section-txt-cols__content {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    
+    .section-txt-cols__text-container {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      position: relative;
+    }
+    
+    .section-txt-cols__block-subheading {
+      position: relative;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .read-more-container {
+      margin-top: auto;
+      text-align: center;
+      
+      display: none;
+    }
+    
+    .read-more-btn {
+      display: inline-block;
+      padding-top: 40px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #333;
+      background: transparent;
+      border: 1px solid #333;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    
+    .section-txt-cols__section-heading.no-wrap {
+      font-size: 26px;
+      white-space: nowrap;
+      font-weight: 700 !important;
+    }
+    
+    /* Mobile Layout */
+    @media (max-width: 767px) {
+      .section-txt-cols__section-heading.no-wrap {
+        font-size: 24px !important;
+        white-space: nowrap;
       }
       
-      .section-txt-cols__section-heading.no-wrap {
-        font-size: 26px;
-        white-space: nowrap;
-        font-weight: 700 !important;
+      .section-txt-cols__inner-wrapper {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
+        scroll-padding: 0 20px;
+        scroll-snap-type: x mandatory;
       }
-    </style>
+      
+      .section-txt-cols__item {
+        flex: 0 0 270px;
+        width: 270px !important;
+        margin-right: 15px !important;
+        scroll-snap-align: start;
+        min-height: 350px;
+      }
+      
+      .section-txt-cols__text-container {
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .section-txt-cols__block-subheading.collapsed {
+        max-height: 120px;
+        overflow: hidden;
+      }
+      
+      .section-txt-cols__block-subheading.collapsed::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
+        pointer-events: none;
+      }
+    }
+  </style>
 
-    {% if section.blocks.size == 0 %}
-      {% render 'onboard-no-blocks' %}
-    {% endif %}
-  </div>
+  {% if section.blocks.size == 0 %}
+    {% render 'onboard-no-blocks' %}
+  {% endif %}
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Add rollup functionality for mobile text
+    // Setup text rollup functionality for mobile
     function setupTextRollup() {
-      if (window.innerWidth <= 1023) {
-        const items = document.querySelectorAll('.text-columns-{{ section.id }} .section-txt-cols__item');
+      const isMobile = window.innerWidth <= 767;
+      const section = document.querySelector('.text-columns-{{ section.id }}');
+      const contentWrappers = section.querySelectorAll('.section-txt-cols__block-subheading');
+      
+      contentWrappers.forEach(contentWrapper => {
+        const contentId = contentWrapper.id;
+        const buttonContainer = section.querySelector(`.read-more-container[data-for-content="${contentId}"]`);
         
-        items.forEach(item => {
-          const content = item.querySelector('.section-txt-cols__block-subheading');
+        if (!buttonContainer) return;
+        
+        if (isMobile) {
+          // Check if content is overflowing
+          const isOverflowing = contentWrapper.scrollHeight > 120;
           
-          // Only process if content exists and doesn't already have a button
-          if (content && !item.querySelector('.read-more-btn')) {
-            // Check if content is taller than our limit
-            if (content.scrollHeight > 120) {
-              item.classList.add('collapsed');
-              
-              // Create read more button
-              const button = document.createElement('button');
-              button.classList.add('read-more-btn');
+          if (isOverflowing) {
+            // Add collapsed class and show button
+            contentWrapper.classList.add('collapsed');
+            buttonContainer.style.display = 'block';
+            
+            // Setup button
+            const button = buttonContainer.querySelector('.read-more-btn');
+            if (button) {
               button.textContent = 'Więcej';
-              item.appendChild(button);
+              button.setAttribute('aria-expanded', 'false');
+              
+              // Remove old listener
+              const newButton = button.cloneNode(true);
+              button.parentNode.replaceChild(newButton, button);
               
               // Add click event
-              button.addEventListener('click', function(e) {
+              newButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                if (item.classList.contains('collapsed')) {
-                  item.classList.remove('collapsed');
-                  button.textContent = 'Mniej';
+                const isCollapsed = contentWrapper.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                  contentWrapper.classList.remove('collapsed');
+                  this.textContent = 'Mniej';
+                  this.setAttribute('aria-expanded', 'true');
                 } else {
-                  item.classList.add('collapsed');
-                  button.textContent = 'Więcej';
+                  contentWrapper.classList.add('collapsed');
+                  this.textContent = 'Więcej';
+                  this.setAttribute('aria-expanded', 'false');
                 }
               });
             }
+          } else {
+            // Text fits, no need for button
+            contentWrapper.classList.remove('collapsed');
+            buttonContainer.style.display = 'none';
           }
-        });
-      } else {
-        // Remove collapsed state and buttons on desktop
-        const items = document.querySelectorAll('.text-columns-{{ section.id }} .section-txt-cols__item');
-        items.forEach(item => {
-          item.classList.remove('collapsed');
-          const btn = item.querySelector('.read-more-btn');
-          if (btn) {
-            btn.remove();
-          }
-        });
-      }
+        } else {
+          // Desktop - show all content, hide buttons
+          contentWrapper.classList.remove('collapsed');
+          buttonContainer.style.display = 'none';
+        }
+      });
     }
     
-    // Run on load with a slight delay to ensure DOM is fully processed
-    setTimeout(setupTextRollup, 100);
+    // Run on load
+    setupTextRollup();
     
-    // Run on window resize
+    // Mark section as loaded
+    document.querySelector('.text-columns-{{ section.id }}').dataset.sectionLoaded = 'true';
+    
+    // Run on window resize with debounce
     let resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
