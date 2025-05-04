@@ -82,7 +82,7 @@
 
 {% comment %} Text With Icons Template {% endcomment %}
 <div
-  class="bg-[#eeeeee] mb-6 section-txt-icons max-w-[1600px] mx-auto text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="bg-[#eeeeee] mb-6 section-txt-icons max-w-[1280px] mx-auto text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="text-with-icons"
   data-section-loaded="false">
@@ -160,6 +160,20 @@
     </div>
   </div>
   {% style %}
+    /* Apply the 1280px/1600px responsive max-width pattern */
+    .section-txt-icons {
+      max-width: 1280px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    
+    /* Use 1600px max-width when viewport is at least 1920px */
+    @media (min-width: 1920px) {
+      .section-txt-icons {
+        max-width: 1600px !important;
+      }
+    }
+    
     /* Main container */
     .text-promo-{{ block.id }},
     .section-txt-icons__item {

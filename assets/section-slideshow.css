@@ -56,9 +56,15 @@
 .section-slideshow .slideshow {
   border: 0 !important;
   width: 100%;
-  max-width: 1600px;
+  max-width: 1280px;
   margin: 0 auto;
   contain: content; /* Improve paint performance */
+}
+
+@media (min-width: 1920px) {
+  .section-slideshow .slideshow {
+    max-width: 1600px;
+  }
 }
 
 .slideshow__slide-image .onboard {

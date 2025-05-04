@@ -1,11 +1,18 @@
 /* Before JS or No Js Styles */
 .section-featured-collection__outer-wrapper {
-  max-width: 1600px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* Add new media query for screens 1920px and wider */
+@media (min-width: 1920px) {
+  .section-featured-collection__outer-wrapper {
+    max-width: 1600px;
+  }
 }
 
 @media (max-width: 767px) {

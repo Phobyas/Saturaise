@@ -60,7 +60,7 @@
   data-section-id="{{ section.id }}"
   data-section-type="editorial-columns"
   data-section-loaded="false"
-  style="max-width: 1600px; margin: 0 auto;">
+  style="max-width: 1280px; margin: 0 auto;">
   <div class="grid__wrapper">
     <h2 class="section-txt-cols__section-heading {{ heading_align }} mb-3 grid-span-12 no-wrap">{{ section.settings.title }}</h2>
   </div>
@@ -173,6 +173,13 @@
       font-size: 26px;
       white-space: nowrap;
       font-weight: 700 !important;
+    }
+    
+    /* Set max-width back to 1600px for large screens */
+    @media (min-width: 1920px) {
+      .section-txt-cols.text-columns-{{ section.id }} {
+        max-width: 1600px !important;
+      }
     }
     
     /* Mobile Layout */

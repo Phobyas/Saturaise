@@ -165,10 +165,24 @@
     height: 48px;
     object-fit: contain;
   }
+  
+  /* Responsive container max-width */
+  .badge-container {
+    max-width: 1280px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  /* Use 1600px max-width when viewport is at least 1920px */
+  @media (min-width: 1920px) {
+    .badge-container {
+      max-width: 1600px !important;
+    }
+  }
 </style>
 
 <div class="w-full flex justify-center mt-3">
-  <div class="relative w-full max-w-[1600px] pt-3 pl-3 md:pl-0">
+  <div class="badge-container relative w-full pt-3 pl-3 md:pl-0">
     <!-- Header with arrows - maintaining original position -->
     <div class="flex justify-between items-center">
       <div></div>
