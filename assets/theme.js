@@ -2716,3 +2716,52 @@ document.addEventListener("DOMContentLoaded", function () {
     fixMonorailErrors();
   }
 })();
+
+// Add this to your theme.js file or create a new JS file
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const styleTag = document.createElement("style");
+    styleTag.textContent = `
+      shop-pay-wallet-button,
+      shop-pay-wallet-button::part(button),
+      gravity-button.accelerated-checkout-button,
+      .shopify-payment-button__button--express {
+        height: 72px !important;
+        min-height: 72px !important;
+        max-height: 72px !important;
+        border-radius: 16px !important;
+        line-height: 72px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        margin-bottom: 10px !important;
+      }
+      
+      gravity-button.accelerated-checkout-button .button-content {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 72px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      @media screen and (max-width: 768px) {
+        shop-pay-wallet-button,
+        shop-pay-wallet-button::part(button),
+        gravity-button.accelerated-checkout-button,
+        .shopify-payment-button__button--express {
+          height: 60px !important;
+          min-height: 60px !important;
+          max-height: 60px !important;
+          line-height: 60px !important;
+        }
+        
+        gravity-button.accelerated-checkout-button .button-content {
+          height: 60px !important;
+        }
+      }
+    `;
+    document.head.appendChild(styleTag);
+  }, 500); // Add a small delay to ensure the buttons are rendered
+});

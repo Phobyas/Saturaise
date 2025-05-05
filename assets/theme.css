@@ -2668,7 +2668,7 @@ a.no-hover:hover {
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: auto;
   font-size: 0;
-}
+} 
 
 @media (min-width: 1920px) {
   .grid__wrapper {
@@ -3053,7 +3053,7 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-}
+} 
 select:active,
 select:focus-visible {
   outline: 0;
