@@ -211,6 +211,17 @@
         color: var(--scheme-{{ section.settings.color_scheme }}-bg) !important;
       {% endif %}
     }
+
+    /* Grid width responsiveness */
+    .grid__wrapper {
+      max-width: 1280px;
+    }
+
+    @media (min-width: 1920px) {
+      .grid__wrapper {
+        max-width: 1600px;
+      }
+    }
   </style>
   
   <script>

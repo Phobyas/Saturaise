@@ -1,9 +1,15 @@
 .section-text-with-image {
-  max-width: 1600px;
+  max-width: 1280px;
   margin: 0px auto 40px auto !important;
   color: var(--background);
   overflow: hidden;
   background-color: #efefef !important;
+}
+
+@media (min-width: 1920px) {
+  .section-text-with-image {
+    max-width: 1600px;
+  }
 }
 
 .btn-contact {
@@ -34,8 +40,14 @@
 }
 
 .section-text-with-image .grid__wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 1280px;
+  margin: 0 48px;
+}
+
+@media (min-width: 1920px) {
+  .section-text-with-image .grid__wrapper {
+    max-width: 1600px;
+  }
 }
 
 .section-text-with-image h3 {

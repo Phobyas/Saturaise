@@ -2,15 +2,9 @@
   .swiper-collection-carousel {
     overflow: hidden;
     position: relative;
-    max-width: 1280px;
+    max-width: 1600px;
     margin: 0 auto;
     width: 100%;
-  }
-  
-  @media (min-width: 1920px) {
-    .swiper-collection-carousel {
-      max-width: 1600px;
-    }
   }
   
   .swiper-wrapper {
@@ -24,10 +18,23 @@
     height: 100%;
     position: relative;
   }
+
+  .section-collection-carousel {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 1920px) {
+  .section-collection-carousel {
+    max-width: 1600px;
+  }
+}
   
   /* Fix for Swiper navigation buttons */
   .swiper-button-prev,
   .swiper-button-next {
+    display: none;
     width: 40px;
     height: 40px;
     background-color: white;
@@ -43,11 +50,11 @@
   }
   
   .swiper-button-prev {
-    left: -80px;
+    left: 10px;
   }
   
   .swiper-button-next {
-    right: -80px;
+    right: 10px;
   }
 
   /* Hide the default Swiper arrow content */
@@ -64,16 +71,15 @@
     fill: #000;
   }
   
-  /* Hide navigation buttons on mobile */
-  @media (max-width: 767px) {
+  @media (max-width: 1024px) {
     .swiper-button-prev,
     .swiper-button-next {
-      display: none !important;
+      display: flex;
     }
   }
 {%- endstyle -%}
 
-<div class="section-collection-carousel max-w-[1280px] mx-auto mb-5 px-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
+<div class="section-collection-carousel  mx-auto mb-5 px-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
   {% if section.settings.title != blank %}
     <h2 class="text-[24px] md:text-[32px] font-bold mb-6 ">{{ section.settings.title }}</h2>
   {% endif %}
@@ -166,38 +172,6 @@
         },
       },
     });
-    
-    // Check for button visibility based on container width
-    function updateButtonsVisibility() {
-      const container = document.querySelector('.section-collection-carousel');
-      if (!container) return;
-      
-      const prevButton = container.querySelector('.swiper-button-prev');
-      const nextButton = container.querySelector('.swiper-button-next');
-      
-      if (prevButton && nextButton) {
-        const containerRect = container.getBoundingClientRect();
-        const containerWidth = containerRect.width;
-        const viewportWidth = window.innerWidth;
-        
-        // Calculate available space for buttons
-        const leftSpace = containerRect.left;
-        const rightSpace = viewportWidth - (containerRect.left + containerWidth);
-        
-        // If not enough space on either side, hide both buttons
-        if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1280) {
-          prevButton.style.display = 'none';
-          nextButton.style.display = 'none';
-        } else {
-          prevButton.style.display = '';
-          nextButton.style.display = '';
-        }
-      }
-    }
-
-    // Call initially and on resize
-    updateButtonsVisibility();
-    window.addEventListener('resize', updateButtonsVisibility);
   }
 
   // Load Swiper if it's not already loaded
