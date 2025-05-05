@@ -1,55 +1,33 @@
+// Immediately invoked function to set CSS variables before any rendering
+(function () {
+  // Set fixed heights immediately to prevent CLS
+  document.documentElement.style.setProperty(
+    "--announcement-bar-height",
+    "40px"
+  );
+  document.documentElement.style.setProperty("--header-height", "66px");
+
+  // Pre-calculate total height for spacing elements
+  const totalHeaderHeight = 40 + 66; // announcement + header
+
+  // Add header spacer with correct height
+  const headerSpacer = document.querySelector(".header-spacer");
+  if (headerSpacer) {
+    headerSpacer.style.height = totalHeaderHeight + "px";
+  }
+})();
+
 const Header = {
   init: function init(container) {
     const themeHeader = document.querySelector(".js-theme-header"),
-      clearElement = document.querySelector(".js-clear-element"),
       menuItemsWithNestedDropdowns = document.querySelectorAll(
         ".js-menuitem-with-nested-dropdown"
       ),
       doubleTapToGoItems = document.querySelectorAll(".js-doubletap-to-go"),
       searchSlideout = container.querySelector(".searchbox");
 
-    // Dynamic height calculation for announcement bar and header - set early to prevent CLS
-    const announcementBar = document.getElementById("announcement-bar");
-    if (announcementBar && themeHeader) {
-      const setHeightVariables = () => {
-        const announcementBarHeight = announcementBar.offsetHeight || 40;
-        const headerHeight = themeHeader.offsetHeight || 60;
-
-        document.documentElement.style.setProperty(
-          "--announcement-bar-height",
-          `${announcementBarHeight}px`
-        );
-        document.documentElement.style.setProperty(
-          "--header-height",
-          `${headerHeight}px`
-        );
-
-        // Update header-spacer height if it exists
-        const headerSpacer = document.querySelector(".header-spacer");
-        if (headerSpacer) {
-          headerSpacer.style.height = `${
-            announcementBarHeight + headerHeight
-          }px`;
-        }
-      };
-
-      // Initial setup as early as possible
-      setHeightVariables();
-
-      // Recalculate on window resize (debounced)
-      let resizeTimeout;
-      window.addEventListener(
-        "resize",
-        function () {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(setHeightVariables, 100);
-        },
-        { passive: true }
-      );
-
-      // Recalculate after all images and resources are loaded
-      window.addEventListener("load", setHeightVariables);
-    }
+    // Skip dynamic height calculations that cause CLS
+    // Instead use the pre-defined fixed heights
 
     if (container.querySelector(".js-stickynav")) {
       Header.clearSticky();
@@ -153,29 +131,15 @@ const Header = {
   },
 
   prepareSticky: function prepareSticky() {
-    const announcementBar = document.getElementById("announcement-bar");
-    const headerSection = document.querySelector(
-      ".shopify-section-group-header-group"
-    );
-
-    if (!announcementBar || !headerSection) return;
-
-    // Set announcement bar height
-    const announcementBarHeight = announcementBar.offsetHeight || 40;
-    document.documentElement.style.setProperty(
-      "--announcement-bar-height",
-      `${announcementBarHeight}px`
-    );
+    // No dynamic height calculations needed - fixed heights are set in CSS
+    // This function remains for compatibility with the existing code
   },
 
   // Updated method to handle desktop header scroll behavior with improved performance
   handleDesktopHeaderScroll: function handleDesktopHeaderScroll() {
     const announcementBar = document.querySelector(".announcement-bar.wrapper");
-    const headerSection = document.querySelector(
-      ".shopify-section-group-header-group"
-    );
 
-    if (!announcementBar || !headerSection) return;
+    if (!announcementBar) return;
 
     let scrollTimeout;
     let lastScrollTop = 0;
@@ -298,7 +262,7 @@ const Header = {
   },
 };
 
-// Initialize header as soon as DOM is ready
+// Run header initialization as early as possible
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function () {
     document
@@ -314,17 +278,3 @@ if (document.readyState === "loading") {
       Header.init(container);
     });
 }
-
-// Set initial CSS variables to prevent CLS
-(function () {
-  document.documentElement.style.setProperty(
-    "--announcement-bar-height",
-    "40px"
-  );
-  document.documentElement.style.setProperty("--header-height", "60px");
-
-  const headerSpacer = document.querySelector(".header-spacer");
-  if (headerSpacer) {
-    headerSpacer.style.height = "100px"; // 40px + 60px
-  }
-})();

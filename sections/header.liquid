@@ -1,21 +1,61 @@
 {% render 'announcement-bar', section: section %}
 
-{% comment %} Header Assets with improved loading {% endcomment %}
-<link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}" media="print" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}"></noscript>
-<link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}" media="print" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}"></noscript>
+{% comment %} Critical CSS to prevent layout shift {% endcomment %}
+<style>
+  :root {
+    --announcement-bar-height: 40px;
+    --header-height: 66px;
+  }
+  
+  .section-header__main-bar {
+    height: var(--header-height);
+    min-height: var(--header-height);
+    contain: layout;
+    position: fixed;
+    top: var(--announcement-bar-height);
+    left: 0;
+    right: 0;
+    z-index: 999;
+    width: 100%;
+    border-bottom: 3px solid #efefef;
+  }
+  
+  /* body:not(.template-index) .page-content,
+  body:not(.template-index) main {
+    padding-top: calc(var(--announcement-bar-height) + var(--header-height));
+  } */
+  
+  body.template-index .page-content > .shopify-section:first-child {
+    margin-top: calc(var(--announcement-bar-height) + var(--header-height));
+  }
+  
+  .header-spacer {
+    height: 106px; /* 40px + 66px */
+    display: block;
+    width: 100%;
+  }
+  
+  @media (max-width: 767px) {
+    .announcement-bar.wrapper.is-hidden + .section-header__main-bar {
+      top: 0;
+    }
+  }
+</style>
 
+{% comment %} Header Assets with improved loading {% endcomment %}
+<link rel="preload" href="{{ 'section-header.css' | asset_url }}" as="style">
+<link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}">
+<link rel="preload" href="{{ 'component-navigation.css' | asset_url }}" as="style">
+<link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}">
+<link rel="preload" href="{{ 'section-header.js' | asset_url }}" as="script">
 <script>
-  // Preload the section-header.js file
+  // Preload and execute the header script as early as possible
   (function() {
-    var preloadLink = document.createElement('link');
-    preloadLink.rel = 'preload';
-    preloadLink.as = 'script';
-    preloadLink.href = {{ 'section-header.js' | asset_url | json }};
-    document.head.appendChild(preloadLink);
+    // Set fixed heights immediately to prevent CLS
+    document.documentElement.style.setProperty('--announcement-bar-height', '40px');
+    document.documentElement.style.setProperty('--header-height', '66px');
     
-    // Load the script asynchronously
+    // Create a script element to load section-header.js
     var script = document.createElement('script');
     script.src = {{ 'section-header.js' | asset_url | json }};
     script.defer = true;
@@ -81,7 +121,6 @@
 
 -%} 
 
-
 {% comment %} Header Template {% endcomment %}
 <header class="section-header header-section no-section-animation"
   data-section-id="{{ section.id }}"
@@ -90,8 +129,7 @@
   data-asset-url="{{ 'section-header.js' | asset_url }}">
 
   <section class="section-header__main-bar main-bar w100 devices-hide js-theme-header {{ sticky }} {{ sticky_js }}">
-  <div class="grid__wrapper grid__wrapper--header {{ layout_style }} {% if section.settings.enable_header_overlay and template == 'index' %}absolute{% endif %}">
-  
+    <div class="grid__wrapper {{ layout_style }} {% if section.settings.enable_header_overlay and template == 'index' %}absolute{% endif %}">
       {% if section.settings.header_layout == 'inline_layout_center' or section.settings.header_layout == 'inline_layout_left' %}
         {%
           render 'header-inline',
@@ -120,7 +158,7 @@
     </div>
   </section>
 
-  <aside class="slideout slideout__drawer-right  section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
+  <aside class="slideout slideout__drawer-right section-header__searchbox" data-wau-slideout="searchbox" id="slideout-searchbox">
     <article class="span-10 push-1 auto v-stretch v-center">
       <div class="slideout__trigger--close slideout__trigger-search">
         <button class="js-slideout-close" aria-label="Close search slideout" data-slideout-direction="right" tabindex="0" type="button" name="button">
@@ -176,55 +214,30 @@
   </aside>
 
   {% style %}
-    /* Define standard heights as CSS variables for consistent usage */
-    :root {
-      --header-height: 60px;
-      --logo-height: 50px;
-      --announcement-bar-height: 40px;
-    }
-    
-    /* Force the header to render at exact dimensions from the start */
-    .section-header__main-bar {
-      height: var(--header-height) !important;
-      max-height: var(--header-height) !important;
-      overflow: visible;
-      contain: strict;
-    }
-    
-    /* Exact sizing for logo area */
-    .header__logo-wrapper {
-      height: var(--logo-height) !important;
-      max-height: var(--logo-height) !important;
-    }
-    
-    /* Prevent images from causing layout shifts */
-    .header__logo-wrapper a {
-      font-size: {{ section.settings.logo_size }}px;
-      word-break: break-word;
-      height: 100%;
-      display: flex;
-      align-items: center;
-    }
-    
-    .header__logo-wrapper a img {
-      max-width: {{ section.settings.logo_max_width }}px !important;
-      max-height: 50px !important;
-      width: auto !important;
-      height: auto !important;
-    }
-    
-    .navigation {
-      text-align: {{ nav_alignment }};
-      height: var(--nav-height) !important;
-    }
-    
-    /* Ensure the page scrolls properly with fixed header */
-    html {
-      scroll-padding-top: calc(var(--header-height) + var(--announcement-bar-height));
-    }
-    {% endstyle %}
+  .header__logo-wrapper a {
+    font-size: {{ section.settings.logo_size }}px;
+    word-break: break-word;
+  }
+  .header__logo-wrapper a img {
+    max-width: {{ section.settings.logo_max_width }}px;
+  }
+  .navigation {
+    text-align: {{ nav_alignment }};
+  }
+  
+  /* Fixed height to prevent layout shift */
+  .section-header__main-bar {
+    height: var(--header-height);
+    min-height: var(--header-height);
+    contain: layout;
+  }
+  {% endstyle %}
 </header>
+
+<!-- Add a header spacer element to prevent content shifting -->
+<div></div>
 <div class="clear js-clear-element js-desktop-clear-element"></div>
+
 {% schema %}
 {
   "name": "Header",
