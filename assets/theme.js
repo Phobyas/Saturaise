@@ -2735,10 +2735,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 height: 72px !important;
                 min-height: 72px !important;
                 max-height: 72px !important;
-                border-radius: 8px !important; /* Changed to 8px */
+                border-radius: 8px !important;
                 padding: 0 !important;
-                margin: 0 !important;
-                margin-bottom: 10px !important;
+margin: 20px 0 20px 0 !important; /* Changed to 20px bottom margin */
               }
               
               @media (max-width: 768px) {
@@ -2746,7 +2745,8 @@ document.addEventListener("DOMContentLoaded", function () {
                   height: 60px !important;
                   min-height: 60px !important;
                   max-height: 60px !important;
-                  border-radius: 8px !important; /* Maintained 8px for mobile */
+                  border-radius: 8px !important;
+margin: 20px 0 20px 0 !important; /* Changed to 20px bottom margin */
                 }
               }
             `;
@@ -2764,10 +2764,18 @@ document.addEventListener("DOMContentLoaded", function () {
         button.style.minHeight = window.innerWidth <= 768 ? "60px" : "72px";
         button.style.maxHeight = window.innerWidth <= 768 ? "60px" : "72px";
         button.style.padding = "0";
-        button.style.margin = "0 0 10px 0";
-        button.style.borderRadius = "8px"; /* Changed to 8px */
+        button.style.margin = "0 0 20px 0"; /* Changed to 20px bottom margin */
+        button.style.borderRadius = "8px";
       });
     }
+
+    // Also target the container elements
+    const containers = document.querySelectorAll(
+      ".shopify-payment-button, .product-additional-buttons"
+    );
+    containers.forEach((container) => {
+      container.style.marginBottom = "20px";
+    });
   }
 
   // Try styling immediately

@@ -23,6 +23,7 @@
   endif
 -%}
 
+
 {%
   form 'product', product,
   id: product_form_id,
@@ -85,7 +86,7 @@
     <input class="formQty" type="hidden" name="quantity" value="1">
   {% endif %}
   <div
-    class="product-form__buttons product__add-container mt-4 w-full animate--text delay--{{ index }}"
+    class="product-form__buttons product__add-container mt-4 mb-10 w-full animate--text delay--{{ index }}"
     {{ block.shopify_attributes }}
   >
 

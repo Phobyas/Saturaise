@@ -388,6 +388,8 @@
   pointer-events: none;
 }
 
+
+
 /* Product form errror/success notes */
 .product__add-container .note-success {
   font-size: var(--font-size-sm);
@@ -884,7 +886,7 @@
   font-size: 16px !important;
   font-weight: 500 !important;
   border-radius: 8px;
-  margin-bottom: 16px !important;
+  margin-bottom: 20px !important;
 }
 
 /* .product-additional-buttons,
