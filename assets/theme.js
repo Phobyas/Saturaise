@@ -2716,19 +2716,21 @@ document.addEventListener("DOMContentLoaded", function () {
     fixMonorailErrors();
   }
 })();
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Function to try to style the payment buttons
-    function stylePaymentButtons() {
-      const buttons = document.querySelectorAll('shop-pay-wallet-button, gravity-button, .shopify-payment-button__button');
-      
-      if (buttons.length) {
-        buttons.forEach(button => {
-          // Try to access shadow DOM if it exists
-          if (button.shadowRoot) {
-            // Create a style element
-            const style = document.createElement('style');
-            style.textContent = `
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Function to try to style the payment buttons
+  function stylePaymentButtons() {
+    const buttons = document.querySelectorAll(
+      "shop-pay-wallet-button, gravity-button, .shopify-payment-button__button"
+    );
+
+    if (buttons.length) {
+      buttons.forEach((button) => {
+        // Try to access shadow DOM if it exists
+        if (button.shadowRoot) {
+          // Create a style element
+          const style = document.createElement("style");
+          style.textContent = `
               :host, button, .button, .shopify-payment-button__button, * {
                 height: 72px !important;
                 min-height: 72px !important;
@@ -2748,42 +2750,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               }
             `;
-            
-            // Try to append to shadow root
-            try {
-              button.shadowRoot.appendChild(style);
-            } catch (e) {
-              console.log('Could not append style to shadow root');
-            }
+
+          // Try to append to shadow root
+          try {
+            button.shadowRoot.appendChild(style);
+          } catch (e) {
+            console.log("Could not append style to shadow root");
           }
-          
-          // Set inline styles as a fallback
-          button.style.height = window.innerWidth <= 768 ? '60px' : '72px';
-          button.style.minHeight = window.innerWidth <= 768 ? '60px' : '72px';
-          button.style.maxHeight = window.innerWidth <= 768 ? '60px' : '72px';
-          button.style.padding = '0';
-          button.style.margin = '0 0 10px 0';
-          button.style.borderRadius = '8px'; /* Changed to 8px */
-        });
-      }
+        }
+
+        // Set inline styles as a fallback
+        button.style.height = window.innerWidth <= 768 ? "60px" : "72px";
+        button.style.minHeight = window.innerWidth <= 768 ? "60px" : "72px";
+        button.style.maxHeight = window.innerWidth <= 768 ? "60px" : "72px";
+        button.style.padding = "0";
+        button.style.margin = "0 0 10px 0";
+        button.style.borderRadius = "8px"; /* Changed to 8px */
+      });
     }
-    
-    // Try styling immediately
+  }
+
+  // Try styling immediately
+  stylePaymentButtons();
+
+  // And also try after a delay to catch dynamically loaded buttons
+  setTimeout(stylePaymentButtons, 500);
+  setTimeout(stylePaymentButtons, 1000);
+  setTimeout(stylePaymentButtons, 2000);
+
+  // Also set up a MutationObserver to catch dynamically added buttons
+  const observer = new MutationObserver(function (mutations) {
     stylePaymentButtons();
-    
-    // And also try after a delay to catch dynamically loaded buttons
-    setTimeout(stylePaymentButtons, 500);
-    setTimeout(stylePaymentButtons, 1000);
-    setTimeout(stylePaymentButtons, 2000);
-    
-    // Also set up a MutationObserver to catch dynamically added buttons
-    const observer = new MutationObserver(function(mutations) {
-      stylePaymentButtons();
-    });
-    
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
   });
-</script>
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+});
