@@ -2716,52 +2716,74 @@ document.addEventListener("DOMContentLoaded", function () {
     fixMonorailErrors();
   }
 })();
-
-// Add this to your theme.js file or create a new JS file
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const styleTag = document.createElement("style");
-    styleTag.textContent = `
-      shop-pay-wallet-button,
-      shop-pay-wallet-button::part(button),
-      gravity-button.accelerated-checkout-button,
-      .shopify-payment-button__button--express {
-        height: 72px !important;
-        min-height: 72px !important;
-        max-height: 72px !important;
-        border-radius: 16px !important;
-        line-height: 72px !important;
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        margin-bottom: 10px !important;
-      }
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Function to try to style the payment buttons
+    function stylePaymentButtons() {
+      const buttons = document.querySelectorAll('shop-pay-wallet-button, gravity-button, .shopify-payment-button__button');
       
-      gravity-button.accelerated-checkout-button .button-content {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        height: 72px !important;
-        padding: 0 !important;
-        margin: 0 !important;
+      if (buttons.length) {
+        buttons.forEach(button => {
+          // Try to access shadow DOM if it exists
+          if (button.shadowRoot) {
+            // Create a style element
+            const style = document.createElement('style');
+            style.textContent = `
+              :host, button, .button, .shopify-payment-button__button, * {
+                height: 72px !important;
+                min-height: 72px !important;
+                max-height: 72px !important;
+                border-radius: 8px !important; /* Changed to 8px */
+                padding: 0 !important;
+                margin: 0 !important;
+                margin-bottom: 10px !important;
+              }
+              
+              @media (max-width: 768px) {
+                :host, button, .button, .shopify-payment-button__button, * {
+                  height: 60px !important;
+                  min-height: 60px !important;
+                  max-height: 60px !important;
+                  border-radius: 8px !important; /* Maintained 8px for mobile */
+                }
+              }
+            `;
+            
+            // Try to append to shadow root
+            try {
+              button.shadowRoot.appendChild(style);
+            } catch (e) {
+              console.log('Could not append style to shadow root');
+            }
+          }
+          
+          // Set inline styles as a fallback
+          button.style.height = window.innerWidth <= 768 ? '60px' : '72px';
+          button.style.minHeight = window.innerWidth <= 768 ? '60px' : '72px';
+          button.style.maxHeight = window.innerWidth <= 768 ? '60px' : '72px';
+          button.style.padding = '0';
+          button.style.margin = '0 0 10px 0';
+          button.style.borderRadius = '8px'; /* Changed to 8px */
+        });
       }
-      
-      @media screen and (max-width: 768px) {
-        shop-pay-wallet-button,
-        shop-pay-wallet-button::part(button),
-        gravity-button.accelerated-checkout-button,
-        .shopify-payment-button__button--express {
-          height: 60px !important;
-          min-height: 60px !important;
-          max-height: 60px !important;
-          line-height: 60px !important;
-        }
-        
-        gravity-button.accelerated-checkout-button .button-content {
-          height: 60px !important;
-        }
-      }
-    `;
-    document.head.appendChild(styleTag);
-  }, 500); // Add a small delay to ensure the buttons are rendered
-});
+    }
+    
+    // Try styling immediately
+    stylePaymentButtons();
+    
+    // And also try after a delay to catch dynamically loaded buttons
+    setTimeout(stylePaymentButtons, 500);
+    setTimeout(stylePaymentButtons, 1000);
+    setTimeout(stylePaymentButtons, 2000);
+    
+    // Also set up a MutationObserver to catch dynamically added buttons
+    const observer = new MutationObserver(function(mutations) {
+      stylePaymentButtons();
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+</script>
