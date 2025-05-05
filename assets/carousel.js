@@ -7,7 +7,7 @@
       const carouselElement = carousel.querySelector(".js-carousel");
       if (carouselElement) {
         carouselElement.style.minHeight =
-          window.innerWidth < 768 ? "350px" : "400px";
+          window.innerWidth < 768 ? "350px" : "300px";
         carouselElement.style.opacity = "1";
       }
     });
@@ -136,7 +136,7 @@ function carouselInit(container) {
   }
 
   // Set minimum height immediately to prevent CLS
-  carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "400px";
+  carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "300px";
 
   if (carousel.classList.contains("carousel-loaded--false")) {
     carousel.classList.remove("carousel-loaded--false");
@@ -307,7 +307,7 @@ window.addEventListener(
     document
       .querySelectorAll('[data-section-type="carousel"] .js-carousel')
       .forEach(function (carousel) {
-        carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "400px";
+        carousel.style.minHeight = window.innerWidth < 768 ? "350px" : "300px";
 
         // Resize Flickity instance if it exists
         if (typeof Flickity !== "undefined") {

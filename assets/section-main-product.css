@@ -388,8 +388,6 @@
   pointer-events: none;
 }
 
-
-
 /* Product form errror/success notes */
 .product__add-container .note-success {
   font-size: var(--font-size-sm);
@@ -481,7 +479,7 @@
 
 @media (max-width: 767px) {
   .product__section--main .product-gallery__media-container {
-    min-height: 400px;
+    min-height: 300px;
     background-color: #eee;
     display: flex;
     align-items: center;
