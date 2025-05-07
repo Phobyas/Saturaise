@@ -73,7 +73,7 @@
           "type": "accordion",
           "settings": {
             "label": "Metody płatności",
-            "content": "<p>•Płatność BLIK,<br/>•Płatność przelewem,<br/>•Płatność przelewem na telefon,<br/>•Płatność kartą,</p>"
+            "content": "<p>- Płatność BLIK<br/>- Płatność przelewem<br/>- Płatność przelewem na telefon<br/>- Płatność kartą<br/>- Płatność pobraniowo <br/>- Klarna</p>"
           }
         },
         "accordion_fYy6Be": {
