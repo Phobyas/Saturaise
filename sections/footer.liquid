@@ -273,7 +273,7 @@
               </div>
             {%- endif -%}
             {% if section.settings.show_credit_cards %}
-              <div class="payment-methods mb4">
+              <div class="payment-methods mb4 flex ">
                 {% for type in shop.enabled_payment_types %}
                   {{ type | payment_type_svg_tag: class: 'payment-icon' }}
                 {% endfor %}

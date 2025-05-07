@@ -258,68 +258,73 @@
     // Get existing Flickity instance if it exists
     let flkty = Flickity.data(carousel);
     
-    // If no instance exists, initialize it
-    if (!flkty) {
-      const config = window.innerWidth < 768 
-        ? JSON.parse(carousel.getAttribute('data-flickity-mobile'))
-        : JSON.parse(carousel.getAttribute('data-flickity-other'));
-        
-      // Add the groupCells setting to ensure single item movement
-      config.groupCells = false;  // This ensures we move one cell at a time
-      
-      // Make sure page dots are always disabled
-      config.pageDots = false;
-      
-      flkty = new Flickity(carousel, config);
-      
-      // Check for button spacing and prevent overflow
-      setTimeout(function() {
-        const prevButton = carousel.querySelector('.flickity-button.previous');
-        const nextButton = carousel.querySelector('.flickity-button.next');
-        
-        if (prevButton && nextButton) {
-          const container = carousel.closest('.section-featured-collection__outer-wrapper');
-          const containerRect = container.getBoundingClientRect();
-          const containerWidth = containerRect.width;
-          const viewportWidth = window.innerWidth;
-          
-          // Calculate available space for buttons
-          const leftSpace = containerRect.left;
-          const rightSpace = viewportWidth - (containerRect.left + containerWidth);
-          
-          // If not enough space on either side, hide both buttons
-          if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1600) {
-            prevButton.style.display = 'none';
-            nextButton.style.display = 'none';
-          } else {
-            prevButton.style.display = '';
-            nextButton.style.display = '';
-          }
-        }
-      }, 100);
+    // If an instance exists, destroy it first to reinitialize
+    if (flkty) {
+      flkty.destroy();
     }
     
-    // Add direct click handlers to the buttons
+    // Get the appropriate config based on viewport size
+    const config = window.innerWidth < 768 
+      ? JSON.parse(carousel.getAttribute('data-flickity-mobile'))
+      : JSON.parse(carousel.getAttribute('data-flickity-other'));
+    
+    // IMPORTANT: Set these options to ensure one-by-one movement
+    config.groupCells = 1;        // Force groupCells to 1
+    config.pageDots = false;      // Ensure page dots are disabled
+    config.cellAlign = 'left';    // Ensure proper alignment
+    config.contain = true;        // Contain cells to container
+    config.draggable = true;      // Ensure dragging is enabled
+    
+    // Initialize Flickity with proper settings
+    flkty = new Flickity(carousel, config);
+    
+    // Add custom click handlers to override default button behavior
     const prevButton = carousel.querySelector('.flickity-button.previous');
     const nextButton = carousel.querySelector('.flickity-button.next');
     
     if (prevButton) {
-      prevButton.addEventListener('click', function(e) {
+      // Remove existing listeners first
+      const newPrevButton = prevButton.cloneNode(true);
+      prevButton.parentNode.replaceChild(newPrevButton, prevButton);
+      
+      newPrevButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        flkty.previous(true); // true ensures we move only one cell
+        flkty.previous(true);
       });
     }
     
     if (nextButton) {
-      nextButton.addEventListener('click', function(e) {
+      // Remove existing listeners first
+      const newNextButton = nextButton.cloneNode(true);
+      nextButton.parentNode.replaceChild(newNextButton, nextButton);
+      
+      newNextButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        flkty.next(true); // true ensures we move only one cell
+        flkty.next(true);
       });
     }
     
-    // Show carousel after initialization
+    // Handle button visibility based on container width
+    const container = carousel.closest('.section-featured-collection__outer-wrapper');
+    const containerRect = container.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const viewportWidth = window.innerWidth;
+    
+    // Calculate available space for buttons
+    const leftSpace = containerRect.left;
+    const rightSpace = viewportWidth - (containerRect.left + containerWidth);
+    
+    // Update button visibility
+    const buttons = carousel.querySelectorAll('.flickity-button');
+    if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1600) {
+      buttons.forEach(button => button.style.display = 'none');
+    } else {
+      buttons.forEach(button => button.style.display = '');
+    }
+    
+    // Make carousel visible after initialization
     carousel.classList.remove('is-hidden');
   }
 
@@ -337,33 +342,11 @@
     }
   });
   
-  // Handle window resize to check button visibility
+  // Handle window resize
   window.addEventListener('resize', function() {
-    const carousel = document.querySelector('.featured-collection-{{ section.id }} .js-carousel');
-    if (!carousel) return;
-    
-    const prevButton = carousel.querySelector('.flickity-button.previous');
-    const nextButton = carousel.querySelector('.flickity-button.next');
-    
-    if (prevButton && nextButton) {
-      const container = carousel.closest('.section-featured-collection__outer-wrapper');
-      const containerRect = container.getBoundingClientRect();
-      const containerWidth = containerRect.width;
-      const viewportWidth = window.innerWidth;
-      
-      // Calculate available space for buttons
-      const leftSpace = containerRect.left;
-      const rightSpace = viewportWidth - (containerRect.left + containerWidth);
-      
-      // If not enough space on either side, hide both buttons
-      if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1600) {
-        prevButton.style.display = 'none';
-        nextButton.style.display = 'none';
-      } else {
-        prevButton.style.display = '';
-        nextButton.style.display = '';
-      }
-    }
+    // Debounce the resize event to avoid excessive reinitialization
+    clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(initCarousel, 250);
   });
 })();
 </script>
