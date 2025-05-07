@@ -15,7 +15,7 @@
 }
 
 .ajax-cart__drawer-wrapper .ajax-cart__cart-items {
-  height: calc(90vh - 250px);
+  height: calc(95vh - 250px);
   overflow-y: auto;
   padding: 24px 12px 0;
   margin: 0;
@@ -202,7 +202,7 @@
 
 .ajax-cart__summary-wrapper {
   background: #fff;
-  padding: 32px 12px 8px;
+  padding: 12px 12px 8px;
   height: auto !important;
   min-height: 200px;
   border-top: 1px solid #f2f2f2;
@@ -222,11 +222,11 @@
 .ajax-cart__total,
 .ajax-cart__discounts {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
   align-items: center;
-  margin: 0 0 8px 0;
+  margin: 0;
   padding: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .ajax-cart__subtotal span,
@@ -238,7 +238,7 @@
 
 .ajax-cart__total span {
   margin-top: 16px;
-  padding-top: 16px;
+
   border-top: 1px solid #f2f2f2;
   font-weight: 600 !important;
   font-size: 14px;
@@ -512,9 +512,9 @@
 .cart__section--main .ajax-cart__summary-wrapper {
   background: #f9f9f9;
   border-radius: 8px;
-  padding: 24px;
+  padding: 36px 24px;
   position: sticky;
-  top: 20px;
+  top: 106px;
   height: auto;
   border: none;
 }
@@ -523,7 +523,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-top: 12px;
-  padding-top: 12px;
+
   border-top: 1px solid #eee;
 }
 

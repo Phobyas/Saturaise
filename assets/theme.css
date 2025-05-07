@@ -3582,3 +3582,20 @@ section#shopify-section-template--24156831154469__3a259e86-1d8c-4b1e-b9b4-342fc4
   background-color: var(--placeholder-background, #f6f6f6);
 }
 
+.wallet-cart-button-container {
+  width: 50% !important;
+  display: inline-block !important;
+}
+
+/* Set the width of the wallet buttons to 100% */
+.wallet-cart-button {
+  width: 100% !important;
+}
+
+.wallet-cart-grid {
+  justify-content: center !important;
+}
+
+.ajax-cart__footer-wrapper .wallet-cart-grid {
+  justify-content: center !important;
+}

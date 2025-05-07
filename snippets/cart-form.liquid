@@ -1,5 +1,3 @@
-
-
 <form class="ajax-cart__cart-form js-cart-form" action="{{ routes.cart_url }}" method="post">
   <div class="ajax-cart__cart-items">
     {% for item in cart.items %}
@@ -87,8 +85,8 @@
   <div class="ajax-cart__summary-wrapper {% if cart.item_count < 1 %}hide{% endif %} js-cart-summary">
     <div class="ajax-cart__final-details">
       <div class="ajax-cart__subtotal">
-        <span>{{ 'cart.general.subtotal' | t }} (<span class="js-cart-count">{{ cart.item_count }}</span> {{ 'cart.general.items' | t }})</span>
-        <span class="js-cart-subtotal">{{ cart.items_subtotal_price | money }}</span>
+        <span>{{ 'cart.general.subtotal' | t }}<span class="js-cart-count">{{ cart.item_count }}</span></span>
+        {% comment %} <span class="js-cart-subtotal">{{ cart.items_subtotal_price | money }}</span> {% endcomment %}
       </div>
 
       {% if cart.cart_level_discount_applications != blank %}
@@ -111,15 +109,39 @@
         {{ 'cart.general.checkout' | t }}
       </button>
       
-      <a href="{{ routes.cart_url }}" class="mt-4 ajax-cart__view-button">
-        {{ 'cart.general.view_cart' | t }}
-      </a>
+      {% comment %}
+      Only show the "Sprawdź koszyk" button in the mini-cart drawer,
+      not on the cart page.
+      {% endcomment %}
+      
+      {% if template != 'cart' %}
+        <a href="/cart" class="mt-4 ajax-cart__view-button">
+          Sprawdź koszyk
+        </a>
+      {% endif %}
     </div>
-
-    {% comment %} {% if settings.show_cart_notes %}
-      <div class="ajax-cart__info-wrapper js-cart-info {% if cart.item_count < 1 %}hide{% endif %}">
-        <textarea name="note" class="js-cart-note">{{ cart.note }}</textarea>
-      </div>
-    {% endif %} {% endcomment %}
+    
+    <!-- No additional checkout buttons here - they will be added in main-cart.liquid -->
   </div>
 </form>
+
+<style>
+  /* Hide the View Cart button if we're on the cart page */
+  .cart-page .ajax-cart__view-button {
+    display: none !important;
+  }
+  
+  /* Wallet button styling */
+  .ajax-cart__footer-wrapper .wallet-cart-button-container {
+    width: 50% !important;
+    display: inline-block !important;
+  }
+  
+  .ajax-cart__footer-wrapper .wallet-cart-button {
+    width: 100% !important;
+  }
+  
+  .ajax-cart__footer-wrapper .wallet-cart-grid {
+    justify-content: center !important;
+  }
+</style>

@@ -44,18 +44,56 @@ data-ajax-cart-mini>
   </div>
 
   <div class="ajax-cart__form-wrapper cart-wrapper js-ajax-cart-content">
-
+    <!-- This is where the cart-form.liquid content is loaded -->
   </div>
-  {%- unless request.design_mode -%}
-    {%- if additional_checkout_buttons -%}
-      <div class="ajax-cart__footer-wrapper grid__wrapper" style="width: auto; max-width: 600px; margin: 0 auto;">
-        <div class="span-12 auto">
-          <p class="sm-caps or-divider mt2 mb2 a-center"><span>Or</span></p>
-          <div class="ajax-cart__buttons-additional">
-            {{ content_for_additional_checkout_buttons }}
-          </div>
-        </div>
-      </div>
-    {%- endif -%}
-  {%- endunless -%}
+  
+  <!-- Make sure "Sprawdź koszyk" button appears in drawer by adding it directly -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function addViewCartButton() {
+        // Check if we're on the cart page (don't add button on cart page)
+        if (window.location.pathname === '/cart') {
+          return;
+        }
+        
+        // Find the checkout button within the drawer
+        const checkoutButtons = document.querySelectorAll('.ajax-cart__checkout-button');
+        if (checkoutButtons.length > 0) {
+          // For each checkout button, check if it needs a "View Cart" button after it
+          checkoutButtons.forEach(checkoutBtn => {
+            // Only proceed if we're in the drawer (not on cart page)
+            if (document.querySelector('#mini-cart') && 
+                checkoutBtn.closest('.ajax-cart__buttons') &&
+                !checkoutBtn.nextElementSibling ||
+                !checkoutBtn.nextElementSibling.classList.contains('ajax-cart__view-button')) {
+              
+              // Create the "View Cart" button
+              const viewCartBtn = document.createElement('a');
+              viewCartBtn.href = '/cart';
+              viewCartBtn.className = 'mt-4 ajax-cart__view-button';
+              viewCartBtn.textContent = 'Sprawdź koszyk';
+              
+              // Insert after the checkout button
+              checkoutBtn.parentNode.appendChild(viewCartBtn);
+            }
+          });
+        }
+      }
+      
+      // Initial check
+      addViewCartButton();
+      
+      // Set up observer to watch for cart content changes
+      const observer = new MutationObserver(addViewCartButton);
+      
+      // Target the cart content area
+      const cartContent = document.querySelector('.js-ajax-cart-content');
+      if (cartContent) {
+        observer.observe(cartContent, { 
+          childList: true,
+          subtree: true 
+        });
+      }
+    });
+  </script>
 </section>

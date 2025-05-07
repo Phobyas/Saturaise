@@ -83,7 +83,7 @@
       <div class="product-recommendations js-product-rec-inner mt-7" data-section-loaded="false">
         <div class="product-recommendations__text-wrapper mb-4">
           {%- if section.settings.title != blank -%}
-            <h2 class="section-product-recommendations__section-heading px-3 lg:px-0">{{ section.settings.title }}</h2>
+            <h2 class=" section-product-recommendations__section-heading px-3 lg:px-0">{{ section.settings.title }}</h2>
           {%- endif -%}
           {%- if section.settings.subheading != blank -%}
             <div class="rte mb2">{{ section.settings.subheading }}</div>
@@ -97,7 +97,7 @@
       
         <div class=" grid__wrapper relative section-product-recommendations__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
 
-
+        
         {% capture carousel_config %}{
           "wrapAround": {{ enough_to_wrap }},
           "cellAlign": "left", 
@@ -168,6 +168,15 @@
             align-items: end;
             align-content: end;
             width: 100%;
+            max-width: 1280px;
+            margin: 0 auto 20px auto;
+            
+          }
+
+          @media (min-width: 1920px) {
+              .product-recommendations__text-wrapper {
+                max-width: 1600px;
+            }
           }
           
           .section-product-recommendations__section-heading {
