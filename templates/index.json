@@ -149,6 +149,30 @@
             "link": "shopify://collections/handball-spezial",
             "image": "shopify://shop_images/adidas-handball-spezial-sporty-rich-brown4-copie.webp"
           }
+        },
+        "category_JgU69Q": {
+          "type": "category",
+          "settings": {
+            "title": "Air Jordan 11",
+            "link": "shopify://collections/handball-spezial",
+            "image": "shopify://shop_images/air-jordan-11-retro-jubilee-25th-anniversary-361803.webp"
+          }
+        },
+        "category_Ttccam": {
+          "type": "category",
+          "settings": {
+            "title": "Yeezy 350",
+            "link": "shopify://collections/yeezy-350",
+            "image": "shopify://shop_images/Adidas-Yeezy-Boost-350-V2-Beluga-Reflective-Wethenew-1.webp"
+          }
+        },
+        "category_Abkktp": {
+          "type": "category",
+          "settings": {
+            "title": "Akcesoria",
+            "link": "shopify://collections/akcesoria",
+            "image": "shopify://shop_images/Medicom-Bearbrick-Blindbox-Series-48-2.png"
+          }
         }
       },
       "block_order": [
@@ -163,7 +187,10 @@
         "category_kcDV4c",
         "category_JimxB9",
         "category_7gnDcc",
-        "category_43Wq8j"
+        "category_43Wq8j",
+        "category_JgU69Q",
+        "category_Ttccam",
+        "category_Abkktp"
       ],
       "settings": {
         "scroll_amount": 200
