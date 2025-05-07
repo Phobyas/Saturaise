@@ -472,12 +472,41 @@
   <script>
 document.addEventListener('DOMContentLoaded', function() {
   let isLoading = false;
+  let pendingRequest = null;
+  
+  // Add a global error handler to reset loading state if something goes wrong
+  window.addEventListener('error', function() {
+    resetLoadingState();
+  });
+  
+  // Function to properly reset loading state in case of errors
+  function resetLoadingState() {
+    isLoading = false;
+    if (document.querySelector('.filter-drawer__wrapper')) {
+      document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
+    }
+    document.body.classList.remove('is-loading');
+  }
   
   // Critical: Move drawer to body to fix positioning
   function moveDrawerToBody() {
     const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
     if (drawer && drawer.parentElement !== document.body) {
-      document.body.appendChild(drawer);
+      // Create a clone to avoid event handler issues
+      const clonedDrawer = drawer.cloneNode(true);
+      document.body.appendChild(clonedDrawer);
+      
+      // Remove original after clone is added to prevent flashing
+      if (drawer.parentElement) {
+        drawer.parentElement.removeChild(drawer);
+      }
+      
+      // Re-initialize WAU slideout if available
+      if (typeof WAU !== 'undefined' && WAU.Slideout && WAU.Slideout._init) {
+        setTimeout(() => {
+          WAU.Slideout._init();
+        }, 100);
+      }
     }
   }
   
@@ -486,16 +515,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // DIRECT FIX FOR CURRENT FILTERS CLICK
   // This adds a dedicated event delegation for clicks on current filters in the main page
   function setupMainPageFiltersClickEvent() {
-    const mainPage = document.querySelector('.collection__page--topbar');
-    if (!mainPage) return;
-    
-    // Use event delegation to catch all filter clicks
-    mainPage.addEventListener('click', function(e) {
+    document.addEventListener('click', function(e) {
       // Find the closest js-current-filter ancestor of the click target
       const filterLink = e.target.closest('.js-current-filter');
       
       // If the click wasn't on a filter link, ignore it
       if (!filterLink) return;
+      
+      // Check if the filter link is in the main page (not in drawer)
+      const isInMainPage = filterLink.closest('.js-main-filters-container') !== null;
+      if (!isInMainPage) return;
       
       // If the click was on a filter link, prevent default and handle it
       e.preventDefault();
@@ -504,17 +533,33 @@ document.addEventListener('DOMContentLoaded', function() {
       if (isLoading) return;
       isLoading = true;
       
+      // Add visual feedback
+      document.body.classList.add('is-loading');
+      
       // Record the drawer state
       const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
       const wasDrawerOpen = drawer && drawer.classList.contains('slideout--active');
       
+      // Setup timeout for request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        resetLoadingState();
+        console.error('Filter request timed out');
+      }, 10000);
+      
       // Make the AJAX request
       fetch(filterLink.href, {
+        signal: controller.signal,
         headers: {
           'X-Requested-With': 'XMLHttpRequest'
         }
       })
-      .then(response => response.text())
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
       .then(html => {
         // Parse the HTML
         const parser = new DOMParser();
@@ -566,17 +611,16 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         
-        // Re-initialize all handlers
-        setupAllEventHandlers();
+        // Reset loading states
+        resetLoadingState();
         
         // Update URL without page reload
         window.history.pushState({}, '', filterLink.href);
-        
-        isLoading = false;
       })
       .catch(error => {
+        clearTimeout(timeoutId);
         console.error('Error:', error);
-        isLoading = false;
+        resetLoadingState();
       });
     });
   }
@@ -597,14 +641,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const drawerWrapper = document.querySelector('.filter-drawer__wrapper');
     const newDrawerWrapper = newDocument.querySelector('.filter-drawer__wrapper');
     if (drawerWrapper && newDrawerWrapper) {
-      // Instead of replacing the entire drawer, update only the inner filter parts
-      // Update filter list sections
-      const filterBlocks = drawerWrapper.querySelectorAll('.sidebar__filter-block');
-      const newFilterBlocks = newDrawerWrapper.querySelectorAll('.sidebar__filter-block');
+      // Update filter menu blocks
+      const filterMenu = drawerWrapper.querySelector('[data-menu-handle="filter"]');
+      const newFilterMenu = newDrawerWrapper.querySelector('[data-menu-handle="filter"]');
       
-      if (filterBlocks.length > 0 && newFilterBlocks.length > 0) {
-        for (let i = 0; i < Math.min(filterBlocks.length, newFilterBlocks.length); i++) {
-          filterBlocks[i].innerHTML = newFilterBlocks[i].innerHTML;
+      if (filterMenu && newFilterMenu) {
+        filterMenu.innerHTML = newFilterMenu.innerHTML;
+      }
+      
+      // Update sort menu
+      const sortMenu = drawerWrapper.querySelector('[data-menu-handle="sort"]');
+      const newSortMenu = newDrawerWrapper.querySelector('[data-menu-handle="sort"]');
+      
+      if (sortMenu && newSortMenu) {
+        // Preserve active sort state
+        const activeSortValue = sortMenu.querySelector('.current a')?.getAttribute('data-sort-value');
+        
+        // Update menu content
+        sortMenu.innerHTML = newSortMenu.innerHTML;
+        
+        // Re-apply active sort if needed
+        if (activeSortValue) {
+          sortMenu.querySelectorAll('[data-sort-value]').forEach(option => {
+            if (option.getAttribute('data-sort-value') === activeSortValue) {
+              option.parentElement.classList.add('current');
+            }
+          });
         }
       }
       
@@ -621,9 +683,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide the filters section if it no longer exists
         currentFilters.style.display = 'none';
       }
-      
-      // Reinitialize all event handlers without replacing the entire drawer
-      setupAllEventHandlers();
     }
     
     // Update main page filters container
@@ -670,6 +729,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mobileFilterButton && newMobileFilterButton) {
       mobileFilterButton.innerHTML = newMobileFilterButton.innerHTML;
     }
+    
+    // Re-setup event handlers for the updated elements
+    setupFilterEventHandlers();
   }
   
   // Make this function available globally
@@ -682,181 +744,228 @@ document.addEventListener('DOMContentLoaded', function() {
     setupPriceRangeHandlers();
     setupSortingHandlers();
     setupDrawerMenuSwitching();
-    setupMainPageFiltersClickEvent(); // Added this line to ensure main page filters are set up
+    setupMainPageFiltersClickEvent();
+  }
+  
+  // Re-bind event handlers to newly added elements
+  function setupFilterEventHandlers() {
+    // Use separate function to avoid duplicated code
+    // Apply event handlers to filter links
+    document.querySelectorAll('.js-collection-side-filter').forEach(filterLink => {
+      const newLink = filterLink.cloneNode(true);
+      filterLink.parentNode.replaceChild(newLink, filterLink);
+    });
+    
+    // Apply event handlers to current filter links
+    document.querySelectorAll('.filter-drawer__wrapper .js-current-filter').forEach(filterLink => {
+      const newLink = filterLink.cloneNode(true);
+      filterLink.parentNode.replaceChild(newLink, filterLink);
+    });
+    
+    // Apply event handlers to sort options
+    document.querySelectorAll('.js-sort-option').forEach(sortLink => {
+      const newLink = sortLink.cloneNode(true);
+      sortLink.parentNode.replaceChild(newLink, sortLink);
+    });
   }
   
   // AJAX filtering implementation
   function setupAjaxFiltering() {
-    // Handle filter clicks
-    document.querySelectorAll('.js-collection-side-filter').forEach(link => {
-      const newLink = link.cloneNode(true);
-      link.parentNode.replaceChild(newLink, link);
+    // Delegate event handling for all filter clicks
+    document.addEventListener('click', function(e) {
+      // Handle all filter link clicks
+      const filterLink = e.target.closest('.js-collection-side-filter');
+      if (!filterLink) return; // Not a filter link click
       
-      newLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Prevent multiple requests
-        if (isLoading) return;
-        isLoading = true;
-        
-        // Add loading state
-        const drawerWrapper = document.querySelector('.filter-drawer__wrapper');
+      e.preventDefault();
+      
+      // Prevent multiple requests
+      if (isLoading) return;
+      isLoading = true;
+      
+      // Add loading state
+      const drawerWrapper = document.querySelector('.filter-drawer__wrapper');
+      if (drawerWrapper) {
         drawerWrapper.classList.add('is-loading');
+      }
+      
+      // Use fetch with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        resetLoadingState();
+        console.error('Filter request timed out');
+      }, 10000);
+      
+      fetch(filterLink.href, {
+        signal: controller.signal,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(html => {
+        updateUIFromResponse(html);
         
-        // Use fetch with timeout
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        // Keep drawer open
+        const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+        if (drawer) {
+          drawer.classList.add('slideout--active');
+          drawer.setAttribute('aria-hidden', 'false');
+          
+          // Ensure overlay is visible
+          const overlay = document.querySelector('.js-slideout-overlay');
+          if (overlay) {
+            overlay.classList.add('is-active');
+            overlay.setAttribute('aria-hidden', 'false');
+          }
+        }
         
-        fetch(this.href, {
-          signal: controller.signal,
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => {
-          clearTimeout(timeout);
-          return response.text();
-        })
-        .then(html => {
-          updateUIFromResponse(html);
-          
-          // Keep drawer open
-          const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
-          if (drawer) {
-            drawer.classList.add('slideout--active');
-            drawer.setAttribute('aria-hidden', 'false');
-            
-            // Ensure overlay is visible
-            const overlay = document.querySelector('.js-slideout-overlay');
-            if (overlay) {
-              overlay.classList.add('is-active');
-              overlay.setAttribute('aria-hidden', 'false');
-            }
-          }
-          
-          // Remove loading state
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
-          
-          // Update URL
-          window.history.pushState({}, '', this.href);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
-        });
+        // Reset loading state
+        resetLoadingState();
+        
+        // Update URL
+        window.history.pushState({}, '', filterLink.href);
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error:', error);
+        resetLoadingState();
       });
     });
     
     // Handle clear all filter and individual filter removal within drawer
-    document.querySelectorAll('.filter-drawer__wrapper .js-current-filter').forEach(link => {
-      const newLink = link.cloneNode(true);
-      link.parentNode.replaceChild(newLink, link);
+    document.addEventListener('click', function(e) {
+      const filterLink = e.target.closest('.filter-drawer__wrapper .js-current-filter');
+      if (!filterLink) return; // Not a current filter removal link
       
-      newLink.addEventListener('click', function(e) {
-        e.preventDefault();
+      e.preventDefault();
+      
+      if (isLoading) return;
+      isLoading = true;
+      
+      // Add loading state
+      document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
+      
+      // Set up timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        resetLoadingState();
+        console.error('Filter clear request timed out');
+      }, 10000);
+      
+      fetch(filterLink.href, {
+        signal: controller.signal,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(html => {
+        updateUIFromResponse(html);
         
-        if (isLoading) return;
-        isLoading = true;
-        
-        // Add loading state
-        document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
-        
-        fetch(this.href, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+        // Keep drawer open for click inside drawer
+        const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+        if (drawer) {
+          drawer.classList.add('slideout--active');
+          drawer.setAttribute('aria-hidden', 'false');
+          
+          // Ensure overlay is visible
+          const overlay = document.querySelector('.js-slideout-overlay');
+          if (overlay) {
+            overlay.classList.add('is-active');
+            overlay.setAttribute('aria-hidden', 'false');
           }
-        })
-        .then(response => response.text())
-        .then(html => {
-          updateUIFromResponse(html);
-          
-          // Keep drawer open for click inside drawer
-          const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
-          if (drawer) {
-            drawer.classList.add('slideout--active');
-            drawer.setAttribute('aria-hidden', 'false');
-            
-            // Ensure overlay is visible
-            const overlay = document.querySelector('.js-slideout-overlay');
-            if (overlay) {
-              overlay.classList.add('is-active');
-              overlay.setAttribute('aria-hidden', 'false');
-            }
-          }
-          
-          // Remove loading state
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
-          
-          // Update URL
-          window.history.pushState({}, '', this.href);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
-        });
+        }
+        
+        // Reset loading state
+        resetLoadingState();
+        
+        // Update URL
+        window.history.pushState({}, '', filterLink.href);
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error:', error);
+        resetLoadingState();
       });
     });
   }
   
   // Handle sorting options
   function setupSortingHandlers() {
-    document.querySelectorAll('.js-sort-option').forEach(link => {
-      const newLink = link.cloneNode(true);
-      link.parentNode.replaceChild(newLink, link);
+    document.addEventListener('click', function(e) {
+      const sortLink = e.target.closest('.js-sort-option');
+      if (!sortLink) return; // Not a sort option click
       
-      newLink.addEventListener('click', function(e) {
-        e.preventDefault();
+      e.preventDefault();
+      
+      if (isLoading) return;
+      isLoading = true;
+      
+      document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
+      
+      // Set up timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        resetLoadingState();
+        console.error('Sort request timed out');
+      }, 10000);
+      
+      fetch(sortLink.href, {
+        signal: controller.signal,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(html => {
+        updateUIFromResponse(html);
         
-        if (isLoading) return;
-        isLoading = true;
-        
-        document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
-        
-        fetch(this.href, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => response.text())
-        .then(html => {
-          updateUIFromResponse(html);
-          
-          // Update sort UI
-          document.querySelectorAll('.js-sort-option').forEach(opt => {
-            opt.parentElement.classList.remove('current');
-          });
-          this.parentElement.classList.add('current');
-          
-          // Keep drawer open
-          const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
-          if (drawer) {
-            drawer.classList.add('slideout--active');
-            drawer.setAttribute('aria-hidden', 'false');
-            
-            // Ensure overlay is visible
-            const overlay = document.querySelector('.js-slideout-overlay');
-            if (overlay) {
-              overlay.classList.add('is-active');
-              overlay.setAttribute('aria-hidden', 'false');
-            }
-          }
-          
-          // Remove loading state
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
-          
-          // Update URL
-          window.history.pushState({}, '', this.href);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
+        // Update sort UI
+        document.querySelectorAll('.js-sort-option').forEach(opt => {
+          opt.parentElement.classList.remove('current');
         });
+        sortLink.parentElement.classList.add('current');
+        
+        // Keep drawer open
+        const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+        if (drawer) {
+          drawer.classList.add('slideout--active');
+          drawer.setAttribute('aria-hidden', 'false');
+          
+          // Ensure overlay is visible
+          const overlay = document.querySelector('.js-slideout-overlay');
+          if (overlay) {
+            overlay.classList.add('is-active');
+            overlay.setAttribute('aria-hidden', 'false');
+          }
+        }
+        
+        // Reset loading state
+        resetLoadingState();
+        
+        // Update URL
+        window.history.pushState({}, '', sortLink.href);
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error:', error);
+        resetLoadingState();
       });
     });
   }
@@ -879,13 +988,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     };
     
-    const closeButton = drawer.querySelector('.js-slideout-close');
-    if (closeButton) {
-      closeButton.addEventListener('click', function(e) {
-        drawer.setAttribute('data-should-close', 'true');
-        WAU.Slideout._closeByName('collection-filters');
-      });
-    }
+    // Use event delegation for close button
+    document.addEventListener('click', function(e) {
+      const closeButton = e.target.closest('.filter-drawer__wrapper .js-slideout-close');
+      if (!closeButton) return;
+      
+      drawer.setAttribute('data-should-close', 'true');
+      WAU.Slideout._closeByName('collection-filters');
+    });
     
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && drawer.classList.contains('slideout--active')) {
@@ -894,25 +1004,22 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    const overlay = document.querySelector('.js-slideout-overlay');
-    if (overlay) {
-      overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) {
-          drawer.setAttribute('data-should-close', 'true');
-          WAU.Slideout._closeByName('collection-filters');
-        }
-      });
-    }
+    // Use event delegation for overlay clicks
+    document.addEventListener('click', function(e) {
+      const overlay = e.target.closest('.js-slideout-overlay');
+      if (!overlay || e.target !== overlay) return;
+      
+      drawer.setAttribute('data-should-close', 'true');
+      WAU.Slideout._closeByName('collection-filters');
+    });
   }
   
   // Handle price range changes
   function setupPriceRangeHandlers() {
-    const priceInputs = document.querySelectorAll('.js-filter-range-input');
-    const sliderInputs = document.querySelectorAll('.filter-range__slider--input');
-    let timeout;
+    // Use event delegation for price range changes
+    let priceRangeTimeout;
     
-    function updatePriceRangeUI(isActive) {
-      const priceRange = document.querySelector('.filter--price-range');
+    function updatePriceRangeUI(priceRange, isActive) {
       if (priceRange) {
         if (isActive) {
           priceRange.classList.add('active');
@@ -922,40 +1029,83 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    function handlePriceChange(input) {
+    function syncSliderAndInput(priceRange, inputType, value) {
+      const minInput = priceRange.querySelector('.js-price-min-output');
+      const maxInput = priceRange.querySelector('.js-price-max-output');
+      const sliders = priceRange.querySelectorAll('.filter-range__slider--input');
+      
+      if (!minInput || !maxInput || sliders.length < 2) return;
+      
+      if (inputType === 'min') {
+        minInput.value = value;
+        sliders[0].value = value;
+        
+        // Ensure min doesn't exceed max
+        if (parseInt(minInput.value) > parseInt(maxInput.value)) {
+          maxInput.value = minInput.value;
+          sliders[1].value = minInput.value;
+        }
+      } else if (inputType === 'max') {
+        maxInput.value = value;
+        sliders[1].value = value;
+        
+        // Ensure max doesn't fall below min
+        if (parseInt(maxInput.value) < parseInt(minInput.value)) {
+          minInput.value = maxInput.value;
+          sliders[0].value = maxInput.value;
+        }
+      }
+    }
+    
+    function handlePriceRangeRequest(priceRange) {
       if (isLoading) return;
       
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        isLoading = true;
-        
-        const priceRange = input.closest('.filter--price-range');
+      clearTimeout(priceRangeTimeout);
+      
+      priceRangeTimeout = setTimeout(function() {
         const minInput = priceRange.querySelector('.js-price-min-output');
         const maxInput = priceRange.querySelector('.js-price-max-output');
         
-        const minVal = minInput.value;
-        const maxVal = maxInput.value;
+        if (!minInput || !maxInput) return;
+        
+        const minVal = parseInt(minInput.value) || 0;
+        const maxVal = parseInt(maxInput.value) || parseInt(maxInput.getAttribute('max'));
+        const maxDefaultVal = parseInt(maxInput.getAttribute('max'));
         
         // Check if price filter is active
-        const isPriceFilterActive = minVal > 0 || (maxVal && maxVal < priceRange.querySelector('.js-price-max-output').getAttribute('max'));
-        updatePriceRangeUI(isPriceFilterActive);
+        const isPriceFilterActive = minVal > 0 || (maxVal && maxVal < maxDefaultVal);
+        updatePriceRangeUI(priceRange, isPriceFilterActive);
         
         // Build URL with price filters
         const url = new URL(window.location.href);
-        if (minVal) url.searchParams.set('filter.v.price.gte', minVal * 100);
+        if (minVal > 0) url.searchParams.set('filter.v.price.gte', minVal * 100);
         else url.searchParams.delete('filter.v.price.gte');
         
-        if (maxVal) url.searchParams.set('filter.v.price.lte', maxVal * 100);
+        if (maxVal < maxDefaultVal) url.searchParams.set('filter.v.price.lte', maxVal * 100);
         else url.searchParams.delete('filter.v.price.lte');
         
+        isLoading = true;
         document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
         
+        // Set up timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+          controller.abort();
+          resetLoadingState();
+          console.error('Price range request timed out');
+        }, 10000);
+        
         fetch(url.toString(), {
+          signal: controller.signal,
           headers: {
             'X-Requested-With': 'XMLHttpRequest'
           }
         })
-        .then(response => response.text())
+        .then(response => {
+          clearTimeout(timeoutId);
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.text();
+        })
         .then(html => {
           updateUIFromResponse(html);
           
@@ -973,68 +1123,58 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           }
           
-          // Remove loading state
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
+          // Reset loading state
+          resetLoadingState();
           
           // Update URL
           window.history.pushState({}, '', url.toString());
         })
         .catch(error => {
+          clearTimeout(timeoutId);
           console.error('Error:', error);
-          document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-          isLoading = false;
+          resetLoadingState();
         });
       }, 800); // Shorter timeout for better responsiveness
     }
     
-    priceInputs.forEach(input => {
-      input.addEventListener('change', function() {
-        handlePriceChange(this);
-      });
+    // Handle price input changes
+    document.addEventListener('change', function(e) {
+      if (!e.target.classList.contains('js-filter-range-input')) return;
       
-      input.addEventListener('input', function() {
-        // Also sync the slider with the input value
-        const priceRange = this.closest('.filter--price-range');
-        const sliders = priceRange.querySelectorAll('.filter-range__slider--input');
-        
-        if (this.classList.contains('js-price-min-output')) {
-          sliders[0].value = this.value;
-        } else if (this.classList.contains('js-price-max-output')) {
-          sliders[1].value = this.value;
-        }
-      });
+      const priceRange = e.target.closest('.filter--price-range');
+      if (!priceRange) return;
+      
+      // Determine input type
+      if (e.target.classList.contains('js-price-min-output')) {
+        syncSliderAndInput(priceRange, 'min', e.target.value);
+      } else if (e.target.classList.contains('js-price-max-output')) {
+        syncSliderAndInput(priceRange, 'max', e.target.value);
+      }
+      
+      handlePriceRangeRequest(priceRange);
     });
     
-    sliderInputs.forEach((input, index) => {
-      input.addEventListener('input', function() {
-        const priceRange = this.closest('.filter--price-range');
-        const minSlider = priceRange.querySelectorAll('.filter-range__slider--input')[0];
-        const maxSlider = priceRange.querySelectorAll('.filter-range__slider--input')[1];
-        const minInput = priceRange.querySelector('.js-price-min-output');
-        const maxInput = priceRange.querySelector('.js-price-max-output');
-        
-        if (this === minSlider) {
-          minInput.value = this.value;
-          // Ensure min doesn't exceed max
-          if (parseInt(minInput.value) > parseInt(maxInput.value)) {
-            maxInput.value = minInput.value;
-            maxSlider.value = minInput.value;
-          }
-        } else {
-          maxInput.value = this.value;
-          // Ensure max doesn't fall below min
-          if (parseInt(maxInput.value) < parseInt(minInput.value)) {
-            minInput.value = maxInput.value;
-            minSlider.value = maxInput.value;
-          }
-        }
-        
-        handlePriceChange(this);
-      });
+    // Handle slider changes
+    document.addEventListener('input', function(e) {
+      if (!e.target.classList.contains('filter-range__slider--input')) return;
+      
+      const priceRange = e.target.closest('.filter--price-range');
+      if (!priceRange) return;
+      
+      const sliders = priceRange.querySelectorAll('.filter-range__slider--input');
+      if (sliders.length < 2) return;
+      
+      // Determine slider type (min or max)
+      if (e.target === sliders[0]) {
+        syncSliderAndInput(priceRange, 'min', e.target.value);
+      } else if (e.target === sliders[1]) {
+        syncSliderAndInput(priceRange, 'max', e.target.value);
+      }
+      
+      handlePriceRangeRequest(priceRange);
     });
     
-    // Check if price filter is active and update UI accordingly
+    // Initialize price range UI state
     const priceRange = document.querySelector('.filter--price-range');
     if (priceRange) {
       const minInput = priceRange.querySelector('.js-price-min-output');
@@ -1045,7 +1185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxVal = parseInt(maxInput.value) || parseInt(maxInput.getAttribute('max'));
         const maxDefaultVal = parseInt(maxInput.getAttribute('max'));
         
-        updatePriceRangeUI(minVal > 0 || (maxVal && maxVal < maxDefaultVal));
+        updatePriceRangeUI(priceRange, minVal > 0 || (maxVal && maxVal < maxDefaultVal));
       }
     }
   }
@@ -1058,90 +1198,104 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listen for slideout open events
     if (typeof Events !== 'undefined') {
       Events.on('slideout:open:collection-filters', function() {
-        const menuButtons = document.querySelectorAll('.js-menu-toggle');
+        // Set up initial state based on active drawer
+        setTimeout(() => {
+          // Check which menu should be active by default
+          const filterMenu = drawer.querySelector('[data-menu-handle="filter"]');
+          const sortMenu = drawer.querySelector('[data-menu-handle="sort"]');
+          
+          // Default to filter menu unless conditions dictate otherwise
+          if (filterMenu && sortMenu) {
+            if (collection && collection.all_products_count >= 1000) {
+              // When collection is large, show sort by default
+              filterMenu.style.display = 'none';
+              filterMenu.classList.remove('active--menu');
+              sortMenu.style.display = 'block';
+              sortMenu.classList.add('active--menu');
+            } else {
+              // Otherwise show filters by default
+              filterMenu.style.display = 'block';
+              filterMenu.classList.add('active--menu');
+              sortMenu.style.display = 'none';
+              sortMenu.classList.remove('active--menu');
+            }
+          }
+        }, 50);
+      });
+    }
+    
+    // Set up menu switching based on button click
+    document.addEventListener('click', function(e) {
+      const menuButton = e.target.closest('.js-menu-toggle');
+      if (!menuButton) return;
+      
+      const targetMenu = menuButton.dataset.toggleMenu;
+      if (!targetMenu) return;
+      
+      setTimeout(() => {
+        const menuBlocks = drawer.querySelectorAll('.js-mobile-menu');
         
-        menuButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const targetMenu = this.dataset.toggleMenu;
-            const menuBlocks = drawer.querySelectorAll('.js-mobile-menu');
-            
-            // Hide all menu blocks
-            menuBlocks.forEach(block => {
-              block.style.display = 'none';
-              block.classList.remove('active--menu');
-            });
-            
-            // Show the target menu block
-            const targetBlock = drawer.querySelector(`[data-menu-handle="${targetMenu}"]`);
-            if (targetBlock) {
-              targetBlock.style.display = 'block';
-              targetBlock.classList.add('active--menu');
-            }
-          });
+        // Hide all menu blocks first
+        menuBlocks.forEach(block => {
+          block.style.display = 'none';
+          block.classList.remove('active--menu');
         });
-      });
-    }
-    
-    // Set up initial state based on which button was clicked
-    const filterButton = document.querySelector('[data-toggle-menu="filter"]');
-    const sortButton = document.querySelector('[data-toggle-menu="sort"]');
-    
-    if (filterButton) {
-      filterButton.addEventListener('click', function() {
-        setTimeout(() => {
-          const menuBlocks = drawer.querySelectorAll('.js-mobile-menu');
-          menuBlocks.forEach(block => {
-            if (block.dataset.menuHandle === 'filter') {
-              block.style.display = 'block';
-              block.classList.add('active--menu');
-            } else {
-              block.style.display = 'none';
-              block.classList.remove('active--menu');
-            }
-          });
-        }, 50);
-      });
-    }
-    
-    if (sortButton) {
-      sortButton.addEventListener('click', function() {
-        setTimeout(() => {
-          const menuBlocks = drawer.querySelectorAll('.js-mobile-menu');
-          menuBlocks.forEach(block => {
-            if (block.dataset.menuHandle === 'sort') {
-              block.style.display = 'block';
-              block.classList.add('active--menu');
-            } else {
-              block.style.display = 'none';
-              block.classList.remove('active--menu');
-            }
-          });
-        }, 50);
-      });
-    }
+        
+        // Then show the target menu block
+        const targetBlock = drawer.querySelector(`[data-menu-handle="${targetMenu}"]`);
+        if (targetBlock) {
+          targetBlock.style.display = 'block';
+          targetBlock.classList.add('active--menu');
+        }
+      }, 50);
+    });
   }
   
   // Handle browser back/forward buttons
   window.addEventListener('popstate', function() {
-    if (!isLoading) {
-      isLoading = true;
-      
-      fetch(window.location.href, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      })
-      .then(response => response.text())
-      .then(html => {
-        updateUIFromResponse(html);
-        isLoading = false;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        window.location.reload();
-        isLoading = false;
-      });
+    if (isLoading) return;
+    isLoading = true;
+    
+    const drawerWrapper = document.querySelector('.filter-drawer__wrapper');
+    if (drawerWrapper) {
+      drawerWrapper.classList.add('is-loading');
     }
+    
+    // Set up timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      resetLoadingState();
+      console.error('History navigation request timed out');
+      // Reload the page as fallback
+      window.location.reload();
+    }, 10000);
+    
+    fetch(window.location.href, {
+      signal: controller.signal,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => {
+      clearTimeout(timeoutId);
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.text();
+    })
+    .then(html => {
+      updateUIFromResponse(html);
+      resetLoadingState();
+    })
+    .catch(error => {
+      clearTimeout(timeoutId);
+      console.error('Error:', error);
+      // On serious errors, reload the page
+      if (error.name !== 'AbortError') {
+        window.location.reload();
+      } else {
+        resetLoadingState();
+      }
+    });
   });
   
   // Initialize all handlers
