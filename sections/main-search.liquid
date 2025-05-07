@@ -49,8 +49,14 @@
   .search__page--bar-wrapper {
    width: 100% !important;
    max-width: 1200px !important;
-   margin: 24px auto 36px auto !important;
-   padding: 0 12px;
+   margin: 24px 0 36px 0 !important;
+   
+ }
+
+ @media screen and (max-width: 1023px) {
+   .search__page--bar-wrapper {
+    padding: 0 12px;
+   }
  }
 
  .search__page--bar-wrapper input {
@@ -159,7 +165,7 @@
 -%}
 
 <section
-  class="search-template search__page--wrapper collection-template no-section-animation mt6 pb9"
+  class="search-template search__page--wrapper collection-template no-section-animation mt6 pb9 "
   data-section-id="{{ section.id }}"
   data-section-type="search-template"
   data-asset-url="{{ 'section-main-search.js' | asset_url }}">
@@ -168,7 +174,7 @@
     <div id="SearchProductGrid" class="grid__wrapper">
       <div id="search-bar" class="search__page--bar-wrapper span-12 auto ">
         <form action="{{ routes.search_url }}" method="get">
-          <div class="a-left text-search">
+          <div class="a-left text-search mb-3">
             {% if search.performed %}
               {% if search.results_count == 0 %}
                 <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>

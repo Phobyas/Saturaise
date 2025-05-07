@@ -44,7 +44,7 @@
     "search": {
       "no_results": "Brak wyników",
       "no_results_html": "Twoje wyszukiwanie \"{{ terms }}\" nie przyniosło żadnych wyników.",
-      "results_for_html": "Twoje wyszukiwanie \"{{ terms }}\" ujawniło następujące wyniki:",
+      "results_for_html": "Wyniki dla twojego wyszukiwania \"{{ terms }}\":",
       "title": "Przeszukaj nasz sklep",
       "title_results": "Wyniki wyszukiwania",
       "placeholder": "Wpisz, aby wyszukać...",
