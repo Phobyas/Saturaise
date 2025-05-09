@@ -1,7 +1,36 @@
+{% comment %}
+  product-scroll-gallery.liquid - optimized for mobile
+{% endcomment %}
+
+<style>
+  /* Mobile-only CSS to prevent layout shifts */
+  @media (max-width: 1023px) {
+    /* Ensure container has stable dimensions before images load */
+    .product-images__scroll-gallery-container {
+      position: relative;
+      width: 100%;
+      contain: layout size style; /* Prevent layout shift */
+      min-height: 300px; /* Keep your existing min-height */
+    }
+    
+    /* Set up gallery items with proper sizing */
+    .scroll--gallery_item {
+      position: relative;
+      width: 100%;
+      opacity: 0; /* Hide by default */
+    }
+    
+    /* Show only the selected item */
+    .scroll--gallery_item.is-selected {
+      opacity: 1;
+      z-index: 2;
+    }
+  }
+</style>
+
 <div id="product-images">
   {% if product.featured_media %}
-    <div id="main-image-gallery"
-      class="product-main-images mb2 sm-mb0">
+    <div id="main-image-gallery" class="product-main-images mb2 sm-mb0">
       <div class="product-images__scroll-gallery-container js-scroll-gallery">
         {% for media in product.media %}
           {%- liquid
@@ -141,3 +170,47 @@
     {%- endstyle -%}
   {% endif %}
 </div>
+
+<script>
+  // Mobile-only gallery initialization
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only run on mobile and tablet devices
+    if (window.innerWidth <= 1023) {
+      // Set initial height for gallery container
+      const galleryContainer = document.querySelector('.js-scroll-gallery');
+      if (galleryContainer) {
+        // Ensure the first slide is visible
+        const firstSlide = galleryContainer.querySelector('.is-selected');
+        if (firstSlide) {
+          firstSlide.style.opacity = '1';
+          
+          // Set up image loading handling
+          const image = firstSlide.querySelector('img');
+          if (image) {
+            // If image already loaded
+            if (image.complete) {
+              fixGalleryHeight(image);
+            } else {
+              // Wait for image to load
+              image.addEventListener('load', function() {
+                fixGalleryHeight(image);
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    function fixGalleryHeight(image) {
+      // Set container height based on image aspect ratio while maintaining width
+      const container = document.querySelector('.product-images__scroll-gallery-container');
+      if (container && image) {
+        // Keep original aspect ratio but ensure min-height of 300px
+        const containerWidth = container.offsetWidth;
+        const originalAspect = image.naturalWidth / image.naturalHeight;
+        
+        container.style.height = Math.max(300, containerWidth / originalAspect) + 'px';
+      }
+    }
+  });
+</script>

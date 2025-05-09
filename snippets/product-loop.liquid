@@ -5,7 +5,7 @@
   padding-bottom: 100%;
   overflow: hidden;
   background: #eeeeee;
-  display: flex;
+  display: flex; /* Keep original display flex */
   align-items: center;
   justify-content: center;
 }
@@ -17,8 +17,8 @@
   transform: translate(-50%, -50%);
   max-width: 100%;
   max-height: 100%;
-  width: auto !important;
-  height: auto !important;
+  width: auto !important; /* Keep original width auto */
+  height: auto !important; /* Keep original height auto */
   object-fit: contain;
 }
 
@@ -105,13 +105,21 @@
   z-index: 10;  /* Higher number to ensure it's always on top */
 }
 
-
+  /* Fixed product title handling with min-height instead of fixed height */
   .p-title {
-    height: 70px !important;
+    min-height: 70px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .p-title-index {
-    height: 70px !important;
+    min-height: 70px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .p-title-index a {
@@ -123,7 +131,7 @@
   }
 
 @media screen and (max-width: 768px) {
-  /* Keep container square but make image fill more space */
+  /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
   .template-index .product-loop__img-wrapper {
     padding-bottom: 100%; /* Keep square aspect ratio */
   }
@@ -142,12 +150,12 @@
   }
 
   .p-title {
-    height: 90px !important;
+    min-height: 90px !important;
   }
 }
 
 @media screen and (max-width: 768px) {
-  /* Keep container square but make image fill more space */
+  /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
   .template-product .product-loop__img-wrapper {
     padding-bottom: 100%; /* Keep square aspect ratio */
   }
@@ -168,10 +176,10 @@
 
 @media (min-width: 768px) and (max-width: 1024px) {
   .p-title-index {
-    height: 90px !important;
+    min-height: 90px !important;
   }
   .p-title{
-    height: 90px !important;
+    min-height: 90px !important;
   }
   .p-title-index a {
     font-size: 16px !important;
@@ -425,3 +433,35 @@
   {% endif %}
 
 </article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Here we add a script that prevents layout shift without altering the image aspect ratio
+    function preventImageShift() {
+      // Only add this on mobile where layout shift is most problematic
+      if (window.innerWidth <= 768) {
+        const articleWrappers = document.querySelectorAll('.product-loop__img-wrapper');
+        articleWrappers.forEach(wrapper => {
+          // Ensure consistent placeholder until image loads
+          const img = wrapper.querySelector('img');
+          if (img) {
+            // Add loading attribute for better loading behavior
+            if (!img.hasAttribute('loading')) {
+              img.setAttribute('loading', 'lazy');
+            }
+            
+            // We're monitoring for load but not changing image dimensions
+            img.addEventListener('load', function() {
+              wrapper.classList.add('image-loaded');
+            });
+          }
+        });
+      }
+    }
+    
+    preventImageShift();
+    
+    // Run again on window resize
+    window.addEventListener('resize', preventImageShift);
+  });
+</script>

@@ -1414,3 +1414,36 @@
 .accordion .accordion-collapse.show {
   display: flex;
 }
+
+/* Add this to your section-main-product.css file */
+@media (max-width: 1023px) {
+  /* Prevent layout shifts in mobile gallery */
+  .product__section-images .scroll--gallery_item {
+    position: relative;
+    top: 0 !important;
+  }
+
+  /* Hide non-selected items without layout shift */
+  .product__section-images .scroll--gallery_item:not(.is-selected) {
+    position: absolute !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    width: 100%;
+    height: 0;
+  }
+
+  /* Make sure selected item is visible */
+  .product__section-images .scroll--gallery_item.is-selected {
+    position: relative !important;
+    z-index: 2 !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure gallery container has minimum height */
+  .product-images__scroll-gallery-container {
+    min-height: 300px;
+    position: relative;
+    contain: layout style;
+  }
+}
