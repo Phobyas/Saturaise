@@ -256,7 +256,7 @@ ul.footer--country_list {
 }
 
 .section-footer .footer-block__menu li a {
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
 }
 
@@ -266,7 +266,7 @@ ul.footer--country_list {
 }
 
 .footer-block__text div p {
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
 }
 
@@ -321,4 +321,9 @@ ul.footer--country_list {
 form#section_newsletter_form .form {
   display: flex;
   flex-wrap: nowrap;
+}
+
+.footer-block__heading
+{
+  margin-bottom: 12px !important;
 }

@@ -1,5 +1,3 @@
-
-
 {%- liquid
   if product.template_suffix == 'pre-order'
     assign call_to_action = 'products.product.pre_order' | t
@@ -97,6 +95,7 @@
     <input id="formVariantId" name="id" type="hidden" value="{{ product.selected_or_first_available_variant.id }}">
 
     <input
+        id="product-submit-{{ product.id }}"
         type="submit"
         name="button"
         data-variant-id="{{ current_variant.id }}"
@@ -132,24 +131,204 @@
   {%- endif -%}
 {%- endfor -%}
 
+<style>
+  /* Custom styling for success state */
+  .button.ajax-submit {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .button.ajax-submit.adding-to-cart {
+    background-color: #FFA500 !important; /* Orange during adding process */
+    color: white !important;
+  }
+  
+  .button.ajax-submit.added-to-cart {
+    background-color: #1d4ed8 !important; /* Desired blue color */
+    color: white !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Keyframe animation for the button pulse */
+  @keyframes successPulse {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.9; }
+  }
+  
+  .button.ajax-submit.added-to-cart {
+    animation: successPulse 0.5s ease-in-out;
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('#{{ product_form_id }}');
-    const submitButton = form.querySelector('.js-ajax-submit');
-    const originalText = submitButton.value;
+    // Get the form and submit button
+    const form = document.getElementById('{{ product_form_id }}');
+    if (!form) return;
     
-    form.addEventListener('submit', function(e) {
-      submitButton.value = "{{ 'products.product.adding' | t }}";
-      
-      document.addEventListener('ajaxProduct:added', function() {
-        submitButton.value = "{{ 'products.product.added' | t }} ✓";
-        submitButton.classList.add('button-success');
-        
-        setTimeout(() => {
-          submitButton.value = originalText;
-          submitButton.classList.remove('button-success');
-        }, 2000);
-      }, { once: true });
+    const submitButton = form.querySelector('.js-ajax-submit');
+    if (!submitButton) return;
+    
+    const originalText = submitButton.value;
+    const originalButtonClass = submitButton.className;
+    let resetTimer; // Variable to store our timeout reference
+    let isInSuccessState = false; // Flag to track if button is in success state
+    
+    // Configurable options
+    const successDisplayDuration = 2000; // 2 seconds for both checkmark and color to be visible
+    
+    // Text settings - explicitly define these to ensure consistency
+    const addingText = "{{ 'products.product.adding' | t }}";
+    const addedText = "{{ 'products.product.added' | t }} ✓";
+    
+    console.log('Form and submit button found, setting up handlers');
+    
+    // Create a wrapper around the button to maintain control
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.className = 'button-wrapper';
+    submitButton.parentNode.insertBefore(buttonWrapper, submitButton);
+    buttonWrapper.appendChild(submitButton);
+    
+    // Set up a MutationObserver to immediately detect and prevent unwanted text changes
+    const buttonObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+          if (isInSuccessState) {
+            // If we're in success state and someone tries to change the text, force it back
+            if (submitButton.value !== addedText) {
+              console.log('Preventing unwanted text change during success state');
+              submitButton.value = addedText;
+            }
+          }
+        }
+      });
     });
+    
+    buttonObserver.observe(submitButton, { attributes: true });
+    
+    // Function to handle the successful add-to-cart event
+    function handleSuccess() {
+      // Clear any existing timeouts to prevent multiple timers
+      if (resetTimer) clearTimeout(resetTimer);
+      
+      // Set our state flag
+      isInSuccessState = true;
+      
+      // Change button appearance with checkmark
+      submitButton.value = addedText;
+      submitButton.classList.remove('adding-to-cart');
+      submitButton.classList.add('added-to-cart');
+      
+      // Set a single timeout to reset everything together
+      resetTimer = setTimeout(function() {
+        // Reset both the text and the styling in the same timeout
+        isInSuccessState = false;
+        submitButton.value = originalText;
+        submitButton.classList.remove('added-to-cart');
+      }, successDisplayDuration);
+    }
+    
+    // Handle form submission - capture original ajax submit event
+    form.addEventListener('submit', function(e) {
+      console.log('Form submitted');
+      isInSuccessState = false; // Reset state
+      submitButton.value = addingText;
+      submitButton.classList.add('adding-to-cart');
+    });
+    
+    // Method 1: Listen for Events' custom event system
+    if (typeof Events !== 'undefined') {
+      Events.on('ajaxProduct:added', function(event) {
+        console.log('ajaxProduct:added event detected via Events system');
+        handleSuccess();
+      });
+    }
+    
+    // Method 2: Create a MutationObserver to watch the cart count or the mini-cart
+    const cartBubble = document.querySelector('.cart-count-bubble');
+    const miniCart = document.querySelector('.mini-cart');
+    
+    if (cartBubble || miniCart) {
+      const targetNode = cartBubble || miniCart;
+      const observer = new MutationObserver(function(mutations) {
+        console.log('Cart element mutation detected');
+        
+        if (submitButton.classList.contains('adding-to-cart')) {
+          handleSuccess();
+        }
+      });
+      
+      observer.observe(targetNode, { 
+        childList: true, 
+        subtree: true,
+        characterData: true,
+        attributes: true 
+      });
+    }
+    
+    // Method 3: Listen for the standard DOM event
+    document.addEventListener('ajaxProduct:added', function(event) {
+      console.log('Standard DOM ajaxProduct:added event detected');
+      handleSuccess();
+    });
+    
+    // Method 4: Create a global event listener
+    window.productAddedToCart = function() {
+      console.log('Global productAddedToCart function called');
+      if (submitButton.classList.contains('adding-to-cart')) {
+        handleSuccess();
+      }
+    };
+    
+    // Forcibly reassert our button state at regular intervals during the success state
+    // This will combat any scripts that might be trying to change the text
+    setInterval(function() {
+      if (isInSuccessState) {
+        if (submitButton.value !== addedText) {
+          console.log('Reasserting success state text');
+          submitButton.value = addedText;
+        }
+        if (!submitButton.classList.contains('added-to-cart')) {
+          console.log('Reasserting success state styling');
+          submitButton.classList.add('added-to-cart');
+        }
+      }
+    }, 50); // Check every 50ms
+    
+    // Inject the event listener for your custom event into the global scope
+    const scriptEl = document.createElement('script');
+    scriptEl.textContent = `
+      // Add event trigger to the ajax callback
+      (function() {
+        const originalFetch = window.fetch;
+        window.fetch = function() {
+          return originalFetch.apply(this, arguments)
+            .then(function(response) {
+              if (response.url.includes('/cart/add') || response.url.includes('/cart/add.js')) {
+                response.clone().json().then(function(data) {
+                  if (data && (data.items || data.product_title)) {
+                    // Try all possible event emitters
+                    if (typeof Events !== 'undefined') {
+                      Events.trigger('ajaxProduct:added', data);
+                    }
+                    
+                    // Standard DOM event
+                    document.dispatchEvent(new CustomEvent('ajaxProduct:added', { detail: data }));
+                    
+                    // Global function
+                    if (typeof window.productAddedToCart === 'function') {
+                      window.productAddedToCart(data);
+                    }
+                  }
+                }).catch(function(err) {
+                  console.log('Error parsing response', err);
+                });
+              }
+              return response;
+            });
+        };
+      })();
+    `;
+    document.head.appendChild(scriptEl);
   });
 </script>
