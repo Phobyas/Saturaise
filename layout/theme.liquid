@@ -201,6 +201,7 @@
   <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
   <link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
+  {{ 'size-chart.css' | asset_url | stylesheet_tag }}
   
   <!-- JS -->
   <script>
@@ -512,6 +513,7 @@
   <script src='{{ 'section-header.js' | asset_url }}' defer></script>
   <script src='{{ 'section-mobile-navigation.js' | asset_url }}' defer></script>
   <script src='{{ 'carousel.js' | asset_url }}' defer></script>
+  <script src="{{ 'size-chart.js' | asset_url }}" defer></script>
 
   {%- if settings.product_grid_video -%}
     <script src="{{ 'vendor-video.js' | asset_url }}" defer></script>
@@ -538,6 +540,7 @@
       }
     });
   </script>
+  
   
 </body>
 </html>

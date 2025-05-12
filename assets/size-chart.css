@@ -1,230 +1,112 @@
-/* Modal specific styles for size chart */
-body.modal-open {
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
+/* Size Chart Modal - No Parent Scroll, Only Content Scroll */
 
-.modal__container[data-wau-modal-target="size-chart-modal"] {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 800px !important;
-  max-width: 90%;
-  max-height: 90vh;
-}
-
-.modal__container[data-wau-modal-target="size-chart-modal"]
-  .modal__inner-wrapper {
-  position: relative;
-  padding: 30px 20px 20px;
-  max-height: 80vh; /* Maximum height of 80% of viewport */
-  height: auto;
-  background: #fff;
-  border-radius: 8px;
-  width: 100% !important;
-  overflow-y: auto; /* Enable vertical scrolling */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-}
-
-/* Ensure the modal content is scrollable */
-.modal__inner-content-container {
-  max-height: calc(
-    80vh - 90px
-  ); /* Subtract space for close button and padding */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Size Chart Content */
+/* Remove all scrolling from modal container and wrappers */
+[data-wau-modal="size-chart-modal"],
+.modal__container,
+.modal__inner-wrapper,
+.modal__inner-content-container,
+.sizing-modal__main,
 .tab-block {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  overflow: hidden !important;
 }
 
-/* Tabs Navigation */
+/* Ensure the modal has fixed height and no scrolling */
+[data-wau-modal="size-chart-modal"] {
+  position: fixed !important;
+  top: 15vh !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  max-height: 75vh !important;
+  max-width: 90vw !important;
+  width: 800px !important;
+  z-index: 9999 !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15) !important;
+  overflow: hidden !important;
+  margin-bottom: 10vh !important;
+}
+
+/* Tab navigation - always visible */
 .tab-mnu {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin-top: 25px;
-  gap: 10px;
-  width: 100%;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 0 15px !important;
+  gap: 8px !important;
+  border-bottom: 1px solid #eee !important;
+  padding-bottom: 15px !important;
+  background: #fff !important;
+  z-index: 5 !important;
+  position: relative !important;
 }
 
 .tab-mnu li {
-  flex: 1;
-  padding: 12px 24px;
-  cursor: pointer;
-  background: #eeeeee;
-  color: #323232;
-  transition: all 0.2s ease;
-  border: none;
-  border-radius: 4px;
-  text-align: center;
-  white-space: nowrap;
+  flex: 0 0 auto !important;
+  padding: 8px 15px !important;
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
 }
 
 .tab-mnu li:hover {
-  background: #e0e0e0;
+  background: #eaeaea !important;
 }
 
 .tab-mnu li.active {
-  background: #323232;
-  color: #fff;
-  font-weight: 500;
+  background: #333 !important;
+  color: #fff !important;
+  border-color: #333 !important;
+  font-weight: bold !important;
 }
 
-/* Table Content */
-.tabe-pane__content {
-  display: none;
-  width: 100%;
+/* Tab content container - ONLY this element should scroll */
+.tab-cont {
+  overflow-y: auto !important;
+  max-height: calc(
+    75vh - 120px
+  ) !important; /* Adjusted height to account for tabs, padding, and headers */
+  padding-right: 10px !important;
+  height: auto !important; /* Allow it to shrink if content is small */
 }
 
-.tabe-pane__content.active {
-  display: block;
+/* Table header sticky position */
+.tabe-pane__content.active table th {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #f5f5f5 !important;
+  z-index: 2 !important;
 }
 
-.size-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #eeeeee;
-  table-layout: fixed;
-}
-
-.size-table th,
-.size-table td {
-  width: calc(100% / 3);
-  padding: 12px 10px;
-  text-align: center;
-}
-
-.size-table th {
-  background: #323232;
-  color: #fff;
-  font-weight: 500;
-  border: none;
-}
-
-.size-table td {
-  border: 1px solid #eeeeee;
-}
-
-.size-table tr:nth-child(even) {
-  background: #f8f8f8;
-}
-
-.size-table tbody tr:hover {
-  background: #eeeeee;
-}
-
-/* Enhanced close button */
-.modal__container[data-wau-modal-target="size-chart-modal"]
-  .modal__trigger--close {
-  right: 15px;
-  top: 15px;
-  z-index: 10;
-  position: absolute;
-}
-
-.modal__container[data-wau-modal-target="size-chart-modal"]
-  .modal__trigger--close
-  button {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: 50%;
-  background: #323232 !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.modal__container[data-wau-modal-target="size-chart-modal"]
-  .modal__trigger--close
-  button
-  .icn-close:before,
-.modal__container[data-wau-modal-target="size-chart-modal"]
-  .modal__trigger--close
-  button
-  .icn-close:after {
-  border-color: #fff;
-  border-width: 2px;
+/* Close button adjustment */
+.modal__trigger--close {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  z-index: 10 !important;
 }
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
-  .modal__container[data-wau-modal-target="size-chart-modal"] {
-    width: 95% !important;
-    max-width: 95% !important;
-    left: 50% !important;
-    position: fixed !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    max-height: 95vh;
-  }
-
-  .modal__container[data-wau-modal-target="size-chart-modal"]
-    .modal__inner-wrapper {
-    width: 100% !important;
-    padding: 30px 15px 15px;
-    max-height: 90vh;
-    height: auto;
-    overflow-y: auto; /* Ensure vertical scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  }
-
-  .modal__inner-content-container {
-    max-height: calc(90vh - 100px);
-    overflow-y: auto; /* Enable vertical scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  }
-
-  .tab-block {
-    overflow-y: auto; /* Add scrolling to tab block */
-    max-height: calc(90vh - 150px);
-    -webkit-overflow-scrolling: touch;
+  [data-wau-modal="size-chart-modal"] {
+    width: 92vw !important;
+    max-height: 80vh !important;
+    top: 10vh !important;
   }
 
   .tab-mnu {
-    gap: 8px;
-    margin-top: 15px; /* Slightly reduced top margin */
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    padding-right: 40px !important;
   }
 
-  .tab-mnu li {
-    flex: 1 1 calc(33.333% - 6px);
-    padding: 8px 10px;
-    font-size: 13px;
-  }
-
-  .size-table {
-    font-size: 13px;
-  }
-
-  .size-table th,
-  .size-table td {
-    padding: 8px 6px;
-  }
-
-  .modal__container[data-wau-modal-target="size-chart-modal"]
-    .modal__trigger--close {
-    right: 15px;
-    top: 15px;
-  }
-
-  .modal__container[data-wau-modal-target="size-chart-modal"]
-    .modal__trigger--close
-    button {
-    width: 44px;
-    height: 44px;
-    background: #323232 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  .tab-cont {
+    max-height: calc(80vh - 130px) !important;
   }
 }

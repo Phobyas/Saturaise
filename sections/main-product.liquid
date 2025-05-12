@@ -114,6 +114,10 @@
 >
 <noscript><link rel="stylesheet" href="{{ 'section-main-product.css' | asset_url }}"></noscript>
 
+<!-- Size Chart Assets -->
+<link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
+<script src="{{ 'size-chart.js' | asset_url }}" defer></script>
+
 {%- if has_media -%}
   <link
     id="ModelViewerStyle"
@@ -229,7 +233,19 @@
               {%- endunless -%}
 
               {%- when 'size_chart' -%}
-                {% render 'size-chart-modal', index: forloop.index %}
+                <div class="product-form__popup pb-6 mb-3 sm-pt-1 sm-mb-1 text-left animate--text delay--{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  <button
+                    class="btn-as-link underline js-modal-open pl0"
+                    type="button"
+                    name="button"
+                    data-wau-modal-target="size-chart-modal"
+                  >
+                    Tabela rozmiarów
+                  </button>
+                  <div data-wau-modal-content="size-chart-modal" style="display: none;">
+                    {% render 'size-chart-tables' %}
+                  </div>
+                </div>
 
             {%- when 'richtext_metafield' -%}
               {%- unless block.settings.content == blank -%}
