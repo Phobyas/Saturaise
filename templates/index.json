@@ -38,8 +38,8 @@
           "settings": {
             "image": "shopify://shop_images/slider_banner_2_desktop_final_compressed.webp",
             "mobile_image": "shopify://shop_images/slider_banner_2_mobile_final_compressed.webp",
-            "heading": "Slide image title",
-            "subheading": "<p>Slide image subheading</p>",
+            "heading": "",
+            "subheading": "",
             "link": "",
             "button_text": "Button",
             "second_link": "",
