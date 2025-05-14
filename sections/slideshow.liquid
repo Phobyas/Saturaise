@@ -44,64 +44,138 @@
   assign mobile_height = section.settings.mobile_height
 -%}
 
-{% style %}
+<!-- Special CLS prevention styles for slideshow -->
+<style id="cls-prevention-slideshow-{{ section.id }}">
+  /* Ensure the slideshow container has fixed dimensions */
   #shopify-section-{{ section.id }} {
-    --font-size:  {{ section.settings.subheading_size }}px;
-    --h2-size:  {{ section.settings.slide_heading_size }}px;
+    --font-size: {{ section.settings.subheading_size }}px;
+    --h2-size: {{ section.settings.slide_heading_size }}px;
     {% if fixed_height %}
       --desktop-section-height: {{ desktop_height }}px;
       --mobile-section-height: {{ mobile_height }}px;
     {% endif %}
   }
   
-  /* Prevent layout shift with fixed dimensions */
-  {% if fixed_height %}
-  #shopify-section-{{ section.id }} {
-    min-height: var(--mobile-section-height);
-    contain: layout size;
+  /* Force the slideshow to maintain its dimensions */
+  #slideshow--{{ section.id }} {
+    {% if fixed_height %}
+      /* Fixed height for the slideshow */
+      height: var(--mobile-section-height);
+      max-height: var(--mobile-section-height);
+      min-height: var(--mobile-section-height);
+      overflow: hidden;
+      position: relative;
+    {% else %}
+      /* Natural height needs minimum constraints */
+      min-height: 350px;
+      position: relative;
+    {% endif %}
   }
   
   @media (min-width: 768px) {
-    #shopify-section-{{ section.id }} {
-      min-height: var(--desktop-section-height);
+    #slideshow--{{ section.id }} {
+      {% if fixed_height %}
+        height: var(--desktop-section-height);
+        max-height: var(--desktop-section-height);
+        min-height: var(--desktop-section-height);
+      {% else %}
+        min-height: 450px;
+      {% endif %}
     }
   }
   
-  /* Initial slide visibility before JS loads */
-  #shopify-section-{{ section.id }} .slideshow__slide:first-child {
-    opacity: 1 !important;
+  /* Make sure the first slide is always visible */
+  #slideshow--{{ section.id }} .slideshow__slide:first-child {
+    opacity: 1;
     z-index: 1;
-    transition: none !important;
+    display: block !important;
+    position: relative; /* Position first slide normally */
   }
-  {% endif %}
   
-  /* Ensure images maintain proper aspect ratio */
-  .section-slideshow .slideshow.is-fixed_height .slideshow__slide-image img {
-    object-fit: cover;
-    object-position: center;
+  /* Ensure slide images don't cause layout shifts */
+  .slideshow__slide-image {
+    {% if fixed_height %}
+      height: var(--mobile-section-height);
+      overflow: hidden;
+      position: relative;
+      background-color: #f6f6f6; /* Placeholder color while loading */
+    {% else %}
+      position: relative;
+      overflow: hidden;
+      background-color: #f6f6f6; /* Placeholder color while loading */
+    {% endif %}
+  }
+  
+  @media (min-width: 768px) {
+    .slideshow__slide-image {
+      {% if fixed_height %}
+        height: var(--desktop-section-height);
+      {% endif %}
+    }
+  }
+  
+  /* Force all images to cover their containers */
+  .slideshow__slide-image img {
     width: 100%;
+    {% if fixed_height %}
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    {% endif %}
+  }
+  
+  /* Mobile text size adjustments */
+  @media (max-width: 740px) {
+    #shopify-section-{{ section.id }} {
+      --font-size: calc({{ section.settings.subheading_size }}px - ({{ section.settings.subheading_size }}px * 0.15));
+      --h2-size: calc({{ section.settings.slide_heading_size }}px - ({{ section.settings.slide_heading_size }}px * 0.15));
+    }
+  }
+  
+  /* Ensure Flickity viewport is properly sized */
+  #slideshow--{{ section.id }} .flickity-viewport {
+    {% if fixed_height %}
+      height: var(--mobile-section-height) !important;
+      max-height: var(--mobile-section-height);
+      overflow: hidden;
+    {% else %}
+      min-height: 350px;
+      overflow: hidden;
+    {% endif %}
+  }
+  
+  @media (min-width: 768px) {
+    #slideshow--{{ section.id }} .flickity-viewport {
+      {% if fixed_height %}
+        height: var(--desktop-section-height) !important;
+        max-height: var(--desktop-section-height);
+      {% else %}
+        min-height: 450px;
+      {% endif %}
+    }
+  }
+  
+  /* Make flickity slide container maintain size */
+  .flickity-slider {
+    display: flex;
+    align-items: stretch;
     height: 100%;
   }
   
-  /* Add explicit dimensions to prevent layout shift */
-  .slideshow__slide-image picture {
-    display: block;
-    aspect-ratio: 1920/800;
+  /* Prevent flicker during initialization */
+  .slideshow:not(.flickity-enabled) .slideshow__slide:not(:first-child) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: -1;
   }
+</style>
 
-  @media (max-width: 767px) {
-    .slideshow__slide-image picture {
-      aspect-ratio: 800/1000;
-    }
-  }
-  
-  @media (max-width: 740px) {
-     #shopify-section-{{ section.id }} {
-       --font-size: calc({{ section.settings.subheading_size }}px - ({{ section.settings.subheading_size }}px * 0.15));
-       --h2-size: calc({{ section.settings.slide_heading_size }}px - ({{ section.settings.slide_heading_size }}px * 0.15));
-     }
-   }
-
+{% style %}
+  /* Navigation indicators */
   {% if section.settings.pager == 'dots' %}
     #slideshow--{{ section.id }}.flickity__section .flickity-prev-next-button {
       display: none;
@@ -119,7 +193,7 @@
     }
   {% endif %}
 
-  /* Add explicit styles for each slide */
+  /* Slide styles */
   {% for block in section.blocks %}
   {% assign block_opacity = block.settings.overlay_opacity | plus: 0 | divided_by: 100.0%}
     #slide--{{ block.id }} {
@@ -129,14 +203,58 @@
         --button-text: {{ block.settings.slide_text_color }};
     }
     
-    /* First slide optimization */
-    {% if forloop.first %}
-    #slide--{{ block.id }} {
-        display: block !important;
-        opacity: 1 !important;
-        z-index: 1;
+    /* Caption positioning */
+    .slideshow__caption.slide-{{ block.id }} {
+      top: {{ block.settings.caption_vertical }}%;
+      left: {{ block.settings.caption_horizontal }}%;
+      -webkit-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
+      transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
     }
-    {% endif %}
+    
+    @media only screen and (max-width: 767px) {
+      {% if block.settings.mobile_image != blank %}
+        .slide--{{ block.id }} .slideshow__slide-image {
+          {% if fixed_height %}
+            padding-bottom: var(--mobile-section-height) !important;
+          {% endif %}
+        }
+      {% else %}
+        .slide--{{ block.id }} .slideshow__slide-image .box-ratio {
+          {% if block.settings.image != blank %}
+            {% assign desktop_image_aspect = block.settings.image.height | times: 1.0 | divided_by: block.settings.image.width %}
+            padding-bottom: {{ desktop_image_aspect | times: 100 }}% !important;
+          {% endif %}
+        }
+        .slide--{{ block.id }} .slideshow__slide-image img {
+          object-fit: contain;
+          object-position: center;
+        }
+        .slide--{{ block.id }} .slideshow__slide-image {
+          display: block;
+        }
+      {% endif %}
+      {% if caption_below %}
+        .slideshow__slide .slideshow__caption.slide-{{ block.id }} {
+          position: relative;
+          width: 100%;
+          top: unset;
+          left: unset;
+          transform: translate(0, 0);
+        }
+        .slideshow__slide.image .slideshow__caption.slide-{{ block.id }} .slideshow__caption-wrapper {
+          width: 100%;
+        }
+        {% if block.settings.image == blank and block.settings.mobile_image == blank %}
+          .slideshow__slide-image svg {
+            {% if fixed_height %}
+            height: var(--mobile-section-height) !important;
+            {% else %}
+            height: 400px !important;
+            {% endif %}
+          }
+        {% endif %}
+      {% endif %}
+    }
   {% endfor %}
 {% endstyle %}
 
@@ -155,9 +273,10 @@ data-section-type="carousel">
         "pauseAutoPlayOnHover":false,
         "autoPlay": {{ slider_speed }},
         "fade": true,
-        "adaptiveHeight": true,
+        "adaptiveHeight": false,
         "pageDots":{% if section.settings.pager == 'dots' and enough_to_wrap %}true{% else %}false{% endif %},
-        "prevNextButtons":{% if section.settings.pager == 'arrows' and enough_to_wrap %}true{% else %}false{% endif %}
+        "prevNextButtons":{% if section.settings.pager == 'arrows' and enough_to_wrap %}true{% else %}false{% endif %},
+        "initialIndex": 0
      }{% endcapture %}
 
       {% if section.blocks.size > 0 %}
@@ -205,17 +324,6 @@ data-section-type="carousel">
           assign main_image = block.settings.image
           assign mobile_image = block.settings.mobile_image
           
-          assign desktop_image_aspect = 1
-          assign mobile_image_aspect = 1
-          
-          if main_image != blank
-            assign desktop_image_aspect = main_image.height | times: 1.0 | divided_by: main_image.width
-          endif
-          
-          if mobile_image != blank
-            assign mobile_image_aspect = mobile_image.height | times: 1.0 | divided_by: mobile_image.width
-          endif
-
           if mobile_image != blank
             assign mobile_class = 'sm-hide'
           else
@@ -228,17 +336,12 @@ data-section-type="carousel">
 
           assign loading = 'lazy'
           assign fetch_priority = 'auto'
-          assign preload_link = false
-          assign display_style = ''
+          assign slide_class = ''
 
           if forloop.first
             assign loading = 'eager'
             assign fetch_priority = 'high'
-            assign preload_link = true
-            assign display_style = 'style="display: block; visibility: visible; opacity: 1;"'
             assign slide_class = 'is-selected'
-          else
-            assign slide_class = ''
           endif
         -%}
 
@@ -247,8 +350,6 @@ data-section-type="carousel">
             data-block-id="{{ block.id }}"
             class="slide--{{ block.id }} slideshow__slide {{ slide_class }} {% if has_image == false %}slideshow__slide-onboard{% endif %}"
             data-slider-index="{{ forloop.index0 }}"
-            data-slide-index="{{ forloop.index0 }}"
-            {% if forloop.first %}{{ display_style }}{% endif %}
             {{ block.shopify_attributes }}
           >
 
@@ -256,7 +357,7 @@ data-section-type="carousel">
               <div class="slideshow__slide-image">
                 {% if has_image %}
                   {% if mobile_image != blank %}
-                    {% if preload_link %}
+                    {% if forloop.first %}
                     <link rel="preload" as="image" 
                           href="{{ mobile_image | image_url: width: 640 }}" 
                           media="(max-width: 767px)">
@@ -283,11 +384,10 @@ data-section-type="carousel">
                         width="{{ mobile_image.width }}"
                         height="{{ mobile_image.height }}"
                         loading="{{ loading }}"
-                        fetchpriority="{{ fetch_priority }}"
-                        {% if forloop.first %}style="display: block; visibility: visible; opacity: 1;"{% endif %}>
+                        fetchpriority="{{ fetch_priority }}">
                     </picture>
                   {% else %}
-                    {% if preload_link %}
+                    {% if forloop.first %}
                     <link rel="preload" as="image" 
                           href="{{ main_image | image_url: width: 640 }}" 
                           media="(max-width: 767px)">
@@ -295,14 +395,15 @@ data-section-type="carousel">
                           href="{{ main_image | image_url: width: 1600 }}" 
                           media="(min-width: 768px)">
                     {% endif %}
-                    {% render 'helper-image',
-                       type: block.settings.image,
-                       sm_render: '100vw',
-                       md_render: '100vw',
-                       lg_render: '100vw',
-                       class: mobile_class,
-                       loading: loading,
-                       fetchpriority: fetch_priority %}
+                    <img 
+                      src="{{ main_image | image_url: width: 1600 }}" 
+                      srcset="{{ main_image | image_url: width: 640 }} 640w, {{ main_image | image_url: width: 1200 }} 1200w, {{ main_image | image_url: width: 1600 }} 1600w" 
+                      sizes="100vw" 
+                      width="{{ main_image.width }}" 
+                      height="{{ main_image.height }}" 
+                      alt="{{ block.settings.heading | escape | default: main_image.alt | escape }}" 
+                      loading="{{ loading }}" 
+                      fetchpriority="{{ fetch_priority }}">
                   {% endif %}
                 {% else %}
                   {% capture current %}{% cycle 1, 2 %}{% endcapture %}
@@ -343,56 +444,6 @@ data-section-type="carousel">
               </div>
             </div>
             {% endif %}
-            {% style %}
-              .slideshow__caption.slide-{{ block.id }} {
-                top: {{ block.settings.caption_vertical }}%;
-                left: {{ block.settings.caption_horizontal }}%;
-                -webkit-transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
-                transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
-              }
-              
-              @media only screen and (max-width: 767px) {
-                {% if mobile_image != blank %}
-                  .slide--{{ block.id }} .slideshow__slide-image {
-                    {% if fixed_height %}
-                      padding-bottom: var(--mobile-section-height) !important;
-                    {% endif %}
-                  }
-                {% else %}
-                  .slide--{{ block.id }} .slideshow__slide-image .box-ratio {
-                    padding-bottom: {{ desktop_image_aspect | times: 100 }}% !important;
-                  }
-                  .slide--{{ block.id }} .slideshow__slide-image img {
-                    object-fit: contain;
-                    object-position: center;
-                  }
-                  .slide--{{ block.id }} .slideshow__slide-image {
-                    display: block;
-                  }
-                {% endif %}
-                {% if caption_below %}
-                  .slideshow__slide .slideshow__caption.slide-{{ block.id }} {
-                    position: relative;
-                    width: 100%;
-                    top: unset;
-                    left: unset;
-                    transform: translate(0, 0);
-                  }
-                  .slideshow__slide.image .slideshow__caption.slide-{{ block.id }} .slideshow__caption-wrapper {
-                    width: 100%;
-                  }
-                  {% if has_image == false and mobile_image == blank %}
-                    .slideshow__slide-image svg {
-                      {% if fixed_height %}
-                      height: var(--mobile-section-height) !important;
-                      {% else %}
-                      height: 400px !important;
-                      {% endif %}
-                    }
-                  {% endif %}
-                {% endif %}
-              }
-            {% endstyle %}
           </div>
         {% endfor %}
       </div>
@@ -404,78 +455,131 @@ data-section-type="carousel">
   </div>
 </div>
 
+<!-- Modified initialization script to prevent CLS -->
 <script>
-// Optimized slideshow initialization
 (function() {
-  // First, make sure the first slide is visible immediately
-  var firstSlide = document.querySelector('#slideshow--{{ section.id }} .slideshow__slide:first-child');
+  // Set dimensions immediately to prevent layout shift
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  var slideshow = document.getElementById('slideshow--{{ section.id }}');
+  var firstSlide = slideshow ? slideshow.querySelector('.slideshow__slide:first-child') : null;
+  var otherSlides = slideshow ? slideshow.querySelectorAll('.slideshow__slide:not(:first-child)') : [];
+  
+  // Set fixed height if needed
+  {% if fixed_height %}
+  var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
+  if (slideshow) {
+    slideshow.style.height = height + 'px';
+    slideshow.style.minHeight = height + 'px';
+    slideshow.style.maxHeight = height + 'px';
+    slideshow.style.overflow = 'hidden';
+  }
+  
+  // Make sure all slide images have correct dimensions
+  var slideImages = slideshow.querySelectorAll('.slideshow__slide-image');
+  slideImages.forEach(function(img) {
+    img.style.height = height + 'px';
+  });
+  {% endif %}
+  
+  // Make sure first slide is visible
   if (firstSlide) {
     firstSlide.style.opacity = '1';
+    firstSlide.style.position = 'relative';
+    firstSlide.style.zIndex = '1';
     firstSlide.style.display = 'block';
-    firstSlide.classList.add('is-selected');
     
-    // Force immediate rendering of the image
-    var img = firstSlide.querySelector('img');
-    if (img) {
-      img.style.display = 'block';
-      img.style.visibility = 'visible';
-      img.style.opacity = '1';
+    // Ensure first image is displayed immediately
+    var firstImg = firstSlide.querySelector('img');
+    if (firstImg) {
+      firstImg.style.display = 'block';
     }
   }
   
-  // Set proper height immediately to prevent CLS
-  var slideshow = document.getElementById('slideshow--{{ section.id }}');
-  if (slideshow && slideshow.classList.contains('is-fixed_height')) {
-    var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
-    slideshow.style.minHeight = height + 'px';
-  }
+  // Hide other slides initially to prevent layout shift
+  otherSlides.forEach(function(slide) {
+    slide.style.position = 'absolute';
+    slide.style.top = '0';
+    slide.style.left = '0';
+    slide.style.width = '100%';
+    slide.style.height = '100%';
+    slide.style.opacity = '0';
+    slide.style.zIndex = '-1';
+  });
   
-  // We'll use a promise to handle Flickity loading/initialization
-  function loadFlickity() {
-    return new Promise((resolve) => {
-      if (typeof Flickity !== 'undefined') {
-        resolve();
-        return;
-      }
-      
-      // Try to load Flickity from various sources
-      if (typeof jsAssets !== 'undefined' && jsAssets.flickity) {
-        var flickityScript = document.createElement('script');
-        flickityScript.src = jsAssets.flickity;
-        flickityScript.onload = resolve;
-        document.head.appendChild(flickityScript);
-      } else {
-        // As a fallback, try to load from CDN
-        var cdnScript = document.createElement('script');
-        cdnScript.src = 'https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js';
-        cdnScript.onload = resolve;
-        document.head.appendChild(cdnScript);
-      }
-    });
-  }
-  
-  // Initialize Flickity with a small delay
+  // Initialize Flickity with proper configuration
   function initSlideshow() {
-    loadFlickity().then(() => {
-      try {
-        new Flickity('#slideshow--{{ section.id }}', JSON.parse('{{ slideshow_config }}'));
-      } catch (e) {
-        console.error('Slideshow initialization error:', e);
-        // Make sure at least the first slide is visible if Flickity fails
-        if (firstSlide) {
-          firstSlide.style.opacity = '1';
-          firstSlide.style.display = 'block';
-        }
-      }
-    });
+    if (typeof Flickity === 'undefined') {
+      var script = document.createElement('script');
+      script.src = '{{ "vendor-flickity.js" | asset_url }}';
+      script.onload = createSlideshow;
+      document.head.appendChild(script);
+    } else {
+      createSlideshow();
+    }
   }
   
-  // Use requestIdleCallback if available, otherwise use setTimeout
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => initSlideshow(), { timeout: 1000 });
-  } else {
-    setTimeout(initSlideshow, 500);
+  function createSlideshow() {
+    try {
+      if (!slideshow) return;
+      
+      // Create Flickity instance with specific settings
+      var flkty = new Flickity(slideshow, JSON.parse('{{ slideshow_config }}'));
+      
+      // After initialization, make sure all slides are visible to Flickity
+      otherSlides.forEach(function(slide) {
+        // Reset styles that were needed for CLS prevention
+        // but might interfere with Flickity's operation
+        slide.style.position = '';
+        slide.style.zIndex = '';
+      });
+      
+      // Force correct layout after initialization
+      setTimeout(function() {
+        if (flkty && typeof flkty.resize === 'function') {
+          flkty.resize();
+        }
+      }, 100);
+      
+    } catch (e) {
+      console.warn('Slideshow initialization error:', e);
+      
+      // Fallback to make sure at least first slide is visible
+      if (firstSlide) {
+        firstSlide.style.display = 'block';
+        firstSlide.style.opacity = '1';
+      }
+    }
   }
+  
+  // Use requestIdleCallback if available, otherwise setTimeout
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(function() {
+      initSlideshow();
+    }, { timeout: 1000 });
+  } else {
+    setTimeout(initSlideshow, 300);
+  }
+  
+  // Update dimensions on resize
+  window.addEventListener('resize', function() {
+    {% if fixed_height %}
+    var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
+    if (slideshow) {
+      slideshow.style.height = height + 'px';
+      
+      // Update slide image heights
+      var slideImages = slideshow.querySelectorAll('.slideshow__slide-image');
+      slideImages.forEach(function(img) {
+        img.style.height = height + 'px';
+      });
+    }
+    {% endif %}
+    
+    // Resize Flickity if initialized
+    if (slideshow && slideshow.flickity) {
+      slideshow.flickity.resize();
+    }
+  });
 })();
 </script>
 

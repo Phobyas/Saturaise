@@ -58,15 +58,13 @@
   }
 {% endschema %}
 
-<!-- Immediate height styles to prevent CLS -->
+<!-- CLS prevention styles -->
 <style id="cls-prevention-{{ section.id }}">
-  /* Fixed dimensions for section container to prevent layout shifts */
+  /* Fixed dimensions for section container */
   #shopify-section-{{ section.id }} {
     min-height: 110px;
     overflow: visible;
-    contain: layout;
     margin-bottom: 8px;
-    will-change: contents;
   }
   
   @media (max-width: 767px) {
@@ -75,15 +73,14 @@
     }
   }
   
+  /* Fixed dimensions for scroll container */
   #badgeScroller {
     -ms-overflow-style: none;
     scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
     height: 80px;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    contain: layout;
   }
   
   @media (max-width: 767px) {
@@ -145,9 +142,9 @@
     height: 64px;
     min-width: 120px;
     margin-right: 12px;
-    contain: layout;
   }
   
+  /* Fixed dimensions for image container */
   .badge-image-container {
     width: 48px;
     height: 48px;
@@ -160,6 +157,7 @@
     overflow: hidden;
   }
   
+  /* Fixed dimensions for image */
   .badge-image-container img {
     width: 48px;
     height: 48px;
@@ -232,33 +230,33 @@
   </div>
 </div>
 
-<!-- Early initialization script to prevent CLS -->
+<!-- CLS prevention script -->
 <script>
 // Early pre-calculation script to prevent CLS
 (function() {
   // Reserve space before the DOM is fully loaded
-  document.documentElement.style.setProperty('--badge-section-height', 
-    window.innerWidth < 768 ? '90px' : '110px');
-
-  const sectionElement = document.getElementById('shopify-section-{{ section.id }}');
+  var sectionElement = document.getElementById('shopify-section-{{ section.id }}');
   if (sectionElement) {
     sectionElement.style.minHeight = window.innerWidth < 768 ? '90px' : '110px';
   }
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
-  const scroller = document.getElementById('badgeScroller');
-  const prevBtn = document.getElementById('badgePrev');
-  const nextBtn = document.getElementById('badgeNext');
-  const scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
+  var scroller = document.getElementById('badgeScroller');
+  var prevBtn = document.getElementById('badgePrev');
+  var nextBtn = document.getElementById('badgeNext');
+  var scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
   
   // Skip initialization if elements don't exist
   if (!scroller || !prevBtn || !nextBtn) return;
   
+  // Set fixed height immediately
+  scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
+  
   // Simple drag handling variables
-  let isDragging = false;
-  let startX = 0;
-  let startScrollLeft = 0;
+  var isDragging = false;
+  var startX = 0;
+  var startScrollLeft = 0;
   
   // Basic arrow button functionality
   function updateArrowState() {
@@ -308,8 +306,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!isDragging) return;
     
     // Direct calculation without complex math
-    const x = e.pageX;
-    const distance = x - startX;
+    var x = e.pageX;
+    var distance = x - startX;
     scroller.scrollLeft = startScrollLeft - distance;
     
     // Prevent other events
@@ -345,15 +343,10 @@ document.addEventListener('DOMContentLoaded', function() {
   scroller.addEventListener('touchmove', function(e) {
     if (!isDragging) return;
     
-    const x = e.touches[0].pageX;
-    const distance = x - startX;
+    var x = e.touches[0].pageX;
+    var distance = x - startX;
     scroller.scrollLeft = startScrollLeft - distance;
-    
-    // Prevent page scrolling when dragging horizontally
-    if (Math.abs(distance) > 10) {
-      e.preventDefault();
-    }
-  }, { passive: false });
+  }, { passive: true });
   
   scroller.addEventListener('touchend', function() {
     isDragging = false;
@@ -364,26 +357,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 50);
   });
   
-  // Prevent click after drag
-  let dragStartTime = 0;
-  let hasMoved = false;
-  
-  scroller.addEventListener('mousedown', function() {
-    dragStartTime = Date.now();
-    hasMoved = false;
-  }, { passive: true });
-  
-  scroller.addEventListener('mousemove', function() {
-    if (isDragging) {
-      hasMoved = true;
+  // Handle resize
+  window.addEventListener('resize', function() {
+    // Update section height based on viewport
+    var sectionElement = document.getElementById('shopify-section-{{ section.id }}');
+    if (sectionElement) {
+      sectionElement.style.minHeight = window.innerWidth < 768 ? '90px' : '110px';
     }
-  }, { passive: true });
-  
-  scroller.addEventListener('click', function(e) {
-    if (hasMoved && (Date.now() - dragStartTime > 100)) {
-      e.preventDefault();
-      e.stopPropagation();
+    
+    // Update scroller height
+    if (scroller) {
+      scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
     }
-  }, true);
+    
+    // Update arrow state
+    updateArrowState();
+  }, { passive: true });
 });
 </script>

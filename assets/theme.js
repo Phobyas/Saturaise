@@ -2797,3 +2797,153 @@ margin: 20px 0 20px 0 !important; /* Changed to 20px bottom margin */
   });
 });
 
+/**
+ * Performance Optimization Script - Preserves Dynamic Slideshow Height
+ */
+(function () {
+  // Run immediately to reserve space for collection badges section only
+  (function reserveSpaceImmediately() {
+    // Create style element with fixed dimensions
+    const style = document.createElement("style");
+    style.innerHTML = `
+      /* Fixed dimensions for Collection Badges only */
+      .collection-badges-section {
+        min-height: ${window.innerWidth < 768 ? "90px" : "110px"};
+        overflow: visible;
+        contain: layout;
+      }
+      
+      /* Make badge items stable */
+      #badgeScroller {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        height: ${window.innerWidth < 768 ? "70px" : "80px"};
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        contain: layout;
+      }
+      
+      #badgeScroller::-webkit-scrollbar {
+        display: none;
+      }
+      
+      /* Fixed dimensions for badge items */
+      .badge-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        background-color: #EEEEEE;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: background-color 0.2s;
+        white-space: nowrap;
+        height: 64px;
+        min-width: 120px;
+        margin-right: 12px;
+        contain: layout;
+      }
+      
+      .badge-image-container {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        overflow: hidden;
+      }
+      
+      /* Fix slideshow first slide only without changing height */
+      .slideshow__slide:first-child {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+      }
+      
+      /* Ensure images maintain aspect ratio */
+      .slideshow__slide-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      /* Picture element optimization */
+      picture {
+        display: block;
+      }
+      
+      /* Add aspect ratio to images without dimensions */
+      img[width][height]:not([style*="aspect-ratio"]) {
+        aspect-ratio: attr(width) / attr(height);
+      }
+    `;
+    document.head.appendChild(style);
+  })();
+
+  // Initialize on DOM content loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    // Fix the collection badges section dimensions
+    const badgesSection = document.querySelector(".collection-badges-section");
+    if (badgesSection) {
+      badgesSection.style.minHeight =
+        window.innerWidth < 768 ? "90px" : "110px";
+      badgesSection.style.contain = "layout";
+    }
+
+    // Force visible first slide in slideshows without changing their height
+    document
+      .querySelectorAll(".slideshow__slide:first-child")
+      .forEach((slide) => {
+        slide.style.opacity = "1";
+        slide.style.visibility = "visible";
+        slide.style.display = "block";
+
+        const img = slide.querySelector("img");
+        if (img) {
+          img.style.opacity = "1";
+          img.style.visibility = "visible";
+          img.style.display = "block";
+        }
+      });
+  });
+
+  // Apply passive event listeners for better performance
+  function optimizeEventListeners() {
+    // Optimize collection badges scroller
+    const badgeScroller = document.getElementById("badgeScroller");
+    if (badgeScroller) {
+      // Replace existing listeners with passive ones where possible
+      badgeScroller.addEventListener(
+        "scroll",
+        function () {
+          // Update button states if needed
+          const prevBtn = document.getElementById("badgePrev");
+          const nextBtn = document.getElementById("badgeNext");
+
+          if (prevBtn) prevBtn.disabled = badgeScroller.scrollLeft <= 0;
+          if (nextBtn)
+            nextBtn.disabled =
+              badgeScroller.scrollLeft >=
+              badgeScroller.scrollWidth - badgeScroller.clientWidth - 5;
+        },
+        { passive: true }
+      );
+
+      badgeScroller.addEventListener("touchstart", function () {}, {
+        passive: true,
+      });
+    }
+  }
+
+  // Run optimizations when DOM is fully loaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", optimizeEventListeners);
+  } else {
+    optimizeEventListeners();
+  }
+})();
