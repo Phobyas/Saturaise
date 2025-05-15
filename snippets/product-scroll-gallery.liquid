@@ -1,37 +1,51 @@
 {% comment %}
-  product-scroll-gallery.liquid - optimized for mobile
+  product-scroll-gallery.liquid - optimized for mobile and tablet
 {% endcomment %}
 
 <style>
-  /* Mobile-only CSS to prevent layout shifts */
-  @media (max-width: 1023px) {
-    /* Ensure container has stable dimensions before images load */
-    .product-images__scroll-gallery-container {
-      position: relative;
-      width: 100%;
-      contain: layout size style; /* Prevent layout shift */
-      min-height: 300px; /* Keep your existing min-height */
+  /* High-specificity selectors to prevent overrides */
+  .product-page .product__section-images .product-images__scroll-gallery-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px !important; /* Base min-height with !important */
+    contain: layout size style; /* Prevent layout shift */
+  }
+  
+  /* Tablet-specific improvements with !important to ensure they apply */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .product-page .product__section-images .product-images__scroll-gallery-container {
+      min-height: 500px !important; /* Increased height for tablets */
+      max-height: none !important; /* Ensure no max-height limitations */
     }
     
-    /* Set up gallery items with proper sizing */
-    .scroll--gallery_item {
+    /* Force proper sizing for the gallery images on tablets */
+    .product-page .product__section-images .product__image {
+      max-height: none !important;
+      object-fit: contain !important;
+    }
+  }
+  
+  /* Maintain responsive behavior for all devices */
+  @media (max-width: 1023px) {
+    .product-page .product__section-images .scroll--gallery_item {
       position: relative;
       width: 100%;
       opacity: 0; /* Hide by default */
+      height: auto !important;
     }
     
-    /* Show only the selected item */
-    .scroll--gallery_item.is-selected {
+    .product-page .product__section-images .scroll--gallery_item.is-selected {
       opacity: 1;
       z-index: 2;
+      display: block !important;
     }
   }
 </style>
 
-<div id="product-images">
+<div id="product-images" class="product-images-container">
   {% if product.featured_media %}
     <div id="main-image-gallery" class="product-main-images mb2 sm-mb0">
-      <div class="product-images__scroll-gallery-container js-scroll-gallery">
+      <div class="product-images__scroll-gallery-container js-scroll-gallery" id="scrollGalleryContainer">
         {% for media in product.media %}
           {%- liquid
             assign is_selected = ''
@@ -172,45 +186,76 @@
 </div>
 
 <script>
-  // Mobile-only gallery initialization
+  // More aggressive approach to adjust gallery height on tablets & mobile
   document.addEventListener('DOMContentLoaded', function() {
-    // Only run on mobile and tablet devices
-    if (window.innerWidth <= 1023) {
-      // Set initial height for gallery container
-      const galleryContainer = document.querySelector('.js-scroll-gallery');
-      if (galleryContainer) {
-        // Ensure the first slide is visible
-        const firstSlide = galleryContainer.querySelector('.is-selected');
-        if (firstSlide) {
-          firstSlide.style.opacity = '1';
-          
-          // Set up image loading handling
-          const image = firstSlide.querySelector('img');
-          if (image) {
-            // If image already loaded
-            if (image.complete) {
-              fixGalleryHeight(image);
-            } else {
-              // Wait for image to load
-              image.addEventListener('load', function() {
-                fixGalleryHeight(image);
-              });
-            }
+    // Initial setup
+    forceGalleryHeight();
+    
+    // Handle resize events
+    window.addEventListener('resize', forceGalleryHeight);
+    
+    // Also run this after a short delay to ensure it applies after any other scripts
+    setTimeout(forceGalleryHeight, 500);
+  });
+  
+  function forceGalleryHeight() {
+    const galleryContainer = document.getElementById('scrollGalleryContainer');
+    if (!galleryContainer) return;
+    
+    // Apply different heights based on screen width
+    if (window.innerWidth >= 768 && window.innerWidth <= 1023px) {
+      // For tablets
+      galleryContainer.style.minHeight = '500px';
+      // Try to force height with !important-like behavior by setting multiple properties
+      galleryContainer.style.height = 'auto';
+      galleryContainer.style.maxHeight = 'none';
+      
+      // Make all images in the gallery container visible on tablets
+      const selectedSlide = galleryContainer.querySelector('.is-selected');
+      if (selectedSlide) {
+        selectedSlide.style.opacity = '1';
+        selectedSlide.style.display = 'block';
+        
+        // Adjust container based on image if available
+        const image = selectedSlide.querySelector('img');
+        if (image) {
+          if (image.complete) {
+            adjustBasedOnImage(image, galleryContainer);
+          } else {
+            image.onload = function() {
+              adjustBasedOnImage(image, galleryContainer);
+            };
           }
         }
       }
+    } else if (window.innerWidth < 768) {
+      // For mobile phones
+      galleryContainer.style.minHeight = '300px';
     }
+  }
+  
+  function adjustBasedOnImage(image, container) {
+    // Calculate height based on image aspect ratio but ensure minimum height
+    if (!image || !container) return;
     
-    function fixGalleryHeight(image) {
-      // Set container height based on image aspect ratio while maintaining width
-      const container = document.querySelector('.product-images__scroll-gallery-container');
-      if (container && image) {
-        // Keep original aspect ratio but ensure min-height of 300px
-        const containerWidth = container.offsetWidth;
-        const originalAspect = image.naturalWidth / image.naturalHeight;
-        
-        container.style.height = Math.max(300, containerWidth / originalAspect) + 'px';
-      }
+    const containerWidth = container.offsetWidth;
+    const aspectRatio = image.naturalWidth / image.naturalHeight;
+    
+    if (window.innerWidth >= 768 && window.innerWidth <= 1023px) {
+      // For tablets - ensure generous height
+      const calculatedHeight = Math.max(500, containerWidth / aspectRatio);
+      container.style.height = calculatedHeight + 'px';
+      
+      // Apply additional styles to image
+      image.style.maxHeight = 'none';
+      image.style.objectFit = 'contain';
     }
+  }
+  
+  // Force this behavior after any possible race conditions with other scripts
+  window.addEventListener('load', function() {
+    forceGalleryHeight();
+    // And once more after everything is fully loaded
+    setTimeout(forceGalleryHeight, 1000);
   });
 </script>
