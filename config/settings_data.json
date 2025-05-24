@@ -71,6 +71,7 @@
     "color_swatch_style": "variant-image",
     "product_show_payment_button": true,
     "cart_added_event": "product_page",
+    "instagram": "https://www.instagram.com/politycznie2025/",
     "enable_metal_swatches": true,
     "gold_gradient": "",
     "enable_kt_labels": true,
@@ -285,7 +286,9 @@
             "main_nav": "main-menu",
             "menu_image": "shopify://shop_images/dainty-gold-necklace.jpg",
             "menu_image_text": "Browse the Lookbook",
-            "menu_image_url": "shopify://pages/lookbook"
+            "menu_image_url": "shopify://pages/lookbook",
+            "menu_text_color": "#000000",
+            "menu_bg_color": "#ffffff"
           }
         },
         "header": {
