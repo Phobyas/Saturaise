@@ -23,55 +23,55 @@
         "announcement_bar_content_eRLqKk": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "Oryginalne produkty"
+            "announcement_text": "✅️ Oryginalne produkty"
           }
         },
         "announcement_bar_content_FTBTAF": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "14 dni na zwrot"
+            "announcement_text": "💵 14 dni na zwrot"
           }
         },
         "announcement_bar_content_XEPkUC": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "Certyfikat autentyczności"
+            "announcement_text": "🚚 Darmowa Wysyłka"
+          }
+        },
+        "announcement_bar_content_ePKcJP": {
+          "type": "announcement_bar_content",
+          "settings": {
+            "announcement_text": "⏳Zapłać póżniej z klarna"
           }
         },
         "announcement_bar_content_JM3dHA": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "Wsparcie klienta"
+            "announcement_text": "💬 Wsparcie klienta"
           }
         },
-        "announcement_bar_content_yrR7mf": {
+        "announcement_bar_content_y4fNEr": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "💳 Bezpieczne płatności"
+            "announcement_text": "⭐️ Zweryfikowane Opinie"
           }
         },
-        "announcement_bar_content_Mq38Jt": {
+        "announcement_bar_content_jkydDj": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "Oryginalne produkty"
+            "announcement_text": "🔥 Spersonalizowane zamówienia"
           }
         },
-        "announcement_bar_content_zicBFm": {
+        "announcement_bar_content_T3k7xm": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "14 dni na zwrot"
+            "announcement_text": "💡 3 Lata na rynku"
           }
         },
-        "announcement_bar_content_rcYXzi": {
+        "announcement_bar_content_tY76Mh": {
           "type": "announcement_bar_content",
           "settings": {
-            "announcement_text": "Certyfikat autentyczności"
-          }
-        },
-        "announcement_bar_content_ReKyqn": {
-          "type": "announcement_bar_content",
-          "settings": {
-            "announcement_text": "Wsparcie klienta"
+            "announcement_text": "📱 Płatności blik"
           }
         }
       },
@@ -80,12 +80,12 @@
         "announcement_bar_content_eRLqKk",
         "announcement_bar_content_FTBTAF",
         "announcement_bar_content_XEPkUC",
+        "announcement_bar_content_ePKcJP",
         "announcement_bar_content_JM3dHA",
-        "announcement_bar_content_yrR7mf",
-        "announcement_bar_content_Mq38Jt",
-        "announcement_bar_content_zicBFm",
-        "announcement_bar_content_rcYXzi",
-        "announcement_bar_content_ReKyqn"
+        "announcement_bar_content_y4fNEr",
+        "announcement_bar_content_jkydDj",
+        "announcement_bar_content_T3k7xm",
+        "announcement_bar_content_tY76Mh"
       ],
       "settings": {
         "announcement_text": "<p>Share a shop announcement or message</p>",
