@@ -9,6 +9,25 @@
  */
 {
   "sections": {
+    "trustmate_reviews_hNwJCm": {
+      "type": "trustmate-reviews",
+      "name": "Trustmate Reviews",
+      "settings": {
+        "widget_id": "4ff47043-34e9-4d3a-beff-0aca4d8b9b93",
+        "heading": "What Our Customers Say",
+        "heading_alignment": "center",
+        "heading_size": 28,
+        "heading_color": "#000000",
+        "heading_margin": 30,
+        "max_width": 1200,
+        "center_widget": true,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": ""
+      }
+    },
     "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
       "type": "slideshow",
       "blocks": {
@@ -519,6 +538,7 @@
     }
   },
   "order": [
+    "trustmate_reviews_hNwJCm",
     "7773d85e-29d5-49cb-80bc-bf840c5e1664",
     "collections_badges_pWqmae",
     "featured_collection_jRewn3",
