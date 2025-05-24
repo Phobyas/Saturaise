@@ -21,7 +21,7 @@
 
   .section-collection-carousel {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   width: 100%;
 }
 
@@ -79,15 +79,15 @@
   }
 {%- endstyle -%}
 
-<div class="section-collection-carousel  mx-auto mb-5 px-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
+<div class="section-collection-carousel  mx-auto px-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
   {% if section.settings.title != blank %}
-    <h2 class="text-[24px] md:text-[32px] font-bold mb-6 ">{{ section.settings.title }}</h2>
+    <h2 class="text-[24px] md:text-[28px] font-bold mb-6 ">{{ section.settings.title }}</h2>
   {% endif %}
 
   <div class="swiper-container swiper-collection-carousel">
     <div class="swiper-wrapper">
       {% for block in section.blocks %}
-        {% assign collection = collections[block.settings.collection] %}
+        {% assign collection = collections[block.settings.collection] %}  
         {% if collection == blank %}{% continue %}{% endif %}
         
         <div class="swiper-slide" {{ block.shopify_attributes }}>
@@ -112,7 +112,7 @@
             </div>
             
             <div class="mt-4 text-center">
-              <h3 class="absolute top-[85%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] text-2xl font-bold tracking-wider uppercase text-white">{{ collection.title }}</h3>
+              <h3 class="absolute top-[85%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] text-xl font-bold tracking-wider uppercase">{{ collection.title }}</h3>
             </div>
           </a>
         </div>

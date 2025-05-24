@@ -1159,6 +1159,11 @@ video {
   line-height: 1.25rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .font-\[600\] {
   font-weight: 600;
 }
@@ -1342,6 +1347,14 @@ video {
 
   .md\:text-\[32px\] {
     font-size: 32px;
+  }
+
+  .md\:text-\[29px\] {
+    font-size: 29px;
+  }
+
+  .md\:text-\[28px\] {
+    font-size: 28px;
   }
 }
 
