@@ -328,7 +328,8 @@
   "products": {
     "general": {
       "new": "NEW",
-      "sale": "SALE",
+      "sale": "OKAZJA!",
+      "bestseller": "BESTSELLER 🔥",
       "sold": "Wyprzedane",
       "set": "Zestaw",
       "from": "Od",
