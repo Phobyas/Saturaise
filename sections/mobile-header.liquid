@@ -180,6 +180,54 @@
     transition: fill 0.2s !important;
     transform: none !important;
   }
+
+  /* Mobile Social Icons Styles */
+  .mobile-social-icons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background-color: {{ bg_color }};
+    z-index: 9999;
+  }
+
+  .mobile-social-icons .social-icons-list {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .mobile-social-icons a {
+    display: inline-block;
+    padding: 0;
+  }
+
+  .mobile-social-icons svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .mobile-social-icons svg .hover-fill {
+    fill: {{ text_color }};
+    transition: fill 0.2s ease;
+  }
+
+  .mobile-social-icons svg:hover .hover-fill {
+    fill: {{ hover_color }};
+  }
+
+  /* Add padding to slideout content to prevent overlap with fixed social icons */
+  body.slideout-mobile-navigation--open .mobile-nav__wrapper {
+    padding-bottom: 80px;
+  }
+
+  /* Ensure social icons stay above everything */
+  #mobile-slideout .mobile-social-icons {
+    z-index: 9999 !important;
+    position: fixed !important;
+  }
 {% endstyle %}
 
 {% comment %} Mobile Header {% endcomment %}
@@ -399,6 +447,116 @@
         </div>
       {% endif %}
     </div>
+
+    {% comment %} Social Media Icons Section {% endcomment %}
+    {%- assign has_social_links = false -%}
+    {%- if settings.facebook_url != blank or settings.twittername != blank or settings.pinterest_url != blank or settings.youtube_url != blank or settings.linkedin_url != blank or settings.instagram != blank or settings.tiktok != blank or settings.etsy != blank -%}
+      {%- assign has_social_links = true -%}
+    {%- endif -%}
+    
+    {%- if section.settings.show_social_icons and has_social_links -%}
+      <div class="mobile-social-icons">
+        <div class="social-icons-list">
+          {% if settings.facebook_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.facebook_url }}" title="Facebook" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'facebook',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.twittername != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.twittername }}" title="Twitter" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'twitter',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.pinterest_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.pinterest_url }}" title="Pinterest" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'pinterest',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.youtube_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.youtube_url }}" title="Youtube" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'youtube',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.linkedin_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.linkedin_url }}" title="Linkedin" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'linkedin',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.instagram != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.instagram }}" title="Instagram" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'instagram',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.tiktok != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.tiktok }}" title="Tiktok" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'tiktok',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.etsy != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.etsy }}" title="Etsy" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'etsy',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
     {% style %}
       #slideout-mobile-navigation,
       #slideout-mobile-navigation .mobile-nav__mobile-header,
@@ -730,6 +888,17 @@ document.addEventListener('DOMContentLoaded', function() {
       "unit": "px",
       "label": "Menu text size",
       "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social media icons",
+      "default": true,
+      "info": "Icons will display based on your theme's social media settings"
     }
   ]
 }

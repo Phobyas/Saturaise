@@ -95,7 +95,7 @@
 }
 
 .c-accordion li:not(.c-accordion__panel) {
-  padding: var(--space-4) 0rem var(--space-4) 1rem;
+  padding: var(--space-4) 0rem var(--space-4) 0;
 }
 
 .c-accordion .c-accordion__third-level li:not(.c-accordion__panel) {
