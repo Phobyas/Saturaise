@@ -150,10 +150,11 @@
       "mailing-popup": {
         "type": "mailing-popup",
         "settings": {
-          "popup": false,
-          "popup_delay": 5,
+          "popup": true,
+          "popup_delay": 25,
           "popup_frequency": 7,
           "popup_image": "background",
+          "email_image": "shopify://shop_images/6feaf86dc4f57419b9bab7cb13a0b267.jpg",
           "mail_popup_title": "Keep In Touch",
           "mail_popup_text": "Signup for exclusive offers and promotions.",
           "mail_button_text": "Signup",
