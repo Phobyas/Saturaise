@@ -253,10 +253,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set fixed height immediately
   scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
   
-  // Simple drag handling variables
+  // Enhanced drag handling variables
   var isDragging = false;
   var startX = 0;
   var startScrollLeft = 0;
+  var hasDragged = false; // Track if actual dragging occurred
+  var dragThreshold = 5; // Minimum pixels to consider it a drag
   
   // Basic arrow button functionality
   function updateArrowState() {
@@ -287,9 +289,37 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update button state on scroll
   scroller.addEventListener('scroll', updateArrowState, { passive: true });
   
-  // Simple mouse drag handling
+  // Prevent clicks on badge items after dragging
+  function preventClickAfterDrag(e) {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    }
+  }
+  
+  // Add click prevention to all badge items
+  function addClickPrevention() {
+    var badgeItems = scroller.querySelectorAll('.badge-item');
+    badgeItems.forEach(function(item) {
+      item.addEventListener('click', preventClickAfterDrag, true);
+    });
+  }
+  
+  // Initialize click prevention
+  addClickPrevention();
+  
+  // Re-add click prevention when new items are added (for dynamic content)
+  var observer = new MutationObserver(function() {
+    addClickPrevention();
+  });
+  observer.observe(scroller, { childList: true, subtree: true });
+  
+  // Enhanced mouse drag handling
   scroller.addEventListener('mousedown', function(e) {
     isDragging = true;
+    hasDragged = false;
     startX = e.pageX;
     startScrollLeft = scroller.scrollLeft;
     
@@ -305,10 +335,17 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('mousemove', function(e) {
     if (!isDragging) return;
     
-    // Direct calculation without complex math
     var x = e.pageX;
-    var distance = x - startX;
-    scroller.scrollLeft = startScrollLeft - distance;
+    var distance = Math.abs(x - startX);
+    
+    // Check if we've moved enough to consider it a drag
+    if (distance > dragThreshold) {
+      hasDragged = true;
+    }
+    
+    // Perform the scroll
+    var scrollDistance = x - startX;
+    scroller.scrollLeft = startScrollLeft - scrollDistance;
     
     // Prevent other events
     e.preventDefault();
@@ -328,11 +365,21 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
       scroller.style.scrollBehavior = '';
     }, 50);
+    
+    // Reset hasDragged flag after a short delay to allow click prevention
+    setTimeout(function() {
+      hasDragged = false;
+    }, 100);
   }
   
-  // Touch handling for mobile
+  // Enhanced touch handling for mobile
+  var touchStartX = 0;
+  var touchHasDragged = false;
+  
   scroller.addEventListener('touchstart', function(e) {
     isDragging = true;
+    touchHasDragged = false;
+    touchStartX = e.touches[0].pageX;
     startX = e.touches[0].pageX;
     startScrollLeft = scroller.scrollLeft;
     
@@ -344,8 +391,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!isDragging) return;
     
     var x = e.touches[0].pageX;
-    var distance = x - startX;
-    scroller.scrollLeft = startScrollLeft - distance;
+    var distance = Math.abs(x - touchStartX);
+    
+    // Check if we've moved enough to consider it a drag
+    if (distance > dragThreshold) {
+      touchHasDragged = true;
+      hasDragged = true;
+    }
+    
+    var scrollDistance = x - startX;
+    scroller.scrollLeft = startScrollLeft - scrollDistance;
   }, { passive: true });
   
   scroller.addEventListener('touchend', function() {
@@ -355,6 +410,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
       scroller.style.scrollBehavior = '';
     }, 50);
+    
+    // Reset hasDragged flag after a short delay for touch
+    setTimeout(function() {
+      hasDragged = false;
+      touchHasDragged = false;
+    }, 150); // Slightly longer delay for touch devices
   });
   
   // Handle resize
@@ -375,5 +436,3 @@ document.addEventListener('DOMContentLoaded', function() {
   }, { passive: true });
 });
 </script>
-
-
