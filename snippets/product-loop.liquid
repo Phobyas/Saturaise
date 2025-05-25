@@ -101,34 +101,43 @@
   object-fit: contain;
 }
 
-  .product-loop__badge-icon {
+.product-loop__badge-icon {
   z-index: 10;  /* Higher number to ensure it's always on top */
 }
 
-  /* Fixed product title handling with min-height instead of fixed height */
-  .p-title {
-    min-height: 70px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+/* Bestseller icon styling */
+.product-loop__badge-icon.icon-type--bestseller {
+  background-color: #1d4ed8;
+  border-radius: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+}
 
-  .p-title-index {
-    min-height: 70px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+/* Fixed product title handling with min-height instead of fixed height */
+.p-title {
+  min-height: 70px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-  .p-title-index a {
-    font-size: 16px !important;
-  }
+.p-title-index {
+  min-height: 70px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-  .price-index {
-    font-size: 16px !important;
-  }
+.p-title-index a {
+  font-size: 16px !important;
+}
+
+.price-index {
+  font-size: 16px !important;
+}
 
 @media screen and (max-width: 768px) {
   /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
@@ -151,6 +160,17 @@
 
   .p-title {
     min-height: 90px !important;
+  }
+
+  /* Mobile badge spacing - smaller gap for mobile devices */
+  .product-loop__badge-icon[data-badge-index="1"] {
+    right: 66px !important; /* 10 + 56 (smaller spacing for mobile) */
+  }
+  .product-loop__badge-icon[data-badge-index="2"] {
+    right: 122px !important; /* 10 + 56 + 56 */
+  }
+  .product-loop__badge-icon[data-badge-index="3"] {
+    right: 178px !important; /* 10 + 56 + 56 + 56 */
   }
 }
 
@@ -203,37 +223,64 @@
 </style>
 
 {%- liquid
-  assign icon_type = ''
-  assign icon_text = ''
-
   assign date_range = settings.date_range
+  assign badges = ''
+
+ 
+  assign is_bestseller = false
+  for tag in product.tags
+    if tag == 'Hot'
+      assign is_bestseller = true
+      break
+    endif
+  endfor
+
+  if is_bestseller
+    assign badges = badges | append: 'bestseller:' | append: 'products.general.bestseller'
+  endif
 
   if product.template_suffix == 'set'
-    assign icon_type = 'new'
-    assign icon_text =  'products.general.set' | t
+    if badges != ''
+      assign badges = badges | append: '|'
+    endif
+    assign badges = badges | append: 'new:' | append: 'products.general.set'
   elsif product.available
     assign product_created_at = product.created_at | date: '%s'
     assign time_ago = 'now' | date: '%s' | minus: product_created_at | divided_by: 86400
-    if time_ago <= date_range
-      assign icon_type = 'new'
-      assign icon_text =  'products.general.new' | t
+
+    assign is_on_sale = false
+    if product.price < product.compare_at_price or product.price_min < product.compare_at_price_min or product.price_max < product.compare_at_price_max
+      assign is_on_sale = true
     endif
-    if product.price < product.compare_at_price
-      assign icon_type = 'sale-item'
-      assign icon_text =  'products.general.sale' | t
+    
+    if is_on_sale
+      if badges != ''
+        assign badges = badges | append: '|'
+      endif
+      assign badges = badges | append: 'sale-item:' | append: 'products.general.sale'
     endif
-    if product.price_min < product.compare_at_price_min or product.price_max < product.compare_at_price_max
-      assign icon_type = 'sale-item'
-      assign icon_text =  'products.general.sale' | t
-    endif
+    
     if product.template_suffix == 'pre-order'
-      assign icon_type = 'pre-order'
-      assign icon_text = 'products.product.pre_order' | t
+      if badges != ''
+        assign badges = badges | append: '|'
+      endif
+      assign badges = badges | append: 'pre-order:' | append: 'products.product.pre_order'
     endif
   else
-    assign icon_type = 'sold-out'
-    assign icon_text =  'products.general.sold' | t
+    if badges != ''
+      assign badges = badges | append: '|'
+    endif
+    assign badges = badges | append: 'sold-out:' | append: 'products.general.sold'
   endif
+
+  assign badges_array = badges | split: '|'
+  assign has_sale_badge = false
+  for badge in badges_array
+    if badge contains 'sale-item:'
+      assign has_sale_badge = true
+      break
+    endif
+  endfor
 
   if varying_grid == true and index == 3 or index == 4 or index == 13 or index == 14 or index == 23 or index == 24
     assign items_per_row = 'span-6 r-span-2 auto'
@@ -259,19 +306,18 @@
   data-price="{{ product.price }}">
 
   <div class="product-image relative">
-    {% unless icon_type == '' %}
-      <div class="product-loop__badge-icon icon-type--{{ icon_type }} icn">{{ icon_text }}</div>
-    {% endunless %}
-    {% unless product.compare_at_price_varies %}
-      {%- if section.settings.show_savings and icon_type == 'sale-item' -%}
-        <div class="product-loop__badge-icon icon-type--savings icn">
-          {% assign savings = product.compare_at_price | minus: product.price %}
-          <span class="product-loop__price--savings savings">
-            ({{ 'collections.general.save' | t }} {{ savings | money }})
-          </span>
-        </div>
-      {%- endif -%}
-    {% endunless %}
+    {% if badges != '' %}
+      {% assign badge_count = 0 %}
+      {% for badge in badges_array %}
+        {% assign badge_parts = badge | split: ':' %}
+        {% assign badge_type = badge_parts[0] %}
+        {% assign badge_text = badge_parts[1] | t %}
+        <div class="product-loop__badge-icon icon-type--{{ badge_type }} icn" style="right: {{ badge_count | times: 70 | plus: 10 }}px; top: 10px;" data-badge-index="{{ badge_count }}">{{ badge_text }}</div>
+        {% assign badge_count = badge_count | plus: 1 %}
+      {% endfor %}
+    {% endif %}
+    
+    {% comment %} Removed the duplicate savings badge logic since it's now handled in the badges system above {% endcomment %}
 
     <div class="product-loop__img-wrapper relative">
       <a href="{{ product.url | within: collection }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">

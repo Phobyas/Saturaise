@@ -190,6 +190,17 @@
     padding: 20px;
     background-color: {{ bg_color }};
     z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Only show social icons when mobile navigation is open */
+  body.slideout-mobile-navigation--open .mobile-social-icons {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .mobile-social-icons .social-icons-list {
@@ -223,10 +234,19 @@
     padding-bottom: 80px;
   }
 
-  /* Ensure social icons stay above everything */
+  /* Ensure social icons stay above everything but don't affect layout when hidden */
   #mobile-slideout .mobile-social-icons {
     z-index: 9999 !important;
     position: fixed !important;
+  }
+
+  /* Prevent any layout shifts by ensuring social icons don't affect document flow */
+  .mobile-social-icons {
+    pointer-events: none;
+  }
+
+  body.slideout-mobile-navigation--open .mobile-social-icons {
+    pointer-events: auto;
   }
 {% endstyle %}
 
