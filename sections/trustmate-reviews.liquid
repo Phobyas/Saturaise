@@ -26,13 +26,33 @@
   }
   
   .trustmate-container {
-    max-width: {{ section.settings.max_width }}px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0;
+  }
+  
+  @media screen and (min-width: 1920px) {
+    .trustmate-container {
+      max-width: 1600px;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .trustmate-container {
+      padding: 0 15px;
+    }
   }
   
   .trustmate-widget {
     width: 100%;
+  }
+  
+  /* Remove margins from Trustmate classes on mobile only */
+  @media screen and (min-width: 768px) {
+    .tm-ferret2,
+    .tm-accountFerret2 {
+      margin: 0 !important;
+    }
   }
   
   {% if section.settings.center_widget %}
@@ -143,16 +163,6 @@
     {
       "type": "header",
       "content": "Layout Settings"
-    },
-    {
-      "type": "range",
-      "id": "max_width",
-      "min": 600,
-      "max": 1400,
-      "step": 50,
-      "unit": "px",
-      "label": "Maximum Width",
-      "default": 1200
     },
     {
       "type": "checkbox",
