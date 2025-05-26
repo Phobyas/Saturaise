@@ -198,17 +198,39 @@
         "category_4eiKkM",
         "category_kpqDfb"
       ],
-      "settings": {}
+      "settings": {
+        "scroll_amount": 200
+      }
     },
     "extended_description": {
       "type": "collection-extended-description",
       "settings": {}
+    },
+    "trustmate_reviews_GhbA8L": {
+      "type": "trustmate-reviews",
+      "name": "Trustmate Reviews",
+      "settings": {
+        "widget_id": "ec9d6caf-04bb-4536-92ac-c8866ab4d9ba",
+        "heading": "What Our Customers Say",
+        "heading_alignment": "center",
+        "heading_size": 28,
+        "heading_color": "#000000",
+        "heading_margin": 30,
+        "max_width": 1200,
+        "center_widget": true,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": ""
+      }
     }
   },
   "order": [
     "banner",
     "main",
     "collections_badges_kVtn9A",
-    "extended_description"
+    "extended_description",
+    "trustmate_reviews_GhbA8L"
   ]
 }
