@@ -3599,3 +3599,11 @@ section#shopify-section-template--24156831154469__3a259e86-1d8c-4b1e-b9b4-342fc4
 .ajax-cart__footer-wrapper .wallet-cart-grid {
   justify-content: center !important;
 }
+
+#scrollGalleryContainer {
+  mix-blend-mode: multiply;
+}
+
+.product__image {
+  mix-blend-mode: multiply;
+}

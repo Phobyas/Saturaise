@@ -121,6 +121,7 @@
   -ms-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
 }
 /* @media (max-width: 767px) {
   .product-loop__item--square .box-ratio img {
