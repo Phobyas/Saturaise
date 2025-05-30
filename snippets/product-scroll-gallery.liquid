@@ -1,46 +1,6 @@
 {% comment %}
-  product-scroll-gallery.liquid - optimized for mobile and tablet
+  product-scroll-gallery.liquid - Fixed with Flickity mobile + desktop grid
 {% endcomment %}
-
-<style>
-  /* High-specificity selectors to prevent overrides */
-  .product-page .product__section-images .product-images__scroll-gallery-container {
-    position: relative;
-    width: 100%;
-    min-height: 300px !important; /* Base min-height with !important */
-    contain: layout size style; /* Prevent layout shift */
-  }
-  
-  /* Tablet-specific improvements with !important to ensure they apply */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .product-page .product__section-images .product-images__scroll-gallery-container {
-      min-height: 500px !important; /* Increased height for tablets */
-      max-height: none !important; /* Ensure no max-height limitations */
-    }
-    
-    /* Force proper sizing for the gallery images on tablets */
-    .product-page .product__section-images .product__image {
-      max-height: none !important;
-      object-fit: contain !important;
-    }
-  }
-  
-  /* Maintain responsive behavior for all devices */
-  @media (max-width: 1023px) {
-    .product-page .product__section-images .scroll--gallery_item {
-      position: relative;
-      width: 100%;
-      opacity: 0; /* Hide by default */
-      height: auto !important;
-    }
-    
-    .product-page .product__section-images .scroll--gallery_item.is-selected {
-      opacity: 1;
-      z-index: 2;
-      display: block !important;
-    }
-  }
-</style>
 
 <div id="product-images" class="product-images-container">
   {% if product.featured_media %}
@@ -62,42 +22,50 @@
               assign fetch_priority = 'high'
             endif
           -%}
-          <div class="{{ media.media_type }}-slide scroll--gallery_item carousel-cell {{ is_selected }}" data-image-id="{{ media.id }}" data-slide-index="{{ forloop.index0 }}" tabindex="-1">
+          <div class="{{ media.media_type }}-slide scroll--gallery_item carousel-cell {{ is_selected }}" 
+               data-image-id="{{ media.id }}" 
+               data-slide-index="{{ forloop.index0 }}" 
+               tabindex="-1">
             <div class="product-gallery__media-container product-media--{{ media.id }} {{ media.media_type }}"
-            data-product-single-media-wrapper
-            {% if media.media_type == 'video' %} data-product-media-type-video data-enable-video-looping="{{ enable_video_looping }}"{% endif %}
-            {% if media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ enable_video_looping }}" data-video-id="{{ media.external_id }}"{% endif %}
-            {% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
-            data-thumbnail-id="product-template-{{ media.id }}"
-            data-media-id="product-template-{{ media.id }}">
+                 data-product-single-media-wrapper
+                 {% if media.media_type == 'video' %} data-product-media-type-video data-enable-video-looping="{{ enable_video_looping }}"{% endif %}
+                 {% if media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ enable_video_looping }}" data-video-id="{{ media.external_id }}"{% endif %}
+                 {% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
+                 data-thumbnail-id="product-template-{{ media.id }}"
+                 data-media-id="product-template-{{ media.id }}">
               {% case media.media_type %}
                 {% when 'image' %}
                 {%- capture counter -%}
                   {%- increment image_count -%}
                 {%- endcapture -%}
-                  <img id="{{ media.id }}" class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
-                     srcset="{%- if media.width >= 180 -%}{{ media | image_url: width: 180 }} 180w,{%- endif -%}
-                     {%- if media.width >= 360 -%}{{ media | image_url: width: 360 }} 360w,{%- endif -%}
-                     {%- if media.width >= 540 -%}{{ media | image_url: width: 540 }} 540w,{%- endif -%}
-                     {%- if media.width >= 720 -%}{{ media | image_url: width: 720 }} 720w,{%- endif -%}
-                     {%- if media.width >= 780 -%}{{ media | image_url: width: 780 }} 780w,{%- endif -%}
-                     {%- if media.width >= 900 -%}{{ media | image_url: width: 900 }} 900w,{%- endif -%}
-                     {%- if media.width >= 1080 -%}{{ media | image_url: width: 1080 }} 1080w,{%- endif -%}
-                     {%- if media.width >= 1220 -%}{{ media | image_url: width: 1220 }} 1220w,{%- endif -%}
-                     {%- if media.width >= 1520 -%}{{ media | image_url: width: 1520 }} 1520w,{%- endif -%}
-                     {%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }} 1920w{%- endif -%}"
-                     src="{{ media | image_url: width: 900 }}"
-                     sizes="(min-width: 1601px) calc(1600px / 2), (min-width: 768px) and (max-width: 1600px) calc(100vw / 2), (max-width: 767px) 100vw, 900px"
-                     alt="{{ media.alt | escape }}"
-                     width="{{ media.width }}"
-                     height="{{ media.height }}"
-                     data-zoom-src="{%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }}{%- elsif media.width >= 1520 -%}{{ media | image_url: width: 1520 }}{%- else -%}{{ media | image_url: width: 1220 }}{%- endif -%}"
-                     loading="{{ loading }}"
-                     fetchpriority="{{ fetch_priority }}"
-                     data-index="{{ counter }}">
+                  <img id="{{ media.id }}" 
+                       class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
+                       srcset="{%- if media.width >= 180 -%}{{ media | image_url: width: 180 }} 180w,{%- endif -%}
+                       {%- if media.width >= 360 -%}{{ media | image_url: width: 360 }} 360w,{%- endif -%}
+                       {%- if media.width >= 540 -%}{{ media | image_url: width: 540 }} 540w,{%- endif -%}
+                       {%- if media.width >= 720 -%}{{ media | image_url: width: 720 }} 720w,{%- endif -%}
+                       {%- if media.width >= 780 -%}{{ media | image_url: width: 780 }} 780w,{%- endif -%}
+                       {%- if media.width >= 900 -%}{{ media | image_url: width: 900 }} 900w,{%- endif -%}
+                       {%- if media.width >= 1080 -%}{{ media | image_url: width: 1080 }} 1080w,{%- endif -%}
+                       {%- if media.width >= 1220 -%}{{ media | image_url: width: 1220 }} 1220w,{%- endif -%}
+                       {%- if media.width >= 1520 -%}{{ media | image_url: width: 1520 }} 1520w,{%- endif -%}
+                       {%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }} 1920w{%- endif -%}"
+                       src="{{ media | image_url: width: 900 }}"
+                       sizes="(min-width: 1601px) calc(1600px / 2), (min-width: 768px) and (max-width: 1600px) calc(100vw / 2), (max-width: 767px) 100vw, 900px"
+                       alt="{{ media.alt | escape }}"
+                       width="{{ media.width }}"
+                       height="{{ media.height }}"
+                       data-zoom-src="{%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }}{%- elsif media.width >= 1520 -%}{{ media | image_url: width: 1520 }}{%- else -%}{{ media | image_url: width: 1220 }}{%- endif -%}"
+                       loading="{{ loading }}"
+                       fetchpriority="{{ fetch_priority }}"
+                       data-index="{{ counter }}">
 
                       {% if section.settings.click_to_enlarge %}
-                      <a class="js-zoom-btn product-gallery__zoom-btn no-js-hidden lg-hide" title="click to zoom-in" data-index="{{ counter }}" href="{{ media | image_url: width: 2400 }}" tabindex="-1">
+                      <a class="js-zoom-btn product-gallery__zoom-btn no-js-hidden lg-hide" 
+                         title="click to zoom-in" 
+                         data-index="{{ counter }}" 
+                         href="{{ media | image_url: width: 2400 }}" 
+                         tabindex="-1">
                         {% render 'snip-icons',
                            wrapper: '.product-gallery__zoom-btn',
                            type: 'theme',
@@ -148,6 +116,7 @@
           </div>
         {% endfor %}
       </div>
+      
       {% assign first_3d_model = product.media | where: "media_type", "model" | first %}
       {%- if first_3d_model -%}
         <button
@@ -184,78 +153,313 @@
     {%- endstyle -%}
   {% endif %}
 </div>
-
 <script>
-  // More aggressive approach to adjust gallery height on tablets & mobile
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initial setup
-    forceGalleryHeight();
-    
-    // Handle resize events
-    window.addEventListener('resize', forceGalleryHeight);
-    
-    // Also run this after a short delay to ensure it applies after any other scripts
-    setTimeout(forceGalleryHeight, 500);
-  });
+// Updated Product Gallery JavaScript for Fixed Layout
+document.addEventListener('DOMContentLoaded', function() {
+  initializeGallery();
   
-  function forceGalleryHeight() {
-    const galleryContainer = document.getElementById('scrollGalleryContainer');
-    if (!galleryContainer) return;
+  // Handle resize to reinitialize if needed
+  window.addEventListener('resize', debounce(initializeGallery, 250));
+});
+
+function initializeGallery() {
+  const galleryContainer = document.getElementById('scrollGalleryContainer');
+  if (!galleryContainer) return;
+  
+  const screenWidth = window.innerWidth;
+  
+  if (screenWidth < 1024) {
+    // Mobile/Tablet: Ensure Flickity is working
+    enableFlickity(galleryContainer);
+  } else {
+    // Desktop: Disable Flickity for grid layout
+    disableFlickity(galleryContainer);
+    setupDesktopGrid(galleryContainer);
+  }
+}
+
+function enableFlickity(container) {
+  // Clean up any interfering inline styles first
+  cleanupInlineStyles(container);
+  
+  // If Flickity isn't already initialized and is available
+  if (window.Flickity && !container.classList.contains('flickity-enabled')) {
+    const flickityInstance = new Flickity(container, {
+      cellAlign: 'center',
+      contain: true,
+      wrapAround: true,
+      autoPlay: false,
+      pauseAutoPlayOnHover: true,
+      prevNextButtons: true,
+      pageDots: true, // Ensure dots are enabled
+      dragThreshold: 10,
+      selectedAttraction: 0.025,
+      friction: 0.28,
+      // Make height responsive to content
+      adaptiveHeight: true,
+      setGallerySize: true
+    });
     
-    // Apply different heights based on screen width
-    if (window.innerWidth >= 768 && window.innerWidth <= 1023px) {
-      // For tablets
-      galleryContainer.style.minHeight = '500px';
-      // Try to force height with !important-like behavior by setting multiple properties
-      galleryContainer.style.height = 'auto';
-      galleryContainer.style.maxHeight = 'none';
-      
-      // Make all images in the gallery container visible on tablets
-      const selectedSlide = galleryContainer.querySelector('.is-selected');
-      if (selectedSlide) {
-        selectedSlide.style.opacity = '1';
-        selectedSlide.style.display = 'block';
-        
-        // Adjust container based on image if available
-        const image = selectedSlide.querySelector('img');
-        if (image) {
-          if (image.complete) {
-            adjustBasedOnImage(image, galleryContainer);
-          } else {
-            image.onload = function() {
-              adjustBasedOnImage(image, galleryContainer);
-            };
-          }
-        }
-      }
-    } else if (window.innerWidth < 768) {
-      // For mobile phones
-      galleryContainer.style.minHeight = '300px';
-    }
+    // Force dynamic height calculation
+    setTimeout(() => {
+      ensureDotsVisible(container);
+      fixImageAspectRatio(container);
+      setDynamicHeight(container, flickityInstance);
+    }, 100);
+    
+    setTimeout(() => {
+      ensureDotsVisible(container);
+      fixImageAspectRatio(container);
+      setDynamicHeight(container, flickityInstance);
+    }, 500);
+    
+    // Listen for Flickity ready event
+    flickityInstance.on('ready', () => {
+      ensureDotsVisible(container);
+      fixImageAspectRatio(container);
+      setDynamicHeight(container, flickityInstance);
+    });
+    
+    // Listen for Flickity settle event (when slide changes)
+    flickityInstance.on('settle', () => {
+      fixImageAspectRatio(container);
+      setDynamicHeight(container, flickityInstance);
+    });
+    
+    // Listen for window resize
+    window.addEventListener('resize', debounce(() => {
+      setDynamicHeight(container, flickityInstance);
+    }, 250));
   }
   
-  function adjustBasedOnImage(image, container) {
-    // Calculate height based on image aspect ratio but ensure minimum height
-    if (!image || !container) return;
-    
+  // Ensure container styles for mobile
+  container.style.position = 'relative';
+  container.style.overflow = 'visible'; // Changed to visible for dots
+}
+
+function setDynamicHeight(container, flickityInstance) {
+  if (window.innerWidth < 1024) {
+    // Calculate the height based on the viewport width and square aspect ratio
     const containerWidth = container.offsetWidth;
-    const aspectRatio = image.naturalWidth / image.naturalHeight;
+    const targetHeight = containerWidth; // Square aspect ratio
     
-    if (window.innerWidth >= 768 && window.innerWidth <= 1023px) {
-      // For tablets - ensure generous height
-      const calculatedHeight = Math.max(500, containerWidth / aspectRatio);
-      container.style.height = calculatedHeight + 'px';
+    // Set the height on the viewport
+    const viewport = container.querySelector('.flickity-viewport');
+    if (viewport) {
+      viewport.style.height = targetHeight + 'px';
+    }
+    
+    // Remove any fixed heights from the container
+    container.style.height = 'auto';
+    container.style.minHeight = 'auto';
+    
+    // Resize Flickity to match
+    if (flickityInstance && flickityInstance.resize) {
+      flickityInstance.resize();
+    }
+    
+    console.log(`Set dynamic height: ${targetHeight}px for container width: ${containerWidth}px`);
+  }
+}
+
+function fixImageAspectRatio(container) {
+  // Force square aspect ratio on mobile and proper fitting
+  if (window.innerWidth < 1024) {
+    const slides = container.querySelectorAll('.scroll--gallery_item');
+    slides.forEach(slide => {
+      slide.style.aspectRatio = '1 / 1'; // Square ratio
+      slide.style.height = 'auto';
+      slide.style.marginBottom = '0';
+      slide.style.paddingBottom = '0';
       
-      // Apply additional styles to image
-      image.style.maxHeight = 'none';
-      image.style.objectFit = 'contain';
+      const img = slide.querySelector('img');
+      if (img) {
+        img.style.aspectRatio = '1 / 1'; // Square images
+        img.style.objectFit = 'contain'; // Ensure full image is visible
+        img.style.width = '100%';
+        img.style.height = 'auto'; // Let aspect ratio control height
+        img.style.display = 'block';
+      }
+    });
+    
+    // Remove any fixed height from container
+    container.style.height = 'auto';
+    container.style.minHeight = 'auto';
+    container.style.overflow = 'visible'; // Allow dots to show
+  }
+}
+
+function ensureDotsVisible(container) {
+  // Look for dots in multiple possible locations
+  const possibleDotSelectors = [
+    '.flickity-page-dots',
+    'ol.flickity-page-dots',
+    '.js-scroll-gallery .flickity-page-dots'
+  ];
+  
+  possibleDotSelectors.forEach(selector => {
+    const dots = container.querySelector(selector) || 
+                 container.parentElement.querySelector(selector) ||
+                 document.querySelector(`#main-image-gallery ${selector}`);
+    
+    if (dots) {
+      dots.style.display = 'block';
+      dots.style.visibility = 'visible';
+      dots.style.opacity = '1';
+      dots.style.position = 'relative';
+      dots.style.marginTop = '20px';
+      dots.style.textAlign = 'center';
+      dots.style.zIndex = '1000';
+      console.log('Flickity dots found and made visible:', selector);
+    }
+  });
+}
+
+function disableFlickity(container) {
+  // Destroy Flickity instance if it exists
+  if (window.Flickity && container.classList.contains('flickity-enabled')) {
+    const flickityInstance = Flickity.data(container);
+    if (flickityInstance) {
+      flickityInstance.destroy();
     }
   }
   
-  // Force this behavior after any possible race conditions with other scripts
-  window.addEventListener('load', function() {
-    forceGalleryHeight();
-    // And once more after everything is fully loaded
-    setTimeout(forceGalleryHeight, 1000);
+  // Reset container styles for desktop
+  container.style.position = 'relative';
+  container.style.overflow = 'visible';
+}
+
+function setupDesktopGrid(container) {
+  // Ensure all slides are visible on desktop
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  slides.forEach((slide, index) => {
+    slide.style.display = 'block';
+    slide.style.opacity = '1';
+    slide.style.position = 'relative';
+    slide.style.transform = 'none';
+    slide.style.left = 'auto';
+    slide.style.top = 'auto';
+    slide.style.height = 'auto';
+    slide.style.paddingBottom = '0';
+    slide.style.paddingRight = '0'; // No padding needed with CSS Grid
+    slide.style.paddingLeft = '0';
+    slide.style.aspectRatio = '';
+    slide.style.width = '100%'; // Let CSS Grid handle sizing
+    slide.style.marginBottom = index === 0 ? '0' : '0'; // Remove margin-bottom from all items
   });
+}
+
+// Clean up inline styles that interfere with mobile Flickity
+function cleanupInlineStyles(container) {
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  slides.forEach((slide, index) => {
+    // Remove inline styles that interfere with Flickity on mobile
+    slide.style.paddingBottom = '';
+    slide.style.paddingRight = '';
+    slide.style.height = '';
+    slide.style.position = '';
+    slide.style.display = '';
+    slide.style.opacity = '';
+    slide.style.transform = '';
+    slide.style.left = '';
+    slide.style.top = '';
+    
+    // Ensure margin-bottom is removed from all items, especially first one
+    slide.style.marginBottom = '0';
+    
+    // Set square aspect ratio for mobile
+    if (window.innerWidth < 1024) {
+      slide.style.aspectRatio = '1 / 1'; // Square ratio
+    }
+  });
+  
+  // Remove fixed height from container that's blocking dots
+  container.style.height = 'auto';
+  container.style.minHeight = 'auto';
+  container.style.overflow = 'visible';
+}
+
+// Handle variant changes
+function switchToImage(mediaId) {
+  const targetSlide = document.querySelector(`[data-image-id="${mediaId}"]`);
+  if (!targetSlide) return;
+  
+  // Remove selection from all slides
+  document.querySelectorAll('.scroll--gallery_item').forEach(slide => {
+    slide.classList.remove('is-selected');
+  });
+  
+  // Add selection to target slide
+  targetSlide.classList.add('is-selected');
+  
+  // If on mobile and Flickity is active, select the slide
+  if (window.innerWidth < 1024) {
+    const container = document.getElementById('scrollGalleryContainer');
+    if (container && container.classList.contains('flickity-enabled')) {
+      const flickityInstance = Flickity.data(container);
+      if (flickityInstance) {
+        const slideIndex = Array.from(container.querySelectorAll('.scroll--gallery_item')).indexOf(targetSlide);
+        flickityInstance.select(slideIndex);
+      }
+    }
+  }
+  
+  console.log(`Switched to image: ${mediaId}`);
+}
+
+// Utility function
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Export functions
+window.switchToImage = switchToImage;
+
+// Handle variant changes if you have them
+document.addEventListener('variant:change', function(e) {
+  if (e.detail && e.detail.variant && e.detail.variant.featured_media) {
+    switchToImage(e.detail.variant.featured_media.id);
+  }
+});
+
+// Additional CSS injection for guaranteed mobile 16:9 ratio
+const mobileStyles = document.createElement('style');
+mobileStyles.textContent = `
+  @media (max-width: 1023px) {
+    .product__section-images .scroll--gallery_item {
+      aspect-ratio: 16 / 9 !important;
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    
+    .product__section-images .scroll--gallery_item:first-of-type {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    
+    .product__section-images .scroll--gallery_item img {
+      aspect-ratio: 16 / 9 !important;
+      object-fit: contain !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    
+    .product__section-images .flickity-page-dots {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin-top: 15px !important;
+      text-align: center !important;
+    }
+  }
+`;
+document.head.appendChild(mobileStyles);
 </script>

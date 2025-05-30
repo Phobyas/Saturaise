@@ -480,7 +480,7 @@
 @media (max-width: 767px) {
   .product__section--main .product-gallery__media-container {
     min-height: 300px;
-    
+
     display: flex;
     align-items: center;
   }
@@ -881,7 +881,7 @@
   height: 200px !important;
   background-color: red !important;
 }
- 
+
 /* Forge Custom */
 .ajax-submit {
   display: block;
@@ -979,9 +979,7 @@
     width: 50%;
     float: left;
   }
-  .product__section-images .scroll--gallery_item {
-    padding: 10px 10px 0 0;
-  }
+
   .product__section-images .scroll--gallery_item img {
     aspect-ratio: 1 / 1;
     object-fit: contain;
@@ -1453,4 +1451,251 @@
     contain: layout style;
   }
 }
+/* ===== PRODUCT GALLERY FIXES ===== */
 
+/* Remove margin-bottom from first gallery item */
+.product__section-images .scroll--gallery_item:first-of-type {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ===== DESKTOP: CSS GRID LAYOUT ===== */
+@media (min-width: 1024px) {
+  /* Container uses CSS Grid for proper layout */
+  .product-images__scroll-gallery-container {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important; /* Creates the middle gap */
+    width: 100% !important;
+  }
+
+  /* First image spans both columns */
+  .product__section-images .scroll--gallery_item:first-of-type {
+    grid-column: 1 / -1 !important; /* Spans both columns */
+    width: 100% !important;
+    padding-right: 0 !important; /* No padding on first image */
+    margin-bottom: 0 !important; /* Remove margin-bottom */
+  }
+
+  /* All other images fit in grid cells equally */
+  .product__section-images .scroll--gallery_item:not(:first-of-type) {
+    width: 100% !important; /* Full width of grid cell */
+    margin-bottom: 0 !important; /* Grid handles spacing */
+    padding-right: 0 !important; /* No padding needed with grid */
+  }
+
+  /* Container adjustments for desktop */
+  .product__section-images .scroll--gallery_item {
+    padding-left: 0 !important;
+    display: block !important;
+  }
+
+  .product__section-images .product-gallery__media-container {
+    background-color: #f6f6f6 !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Hide page dots on desktop */
+  .product__section-images .flickity-page-dots {
+    display: none !important;
+  }
+
+  /* Remove hover animations on desktop */
+  .product__section-images .scroll--gallery_item:hover {
+    transform: none !important;
+  }
+}
+
+/* ===== MOBILE: FLICKITY WITH SQUARE RATIO ===== */
+@media (max-width: 1023px) {
+  /* Remove any padding on mobile */
+  .product__section-images .scroll--gallery_item {
+    padding-right: 0 !important; /* NO PADDING ON MOBILE */
+    padding-left: 0 !important;
+    padding-bottom: 0 !important; /* Remove unnecessary padding-bottom */
+    width: 100% !important;
+    position: relative !important;
+    height: auto !important; /* Let Flickity handle height */
+    aspect-ratio: 1 / 1 !important; /* Back to square ratio for mobile */
+    margin-bottom: 0 !important; /* Remove margin-bottom */
+  }
+
+  /* Special handling for first item - remove margin-bottom */
+  .product__section-images .scroll--gallery_item:first-of-type {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  /* Ensure Flickity viewport has dynamic height */
+  .product__section-images .flickity-viewport {
+    overflow: hidden !important;
+    position: relative !important;
+    height: auto !important; /* Dynamic height based on content */
+    min-height: auto !important; /* Remove min-height */
+  }
+
+  .product__section-images .flickity-slider {
+    position: relative !important; /* Changed from absolute to relative */
+    width: 100% !important;
+    height: auto !important; /* Dynamic height */
+  }
+
+  /* Style the gallery container - NO FIXED HEIGHT */
+  .product-images__scroll-gallery-container {
+    position: relative !important;
+    height: auto !important; /* Remove fixed height */
+    min-height: auto !important; /* Remove min-height */
+    max-height: none !important; /* Remove max-height */
+    overflow: visible !important; /* Allow dots to show below */
+  }
+
+  .product__section-images .product-gallery__media-container {
+    background-color: #f6f6f6 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: auto !important; /* Dynamic height */
+    aspect-ratio: 1 / 1 !important; /* Square container */
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    width: 100% !important;
+    height: auto !important; /* Dynamic height based on aspect ratio */
+    object-fit: contain !important; /* Ensure images fit properly without cropping */
+    aspect-ratio: 1 / 1 !important; /* Square images */
+    display: block !important;
+  }
+
+  /* Force Flickity dots to be visible OUTSIDE the container */
+  .product__section-images .flickity-page-dots,
+  .flickity-page-dots,
+  #main-image-gallery .flickity-page-dots {
+    display: block !important;
+    margin-top: 20px !important;
+    position: relative !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    text-align: center !important;
+    clear: both !important;
+    height: auto !important;
+  }
+
+  /* Style the dots nicely */
+  .product__section-images .flickity-page-dots .dot {
+    background: #ddd !important;
+    border-radius: 50% !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin: 0 5px !important;
+    opacity: 0.5 !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+  }
+
+  .product__section-images .flickity-page-dots .dot.is-selected {
+    background: #333 !important;
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+}
+
+/* ===== TABLET SPECIFIC ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .product-images__scroll-gallery-container {
+    height: auto !important; /* Remove fixed height */
+    margin: 0 15px !important;
+  }
+
+  .product__section-images .product-gallery__media-container {
+    aspect-ratio: 1 / 1 !important; /* Square for tablet */
+  }
+
+  /* Remove unnecessary paddings for tablet */
+  .product__section-images .scroll--gallery_item {
+    aspect-ratio: 1 / 1 !important; /* Back to square */
+    height: auto !important;
+    padding-bottom: 0 !important; /* Remove unnecessary padding-bottom */
+    padding-right: 0 !important; /* NO PADDING ON TABLET */
+    position: relative !important;
+    margin-bottom: 0 !important; /* Remove margin-bottom */
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 1 / 1 !important; /* Square images */
+    object-fit: contain !important; /* Ensure images fit properly */
+  }
+}
+
+/* ===== OVERRIDE EXISTING PROBLEMATIC RULES ===== */
+/* Force Flickity page dots to be visible on mobile */
+@media (max-width: 1023px) {
+  .flickity-page-dots,
+  ol.flickity-page-dots,
+  .product__section-images .flickity-page-dots,
+  #main-slider .flickity-page-dots,
+  .js-scroll-gallery .flickity-page-dots {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    bottom: auto !important;
+    margin-top: 20px !important;
+    text-align: center !important;
+    z-index: 1000 !important;
+  }
+}
+
+/* Remove the rule that hides page dots on desktop */
+@media (min-width: 1024px) {
+  #main-slider .flickity-page-dots {
+    display: none !important; /* Hide on desktop */
+  }
+}
+
+/* Ensure single image galleries don't show dots */
+.single_image--true .flickity-page-dots {
+  display: none !important;
+}
+
+/* ===== FLICKITY BUTTON STYLING ===== */
+.product__section-images .flickity-prev-next-button {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.product__section-images .flickity-prev-next-button:hover {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.product__section-images .flickity-prev-next-button.previous {
+  left: 15px !important;
+}
+
+.product__section-images .flickity-prev-next-button.next {
+  right: 15px !important;
+}
+
+/* Hide navigation buttons on desktop */
+@media (min-width: 1024px) {
+  .product__section-images .flickity-prev-next-button {
+    display: none !important;
+  }
+}
