@@ -49,12 +49,31 @@
         "items_per_page": 8,
         "section_padding": "both"
       }
+    },
+    "trustmate_reviews_nP6FyB": {
+      "type": "trustmate-reviews",
+      "name": "Trustmate Reviews",
+      "settings": {
+        "widget_id": "ec9d6caf-04bb-4536-92ac-c8866ab4d9ba",
+        "heading": "Opinie Naszych Klientów",
+        "heading_alignment": "center",
+        "heading_size": 28,
+        "heading_color": "#323232",
+        "heading_margin": 30,
+        "center_widget": true,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": ""
+      }
     }
   },
   "order": [
     "banner",
     "main",
     "product-recommendations",
-    "featured_collection_b4tEDi"
+    "featured_collection_b4tEDi",
+    "trustmate_reviews_nP6FyB"
   ]
 }
