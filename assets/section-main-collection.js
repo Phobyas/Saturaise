@@ -277,6 +277,17 @@ document.addEventListener("shopify:section:load", function (event) {
 (function patchFilterDrawerVisibility() {
   // Wait for DOM to be ready
   document.addEventListener("DOMContentLoaded", function () {
+    // SIMPLE FIX: Disable overlay for filter drawer completely
+    function hideOverlayForFilterDrawer() {
+      const overlay = document.querySelector(".js-slideout-overlay");
+      if (overlay) {
+        overlay.style.display = "none !important";
+        overlay.style.visibility = "hidden !important";
+        overlay.style.opacity = "0 !important";
+        overlay.style.pointerEvents = "none !important";
+      }
+    }
+
     // Store original methods to preserve functionality
     if (window.WAU && window.WAU.Slideout) {
       const originalRenderPage = CollectionFilters.renderPage;
@@ -311,14 +322,11 @@ document.addEventListener("shopify:section:load", function (event) {
             if (wrapper) {
               wrapper.classList.add("slideout-left--open");
               wrapper.classList.remove("slideout-left--closed");
-
-              // Ensure overlay is visible
-              const overlay = document.querySelector(".js-slideout-overlay");
-              if (overlay) {
-                overlay.removeAttribute("style");
-              }
             }
-          }, 100); // Small delay to ensure this happens after the AJAX update
+
+            // HIDE OVERLAY COMPLETELY
+            hideOverlayForFilterDrawer();
+          }, 100);
         }
       };
 
@@ -351,14 +359,11 @@ document.addEventListener("shopify:section:load", function (event) {
             if (wrapper) {
               wrapper.classList.add("slideout-left--open");
               wrapper.classList.remove("slideout-left--closed");
-
-              // Ensure overlay is visible
-              const overlay = document.querySelector(".js-slideout-overlay");
-              if (overlay) {
-                overlay.removeAttribute("style");
-              }
             }
-          }, 100); // Small delay to ensure this happens after filters are updated
+
+            // HIDE OVERLAY COMPLETELY
+            hideOverlayForFilterDrawer();
+          }, 100);
         }
       };
 
@@ -369,15 +374,34 @@ document.addEventListener("shopify:section:load", function (event) {
       filterButtons.forEach(function (button) {
         // Add click handler that runs alongside WAU.Slideout
         button.addEventListener("click", function () {
-          // Reset overlay if it has inline styles
+          // HIDE OVERLAY when filter drawer opens
           setTimeout(function () {
-            const overlay = document.querySelector(".js-slideout-overlay");
-            if (overlay && overlay.hasAttribute("style")) {
-              overlay.removeAttribute("style");
-            }
+            hideOverlayForFilterDrawer();
           }, 50);
         });
       });
+
+      // Also hide overlay whenever filter drawer becomes active
+      const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          const drawer = document.querySelector(
+            '[data-wau-slideout="collection-filters"]'
+          );
+          if (drawer && drawer.classList.contains("slideout--active")) {
+            hideOverlayForFilterDrawer();
+          }
+        });
+      });
+
+      const drawer = document.querySelector(
+        '[data-wau-slideout="collection-filters"]'
+      );
+      if (drawer) {
+        observer.observe(drawer, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
     }
   });
 })();

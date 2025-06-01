@@ -470,6 +470,108 @@
   </style>
   
   <script>
+    // Add this MINIMAL anti-freeze fix to your existing snip-filter-drawer.liquid script
+// Just add this code at the very beginning of your existing script, don't replace anything else
+
+document.addEventListener('DOMContentLoaded', function() {
+  let isLoading = false;
+  let currentRequest = null; // Track current request to cancel if needed
+  
+  // MINIMAL FIX: Function to cancel current request and unfreeze
+  function cancelCurrentRequest() {
+    if (currentRequest) {
+      currentRequest.abort();
+      currentRequest = null;
+    }
+    isLoading = false;
+    if (document.querySelector('.filter-drawer__wrapper')) {
+      document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
+    }
+    document.body.classList.remove('is-loading');
+  }
+  
+  // OVERRIDE: Patch existing fetch calls to be cancellable
+  const originalFetch = window.fetch;
+  window.fetch = function() {
+    // Cancel any previous request
+    if (currentRequest && arguments[0] && (
+        arguments[0].includes('/collections/') || 
+        arguments[0].includes('/search')
+      )) {
+      cancelCurrentRequest();
+    }
+    
+    // Create new request with cancellation
+    const controller = new AbortController();
+    const options = arguments[1] || {};
+    options.signal = controller.signal;
+    arguments[1] = options;
+    
+    // Track this request
+    if (arguments[0] && (
+        arguments[0].includes('/collections/') || 
+        arguments[0].includes('/search')
+      )) {
+      currentRequest = controller;
+      isLoading = true;
+      
+      // Set timeout for this request
+      setTimeout(() => {
+        if (currentRequest === controller) {
+          cancelCurrentRequest();
+          console.log('Request cancelled due to timeout');
+        }
+      }, 8000);
+    }
+    
+    const fetchPromise = originalFetch.apply(this, arguments);
+    
+    // Reset when request completes
+    fetchPromise.finally(() => {
+      if (currentRequest === controller) {
+        currentRequest = null;
+        isLoading = false;
+      }
+    });
+    
+    return fetchPromise;
+  };
+  
+  // EMERGENCY: Allow filter/sort buttons to work even during loading
+  document.addEventListener('click', function(e) {
+    const filterButton = e.target.closest('[data-wau-slideout-target="collection-filters"]');
+    if (!filterButton) return;
+    
+    // If something is loading, cancel it immediately
+    if (isLoading) {
+      cancelCurrentRequest();
+      console.log('Cancelled loading to open drawer');
+    }
+  });
+  
+  // EMERGENCY: Escape key to unfreeze
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isLoading) {
+      cancelCurrentRequest();
+      console.log('Emergency unfreeze with Escape key');
+    }
+  });
+  
+  // BACKUP: Periodic check to ensure buttons work
+  setInterval(() => {
+    // Reset if stuck in loading state too long
+    if (isLoading && !currentRequest) {
+      isLoading = false;
+      document.body.classList.remove('is-loading');
+      if (document.querySelector('.filter-drawer__wrapper')) {
+        document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
+      }
+    }
+  }, 2000);
+});
+
+// KEEP ALL YOUR EXISTING CODE BELOW THIS POINT
+// Don't change anything else in your snip-filter-drawer.liquid script
 document.addEventListener('DOMContentLoaded', function() {
   let isLoading = false;
   let pendingRequest = null;
