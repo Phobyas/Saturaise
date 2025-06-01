@@ -265,25 +265,22 @@
         "section_padding": "both"
       }
     },
-    "hero_image_with_text_7yXDU9": {
-      "type": "hero-image-with-text",
+    "trustmate_reviews_8qGWa8": {
+      "type": "trustmate-reviews",
+      "name": "Trustmate Reviews",
       "settings": {
-        "text_align": "left",
-        "vertical_align": "middle",
-        "title": "Kontakt",
-        "text": "<p>Nie ma butów, które Cię interesują lub Twojego rozmiaru? Masz problem z zamówieniem? Chcesz osobiście odebrać zakupiony produkt? Jesteśmy tutaj, by pomóc w każdej sytuacji i odpowiedzieć na wszelkie pytania! <br/><br/></p><p><strong>Adres biura:</strong></p><p><br/>Ogrodowa 9a/4<br/>Żyrowa 47-330 <br/><br/></p><p><strong>Kontakt (9:00 - 16:00)<br/><br/></strong></p><p>Instagram: TBD</p><p>Telefon: TBD</p><p>Email: saturaisekontakt@gmail.com</p>",
-        "heading_size": 24,
-        "text_size": 16,
-        "button": "Napisz do nas!",
-        "link": "shopify://pages/contact",
-        "section_padding": "bottom",
-        "color_scheme": "2",
-        "color_header": false,
-        "use_map": true,
-        "map_latitude": "50.45473949051039",
-        "map_longitude": "18.131082121558123",
-        "map_zoom": 13,
-        "map_marker_title": ""
+        "widget_id": "ec9d6caf-04bb-4536-92ac-c8866ab4d9ba",
+        "heading": "Opinie Naszych Klientów",
+        "heading_alignment": "center",
+        "heading_size": 28,
+        "heading_color": "#323232",
+        "heading_margin": 30,
+        "center_widget": true,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": ""
       }
     }
   },
@@ -294,6 +291,6 @@
     "product-recommendations",
     "featured_collection_YMFETD",
     "section_about_us_iTXNV9",
-    "hero_image_with_text_7yXDU9"
+    "trustmate_reviews_8qGWa8"
   ]
 }
