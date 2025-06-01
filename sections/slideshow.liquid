@@ -164,13 +164,7 @@
   
   /* Prevent flicker during initialization */
   .slideshow:not(.flickity-enabled) .slideshow__slide:not(:first-child) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    z-index: -1;
+    display: none;
   }
 </style>
 
@@ -272,11 +266,13 @@ data-section-type="carousel">
         "dragThreshold":"15",
         "pauseAutoPlayOnHover":false,
         "autoPlay": {{ slider_speed }},
-        "fade": true,
+        "fade": false,
         "adaptiveHeight": false,
         "pageDots":{% if section.settings.pager == 'dots' and enough_to_wrap %}true{% else %}false{% endif %},
         "prevNextButtons":{% if section.settings.pager == 'arrows' and enough_to_wrap %}true{% else %}false{% endif %},
-        "initialIndex": 0
+        "initialIndex": 0,
+        "cellAlign": "left",
+        "contain": true
      }{% endcapture %}
 
       {% if section.blocks.size > 0 %}
@@ -455,63 +451,20 @@ data-section-type="carousel">
   </div>
 </div>
 
-<!-- Modified initialization script to prevent CLS -->
+<!-- FADE FIX: Disable fade and implement custom fade via CSS -->
 <script>
 (function() {
-  // Set dimensions immediately to prevent layout shift
-  var section = document.getElementById('shopify-section-{{ section.id }}');
   var slideshow = document.getElementById('slideshow--{{ section.id }}');
-  var firstSlide = slideshow ? slideshow.querySelector('.slideshow__slide:first-child') : null;
-  var otherSlides = slideshow ? slideshow.querySelectorAll('.slideshow__slide:not(:first-child)') : [];
   
-  // Set fixed height if needed
-  {% if fixed_height %}
-  var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
-  if (slideshow) {
-    slideshow.style.height = height + 'px';
-    slideshow.style.minHeight = height + 'px';
-    slideshow.style.maxHeight = height + 'px';
-    slideshow.style.overflow = 'hidden';
-  }
+  if (!slideshow) return;
   
-  // Make sure all slide images have correct dimensions
-  var slideImages = slideshow.querySelectorAll('.slideshow__slide-image');
-  slideImages.forEach(function(img) {
-    img.style.height = height + 'px';
-  });
-  {% endif %}
-  
-  // Make sure first slide is visible
-  if (firstSlide) {
-    firstSlide.style.opacity = '1';
-    firstSlide.style.position = 'relative';
-    firstSlide.style.zIndex = '1';
-    firstSlide.style.display = 'block';
-    
-    // Ensure first image is displayed immediately
-    var firstImg = firstSlide.querySelector('img');
-    if (firstImg) {
-      firstImg.style.display = 'block';
-    }
-  }
-  
-  // Hide other slides initially to prevent layout shift
-  otherSlides.forEach(function(slide) {
-    slide.style.position = 'absolute';
-    slide.style.top = '0';
-    slide.style.left = '0';
-    slide.style.width = '100%';
-    slide.style.height = '100%';
-    slide.style.opacity = '0';
-    slide.style.zIndex = '-1';
-  });
-  
-  // Initialize Flickity with proper configuration
   function initSlideshow() {
     if (typeof Flickity === 'undefined') {
       var script = document.createElement('script');
       script.src = '{{ "vendor-flickity.js" | asset_url }}';
-      script.onload = createSlideshow;
+      script.onload = function() {
+        createSlideshow();
+      };
       document.head.appendChild(script);
     } else {
       createSlideshow();
@@ -520,66 +473,39 @@ data-section-type="carousel">
   
   function createSlideshow() {
     try {
-      if (!slideshow) return;
-      
-      // Create Flickity instance with specific settings
       var flkty = new Flickity(slideshow, JSON.parse('{{ slideshow_config }}'));
       
-      // After initialization, make sure all slides are visible to Flickity
-      otherSlides.forEach(function(slide) {
-        // Reset styles that were needed for CLS prevention
-        // but might interfere with Flickity's operation
-        slide.style.position = '';
-        slide.style.zIndex = '';
+      // CUSTOM FADE EFFECT: Apply fade via CSS instead of Flickity
+      var slides = slideshow.querySelectorAll('.slideshow__slide');
+      
+      // Set initial state
+      slides.forEach(function(slide, index) {
+        slide.style.opacity = index === 0 ? '1' : '0';
+        slide.style.transition = 'opacity 0.6s ease';
+        slide.style.position = 'absolute';
+        slide.style.top = '0';
+        slide.style.left = '0';
+        slide.style.width = '100%';
+        slide.style.height = '100%';
       });
       
-      // Force correct layout after initialization
-      setTimeout(function() {
-        if (flkty && typeof flkty.resize === 'function') {
-          flkty.resize();
-        }
-      }, 100);
+      // Handle slide changes
+      flkty.on('select', function(index) {
+        slides.forEach(function(slide, i) {
+          slide.style.opacity = i === index ? '1' : '0';
+        });
+      });
       
     } catch (e) {
-      console.warn('Slideshow initialization error:', e);
-      
-      // Fallback to make sure at least first slide is visible
-      if (firstSlide) {
-        firstSlide.style.display = 'block';
-        firstSlide.style.opacity = '1';
-      }
+      console.error('Slideshow initialization error:', e);
     }
   }
   
-  // Use requestIdleCallback if available, otherwise setTimeout
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(function() {
-      initSlideshow();
-    }, { timeout: 1000 });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSlideshow);
   } else {
-    setTimeout(initSlideshow, 300);
+    initSlideshow();
   }
-  
-  // Update dimensions on resize
-  window.addEventListener('resize', function() {
-    {% if fixed_height %}
-    var height = window.innerWidth < 768 ? {{ mobile_height }} : {{ desktop_height }};
-    if (slideshow) {
-      slideshow.style.height = height + 'px';
-      
-      // Update slide image heights
-      var slideImages = slideshow.querySelectorAll('.slideshow__slide-image');
-      slideImages.forEach(function(img) {
-        img.style.height = height + 'px';
-      });
-    }
-    {% endif %}
-    
-    // Resize Flickity if initialized
-    if (slideshow && slideshow.flickity) {
-      slideshow.flickity.resize();
-    }
-  });
 })();
 </script>
 
