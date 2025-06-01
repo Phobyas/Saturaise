@@ -36,11 +36,32 @@
         "image_9c38M3": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/slider_banner_2_desktop_final_compressed.webp",
-            "mobile_image": "shopify://shop_images/slider_banner_2_mobile_final_compressed.webp",
+            "image": "shopify://shop_images/slider_banner_2_desktop_edit_Odzyskano.webp",
+            "mobile_image": "shopify://shop_images/slider_banner_2_mobile_edit_Odzyskano.webp",
             "heading": "",
             "subheading": "",
             "link": "shopify://collections/new-balance",
+            "button_text": "",
+            "second_link": "",
+            "second_button_text": "Button 2 text",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "slide_text_color": "#ffffff",
+            "caption_background": "rgba(0,0,0,0)",
+            "hide_caption_background": false,
+            "caption_horizontal": 50,
+            "caption_vertical": 50,
+            "text_align": "center"
+          }
+        },
+        "image_YnEXEc": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/slider_banner_labubu_desktop.webp",
+            "mobile_image": "shopify://shop_images/slider_banner_labubu_mobile.webp",
+            "heading": "",
+            "subheading": "",
+            "link": "shopify://collections/labubu",
             "button_text": "",
             "second_link": "",
             "second_button_text": "Button 2 text",
@@ -57,7 +78,8 @@
       },
       "block_order": [
         "image_Xq6gGW",
-        "image_9c38M3"
+        "image_9c38M3",
+        "image_YnEXEc"
       ],
       "settings": {
         "full_width": true,
