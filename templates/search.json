@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "banner": {
@@ -19,21 +28,28 @@
       "blocks": {
         "filter_block": {
           "type": "filter",
+          "disabled": true,
           "settings": {}
         },
         "sort_by_block": {
           "type": "sort_by",
+          "disabled": true,
           "settings": {}
         }
       },
-      "block_order": ["filter_block", "sort_by_block"],
+      "block_order": [
+        "filter_block",
+        "sort_by_block"
+      ],
       "settings": {
         "items_per_page": 24,
         "items_per_row": 4,
-        "show_filters": true,
         "show_count": true
       }
     }
   },
-  "order": ["banner", "main"]
+  "order": [
+    "banner",
+    "main"
+  ]
 }
