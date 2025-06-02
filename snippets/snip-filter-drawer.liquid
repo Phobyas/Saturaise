@@ -39,7 +39,7 @@
               assign clear_url = routes.search_url
             endif
           -%}
-          <p class="span-6 auto a-right"><a class="current_filters--clear js-current-filter ml4" href="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></p>
+          <p class="span-6 auto a-right"><a class="current_filters--clear js-clear-all-filters ml4" href="{{ clear_url }}" data-clear-url="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></p>
         {%- endif -%}
       </div>
       {%- for filter in type.filters -%}
@@ -308,21 +308,41 @@
         <!-- Regular sort options -->
         {% for option in type.sort_options %}
           {%- liquid
-            if option.value == collection.sort_by
+            if option.value == type.sort_by
               assign status = 'current'
             else
               assign status = 'available'
             endif
+            
+            # Build sort URL with current filters
+            assign current_url = request.url | split: '?' | first
+            assign sort_url = current_url | append: '?' | append: 'sort_by=' | append: option.value
+            
+            # Preserve current filters in sort URL
+            for filter in type.filters
+              for value in filter.active_values
+                assign sort_url = sort_url | append: '&' | append: value.param_name | append: '=' | append: value.value | url_encode
+              endfor
+              if filter.type == 'price_range'
+                if filter.min_value.value != nil
+                  assign sort_url = sort_url | append: '&' | append: filter.min_value.param_name | append: '=' | append: filter.min_value.value
+                endif
+                if filter.max_value.value != nil
+                  assign sort_url = sort_url | append: '&' | append: filter.max_value.param_name | append: '=' | append: filter.max_value.value
+                endif
+              endif
+            endfor
           -%}
       
-          <li class="slide-nav__first-level--item js-filter {% if status == 'current' %}current{% endif %}">
+          <li class="slide-nav__first-level--item js-filter {% if status == 'current' %}current{% endif %}" data-sort-value="{{ option.value }}">
             <input
               type="checkbox"
               name="sort_by"
               value="{{ option.value | escape }}"
               style="display: none;"
-              id="{{ option.name | downcase | handle }}">
-            <a class="slide-nav__first-level--link mb0 vib-center js-sort-option" href="?sort_by={{ option.value }}" data-sort-value="{{ option.value }}">
+              id="{{ option.name | downcase | handle }}"
+              {% if status == 'current' %}checked{% endif %}>
+            <a class="slide-nav__first-level--link mb0 vib-center js-sort-option" href="{{ sort_url }}" data-sort-value="{{ option.value }}">
               <label for="{{ option.name | downcase | handle }}" class="filter__text--label">{{ option.name }}</label>
             </a>
           </li>
@@ -331,7 +351,7 @@
     </div>
   {%- endunless -%}
 
-  {% comment %} {%- if filter_count > 0 -%}
+  {%- if filter_count > 0 -%}
     <div class="filter-drawer__filtering__results span-12 auto js-filters-reset">
       <p class="sm-caps mb1">{{ 'collections.filter.filtering_by_label' | t }}</p>
       <ul class="current_filters mb0">
@@ -360,10 +380,10 @@
             assign clear_url = routes.search_url
           endif
         -%}
-        <li><a class="current_filters--clear js-current-filter ml4" href="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></li>
+        <li><a class="current_filters--clear js-clear-all-filters ml4" href="{{ clear_url }}" data-clear-url="{{ clear_url }}">{{ 'collections.filter.clear_all' | t }}</a></li>
       </ul>
     </div>
-  {%- endif -%} {% endcomment %}
+  {%- endif -%}
 
   <style>
     .slide-nav__first-level--item .filter__text--label {
@@ -380,7 +400,13 @@
     /* Style for active sort option */
     .slide-nav__first-level--item.current .filter__text--label,
     .slide-nav__first-level--item.current a {
-      color: #1d4ed8 !important;
+      color: #1d4ed7 !important;
+      font-weight: 600 !important;
+    }
+    
+    .slide-nav__first-level--item.current {
+      background-color: rgba(29, 78, 215, 0.1) !important;
+      border-radius: 4px;
     }
     
     /* Style for active price range */
@@ -470,7 +496,7 @@
   </style>
   
   <script>
-    // Add this MINIMAL anti-freeze fix to your existing snip-filter-drawer.liquid script
+// Add this MINIMAL anti-freeze fix to your existing snip-filter-drawer.liquid script
 // Just add this code at the very beginning of your existing script, don't replace anything else
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -590,29 +616,67 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.remove('is-loading');
   }
   
-  // Critical: Move drawer to body to fix positioning
-  function moveDrawerToBody() {
+  // Critical: Fix drawer positioning and initialization
+  function fixDrawerInitialization() {
     const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
-    if (drawer && drawer.parentElement !== document.body) {
-      // Create a clone to avoid event handler issues
-      const clonedDrawer = drawer.cloneNode(true);
-      document.body.appendChild(clonedDrawer);
+    if (!drawer) return;
+    
+    // Reset any broken positioning states without changing design
+    drawer.style.transform = '';
+    drawer.style.transition = '';
+    
+    // Only move drawer to body if it's not already there (positioning fix)
+    if (drawer.parentElement !== document.body) {
+      // Store current content and attributes
+      const drawerContent = drawer.innerHTML;
+      const drawerClasses = drawer.className;
+      const drawerAttributes = {};
       
-      // Remove original after clone is added to prevent flashing
-      if (drawer.parentElement) {
-        drawer.parentElement.removeChild(drawer);
+      // Copy all attributes
+      for (let i = 0; i < drawer.attributes.length; i++) {
+        const attr = drawer.attributes[i];
+        drawerAttributes[attr.name] = attr.value;
       }
       
-      // Re-initialize WAU slideout if available
-      if (typeof WAU !== 'undefined' && WAU.Slideout && WAU.Slideout._init) {
-        setTimeout(() => {
+      // Remove original
+      drawer.parentElement.removeChild(drawer);
+      
+      // Create new drawer in body
+      const newDrawer = document.createElement('aside');
+      newDrawer.className = drawerClasses;
+      newDrawer.innerHTML = drawerContent;
+      
+      // Restore all attributes
+      Object.keys(drawerAttributes).forEach(attrName => {
+        newDrawer.setAttribute(attrName, drawerAttributes[attrName]);
+      });
+      
+      // Add to body
+      document.body.appendChild(newDrawer);
+      
+      // Force a reflow to ensure proper positioning
+      newDrawer.offsetHeight;
+    }
+    
+    // Re-initialize WAU slideout with delay to ensure DOM is ready
+    if (typeof WAU !== 'undefined' && WAU.Slideout) {
+      setTimeout(() => {
+        if (WAU.Slideout._init) {
           WAU.Slideout._init();
-        }, 100);
-      }
+        }
+        
+        // Additional fix: ensure slideout is properly registered
+        if (WAU.Slideout._slideouts) {
+          const slideoutExists = WAU.Slideout._slideouts.some(s => s.name === 'collection-filters');
+          if (!slideoutExists) {
+            WAU.Slideout._init();
+          }
+        }
+      }, 200);
     }
   }
   
-  moveDrawerToBody();
+  fixDrawerInitialization();
   
   // DIRECT FIX FOR CURRENT FILTERS CLICK
   // This adds a dedicated event delegation for clicks on current filters in the main page
@@ -756,20 +820,26 @@ document.addEventListener('DOMContentLoaded', function() {
       const newSortMenu = newDrawerWrapper.querySelector('[data-menu-handle="sort"]');
       
       if (sortMenu && newSortMenu) {
-        // Preserve active sort state
-        const activeSortValue = sortMenu.querySelector('.current a')?.getAttribute('data-sort-value');
+        // Get current sort value from URL or preserve existing selection
+        const currentUrl = new URL(window.location.href);
+        const currentSortBy = currentUrl.searchParams.get('sort_by') || 'manual';
         
         // Update menu content
         sortMenu.innerHTML = newSortMenu.innerHTML;
         
-        // Re-apply active sort if needed
-        if (activeSortValue) {
-          sortMenu.querySelectorAll('[data-sort-value]').forEach(option => {
-            if (option.getAttribute('data-sort-value') === activeSortValue) {
-              option.parentElement.classList.add('current');
-            }
-          });
-        }
+        // Re-apply active sort state based on current URL
+        sortMenu.querySelectorAll('.slide-nav__first-level--item').forEach(item => {
+          const sortValue = item.getAttribute('data-sort-value') || item.querySelector('[data-sort-value]')?.getAttribute('data-sort-value');
+          if (sortValue === currentSortBy) {
+            item.classList.add('current');
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = true;
+          } else {
+            item.classList.remove('current');
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = false;
+          }
+        });
       }
       
       // Update current filters section
@@ -847,6 +917,79 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSortingHandlers();
     setupDrawerMenuSwitching();
     setupMainPageFiltersClickEvent();
+    setupClearAllFiltersHandlers(); // NEW: Add clear all filters handler
+  }
+  
+  // NEW: Setup dedicated clear all filters handler
+  function setupClearAllFiltersHandlers() {
+    document.addEventListener('click', function(e) {
+      const clearAllButton = e.target.closest('.js-clear-all-filters');
+      if (!clearAllButton) return;
+      
+      e.preventDefault();
+      
+      if (isLoading) return;
+      isLoading = true;
+      
+      // Add loading state
+      const drawerWrapper = document.querySelector('.filter-drawer__wrapper');
+      if (drawerWrapper) {
+        drawerWrapper.classList.add('is-loading');
+      }
+      document.body.classList.add('is-loading');
+      
+      // Get the clear URL (collection base URL without filters)
+      const clearUrl = clearAllButton.getAttribute('data-clear-url') || clearAllButton.href;
+      
+      // Setup timeout for request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        resetLoadingState();
+        console.error('Clear all filters request timed out');
+      }, 10000);
+      
+      fetch(clearUrl, {
+        signal: controller.signal,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(html => {
+        // Update UI with cleared filters
+        updateUIFromResponse(html);
+        
+        // Keep drawer open after clearing filters
+        const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+        if (drawer) {
+          drawer.classList.add('slideout--active');
+          drawer.setAttribute('aria-hidden', 'false');
+          
+          // Ensure overlay is visible
+          const overlay = document.querySelector('.js-slideout-overlay');
+          if (overlay) {
+            overlay.classList.add('is-active');
+            overlay.setAttribute('aria-hidden', 'false');
+          }
+        }
+        
+        // Reset loading state
+        resetLoadingState();
+        
+        // Update URL to collection base without filters
+        window.history.pushState({}, '', clearUrl);
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Clear all filters error:', error);
+        resetLoadingState();
+      });
+    });
   }
   
   // Re-bind event handlers to newly added elements
@@ -868,6 +1011,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.js-sort-option').forEach(sortLink => {
       const newLink = sortLink.cloneNode(true);
       sortLink.parentNode.replaceChild(newLink, sortLink);
+    });
+    
+    // Apply event handlers to clear all filters buttons
+    document.querySelectorAll('.js-clear-all-filters').forEach(clearButton => {
+      const newButton = clearButton.cloneNode(true);
+      clearButton.parentNode.replaceChild(newButton, clearButton);
     });
   }
   
@@ -1038,11 +1187,23 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(html => {
         updateUIFromResponse(html);
         
-        // Update sort UI
-        document.querySelectorAll('.js-sort-option').forEach(opt => {
-          opt.parentElement.classList.remove('current');
+        // Update sort UI - remove current class from all options
+        document.querySelectorAll('.slide-nav__first-level--item').forEach(item => {
+          item.classList.remove('current');
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          if (checkbox) checkbox.checked = false;
         });
-        sortLink.parentElement.classList.add('current');
+        
+        // Add current class to selected option
+        const selectedSortValue = sortLink.getAttribute('data-sort-value');
+        document.querySelectorAll('.slide-nav__first-level--item').forEach(item => {
+          const itemSortValue = item.getAttribute('data-sort-value') || item.querySelector('[data-sort-value]')?.getAttribute('data-sort-value');
+          if (itemSortValue === selectedSortValue) {
+            item.classList.add('current');
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = true;
+          }
+        });
         
         // Keep drawer open
         const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
@@ -1072,23 +1233,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Keep drawer open
+  // Enhanced permanent drawer setup with better state management
   function setupPermanentDrawer() {
     const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
     if (!drawer) return;
     
-    const originalCloseByName = WAU.Slideout._closeByName;
-    
-    WAU.Slideout._closeByName = function(name) {
-      if (name === 'collection-filters') {
-        if (drawer.getAttribute('data-should-close') === 'true') {
-          drawer.removeAttribute('data-should-close');
+    // Override WAU slideout close behavior
+    if (typeof WAU !== 'undefined' && WAU.Slideout && WAU.Slideout._closeByName) {
+      const originalCloseByName = WAU.Slideout._closeByName;
+      
+      WAU.Slideout._closeByName = function(name) {
+        if (name === 'collection-filters') {
+          if (drawer.getAttribute('data-should-close') === 'true') {
+            drawer.removeAttribute('data-should-close');
+            originalCloseByName.call(this, name);
+          }
+        } else {
           originalCloseByName.call(this, name);
         }
-      } else {
-        originalCloseByName.call(this, name);
-      }
-    };
+      };
+    }
+    
+    // Enhanced slideout open handler to fix positioning issues
+    if (typeof WAU !== 'undefined' && WAU.Slideout && WAU.Slideout._openByName) {
+      const originalOpenByName = WAU.Slideout._openByName;
+      
+      WAU.Slideout._openByName = function(name) {
+        if (name === 'collection-filters') {
+          // Reset any broken transforms before opening
+          const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
+          if (drawer) {
+            drawer.style.transform = '';
+          }
+        }
+        return originalOpenByName.call(this, name);
+      };
+    }
     
     // Use event delegation for close button
     document.addEventListener('click', function(e) {
@@ -1096,13 +1276,17 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!closeButton) return;
       
       drawer.setAttribute('data-should-close', 'true');
-      WAU.Slideout._closeByName('collection-filters');
+      if (typeof WAU !== 'undefined' && WAU.Slideout) {
+        WAU.Slideout._closeByName('collection-filters');
+      }
     });
     
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && drawer.classList.contains('slideout--active')) {
         drawer.setAttribute('data-should-close', 'true');
-        WAU.Slideout._closeByName('collection-filters');
+        if (typeof WAU !== 'undefined' && WAU.Slideout) {
+          WAU.Slideout._closeByName('collection-filters');
+        }
       }
     });
     
@@ -1112,7 +1296,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!overlay || e.target !== overlay) return;
       
       drawer.setAttribute('data-should-close', 'true');
-      WAU.Slideout._closeByName('collection-filters');
+      if (typeof WAU !== 'undefined' && WAU.Slideout) {
+        WAU.Slideout._closeByName('collection-filters');
+      }
     });
   }
   
