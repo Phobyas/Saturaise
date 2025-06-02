@@ -280,12 +280,12 @@
         "heading_alignment": "center",
         "heading_size": 28,
         "heading_color": "#323232",
-        "heading_margin": 30,
+        "heading_margin": 20,
         "center_widget": true,
         "padding_top": 40,
         "padding_bottom": 40,
         "margin_top": 0,
-        "margin_bottom": 0,
+        "margin_bottom": 20,
         "background_color": ""
       }
     },
