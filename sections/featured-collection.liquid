@@ -163,7 +163,11 @@
     {{ text_section }}
   {%- endif -%}
   <div class="grid__wrapper relative section-featured-collection__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
-    <div class="featured-collection__wrapper--loop {{ wrapper_grid_width }} auto{% if carousel %} js-carousel is-hidden{% endif %}" {%- if carousel -%}data-flickity-other='{{ carousel_config }}' data-flickity-mobile='{{ mobile_carousel_config }}'{%- endif -%}>
+    <div class="featured-collection__wrapper--loop {{ wrapper_grid_width }} auto{% if carousel %} js-carousel carousel-loaded--false{% endif %}" 
+         {%- if carousel -%}
+         data-flickity-other='{{ carousel_config }}' 
+         data-flickity-mobile='{{ mobile_carousel_config }}'
+         {%- endif -%}>
       {%- unless carousel -%}<div class="grid__wrapper edge cg6 rg6 {{ wrapper_class }}">{%- endunless -%}
       {% if collection != blank %}
         {% for product in collection.products limit: prod_limit %}
@@ -196,6 +200,77 @@
 </div>
 
   {% style %}
+    /* Fix for mobile carousel display issues */
+    .featured-collection-{{ section.id }} .js-carousel.carousel-loaded--false {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .featured-collection-{{ section.id }} .js-carousel.carousel-loaded--true {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Mobile-specific fixes - preserve original product layout styling */
+    @media (max-width: 767px) {
+      .featured-collection-{{ section.id }} .js-carousel {
+        display: block !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+      }
+      
+      .featured-collection-{{ section.id }} .js-carousel .flickity-slider {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: stretch;
+        min-height: auto;
+      }
+      
+      .featured-collection-{{ section.id }} .js-carousel .product-loop__item {
+        flex: 0 0 auto !important;
+        width: 80% !important;
+        max-width: 280px !important;
+        margin-right: 10px !important;
+        display: block !important;
+        scroll-snap-align: start;
+      }
+      
+      /* Ensure products display horizontally before carousel loads */
+      .featured-collection-{{ section.id }} .carousel-loaded--false .product-loop__item {
+        display: inline-block !important;
+        width: 80% !important;
+        max-width: 280px !important;
+        margin-right: 10px !important;
+        vertical-align: top;
+      }
+      
+      .featured-collection-{{ section.id }} .carousel-loaded--false {
+        white-space: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Preserve original price alignment and product info layout */
+      .featured-collection-{{ section.id }} .product-loop__price {
+        text-align: left !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+      }
+      
+      .featured-collection-{{ section.id }} .product-loop__item .product-loop__info {
+        text-align: left !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+      }
+      
+      .featured-collection-{{ section.id }} .product-loop__item .product-loop__title {
+        text-align: left !important;
+      }
+    }
+    
     @media (min-width: 768px) {
       {% if carousel %}
         .section--reloaded .featured-collection-{{ section.id }}[data-section-loaded="false"] .product-loop__item,
@@ -245,15 +320,31 @@
         display: none !important;
       }
     }
+    
+    /* Preserve original product styling - prevent any text alignment changes */
+    .featured-collection-{{ section.id }} .product-loop__price,
+    .featured-collection-{{ section.id }} .product-loop__title,
+    .featured-collection-{{ section.id }} .product-loop__info {
+      text-align: inherit !important;
+    }
   {% endstyle %}
 </div>
 
-
 <script>
 (function() {
+  const sectionId = '{{ section.id }}';
+  
   function initCarousel() {
-    const carousel = document.querySelector('.featured-collection-{{ section.id }} .js-carousel');
+    const carousel = document.querySelector('.featured-collection-' + sectionId + ' .js-carousel');
     if (!carousel) return;
+    
+    // Check if Flickity is available
+    if (typeof Flickity === 'undefined') {
+      console.warn('Flickity not available for featured collection');
+      // Set up fallback horizontal scroll for mobile
+      setupMobileFallback(carousel);
+      return;
+    }
     
     // Get existing Flickity instance if it exists
     let flkty = Flickity.data(carousel);
@@ -264,89 +355,143 @@
     }
     
     // Get the appropriate config based on viewport size
-    const config = window.innerWidth < 768 
+    const isMobile = window.innerWidth < 768;
+    const config = isMobile 
       ? JSON.parse(carousel.getAttribute('data-flickity-mobile'))
       : JSON.parse(carousel.getAttribute('data-flickity-other'));
     
-    // IMPORTANT: Set these options to ensure one-by-one movement
+    // IMPORTANT: Set these options to ensure proper mobile behavior
     config.groupCells = 1;        // Force groupCells to 1
     config.pageDots = false;      // Ensure page dots are disabled
     config.cellAlign = 'left';    // Ensure proper alignment
     config.contain = true;        // Contain cells to container
     config.draggable = true;      // Ensure dragging is enabled
     
-    // Initialize Flickity with proper settings
-    flkty = new Flickity(carousel, config);
-    
-    // Add custom click handlers to override default button behavior
-    const prevButton = carousel.querySelector('.flickity-button.previous');
-    const nextButton = carousel.querySelector('.flickity-button.next');
-    
-    if (prevButton) {
-      // Remove existing listeners first
-      const newPrevButton = prevButton.cloneNode(true);
-      prevButton.parentNode.replaceChild(newPrevButton, prevButton);
-      
-      newPrevButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        flkty.previous(true);
-      });
+    // Mobile-specific settings
+    if (isMobile) {
+      config.prevNextButtons = false;
+      config.wrapAround = true;
+      config.dragThreshold = 10;
     }
     
-    if (nextButton) {
-      // Remove existing listeners first
-      const newNextButton = nextButton.cloneNode(true);
-      nextButton.parentNode.replaceChild(newNextButton, nextButton);
+    try {
+      // Initialize Flickity with proper settings
+      flkty = new Flickity(carousel, config);
       
-      newNextButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        flkty.next(true);
+      // Mark carousel as loaded
+      carousel.classList.remove('carousel-loaded--false');
+      carousel.classList.add('carousel-loaded--true');
+      carousel.classList.remove('is-hidden');
+      
+      // Add custom click handlers for desktop buttons
+      if (!isMobile) {
+        const prevButton = carousel.querySelector('.flickity-button.previous');
+        const nextButton = carousel.querySelector('.flickity-button.next');
+        
+        if (prevButton) {
+          const newPrevButton = prevButton.cloneNode(true);
+          prevButton.parentNode.replaceChild(newPrevButton, prevButton);
+          
+          newPrevButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            flkty.previous(true);
+          });
+        }
+        
+        if (nextButton) {
+          const newNextButton = nextButton.cloneNode(true);
+          nextButton.parentNode.replaceChild(newNextButton, nextButton);
+          
+          newNextButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            flkty.next(true);
+          });
+        }
+        
+        // Handle button visibility based on container width
+        updateButtonVisibility(carousel);
+      }
+      
+    } catch (error) {
+      console.warn('Error initializing Flickity for featured collection:', error);
+      setupMobileFallback(carousel);
+    }
+  }
+  
+  function setupMobileFallback(carousel) {
+    // Set up basic horizontal scrolling for mobile when Flickity fails
+    carousel.classList.remove('carousel-loaded--false');
+    carousel.classList.add('carousel-loaded--true');
+    carousel.classList.remove('is-hidden');
+    
+    if (window.innerWidth < 768) {
+      carousel.style.overflowX = 'auto';
+      carousel.style.overflowY = 'hidden';
+      carousel.style.webkitOverflowScrolling = 'touch';
+      carousel.style.scrollSnapType = 'x mandatory';
+      
+      const items = carousel.querySelectorAll('.product-loop__item');
+      items.forEach(item => {
+        item.style.scrollSnapAlign = 'start';
+        item.style.flexShrink = '0';
       });
     }
-    
-    // Handle button visibility based on container width
+  }
+  
+  function updateButtonVisibility(carousel) {
     const container = carousel.closest('.section-featured-collection__outer-wrapper');
+    if (!container) return;
+    
     const containerRect = container.getBoundingClientRect();
     const containerWidth = containerRect.width;
     const viewportWidth = window.innerWidth;
     
-    // Calculate available space for buttons
     const leftSpace = containerRect.left;
     const rightSpace = viewportWidth - (containerRect.left + containerWidth);
     
-    // Update button visibility
     const buttons = carousel.querySelectorAll('.flickity-button');
     if (leftSpace < 80 || rightSpace < 80 || containerWidth < 1200) {
       buttons.forEach(button => button.style.display = 'none');
     } else {
       buttons.forEach(button => button.style.display = '');
     }
-    
-    // Make carousel visible after initialization
-    carousel.classList.remove('is-hidden');
   }
 
-  // Initialize on load
+  // Initialize based on document state
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCarousel);
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add a small delay to ensure all assets are loaded
+      setTimeout(initCarousel, 100);
+    });
   } else {
-    initCarousel();
+    setTimeout(initCarousel, 100);
   }
 
   // Re-init on Shopify section updates
   document.addEventListener('shopify:section:load', function(event) {
-    if (event.target.classList.contains('featured-collection-{{ section.id }}')) {
-      setTimeout(initCarousel, 0);
+    if (event.target.classList.contains('featured-collection-' + sectionId)) {
+      setTimeout(initCarousel, 100);
     }
   });
   
-  // Handle window resize
+  // Handle window resize with debouncing
+  let resizeTimer;
   window.addEventListener('resize', function() {
-    // Debounce the resize event to avoid excessive reinitialization
-    clearTimeout(window.resizeTimer);
-    window.resizeTimer = setTimeout(initCarousel, 250);
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      const carousel = document.querySelector('.featured-collection-' + sectionId + ' .js-carousel');
+      if (carousel && typeof Flickity !== 'undefined') {
+        const flkty = Flickity.data(carousel);
+        if (flkty) {
+          flkty.resize();
+          if (window.innerWidth >= 768) {
+            updateButtonVisibility(carousel);
+          }
+        }
+      }
+    }, 250);
   });
 })();
 </script>
