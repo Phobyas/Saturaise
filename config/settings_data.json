@@ -92,7 +92,8 @@
           "menu_image_url": "shopify://pages/lookbook",
           "menu_text_color": "#000000",
           "menu_bg_color": "#ffffff",
-          "menu_text_size": 24
+          "menu_text_size": 24,
+          "show_social_icons": true
         }
       },
       "header": {
@@ -151,7 +152,7 @@
       "mailing-popup": {
         "type": "mailing-popup",
         "settings": {
-          "popup": true,
+          "popup": false,
           "popup_delay": 25,
           "popup_frequency": 7,
           "popup_image": "background",
