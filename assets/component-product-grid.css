@@ -398,3 +398,13 @@
     font-size: 14px !important;
   }
 }
+
+.template-collection .product-loop__price--compare {
+  font-size: 14px !important;
+}
+
+@media (min-width: 768px) {
+  .template-collection .product-loop__price--compare {
+    font-size: 16px !important;
+  }
+}
