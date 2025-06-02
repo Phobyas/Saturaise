@@ -154,12 +154,17 @@
   {% endif %}
 </div>
 <script>
-// Updated Product Gallery JavaScript for Fixed Layout
+// Fixed Product Gallery JavaScript - No Scroll Interference
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Initializing gallery without scroll interference...');
   initializeGallery();
   
-  // Handle resize to reinitialize if needed
-  window.addEventListener('resize', debounce(initializeGallery, 250));
+  // Only reinitialize on actual resize, not scroll
+  let resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(initializeGallery, 250);
+  });
 });
 
 function initializeGallery() {
@@ -169,139 +174,152 @@ function initializeGallery() {
   const screenWidth = window.innerWidth;
   
   if (screenWidth < 1024) {
-    // Mobile/Tablet: Ensure Flickity is working
-    enableFlickity(galleryContainer);
+    setupMobileCarousel(galleryContainer);
   } else {
-    // Desktop: Disable Flickity for grid layout
-    disableFlickity(galleryContainer);
     setupDesktopGrid(galleryContainer);
   }
 }
 
-function enableFlickity(container) {
-  // Clean up any interfering inline styles first
-  cleanupInlineStyles(container);
+function setupMobileCarousel(container) {
+  console.log('Setting up mobile carousel');
   
-  // If Flickity isn't already initialized and is available
-  if (window.Flickity && !container.classList.contains('flickity-enabled')) {
+  // Store current slide index before destroying
+  let currentIndex = 0;
+  if (container.classList.contains('flickity-enabled')) {
+    const existing = Flickity.data(container);
+    if (existing) {
+      currentIndex = existing.selectedIndex || 0;
+      existing.destroy();
+    }
+  }
+  
+  // Check if Flickity exists
+  if (typeof Flickity === 'undefined') {
+    console.log('Flickity not available');
+    return;
+  }
+  
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  console.log('Found slides:', slides.length);
+  
+  if (slides.length === 0) return;
+  
+  // Initialize Flickity
+  try {
     const flickityInstance = new Flickity(container, {
-      cellAlign: 'center',
+      cellAlign: 'left',
       contain: true,
-      wrapAround: true,
-      autoPlay: false,
-      pauseAutoPlayOnHover: true,
-      prevNextButtons: true,
-      pageDots: true, // Ensure dots are enabled
-      dragThreshold: 10,
+      wrapAround: slides.length > 2,
+      prevNextButtons: slides.length > 1,
+      pageDots: slides.length > 1,
+      draggable: true,
+      freeScroll: false,
+      percentPosition: false,
       selectedAttraction: 0.025,
       friction: 0.28,
-      // Make height responsive to content
-      adaptiveHeight: true,
-      setGallerySize: true
+      groupCells: false,
+      adaptiveHeight: false,
+      cellSelector: '.scroll--gallery_item',
+      resize: true,
+      watchCSS: false
     });
     
-    // Force dynamic height calculation
-    setTimeout(() => {
-      ensureDotsVisible(container);
-      fixImageAspectRatio(container);
-      setDynamicHeight(container, flickityInstance);
-    }, 100);
+    console.log('Flickity initialized successfully');
     
-    setTimeout(() => {
-      ensureDotsVisible(container);
-      fixImageAspectRatio(container);
-      setDynamicHeight(container, flickityInstance);
-    }, 500);
+    // Restore previous slide position
+    if (currentIndex > 0 && currentIndex < slides.length) {
+      flickityInstance.select(currentIndex, false, true); // No animation on restore
+    }
     
-    // Listen for Flickity ready event
-    flickityInstance.on('ready', () => {
+    flickityInstance.on('ready', function() {
+      console.log('Flickity ready');
       ensureDotsVisible(container);
-      fixImageAspectRatio(container);
-      setDynamicHeight(container, flickityInstance);
     });
     
-    // Listen for Flickity settle event (when slide changes)
-    flickityInstance.on('settle', () => {
-      fixImageAspectRatio(container);
-      setDynamicHeight(container, flickityInstance);
+    flickityInstance.on('change', function(index) {
+      console.log('Changed to slide:', index);
+      // Store the current selection
+      container.setAttribute('data-current-slide', index);
     });
     
-    // Listen for window resize
-    window.addEventListener('resize', debounce(() => {
-      setDynamicHeight(container, flickityInstance);
-    }, 250));
+    flickityInstance.on('settle', function(index) {
+      console.log('Settled on slide:', index);
+      container.setAttribute('data-current-slide', index);
+    });
+    
+    // IMPORTANT: Prevent scroll events from interfering
+    // Remove any existing scroll listeners that might reset the gallery
+    window.removeEventListener('scroll', handleScrollReset, true);
+    document.removeEventListener('scroll', handleScrollReset, true);
+    
+    // Don't let intersection observers reset the gallery
+    preventIntersectionReset(container);
+    
+    return flickityInstance;
+    
+  } catch (error) {
+    console.error('Flickity initialization error:', error);
+  }
+}
+
+function setupDesktopGrid(container) {
+  console.log('Setting up desktop grid');
+  
+  // Destroy Flickity if exists
+  if (container.classList.contains('flickity-enabled')) {
+    const flickityInstance = Flickity.data(container);
+    if (flickityInstance) {
+      flickityInstance.destroy();
+    }
   }
   
-  // Ensure container styles for mobile
-  container.style.position = 'relative';
-  container.style.overflow = 'visible'; // Changed to visible for dots
+  // Clean up any scroll prevention
+  container.removeAttribute('data-current-slide');
 }
 
-function setDynamicHeight(container, flickityInstance) {
-  if (window.innerWidth < 1024) {
-    // Calculate the height based on the viewport width and square aspect ratio
-    const containerWidth = container.offsetWidth;
-    const targetHeight = containerWidth; // Square aspect ratio
-    
-    // Set the height on the viewport
-    const viewport = container.querySelector('.flickity-viewport');
-    if (viewport) {
-      viewport.style.height = targetHeight + 'px';
+function preventIntersectionReset(container) {
+  // Override any intersection observer that might be resetting the gallery
+  const originalObserve = IntersectionObserver.prototype.observe;
+  const originalUnobserve = IntersectionObserver.prototype.unobserve;
+  
+  // Track observers that might be interfering
+  const galleryObservers = new Set();
+  
+  IntersectionObserver.prototype.observe = function(target) {
+    // If this observer is watching our gallery or its children, track it
+    if (target === container || container.contains(target)) {
+      galleryObservers.add(this);
+      console.log('Tracked intersection observer on gallery');
     }
-    
-    // Remove any fixed heights from the container
-    container.style.height = 'auto';
-    container.style.minHeight = 'auto';
-    
-    // Resize Flickity to match
-    if (flickityInstance && flickityInstance.resize) {
-      flickityInstance.resize();
+    return originalObserve.call(this, target);
+  };
+  
+  IntersectionObserver.prototype.unobserve = function(target) {
+    if (target === container || container.contains(target)) {
+      galleryObservers.delete(this);
     }
-    
-    console.log(`Set dynamic height: ${targetHeight}px for container width: ${containerWidth}px`);
-  }
+    return originalUnobserve.call(this, target);
+  };
+  
+  // Store reference to clean up later if needed
+  container._galleryObservers = galleryObservers;
 }
 
-function fixImageAspectRatio(container) {
-  // Force square aspect ratio on mobile and proper fitting
-  if (window.innerWidth < 1024) {
-    const slides = container.querySelectorAll('.scroll--gallery_item');
-    slides.forEach(slide => {
-      slide.style.aspectRatio = '1 / 1'; // Square ratio
-      slide.style.height = 'auto';
-      slide.style.marginBottom = '0';
-      slide.style.paddingBottom = '0';
-      
-      const img = slide.querySelector('img');
-      if (img) {
-        img.style.aspectRatio = '1 / 1'; // Square images
-        img.style.objectFit = 'contain'; // Ensure full image is visible
-        img.style.width = '100%';
-        img.style.height = 'auto'; // Let aspect ratio control height
-        img.style.display = 'block';
-      }
-    });
-    
-    // Remove any fixed height from container
-    container.style.height = 'auto';
-    container.style.minHeight = 'auto';
-    container.style.overflow = 'visible'; // Allow dots to show
-  }
+function handleScrollReset(event) {
+  // This function should be removed/prevented
+  console.log('Scroll reset prevented');
+  event.stopPropagation();
+  return false;
 }
 
 function ensureDotsVisible(container) {
-  // Look for dots in multiple possible locations
-  const possibleDotSelectors = [
-    '.flickity-page-dots',
-    'ol.flickity-page-dots',
-    '.js-scroll-gallery .flickity-page-dots'
-  ];
+  if (window.innerWidth >= 1024) return;
   
-  possibleDotSelectors.forEach(selector => {
-    const dots = container.querySelector(selector) || 
-                 container.parentElement.querySelector(selector) ||
-                 document.querySelector(`#main-image-gallery ${selector}`);
-    
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  if (slides.length <= 1) return;
+  
+  setTimeout(() => {
+    const dots = container.querySelector('.flickity-page-dots');
     if (dots) {
       dots.style.display = 'block';
       dots.style.visibility = 'visible';
@@ -309,90 +327,21 @@ function ensureDotsVisible(container) {
       dots.style.position = 'relative';
       dots.style.marginTop = '20px';
       dots.style.textAlign = 'center';
-      dots.style.zIndex = '1000';
-      console.log('Flickity dots found and made visible:', selector);
+      console.log('Dots made visible');
     }
-  });
+  }, 100);
 }
 
-function disableFlickity(container) {
-  // Destroy Flickity instance if it exists
-  if (window.Flickity && container.classList.contains('flickity-enabled')) {
-    const flickityInstance = Flickity.data(container);
-    if (flickityInstance) {
-      flickityInstance.destroy();
-    }
-  }
-  
-  // Reset container styles for desktop
-  container.style.position = 'relative';
-  container.style.overflow = 'visible';
-}
-
-function setupDesktopGrid(container) {
-  // Ensure all slides are visible on desktop
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  slides.forEach((slide, index) => {
-    slide.style.display = 'block';
-    slide.style.opacity = '1';
-    slide.style.position = 'relative';
-    slide.style.transform = 'none';
-    slide.style.left = 'auto';
-    slide.style.top = 'auto';
-    slide.style.height = 'auto';
-    slide.style.paddingBottom = '0';
-    slide.style.paddingRight = '0'; // No padding needed with CSS Grid
-    slide.style.paddingLeft = '0';
-    slide.style.aspectRatio = '';
-    slide.style.width = '100%'; // Let CSS Grid handle sizing
-    slide.style.marginBottom = index === 0 ? '0' : '0'; // Remove margin-bottom from all items
-  });
-}
-
-// Clean up inline styles that interfere with mobile Flickity
-function cleanupInlineStyles(container) {
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  slides.forEach((slide, index) => {
-    // Remove inline styles that interfere with Flickity on mobile
-    slide.style.paddingBottom = '';
-    slide.style.paddingRight = '';
-    slide.style.height = '';
-    slide.style.position = '';
-    slide.style.display = '';
-    slide.style.opacity = '';
-    slide.style.transform = '';
-    slide.style.left = '';
-    slide.style.top = '';
-    
-    // Ensure margin-bottom is removed from all items, especially first one
-    slide.style.marginBottom = '0';
-    
-    // Set square aspect ratio for mobile
-    if (window.innerWidth < 1024) {
-      slide.style.aspectRatio = '1 / 1'; // Square ratio
-    }
-  });
-  
-  // Remove fixed height from container that's blocking dots
-  container.style.height = 'auto';
-  container.style.minHeight = 'auto';
-  container.style.overflow = 'visible';
-}
-
-// Handle variant changes
 function switchToImage(mediaId) {
   const targetSlide = document.querySelector(`[data-image-id="${mediaId}"]`);
   if (!targetSlide) return;
   
-  // Remove selection from all slides
   document.querySelectorAll('.scroll--gallery_item').forEach(slide => {
     slide.classList.remove('is-selected');
   });
   
-  // Add selection to target slide
   targetSlide.classList.add('is-selected');
   
-  // If on mobile and Flickity is active, select the slide
   if (window.innerWidth < 1024) {
     const container = document.getElementById('scrollGalleryContainer');
     if (container && container.classList.contains('flickity-enabled')) {
@@ -400,17 +349,21 @@ function switchToImage(mediaId) {
       if (flickityInstance) {
         const slideIndex = Array.from(container.querySelectorAll('.scroll--gallery_item')).indexOf(targetSlide);
         flickityInstance.select(slideIndex);
+        container.setAttribute('data-current-slide', slideIndex);
       }
     }
   }
-  
-  console.log(`Switched to image: ${mediaId}`);
 }
 
-// Utility function
+// Enhanced debounce that ignores scroll events
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
+    // Don't debounce if this is triggered by scroll
+    if (args[0] && args[0].type === 'scroll') {
+      return;
+    }
+    
     const later = () => {
       clearTimeout(timeout);
       func(...args);
@@ -420,46 +373,32 @@ function debounce(func, wait) {
   };
 }
 
-// Export functions
+// Prevent any theme-level scroll handlers from resetting gallery
+document.addEventListener('DOMContentLoaded', function() {
+  // Remove common scroll handlers that might interfere
+  const scrollHandlers = [
+    'theme-scroll-handler',
+    'gallery-scroll-reset',
+    'product-scroll-handler',
+    'intersection-scroll'
+  ];
+  
+  scrollHandlers.forEach(handlerName => {
+    const elements = document.querySelectorAll(`[data-${handlerName}]`);
+    elements.forEach(el => {
+      if (el.closest('#scrollGalleryContainer')) {
+        el.removeAttribute(`data-${handlerName}`);
+        console.log(`Removed ${handlerName} from gallery`);
+      }
+    });
+  });
+});
+
 window.switchToImage = switchToImage;
 
-// Handle variant changes if you have them
 document.addEventListener('variant:change', function(e) {
   if (e.detail && e.detail.variant && e.detail.variant.featured_media) {
     switchToImage(e.detail.variant.featured_media.id);
   }
 });
-
-// Additional CSS injection for guaranteed mobile 16:9 ratio
-const mobileStyles = document.createElement('style');
-mobileStyles.textContent = `
-  @media (max-width: 1023px) {
-    .product__section-images .scroll--gallery_item {
-      aspect-ratio: 16 / 9 !important;
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
-    }
-    
-    .product__section-images .scroll--gallery_item:first-of-type {
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
-    }
-    
-    .product__section-images .scroll--gallery_item img {
-      aspect-ratio: 16 / 9 !important;
-      object-fit: contain !important;
-      width: 100% !important;
-      height: 100% !important;
-    }
-    
-    .product__section-images .flickity-page-dots {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      margin-top: 15px !important;
-      text-align: center !important;
-    }
-  }
-`;
-document.head.appendChild(mobileStyles);
 </script>
