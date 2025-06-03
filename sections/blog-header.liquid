@@ -1,6 +1,5 @@
-{% comment %} Template Header Logic {% endcomment %}
+{% comment %} Blog Header Template - Similar to Collection Header {% endcomment %}
 {%- liquid
-
   assign has_image = false
   assign heading_placement = section.settings.heading_placement
   if heading_placement == 'below'
@@ -14,87 +13,15 @@
     assign has_image = true
   endif
 
-  if section.settings.image == blank and template contains 'article' and article.image != blank
-    assign has_image = true
-  endif
-
-  if template contains 'collection' and template != 'list-collections'
-    if section.settings.collection_image and collection.image != blank
-      assign has_image = true
-    endif
-  endif
-
   if section.settings.full_width
-    assign full_width =  'edge'
+    assign full_width = 'edge'
   endif
 
   assign sm_render = '100vw'
   assign md_render = '100vw'
   assign lg_render = '100vw'
   assign byline = blank
-
-
-  case template.name
-    when '404'
-      assign heading = 'general.404.title' | t
-    when 'search'
-      if search.performed
-        assign heading = 'general.search.title_results' | t
-      else
-        assign heading = 'general.search.title' | t
-      endif
-    when 'collection'
-      assign heading = collection.title
-    when 'list-collections'
-      assign heading = 'collections.general.all_collections' | t
-    when 'blog'
-      assign heading = blog.title
-    when 'customers/account'
-      assign heading = 'customer.account.title' | t
-    when 'customers/login'
-      if shop.checkout.guest_login
-        assign heading = 'customer.login.guest_title' | t
-      else
-        assign heading = 'customer.login.title' | t
-      endif
-    when 'customers/order'
-      assign heading = 'customer.order.title' | t
-      assign subheading = '<p>' | append: order.name | append: '</p>'
-    when 'customers/addresses'
-      assign heading = 'customer.addresses.title' | t
-    when 'cart'
-      assign heading = 'cart.general.title' | t
-  endcase
-
-  if template contains 'page'
-    assign heading = page.title
-  endif
-
-  if template contains 'article'
-    assign heading = article.title
-    assign show_date = false
-    assign show_author = false
-
-    if section.settings.show_date
-      assign show_date = true
-      assign published_at = article.published_at | date: format: 'month_date_year'
-      assign date = 'blogs.article.posted_on_date_html' | t: date: published_at
-    endif
-
-    if section.settings.show_author
-      assign show_author = true
-    endif
-
-    if show_date and show_author
-      assign byline = '<p>' | append: article.author | append: ' – ' | append: date | append: '</p>'
-    elsif show_date and show_author == false
-      assign byline = '<p>' | append: date | append: '</p>'
-    elsif show_date == false and show_author
-      assign byline = '<p>' | append: article.author | append: '</p>'
-    endif
-
-  endif
-
+  assign heading = blog.title
 
   if section.settings.heading != blank
     assign heading = section.settings.heading
@@ -105,7 +32,7 @@
     assign scale = section.settings.scale
     assign is_parallax = true
   else
-    assign section_type = 'data-section-type="template-header"'
+    assign section_type = 'data-section-type="blog-header"'
     assign is_parallax = false
   endif
 
@@ -116,11 +43,10 @@
     assign loading = 'eager'
     assign fetch_priority = 'high'
   endif
-
 -%}
 
-{% comment %} Template Header Template {% endcomment %}
-<div class="global__section section__banner-{{ section.id }} mt0 grid__wrapper {{ full_width }} relative template-header"
+{% comment %} Blog Header Template {% endcomment %}
+<div class="global__section section__banner-{{ section.id }} mt0 grid__wrapper {{ full_width }} relative blog-header"
 data-section-id="{{ section.id }}"
 {{ section_type }}
 data-section-loaded="false"
@@ -128,83 +54,84 @@ data-scale="1.{{ scale }}"
 {%- if is_parallax -%}data-asset-url="{{ 'section-parallax.js' | asset_url }}"{%- endif -%}>
 
   {%- capture text_content -%}
-     <h1 class="span-12 auto mb1 animate--text">{{ heading }}</h1>
-    {%- if subheading != blank -%}
-      <div class="span-12 auto mb0 rte animate--text delay--1">
-        {{ subheading }}
+    <div class="blog__page--description w-100 span-8 mt2 pb2 a-left">
+      <div class="rte desc">
+        <h1 class="text-2xl font-bold">{{ heading }}</h1>
+        {%- if subheading != blank -%}
+          <div class="blog-description mt1">
+            {{ subheading }}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_post_count -%}
+          <p class="blog-post-count text-sm text-text-200 mt1">
+            {{ blog.articles_count }} 
+            {%- if blog.articles_count == 1 -%}
+              post
+            {%- else -%}
+              posts
+            {%- endif -%}
+          </p>
+        {%- endif -%}
       </div>
-    {%- endif -%}
+    </div>
   {%- endcapture -%}
+
   {%- capture image_content -%}
     {%- if has_image -%}
-     {%- if section.settings.collection_image and collection.image != blank -%}
       {% render 'helper-image',
-         type: collection.image,
+         type: section.settings.image,
          sm_render: sm_render,
          md_render: md_render,
          lg_render: lg_render,
          loading: loading,
          fetchpriority: fetch_priority %}
-      {%- elsif section.settings.image == blank and template contains 'article' and article.image != blank -%}
-        {% render 'helper-image',
-           type: article.image,
-           sm_render: sm_render,
-           md_render: md_render,
-           lg_render: lg_render,
-           loading: loading,
-           fetchpriority: fetch_priority %}
-      {%- else -%}
-        {% render 'helper-image',
-           type: section.settings.image,
-           sm_render: sm_render,
-           md_render: md_render,
-           lg_render: lg_render,
-           loading: loading,
-           fetchpriority: fetch_priority %}
-      {%- endif -%}
     {%- endif -%}
   {%- endcapture -%}
 
   <div class="section__banner-inner-wrapper span-12 auto grid__wrapper edge rg0 cg0 relative">
-  {% if heading != blank and heading_placement == 'center' %}
-    <div class="section__banner-image span-12 auto">
-      {{ image_content }}
-    </div>
-    <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} sm-py12 absolute-center banner-text--over">
-      {{ text_content }}
-    </div>
-  {% elsif heading != blank and heading_placement == 'below' %}
-    <div class="section__banner-image span-12 auto">
-      {{ image_content }}
-    </div>
-    <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} mt2 pb2 pt9">
-      {{ text_content }}
-    </div>
-  {% elsif heading != blank and heading_placement == 'left' %}
-    <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px10 sm-py12 banner-text--over">
-      {{ text_content }}
-    </div>
-    <div class="section__banner-image span-6 v-center auto">
-      {{ image_content }}
-    </div>
-  {% elsif heading != blank and heading_placement == 'right' %}
-    <div class="section__banner-image span-6 v-center auto">
-      {{ image_content }}
-    </div>
-    <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px6 sm-py12 banner-text--over">
-      {{ text_content }}
-    </div>
-  {% endif %}
+    {% if heading != blank and heading_placement == 'center' %}
+      <div class="section__banner-image span-12 auto">
+        {{ image_content }}
+      </div>
+      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} sm-py12 absolute-center banner-text--over">
+        {{ text_content }}
+      </div>
+    {% elsif heading != blank and heading_placement == 'below' %}
+      <div class="section__banner-image span-12 auto">
+        {{ image_content }}
+      </div>
+      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} mt2 pb2 pt9">
+        {{ text_content }}
+      </div>
+    {% elsif heading != blank and heading_placement == 'left' %}
+      <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px10 sm-py12 banner-text--over">
+        {{ text_content }}
+      </div>
+      <div class="section__banner-image span-6 v-center auto">
+        {{ image_content }}
+      </div>
+    {% elsif heading != blank and heading_placement == 'right' %}
+      <div class="section__banner-image span-6 v-center auto">
+        {{ image_content }}
+      </div>
+      <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px6 sm-py12 banner-text--over">
+        {{ text_content }}
+      </div>
+    {% else %}
+      {%- comment -%} Default: No image, simple header like collection page {%- endcomment -%}
+      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} mt2 pb2">
+        {{ text_content }}
+      </div>
+    {% endif %}
   </div>
-
 
   {%- style -%}
     {%- unless section.settings.color_scheme == 'none' -%}
     .section__banner-{{ section.id }} .section__banner-caption.banner-text--over h1,
     .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .rte p,
     .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .rte a,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .section__banner-countdown p,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .section__banner-countdown span {
+    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .blog-description p,
+    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .blog-post-count {
       color: {{ text_color }};
     }
       {%- unless heading_placement == 'below' -%}
@@ -213,44 +140,69 @@ data-scale="1.{{ scale }}"
         }
       {%- endunless -%}
     {%- endunless -%}
-    .section__banner-{{ section.id }} .box-ratio {
-      padding-bottom: {{ section.settings.banner_height }}px !important;
-    }
-    .section__banner-{{ section.id }} .box-ratio img {
-      object-fit: cover;
-      object-position: {{ section.settings.image.presentation.focal_point }};
-      height: {{ section.settings.banner_height }}px !important;
-    }
-    {%- if float_header == true -%}
-      .section__banner-{{ section.id }} .section__banner-image {
+    
+    {%- if has_image -%}
+      .section__banner-{{ section.id }} .box-ratio {
+        padding-bottom: {{ section.settings.banner_height }}px !important;
+      }
+      .section__banner-{{ section.id }} .box-ratio img {
+        object-fit: cover;
+        object-position: {{ section.settings.image.presentation.focal_point }};
         height: {{ section.settings.banner_height }}px !important;
       }
-    {%- elsif has_image == false and float_header == false -%}
-      /* No image and no floating text default header colors back to normal */
-      body.over-content--true .section-header .color--header-text,
-      body.over-content--true .section-header .color--header-text span {
-        color: var(--header-text) !important;
+      {%- if float_header == true -%}
+        .section__banner-{{ section.id }} .section__banner-image {
+          height: {{ section.settings.banner_height }}px !important;
+        }
+      {%- endif -%}
+    {%- else -%}
+      /* No image styling - similar to collection page */
+      .section__banner-{{ section.id }} .blog__page--description h1 {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 8px;
       }
-      body.over-content--true .section-header .color--header-text svg .hover-fill {
-        fill: var(--header-text) !important;
+      
+      @media (max-width: 767px) {
+        .section__banner-{{ section.id }} .blog__page--description h1 {
+          font-size: 24px;
+        }
       }
-      body.over-content--true .section-header .color--header-text:hover,
-      body.over-content--true .section-header .color--header-text:hover span {
-        color: var(--header-hover) !important;
+      
+      .section__banner-{{ section.id }} .blog-description {
+        color: var(--text-color-secondary, #666);
+        font-size: 16px;
+        line-height: 1.5;
       }
-      body.over-content--true .section-header .color--header-text:hover svg .hover-fill {
-        fill: var(--header-hover) !important;
+      
+      .section__banner-{{ section.id }} .blog-post-count {
+        color: var(--text-color-secondary, #666);
+        font-size: 14px;
+        font-weight: 500;
       }
-      body.over-content--true .section__banner-{{ section.id }} .section__banner-caption {
-        padding-top: var(--space-11) !important;
+      
+      .section__banner-{{ section.id }} .section__banner-caption {
+        border-bottom: 1px solid #efefef;
+        padding-bottom: 32px;
+        margin-bottom: 32px;
+      }
+      
+      @media (max-width: 767px) {
+        .section__banner-{{ section.id }} .section__banner-caption {
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+        }
       }
     {%- endif -%}
+    
     .section__banner-{{ section.id }} .section__banner-caption.absolute-center.a-left {
       text-align: left !important;
     }
     .section__banner-{{ section.id }} .section__banner-caption.absolute-center.a-right {
       text-align: right !important;
     }
+    
     {%- if has_image and is_parallax -%}
       .section__banner-{{ section.id }} .box-ratio img {
         transform: scale(1.{{ scale }});
@@ -261,7 +213,7 @@ data-scale="1.{{ scale }}"
 
 {% schema %}
 {
-  "name": "Template header",
+  "name": "Blog header",
   "tag": "section",
   "settings": [
     {
@@ -273,7 +225,7 @@ data-scale="1.{{ scale }}"
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
+      "label": "Header image",
       "info": "2880px x 1620px recommended"
     },
     {
@@ -283,7 +235,7 @@ data-scale="1.{{ scale }}"
       "max": 5,
       "step": 1,
       "label": "Parallax effect",
-      "default": 2,
+      "default": 0,
       "info": "The higher the scale the greater the effect, 0 removes parallax effect."
     },
     {
@@ -299,15 +251,21 @@ data-scale="1.{{ scale }}"
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading",
-      "info": "Use a metafield to override the template heading. [Learn more](https://www.weareunderground.com/blogs/shopify-blog/forge-section-heading-metafields)"
+      "label": "Custom heading",
+      "info": "Leave blank to use blog title"
     },
     {
       "id": "subheading",
       "type": "richtext",
       "label": "Subheading",
-      "default": "<p>Add some descriptive subheading text to your template header.</p>",
-      "info":"Use a metafield to add a subheading. [Learn more](https://www.weareunderground.com/blogs/shopify-blog/forge-section-heading-metafields)"
+      "default": "<p>Discover our latest thoughts, insights and updates.</p>",
+      "info": "Description text that appears below the blog title"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_post_count",
+      "label": "Show post count",
+      "default": true
     },
     {
       "type": "select",
@@ -328,10 +286,10 @@ data-scale="1.{{ scale }}"
         },
         {
           "value": "below",
-          "label": "Below"
+          "label": "Below image"
         }
       ],
-      "default": "left"
+      "default": "below"
     },
     {
       "type": "select",
@@ -351,13 +309,13 @@ data-scale="1.{{ scale }}"
           "label": "Right"
         }
       ],
-      "default": "a-center"
+      "default": "a-left"
     },
     {
       "type": "select",
       "id": "color_scheme",
       "label": "Color scheme",
-      "default": "3",
+      "default": "none",
       "options": [
         {
           "value": "none",

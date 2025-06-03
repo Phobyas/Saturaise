@@ -15,66 +15,165 @@
   endcase
 
   assign items_per_page = section.settings.items_per_page
-
 -%}
 
 {% comment %} Blog Template {% endcomment %}
 <section
-  class="blog-template"
+  class="blog-template modern-blog"
   data-section-id="{{ section.id }}"
   data-section-type="blog-template"
   data-section-loaded="false">
 
   {% paginate blog.articles by items_per_page %}
-    <div class="grid__wrapper rg9 pb8">
-
-      {% if section.settings.text != blank or current_tags or section.settings.show_taglist %}
-        <div class="span-12 auto mb5">
-          {% unless section.settings.text == blank %}
-            <div class="blog-description a-center rte">
+    
+    {%- comment -%} Modern Blog Header - Similar to Collection Header {%- endcomment -%}
+    <div class="blog__page--header w-100 span-12 auto mt8 mb6">
+      <div class="blog__page--description w-100 span-8 mt2 pb2 a-left">
+        <div class="rte desc">
+          <h1 class="text-2xl font-bold mb1">
+            {{ blog.title }}
+          </h1>
+          {% if section.settings.text != blank %}
+            <div class="blog-description">
               {{ section.settings.text }}
-            </div>
-          {% endunless %}
-          {%- if section.settings.show_taglist -%}
-            <div class="linklist-section__container span-12 auto">
-              <div class="linklist-section__wrapper a-center">
-                {% for tag in blog.all_tags %}
-                  <span class="linklist-section__link mr4 mb1">{{ tag | link_to_add_tag: tag }}</span>
-                {%- endfor -%}
-              </div>
-            </div>
-          {%- endif -%}
-          {% if current_tags %}
-            <div class="blog-template__tags--wrapper">
-              <p class="blog-template__tags--label mb0 inline-block wauto v-center mr3">{{ 'blogs.article.tagged' | t }}</p>
-              <ul class="blog-template__tags--group inline-block mb0 w80 v-center">
-                {%- for tag in current_tags -%}
-                  <li class="blog-template__tags--tag mr3 mb0">{{ tag | link_to_remove_tag: tag }}</li>
-                {%- endfor -%}
-                <li class="blog-template__tags--clear">
-                  <a class="btn-border-link inline-block relative mb0" href="{{ blog.url }}">
-                     <span>{{ 'collections.general.clear_all_tags' | t }}</span>
-                   </a>
-                 </li>
-              </ul>
             </div>
           {% endif %}
         </div>
-      {% endif %}
-
-      {% render 'article-loop',
-          blog: blog,
-          grid_items: section.settings.items_per_row,
-          items_per_row: items_per_row,
-          side_by_side: side_by_side,
-          paginate: paginate ,
-          items_per_page: items_per_page,
-          show_excerpt: section.settings.show_excerpt %}
-
+      </div>
     </div>
 
+    {%- comment -%} Modern Tag Filter Section - Expandable with Search {%- endcomment -%}
+    {% if section.settings.show_taglist and blog.all_tags.size > 0 %}
+      <div class="blog__tags--section span-12 auto mb6">
+        <div class="sidebar__filter-block sidebar-filter filter--regular">
+          <div class="filter-header" onclick="toggleFilterSection()">
+            <p class="sm-caps filter-t">Szukaj według tematu</p>
+            <span class="filter-toggle">▼</span>
+          </div>
+          
+          <div class="filter-content" id="filterContent">
+            <div class="filter-search-wrapper">
+              <input type="text" 
+                     id="tagSearch" 
+                     placeholder="Search tags..." 
+                     class="filter-search-input"
+                     onkeyup="searchTags()">
+            </div>
+            
+            <div class="filter-list-wrapper">
+              <ul class="blog__tags--list">
+                <li class="filter-item js-filter">
+                  <a class="js-blog-filter active" href="#" data-tag="all">
+                    <input type="checkbox" name="blog_filter" value="all" id="all-posts" checked>
+                    <label class="regular-filter--label" for="all-posts">
+                      <span class="vib-center">All Posts</span>
+                      <span class="filter__count vib-center">({{ blog.articles.size }})</span>
+                    </label>
+                  </a>
+                </li>
+                {% for tag in blog.all_tags %}
+                  {% assign tag_count = 0 %}
+                  {% for article in blog.articles %}
+                    {% if article.tags contains tag %}
+                      {% assign tag_count = tag_count | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  <li class="filter-item js-filter" data-tag-name="{{ tag | downcase }}">
+                    <a class="js-blog-filter" href="#" data-tag="{{ tag | handle }}">
+                      <input type="checkbox" name="blog_filter" value="{{ tag | handle }}" id="{{ tag | handle }}">
+                      <label class="regular-filter--label" for="{{ tag | handle }}">
+                        <span class="vib-center">{{ tag }}</span>
+                        <span class="filter__count vib-center">({{ tag_count }})</span>
+                      </label>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} Current Filters Display - Collection Style {%- endcomment -%}
+    <div class="filter-drawer__filtering__results js-filters-reset js-main-filters-container span-12 auto mb4" style="display: none;">
+      <h3 class="visually-hidden">Current filters</h3>
+      <ul class="current_filters mb0 mt4 js-main-filters-list">
+        <!-- JavaScript will populate this -->
+        <li><a class="current_filters--clear js-current-filter ml4" href="#" onclick="window.location.reload()">Wyczyść wszystkie</a></li>
+      </ul>
+    </div>
+
+    {%- comment -%} Articles List {%- endcomment -%}
+    <div class="blog__articles--list pb8">
+      {% for article in blog.articles %}
+        <article class="blog__article--item" data-tags="{% for tag in article.tags %}{{ tag | handle }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+          <div class="blog__article--row">
+            {% if article.image %}
+              <div class="blog__article--image">
+                <a href="{{ article.url }}" class="image-link">
+                  <img src="{{ article.image | image_url: width: 600 }}" 
+                       alt="{{ article.image.alt | escape }}" 
+                       loading="{% if forloop.index <= 3 %}eager{% else %}lazy{% endif %}"
+                       width="600" 
+                       height="450">
+                </a>
+              </div>
+            {% endif %}
+            
+            <div class="blog__article--content">
+              <div class="blog__article--meta">
+                {% if section.settings.show_date %}
+                  <time class="article-date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                    {{ article.published_at | date: format: 'month_date_year' }}
+                  </time>
+                {% endif %}
+                {% if section.settings.show_author and article.author != blank %}
+                  <span class="article-author">{{ article.author }}</span>
+                {% endif %}
+              </div>
+              
+              <h2 class="blog__article--title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h2>
+              
+              {% if section.settings.show_excerpt %}
+                <div class="blog__article--excerpt">
+                  {% if article.excerpt != blank %}
+                    {{ article.excerpt }}
+                  {% else %}
+                    {{ article.content | strip_html | truncatewords: 30 }}
+                  {% endif %}
+                </div>
+              {% endif %}
+              
+              {% if section.settings.show_tags and article.tags.size > 0 %}
+                <div class="blog__article--tags">
+                  {% for tag in article.tags limit: 3 %}
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+              <div class="blog__article--footer">
+                <a href="{{ article.url }}" class="read-more-btn">
+                  {{ 'blogs.article.read_more' | t | default: 'Czytaj więcej' }}
+                </a>
+                {% if section.settings.show_comments and blog.moderated? == false %}
+                  <span class="article-comments">
+                    {{ 'blogs.comments.comments_with_count' | t: count: article.comment_post_count }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {%- comment -%} Pagination {%- endcomment -%}
     {% if paginate.pages > 1 %}
-      <div class="span-12 auto mb8">
+      <div class="blog__pagination span-12 auto mb8">
         {% render 'snip-pagination', paginate: paginate %}
       </div>
     {% endif %}
@@ -82,22 +181,842 @@
   {% endpaginate %}
 
   <style>
+    /* Modern Blog Styling */
+    .modern-blog {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    @media (min-width: 1920px) {
+      .modern-blog {
+        max-width: 1600px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .modern-blog {
+        padding: 0 12px;
+      }
+    }
+
+    /* Blog Header */
+    .blog__page--header {
+      border-bottom: 1px solid #efefef;
+    }
+
+    .blog__page--description h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 767px) {
+      .blog__page--description h1 {
+        font-size: 24px;
+      }
+    }
+
+    .blog__page--description .blog-description {
+      color: var(--text-color-secondary, #666);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Blog Filter Section - Expandable with Search */
+    .blog__tags--section {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 16px;
+      border: 1px solid #e9ecef;
+    }
+
+    .blog__tags--section .sidebar__filter-block {
+      margin-bottom: 0;
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+
+    .filter-header:hover {
+      opacity: 0.7;
+    }
+
+    .blog__tags--section .filter-t {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0;
+      color: var(--text-color);
+    }
+
+    .filter-toggle {
+      font-size: 12px;
+      color: var(--text-color-secondary, #666);
+      transition: transform 0.3s ease;
+    }
+
+    .filter-toggle.expanded {
+      transform: rotate(180deg);
+    }
+
+    .filter-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .filter-content.expanded {
+      max-height: 400px;
+      transition: max-height 0.3s ease-in;
+    }
+
+    .filter-search-wrapper {
+      margin: 12px 0 8px 0;
+      padding-top: 12px;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .filter-search-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      background: white;
+      transition: border-color 0.2s ease;
+    }
+
+    .filter-search-input:focus {
+      outline: none;
+      border-color: var(--text-color);
+    }
+
+    .filter-search-input::placeholder {
+      color: #999;
+    }
+
+    .filter-list-wrapper {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 8px;
+    }
+
+    .filter-list-wrapper::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .filter-list-wrapper::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    .filter-list-wrapper::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    .filter-list-wrapper::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+
+    .blog__tags--list {
+      display: block;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .blog__tags--list .filter-item {
+      margin-bottom: 2px;
+      transition: opacity 0.2s ease;
+    }
+
+    .blog__tags--list .filter-item.hidden {
+      display: none;
+    }
+
+    .blog__tags--list .js-blog-filter {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .blog__tags--list .js-blog-filter:hover {
+      opacity: 0.7;
+    }
+
+    .blog__tags--list .js-blog-filter.active,
+    .blog__tags--list .filter-item.current .js-blog-filter {
+      font-weight: 600;
+    }
+
+    .blog__tags--list input[type="checkbox"] {
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .blog__tags--list .regular-filter--label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .blog__tags--list .vib-center {
+      display: flex;
+      align-items: center;
+    }
+
+    .blog__tags--list .filter__count {
+      font-size: 12px;
+      color: var(--text-color-secondary, #666);
+      font-weight: 500;
+    }
+
+    /* No results message */
+    .no-results-message {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-color-secondary, #666);
+      font-size: 13px;
+      font-style: italic;
+      display: none;
+    }
+
+    /* Current Filters Display - Collection Style */
+    .filter-drawer__filtering__results {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 12px 16px;
+      border-left: 3px solid var(--text-color);
+    }
+
+    .current_filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .current_filters--filter {
+      background: var(--text-color);
+      border-radius: 4px;
+      padding: 0;
+    }
+
+    .current_filters--filter .js-current-filter {
+      display: block;
+      padding: 4px 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .current_filters--filter .js-current-filter:hover {
+      opacity: 0.8;
+      color: white;
+    }
+
+    .current_filters--clear {
+      color: var(--text-color);
+      text-decoration: underline;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .current_filters--clear:hover {
+      text-decoration: none;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Blog Articles List - Horizontal Layout */
+    .blog__articles--list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .blog__article--item {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .blog__article--item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .blog__article--row {
+      display: flex;
+      align-items: stretch;
+      min-height: 150px;
+    }
+
+    .blog__article--image {
+      flex: 0 0 25%;
+      max-width: 25%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog__article--image .image-link {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .blog__article--image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .blog__article--item:hover .blog__article--image img {
+      transform: scale(1.05);
+    }
+
+    .blog__article--content {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .blog__article--meta {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--text-color-secondary, #666);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .blog__article--title {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .blog__article--title a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .blog__article--title a:hover {
+      color: var(--text-color-secondary, #666);
+    }
+
+    .blog__article--excerpt {
+      color: var(--text-color-secondary, #666);
+      line-height: 1.6;
+      margin-bottom: 12px;
+      flex-grow: 1;
+      font-size: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .blog__article--tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .article-tag {
+      background: #f0f0f0;
+      color: var(--text-color);
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .article-tag:hover {
+      background: var(--text-color);
+      color: white;
+    }
+
+    .blog__article--footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .read-more-btn {
+      background: white;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      padding: 6px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .read-more-btn:hover {
+      background: var(--text-color);
+      color: white;
+    }
+
+    .article-comments {
+      font-size: 12px;
+      color: var(--text-color-secondary, #666);
+    }
+
+    /* Animation for filtered articles */
+    .blog__article--item {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 767px) {
+      .blog__articles--list {
+        gap: 16px;
+      }
+
+      .blog__article--row {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .blog__article--image {
+        flex: none;
+        max-width: 100%;
+        height: 160px;
+      }
+
+      .blog__article--content {
+        padding: 14px 16px;
+      }
+
+      .blog__article--title {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .blog__article--meta {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+
+      .blog__article--excerpt {
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+
+      .blog__article--footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .read-more-btn {
+        padding: 5px 12px;
+        font-size: 11px;
+      }
+
+      .blog__tags--section {
+        padding: 10px;
+      }
+
+      .blog__tags--list {
+        gap: 4px;
+        padding-bottom: 4px;
+      }
+      
+      .blog__tag--item {
+        padding: 3px 6px;
+        font-size: 10px;
+      }
+
+      .current-tags__wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .current-tags__label {
+        margin-right: 0;
+      }
+
+      .blog__current-tags {
+        padding: 6px 10px;
+      }
+    }
+
+    /* Text alignment from settings */
     .blog-template .article-loop__excerpt {
       text-align: {{ section.settings.text_align }};
     }
-    .blog-template .linklist-section__link {
-      display: inline-block;
-      text-transform: uppercase;
-      cursor: pointer;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-      transition: border-bottom 0.4s ease-out;
-      font-size: var(--font-size-sm);
-    }
-    .blog-template .linklist-section__link:hover {
-      border-bottom: 1px solid var(--text-color);
-    }
   </style>
+
+    {%- comment -%} JavaScript for Tag Filtering - Simple & Direct {%- endcomment -%}
+    <script>
+      let activeFilters = [];
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        const filterLinks = document.querySelectorAll('.js-blog-filter');
+        const articles = document.querySelectorAll('.blog__article--item');
+        const currentFiltersSection = document.querySelector('.filter-drawer__filtering__results');
+        const currentFiltersList = document.querySelector('.js-main-filters-list');
+
+        console.log('Blog filter system initialized');
+        console.log('Found', filterLinks.length, 'filter links');
+        console.log('Found', articles.length, 'articles');
+
+        // Add click handlers to filter links
+        filterLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tag = this.getAttribute('data-tag');
+            
+            console.log('Clicked tag:', tag);
+            
+            if (tag === 'all') {
+              handleClearAll();
+            } else {
+              const tagName = this.querySelector('.vib-center').textContent.trim();
+              toggleFilter(tag, tagName, this);
+            }
+          });
+        });
+
+        function toggleFilter(tagHandle, tagName, linkElement) {
+          const checkbox = linkElement.querySelector('input[type="checkbox"]');
+          const filterItem = linkElement.closest('.filter-item');
+          
+          const existingIndex = activeFilters.findIndex(filter => filter.handle === tagHandle);
+          
+          if (existingIndex > -1) {
+            // Remove filter
+            activeFilters.splice(existingIndex, 1);
+            checkbox.checked = false;
+            filterItem.classList.remove('current');
+          } else {
+            // Add filter
+            activeFilters.push({ handle: tagHandle, name: tagName });
+            checkbox.checked = true;
+            filterItem.classList.add('current');
+          }
+          
+          console.log('Active filters:', activeFilters);
+          updateDisplay();
+        }
+
+        function handleClearAll() {
+          console.log('Clearing all filters');
+          
+          // Clear the array
+          activeFilters = [];
+          
+          // Reset all filter UI elements
+          filterLinks.forEach(link => {
+            const checkbox = link.querySelector('input[type="checkbox"]');
+            const filterItem = link.closest('.filter-item');
+            const tag = link.getAttribute('data-tag');
+            
+            if (tag === 'all') {
+              checkbox.checked = true;
+              link.classList.add('active');
+            } else {
+              checkbox.checked = false;
+              filterItem.classList.remove('current');
+              link.classList.remove('active');
+            }
+          });
+          
+          // Hide current filters section
+          if (currentFiltersSection) {
+            currentFiltersSection.style.display = 'none';
+          }
+          
+          // Show all articles
+          articles.forEach(article => {
+            article.style.display = 'block';
+            article.style.opacity = '1';
+            article.style.transform = 'translateY(0)';
+          });
+          
+          console.log('All filters cleared, showing', articles.length, 'articles');
+        }
+
+        function updateDisplay() {
+          // Update "All Posts" button
+          const allPostsLink = document.querySelector('.js-blog-filter[data-tag="all"]');
+          if (allPostsLink) {
+            const allPostsCheckbox = allPostsLink.querySelector('input');
+            if (activeFilters.length === 0) {
+              allPostsLink.classList.add('active');
+              allPostsCheckbox.checked = true;
+            } else {
+              allPostsLink.classList.remove('active');
+              allPostsCheckbox.checked = false;
+            }
+          }
+
+          // Update current filters display
+          if (activeFilters.length > 0 && currentFiltersSection && currentFiltersList) {
+            currentFiltersSection.style.display = 'block';
+            
+            let filterHTML = '';
+            activeFilters.forEach(filter => {
+              filterHTML += `<li class="current_filters--filter">
+                <a class="js-current-filter" href="#" data-remove-tag="${filter.handle}">
+                  ${filter.name} ×
+                </a>
+              </li>`;
+            });
+            
+            filterHTML += '<li><a class="current_filters--clear js-current-filter ml4" href="javascript:void(0)" onclick="clearAllNow()">Wyczyść wszystkie</a></li>';
+            
+            currentFiltersList.innerHTML = filterHTML;
+            
+            // Re-attach event listeners to new elements
+            attachCurrentFilterListeners();
+            
+          } else if (currentFiltersSection) {
+            currentFiltersSection.style.display = 'none';
+          }
+
+          // Filter articles
+          filterArticles();
+        }
+
+        function attachCurrentFilterListeners() {
+          // Remove individual filter buttons
+          document.querySelectorAll('[data-remove-tag]').forEach(link => {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const tagToRemove = this.getAttribute('data-remove-tag');
+              console.log('Removing tag:', tagToRemove);
+              
+              // Find and remove from activeFilters
+              const index = activeFilters.findIndex(filter => filter.handle === tagToRemove);
+              if (index > -1) {
+                activeFilters.splice(index, 1);
+              }
+              
+              // Update the original filter checkbox
+              const originalFilter = document.querySelector(`.js-blog-filter[data-tag="${tagToRemove}"]`);
+              if (originalFilter) {
+                const checkbox = originalFilter.querySelector('input[type="checkbox"]');
+                const filterItem = originalFilter.closest('.filter-item');
+                checkbox.checked = false;
+                filterItem.classList.remove('current');
+              }
+              
+              updateDisplay();
+            });
+          });
+        }
+
+        function filterArticles() {
+          let visibleCount = 0;
+          
+          articles.forEach((article, index) => {
+            const articleTagsAttr = article.getAttribute('data-tags');
+            
+            if (activeFilters.length === 0) {
+              // Show all articles
+              article.style.display = 'block';
+              article.style.opacity = '1';
+              article.style.transform = 'translateY(0)';
+              visibleCount++;
+            } else {
+              // Check if article matches any active filter
+              const articleTags = articleTagsAttr ? articleTagsAttr.split(',') : [];
+              const hasMatchingTag = activeFilters.some(filter => 
+                articleTags.includes(filter.handle)
+              );
+              
+              if (hasMatchingTag) {
+                article.style.display = 'block';
+                article.style.opacity = '1';
+                article.style.transform = 'translateY(0)';
+                visibleCount++;
+              } else {
+                article.style.display = 'none';
+                article.style.opacity = '0';
+                article.style.transform = 'translateY(20px)';
+              }
+            }
+          });
+          
+          console.log('Showing', visibleCount, 'articles');
+        }
+
+        // Global clear all function that actually works
+        window.clearAllFiltersGlobal = function(event) {
+          console.log('clearAllFiltersGlobal called but redirecting to clearAllNow');
+          if (window.clearAllNow) {
+            window.clearAllNow();
+          }
+        };
+        // Global functions for backward compatibility
+        window.clearAllFilters = function(event) {
+          console.log('clearAllFilters called, redirecting to clearAllNow');
+          if (window.clearAllNow) {
+            window.clearAllNow();
+          }
+        };
+        window.removeFilter = function(tagHandle) {
+        window.removeFilter = function(tagHandle) {
+          console.log('removeFilter called for:', tagHandle);
+          const index = activeFilters.findIndex(filter => filter.handle === tagHandle);
+          if (index > -1) {
+            activeFilters.splice(index, 1);
+            
+            const originalFilter = document.querySelector(`.js-blog-filter[data-tag="${tagHandle}"]`);
+            if (originalFilter) {
+              const checkbox = originalFilter.querySelector('input[type="checkbox"]');
+              const filterItem = originalFilter.closest('.filter-item');
+              checkbox.checked = false;
+              filterItem.classList.remove('current');
+            }
+            
+            updateDisplay();
+          }
+        };
+        };
+
+        // Filter section toggle
+        window.toggleFilterSection = function() {
+          const filterContent = document.getElementById('filterContent');
+          const filterToggle = document.querySelector('.filter-toggle');
+          
+          if (filterContent && filterToggle) {
+            if (filterContent.classList.contains('expanded')) {
+              filterContent.classList.remove('expanded');
+              filterToggle.classList.remove('expanded');
+            } else {
+              filterContent.classList.add('expanded');
+              filterToggle.classList.add('expanded');
+            }
+          }
+        };
+
+        // Tag search
+        window.searchTags = function() {
+          const searchInput = document.getElementById('tagSearch');
+          if (!searchInput) return;
+          
+          const searchTerm = searchInput.value.toLowerCase();
+          const filterItems = document.querySelectorAll('.filter-item[data-tag-name]');
+          let visibleCount = 0;
+
+          filterItems.forEach(item => {
+            const tagName = item.getAttribute('data-tag-name');
+            if (tagName && tagName.includes(searchTerm)) {
+              item.style.display = 'block';
+              visibleCount++;
+            } else {
+              item.style.display = 'none';
+            }
+          });
+
+          // Show/hide "All Posts" option
+          const allPostsItem = document.querySelector('.filter-item:not([data-tag-name])');
+          if (allPostsItem) {
+            allPostsItem.style.display = searchTerm === '' ? 'block' : 'none';
+          }
+        };
+
+        // Initialize
+        updateDisplay();
+
+        // Simple global clear function that definitely works
+        window.clearAllNow = function() {
+          console.log('clearAllNow called');
+          
+          // Force clear the activeFilters
+          activeFilters.length = 0;
+          
+          // Reset all checkboxes
+          document.querySelectorAll('.js-blog-filter').forEach(link => {
+            const checkbox = link.querySelector('input[type="checkbox"]');
+            const filterItem = link.closest('.filter-item');
+            const tag = link.getAttribute('data-tag');
+            
+            if (tag === 'all') {
+              checkbox.checked = true;
+              link.classList.add('active');
+            } else {
+              checkbox.checked = false;
+              filterItem.classList.remove('current');
+              link.classList.remove('active');
+            }
+          });
+          
+          // Hide filters section
+          const section = document.querySelector('.filter-drawer__filtering__results');
+          if (section) section.style.display = 'none';
+          
+          // Show all articles
+          document.querySelectorAll('.blog__article--item').forEach(article => {
+            article.style.display = 'block';
+            article.style.opacity = '1';
+            article.style.transform = 'translateY(0)';
+          });
+          
+          console.log('Cleared all - activeFilters length:', activeFilters.length);
+        };
+      });
+    </script>
 </section>
 
 {% schema %}
@@ -107,8 +1026,9 @@
     {
       "id": "text",
       "type": "richtext",
-      "label": "Text",
-      "default": "<p>Add some descriptive text to your Blog page.</p>"
+      "label": "Blog description",
+      "default": "<p>Discover our latest thoughts, insights and updates.</p>",
+      "info": "This text appears below the blog title"
     },
     {
       "type": "range",
@@ -122,14 +1042,15 @@
     {
       "type": "checkbox",
       "id": "show_taglist",
-      "label": "Show tag linklist",
-      "default": true
+      "label": "Show tag filter",
+      "default": true,
+      "info": "Display tags as clickable filters"
     },
     {
       "type": "text_alignment",
       "id": "text_align",
       "label": "Text alignment",
-      "default": "center"
+      "default": "left"
     },
     {
       "type": "checkbox",
