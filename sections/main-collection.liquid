@@ -1,98 +1,3 @@
-{% style %}
-  .desc h3 {
-    font-size: 16px !important;
-  }
-
-  .desc p {
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    margin-top: 8px !important;
-  }
-
-  @media (max-width: 1024px) {
-    .desc h3 {
-      font-size: 14px !important;
-    }
-
-    .desc p {
-      font-size: 14px !important;
-      margin-top: 6px !important;
-    }
-  }
-
-  .count {
-    font-size: 16px !important;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  /* Filter and Sort Button Styles */
-  .collection__page--topbar .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 40px;
-    padding: 8px 16px;
-    border: 1px solid var(--text-color);
-    border-radius: 8px;
-    background: transparent;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-  }
-
-  .collection__page--topbar .button:hover {
-    background: #eee;
-    color: var(--bg-color);
-  }
-
-  .collection__page--topbar .button .no-pe {
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  /* Adjust icon positioning */
-  .collection__page--topbar .button svg {
-    margin-left: 8px;
-    width: 12px;
-    height: 12px;
-    transition: transform 0.3s ease;
-  }
-
-  .collection__page--topbar .button:hover svg {
-    transform: translateY(2px);
-    fill: var(--bg-color);
-  }
-
-  /* Mobile adjustments */
-  @media screen and (max-width: 768px) {
-    .collection__page--topbar .button {
-      min-height: 36px;
-      padding: 6px 12px;
-      font-size: 13px;
-    }
-  }
-
-  @media screen and (max-width: 1023px){
-    #collection-page {
-      padding: 0 12px;
-    }
-  }
-
-  /* Subtle animation for filter updates */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  /* Apply animation only to newly added elements */
-  .filter-drawer__filtering__results.js-new-filter {
-    animation: fadeIn 0.3s ease;
-  }
-
-  collection-page
-{% endstyle %}
-
 {% comment %} Collection Page Assets {% endcomment %}
 <link rel="preload" href="{{ 'section-main-collection.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-main-collection.css' | asset_url }}"></noscript>
@@ -121,10 +26,9 @@
   for filter in collection.filters
     if filter.type == 'price_range'
       if filter.min_value.value != nil or filter.max_value.value != nil
-        assign filter_count = 1
+        assign filter_count = filter_count | plus: 1
       endif
     endif
-
     assign filter_count = filter_count | plus: filter.active_values.size
   endfor
 
@@ -157,13 +61,12 @@
   else
     assign grid_type = 'cg6 sm-cg4 rg9 sm-rg6'
   endif
-
 -%}
 
-{% comment %} Collection Page Template {% endcomment %}
+{% comment %} Enhanced Modern Collection Page Template {% endcomment %}
 <section
   id="collection-page"
-  class="collection__page--wrapper collection-template collection-{{ section.id }} mt6 pb9 no-section-animation"
+  class="collection__page--wrapper collection-template collection-{{ section.id }} modern-collection-filters mt6 pb9 no-section-animation"
   data-section-id="{{ section.id }}"
   data-section-type="collection"
   data-asset-url="{{ 'section-main-collection.js' | asset_url }}"
@@ -172,15 +75,16 @@
 
   {% paginate collection.products by page_limit %}
     <div id="CollectionProductGrid" class="grid__wrapper">
+      
+      {%- comment -%} Collection Header {%- endcomment -%}
       {%- if collection.description != blank -%}
-        <div class="collection__page--description  w-100 span-8 mt2 pb2 a-left">
+        <div class="collection__page--description w-100 span-8 mt2 pb2 a-left">
           <div class="rte desc">
             <h1 class="text-2xl font-bold">
               {{ collection.title }}
             </h1>
-            <p >
+            <p>
               {{ collection.description | replace: '<span>', '<span class=" text-base">' }}
-
             </p>
           </div>
         </div>
@@ -203,98 +107,97 @@
             fetchpriority: fetch_priority %}
        </div>
      {%- endif -%}
- 
-     <div class="collection__page--topbar span-12 auto grid__wrapper edge rg0">
-      <div class="span-5 sm-span-12 auto a-left v-end">
-        {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when 'filter' -%}
-              <button class="button js-slideout-open js-menu-toggle mr3"
-                data-wau-slideout-target="collection-filters"
-                data-slideout-direction="left"
-                data-toggle-menu="filter"
-                aria-label="{{ 'collections.filter.filter' | t }}"
-                {% if collection.all_products_count >= 1000 %}style="display: none;"{% endif %}
-                tabindex="0" type="button" name="button">
-                <span class="no-pe">{{ 'collections.filter.filter' | t }}</span>
-                {% render 'snip-icons',
-                  wrapper: '.collection__page--topbar',
-                  classes: 'icon-filter'
-                  type: 'theme',
-                  icon: 'filter',
-                  size: '14px',
-                  fill: 'currentColor',
-                  hover: 'currentColor' %}
-              </button> 
-            {%- when 'sort_by' -%}
-              <button class="button js-slideout-open js-menu-toggle mr3"
-                data-wau-slideout-target="collection-filters"
-                data-slideout-direction="left"
-                data-toggle-menu="sort"
-                aria-label="{{ 'collections.filter.sort_title' | t }}"
-                tabindex="0" type="button" name="button">
-                <span class="no-pe">{{ 'collections.filter.sort_title' | t }}</span>
-                {% render 'snip-icons',
-                  wrapper: '.collection__page--topbar',
-                  classes: 'icon-sort'
-                  type: 'apollo',
-                  icon: 'down-carrot',
-                  size: '12px',
-                  fill: 'currentColor',
-                  hover: 'currentColor' %}
-              </button>
-          {%- endcase -%}
-        {%- endfor -%}
-      </div>
-      <div class="span-7 sm-hide auto a-right v-end">
-        {%- if section.settings.show_count -%}
-          <p class="topbar__count mb0 count js-product-count">{{ 'collections.general.item_count.other' | t: count: collection.products_count }}</p>
-        {%- endif -%}
-      </div>
-      {%- if filter_count > 0 -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'filter' -%}
-              <div class="filter-drawer__filtering__results js-filters-reset js-main-filters-container span-12 auto">
-                <h3 class="visually-hidden">{{ 'collections.filter.filtering_by_label' | t }}</h3>
-                <ul class="current_filters mb0 mt4 js-main-filters-list">
-                  {%- for filter in collection.filters -%}
-                    {%- for value in filter.active_values -%}
-                      <li class="current_filters--filter">
-                        <a class="js-current-filter" href="{{ value.url_to_remove }}">
-                          {{ value.label | escape }}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                    {% if filter.type == "price_range" %}
-                      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
-                        <li class="current_filters--filter">
-                          <a class="js-current-filter" href="{{ filter.url_to_remove }}">
-                            {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
-                          </a>
-                        </li>
-                      {%- endif -%}
-                    {% endif %}
-                  {%- endfor -%}
-                  <li><a class="current_filters--clear js-current-filter ml4" href="{{ collection.url }}">{{ 'collections.filter.clear_all' | t }}</a></li>
-                </ul>
-              </div>
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-    </div>
 
-      {%- if has_sortby or has_filter -%}
-        <aside class="slideout slideout__drawer-right py8 px7"
-          data-wau-slideout="collection-filters" id="slideout-collection-filters">
-          <form id="CollectionFiltersForm" data-filters>
-            {% render 'snip-filter-drawer',
-              has_sortby: has_sortby,
-              has_filter: has_filter,
-              type: collection,
-              filter_count: filter_count %}
-          </form>
-        </aside>
-      {%- endif -%}
+     {%- comment -%} Enhanced Filter Top Bar {%- endcomment -%}
+     {%- liquid
+       assign show_filters = false
+       if collection.filters.size > 0 or has_sortby
+         assign show_filters = true
+       endif
+     -%}
+     
+     {% if show_filters %}
+       <div class="modern-filter-topbar span-12 auto">
+         <button class="modern-filter-button" 
+                 type="button" 
+                 onclick="FilterDrawer.open()"
+                 aria-label="{{ 'collections.filter.filter' | t | default: 'Otwórz filtry' }}">
+           {{ 'collections.filter.filter' | t | default: 'Filtruj' }}
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+             <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+           </svg>
+         </button>
+         <div class="modern-product-count">
+           <span id="modernProductCount">
+             {%- if collection.products_count == 1 -%}
+               {{ collection.products_count }} produkt
+             {%- elsif collection.products_count < 5 -%}
+               {{ collection.products_count }} produkty
+             {%- else -%}
+               {{ collection.products_count }} produktów
+             {%- endif -%}
+           </span>
+         </div>
+       </div>
+     {% endif %}
+
+     {%- comment -%} Enhanced Current Filters Display {%- endcomment -%}
+     <div class="modern-current-filters span-12 auto" id="modernCurrentFilters" {% unless filter_count > 0 %}style="display: none;"{% endunless %}>
+       <h3 class="modern-current-filters-title">{{ 'collections.filter.filtering_by_label' | t | default: 'Aktywne filtry:' }}</h3>
+       <ul class="modern-current-filters-list" id="modernCurrentFiltersList">
+         {%- comment -%} Load existing active filters {%- endcomment -%}
+         {% for filter in collection.filters %}
+           {% for value in filter.active_values %}
+             <li class="modern-current-filter-item">
+               <button class="modern-current-filter-tag" 
+                       type="button"
+                       data-filter-param="{{ value.param_name }}"
+                       data-filter-value="{{ value.value }}"
+                       onclick="FilterDrawer.removeFilter('{{ value.param_name }}', '{{ value.value }}')"
+                       aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} {{ value.label | escape }}">
+                 {{ value.label | escape }}<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+               </button>
+             </li>
+           {% endfor %}
+           {% if filter.type == 'price_range' %}
+             {% if filter.min_value.value != nil %}
+               <li class="modern-current-filter-item">
+                 <button class="modern-current-filter-tag" 
+                         type="button"
+                         data-filter-param="filter.v.price.gte"
+                         data-filter-value="{{ filter.min_value.value }}"
+                         onclick="FilterDrawer.removeFilter('filter.v.price.gte', '{{ filter.min_value.value }}')"
+                         aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny minimalnej">
+                   Od {{ filter.min_value.value | money_without_currency | replace: ',', '' | round }} zł<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+                 </button>
+               </li>
+             {% endif %}
+             {% if filter.max_value.value != nil %}
+               <li class="modern-current-filter-item">
+                 <button class="modern-current-filter-tag" 
+                         type="button"
+                         data-filter-param="filter.v.price.lte"
+                         data-filter-value="{{ filter.max_value.value }}"
+                         onclick="FilterDrawer.removeFilter('filter.v.price.lte', '{{ filter.max_value.value }}')"
+                         aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny maksymalnej">
+                   Do {{ filter.max_value.value | money_without_currency | replace: ',', '' | round }} zł<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+                 </button>
+               </li>
+             {% endif %}
+           {% endif %}
+         {% endfor %}
+         {% if filter_count > 0 %}
+           <li class="modern-current-filter-item">
+             <button class="modern-clear-all-filters" 
+                     type="button" 
+                     onclick="FilterDrawer.clearAll()"
+                     aria-label="{{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie filtry' }}">
+               {{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie' }}
+             </button>
+           </li>
+         {% endif %}
+       </ul>
+     </div>
 
       {%- if collection.products.size >= 1 -%}
         <div class="collection span-12" id="main-collection-product-grid" data-id="{{ section.id }}">
@@ -355,7 +258,7 @@
           <div class="js-coll-empty-filter py10 a-center" style="display: none;">
             <h2>{{ 'collections.filter.no_results' | t }}</h2>
             <p>{{ 'collections.filter.use_fewer_filters' | t }}</p>
-            <a class="button btn-outlined" href="{{ collection.url }}">{{ 'collections.filter.clear_all' | t }}</a>
+            <button class="button btn-outlined" type="button" onclick="FilterDrawer.clearAll()">{{ 'collections.filter.clear_all' | t }}</button>
           </div>
           <div class="js-coll-empty py10 a-center no-js-show">
             <h2>{{ 'collections.general.empty' | t }}</h2>
@@ -366,296 +269,1253 @@
       {%- endif -%}
    </div>
    {% endpaginate %}
+</section>
 
-   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // This script will ensure the current filters on the main page are updated
-      // when filters are applied or removed via AJAX
+<!-- BULLETPROOF FILTER DRAWER SYSTEM - Built from Scratch -->
+{% if show_filters %}
+  <!-- Drawer Container - Always at body level -->
+  <div id="filterDrawerContainer" class="filter-drawer-container">
+    
+    <!-- Backdrop Overlay -->
+    <div id="filterBackdrop" class="filter-backdrop" onclick="FilterDrawer.close()"></div>
+    
+    <!-- The Actual Drawer -->
+    <div id="filterDrawer" class="filter-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
       
-      // Listen for AJAX requests and update the main page filter list
-      (function() {
-        // Store the original fetch function
-        const originalFetch = window.fetch;
-        
-        // Override the fetch function to intercept AJAX requests
-        window.fetch = function() {
-          const fetchPromise = originalFetch.apply(this, arguments);
-          
-          // Process the response if it's a collection or search page request
-          if (arguments[0] && (
-              arguments[0].includes('/collections/') || 
-              arguments[0].includes('/search')
-            )) {
-            fetchPromise.then(response => {
-              // Clone the response so we can read it twice
-              const clonedResponse = response.clone();
-              
-              // Process the cloned response to update the filter UI
-              clonedResponse.text().then(html => {
-                updateMainPageFilters(html);
-              }).catch(err => console.error('Error processing response:', err));
-            }).catch(err => console.error('Error with fetch:', err));
-          }
-          
-          return fetchPromise;
-        };
-        
-        function updateMainPageFilters(html) {
-          const parser = new DOMParser();
-          const newDocument = parser.parseFromString(html, 'text/html');
-          
-          // Update the main page filters list
-          const mainFiltersContainer = document.querySelector('.js-main-filters-container');
-          const newMainFiltersContainer = newDocument.querySelector('.js-main-filters-container');
-          
-          if (mainFiltersContainer && newMainFiltersContainer) {
-            // Only update the filter list items, not the entire container
-            const mainFiltersList = mainFiltersContainer.querySelector('.js-main-filters-list');
-            const newFiltersList = newMainFiltersContainer.querySelector('.js-main-filters-list');
-            
-            if (mainFiltersList && newFiltersList) {
-              mainFiltersList.innerHTML = newFiltersList.innerHTML;
-            }
-            
-            // Re-attach event listeners to the filter items
-            attachFilterEventListeners();
-            
-            // Show or hide the filters container based on whether there are filters
-            const hasFilters = newMainFiltersContainer.querySelector('.js-main-filters-list li') !== null;
-            mainFiltersContainer.style.display = hasFilters ? 'block' : 'none';
-          } else if (mainFiltersContainer && !newMainFiltersContainer) {
-            // If there are no filters in the new document, hide the container
-            mainFiltersContainer.style.display = 'none';
-          } else if (!mainFiltersContainer && newMainFiltersContainer) {
-            // If we need to add the filters container when it doesn't exist
-            const topbar = document.querySelector('.collection__page--topbar');
-            if (topbar) {
-              // Create a clone of the filters container
-              const containerClone = newMainFiltersContainer.cloneNode(true);
-              // Append it to the topbar
-              topbar.appendChild(containerClone);
-              // Attach event listeners
-              attachFilterEventListeners();
-            }
-          }
-          
-          // Also update filter drawer if it's open
-          const filterDrawer = document.querySelector('.filter-drawer__wrapper');
-          const newFilterDrawer = newDocument.querySelector('.filter-drawer__wrapper');
-          if (filterDrawer && newFilterDrawer) {
-            // Update the current filters in the drawer
-            const drawerFiltersList = filterDrawer.querySelector('.current_filters');
-            const newDrawerFiltersList = newFilterDrawer.querySelector('.current_filters');
-            
-            if (drawerFiltersList && newDrawerFiltersList) {
-              drawerFiltersList.innerHTML = newDrawerFiltersList.innerHTML;
-              
-              // Re-attach event listeners
-              document.querySelectorAll('.filter-drawer__wrapper .js-current-filter').forEach(link => {
-                link.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  
-                  if (window.isLoading) return;
-                  window.isLoading = true;
-                  
-                  document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
-                  
-                  fetch(this.href, {
-                    headers: {
-                      'X-Requested-With': 'XMLHttpRequest'
-                    }
-                  })
-                  .then(response => response.text())
-                  .then(html => {
-                    updateMainPageFilters(html);
-                    document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-                    window.isLoading = false;
-                    window.history.pushState({}, '', this.href);
-                  })
-                  .catch(error => {
-                    console.error('Error:', error);
-                    document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-                    window.isLoading = false;
-                  });
-                });
-              });
-            }
-          }
-          
-          // Update product count if it exists
-          const productCount = document.querySelector('.js-product-count');
-          const newProductCount = newDocument.querySelector('.js-product-count');
-          if (productCount && newProductCount) {
-            productCount.textContent = newProductCount.textContent;
-          }
-        }
-        
-        function attachFilterEventListeners() {
-          // Attach click handlers to all filter remove buttons
-          document.querySelectorAll('.js-main-filters-list .js-current-filter').forEach(link => {
-            // Remove any existing event listeners first to prevent duplicates
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-            
-            newLink.addEventListener('click', function(e) {
-              e.preventDefault();
-              
-              if (window.isLoading) return;
-              window.isLoading = true;
-              
-              // Store the drawer state before making the request
-              const drawer = document.querySelector('[data-wau-slideout="collection-filters"]');
-              const wasDrawerOpen = drawer && drawer.classList.contains('slideout--active');
-              
-              // Add loading state to indicate processing
-              document.body.classList.add('is-loading');
-              if (document.querySelector('.filter-drawer__wrapper')) {
-                document.querySelector('.filter-drawer__wrapper').classList.add('is-loading');
-              }
-              
-              fetch(this.href, {
-                headers: {
-                  'X-Requested-With': 'XMLHttpRequest'
-                }
-              })
-              .then(response => response.text())
-              .then(html => {
-                const parser = new DOMParser();
-                const newDocument = parser.parseFromString(html, 'text/html');
-                
-                // Update product grid
-                const productGrid = document.querySelector('#main-collection-product-grid');
-                const newProductGrid = newDocument.querySelector('#main-collection-product-grid');
-                if (productGrid && newProductGrid) {
-                  productGrid.innerHTML = newProductGrid.innerHTML;
-                }
-                
-                // Update main page filters
-                updateMainPageFilters(html);
-                
-                // Update filter drawer if it exists
-                const filterDrawer = document.querySelector('.filter-drawer__wrapper');
-                const newFilterDrawer = newDocument.querySelector('.filter-drawer__wrapper');
-                if (filterDrawer && newFilterDrawer) {
-                  // Update only the filters list part
-                  const drawerFiltersList = filterDrawer.querySelector('.current_filters');
-                  const newDrawerFiltersList = newFilterDrawer.querySelector('.current_filters');
-                  if (drawerFiltersList && newDrawerFiltersList) {
-                    drawerFiltersList.innerHTML = newDrawerFiltersList.innerHTML;
-                  }
-                  
-                  // Re-initialize drawer filter events
-                  document.querySelectorAll('.filter-drawer__wrapper .js-current-filter').forEach(drawerLink => {
-                    const newDrawerLink = drawerLink.cloneNode(true);
-                    drawerLink.parentNode.replaceChild(newDrawerLink, drawerLink);
-                    
-                    newDrawerLink.addEventListener('click', function(e) {
-                      e.preventDefault();
-                      if (window.isLoading) return;
-                      
-                      const filterUrl = this.href;
-                      window.isLoading = true;
-                      filterDrawer.classList.add('is-loading');
-                      
-                      fetch(filterUrl, {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                      })
-                      .then(response => response.text())
-                      .then(drawerHtml => {
-                        // Update everything
-                        updateMainPageFilters(drawerHtml);
-                        
-                        // Update product grid
-                        const gridParser = new DOMParser();
-                        const gridDocument = gridParser.parseFromString(drawerHtml, 'text/html');
-                        const gridProductGrid = document.querySelector('#main-collection-product-grid');
-                        const newGridProductGrid = gridDocument.querySelector('#main-collection-product-grid');
-                        if (gridProductGrid && newGridProductGrid) {
-                          gridProductGrid.innerHTML = newGridProductGrid.innerHTML;
-                        }
-                        
-                        filterDrawer.classList.remove('is-loading');
-                        window.isLoading = false;
-                        window.history.pushState({}, '', filterUrl);
-                      })
-                      .catch(error => {
-                        console.error('Drawer filter error:', error);
-                        filterDrawer.classList.remove('is-loading');
-                        window.isLoading = false;
-                      });
-                    });
-                  });
-                }
-                
-                // Update product count
-                const productCount = document.querySelector('.js-product-count');
-                const newProductCount = newDocument.querySelector('.js-product-count');
-                if (productCount && newProductCount) {
-                  productCount.textContent = newProductCount.textContent;
-                }
-                
-                // Remove loading states
-                document.body.classList.remove('is-loading');
-                if (document.querySelector('.filter-drawer__wrapper')) {
-                  document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-                }
-                window.isLoading = false;
-                
-                // Update URL
-                window.history.pushState({}, '', this.href);
-              })
-              .catch(error => {
-                console.error('Error:', error);
-                document.body.classList.remove('is-loading');
-                if (document.querySelector('.filter-drawer__wrapper')) {
-                  document.querySelector('.filter-drawer__wrapper').classList.remove('is-loading');
-                }
-                window.isLoading = false;
-              });
-            });
-          });
-        }
-        
-        // Initial setup of event listeners
-        attachFilterEventListeners();
-      })();
+      <!-- Fixed Header -->
+      <div class="filter-drawer-header">
+        <h2 id="drawerTitle" class="filter-drawer-title">
+          {{ 'collections.filter.filter_and_sort' | t | default: 'Filtrowanie i sortowanie' }}
+        </h2>
+        <button class="filter-drawer-close" onclick="FilterDrawer.close()" type="button" aria-label="Zamknij filtry">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
       
-      // Handle empty collection state
-      function updateEmptyState() {
-        const collectionContainer = document.querySelector('.collection');
-        const emptyFilterContainer = document.querySelector('.js-coll-empty-filter');
-        const emptyContainer = document.querySelector('.js-coll-empty');
+      <!-- Scrollable Content -->
+      <div class="filter-drawer-content">
         
-        if (collectionContainer && collectionContainer.classList.contains('collection--empty')) {
-          // Check if empty because of filters
-          const filterCount = document.querySelectorAll('.current_filters--filter').length;
-          
-          if (filterCount > 0) {
-            if (emptyFilterContainer) emptyFilterContainer.style.display = 'block';
-            if (emptyContainer) emptyContainer.style.display = 'none';
-          } else {
-            if (emptyFilterContainer) emptyFilterContainer.style.display = 'none';
-            if (emptyContainer) emptyContainer.style.display = 'block';
-          }
-        }
-      }
+        <!-- Sort Section -->
+        {% if has_sortby %}
+          <div class="filter-section">
+            <button class="filter-section-header" onclick="FilterDrawer.toggleSection('sort')" type="button">
+              <span>{{ 'collections.filter.sort_title' | t | default: 'Sortuj' }}</span>
+              <svg class="filter-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9"></polyline>
+              </svg>
+            </button>
+            <div class="filter-section-content" id="filterSectionSort">
+              <div class="filter-options">
+                {% for option in collection.sort_options %}
+                  <label class="filter-option-item sort-option" data-sort-value="{{ option.value }}">
+                    <input type="radio" 
+                           name="sort_by" 
+                           value="{{ option.value }}" 
+                           {% if option.value == collection.sort_by %}checked{% endif %}
+                           onchange="FilterDrawer.handleSort('{{ option.value }}')">
+                    <span class="filter-option-label">{{ option.name }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Filter Sections -->
+        {% if has_filter and collection.filters.size > 0 %}
+          {% for filter in collection.filters %}
+            {% case filter.type %}
+              {% when 'list' %}
+                <div class="filter-section">
+                  <button class="filter-section-header" onclick="FilterDrawer.toggleSection('{{ filter.label | handle }}')" type="button">
+                    <span>{{ filter.label | escape }}</span>
+                    <svg class="filter-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="filter-section-content" id="filterSection{{ filter.label | handle | capitalize }}">
+                    <div class="filter-options">
+                      {% assign sorted_values = filter.values | sort: 'count' | reverse %}
+                      {% for value in sorted_values %}
+                        <label class="filter-option-item {% if value.active %}active{% endif %}" 
+                               {% if value.count == 0 and value.active == false %}data-disabled="true"{% endif %}>
+                          <input type="checkbox"
+                                 name="{{ value.param_name }}"
+                                 value="{{ value.value }}"
+                                 data-param="{{ value.param_name }}"
+                                 data-value="{{ value.value }}"
+                                 data-label="{{ value.label | escape }}"
+                                 {% if value.active %}checked{% endif %}
+                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                 onchange="FilterDrawer.handleFilterChange(this)">
+                          <span class="filter-option-checkbox"></span>
+                          <span class="filter-option-label">{{ value.label | escape }}</span>
+                          <span class="filter-option-count">({{ value.count }})</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% when 'price_range' %}
+                <div class="filter-section">
+                  <button class="filter-section-header" onclick="FilterDrawer.toggleSection('price')" type="button">
+                    <span>{{ filter.label | escape }}</span>
+                    <svg class="filter-section-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                  </button>
+                  <div class="filter-section-content" id="filterSectionPrice">
+                    <div class="price-range-inputs">
+                      <div class="price-input-group">
+                        <label for="priceMin">{{ 'collections.filter.from' | t | default: 'Od' }}</label>
+                        <input type="number" 
+                               id="priceMin" 
+                               placeholder="0"
+                               min="0"
+                               max="{{ filter.range_max | money_without_currency | replace: ',', '' | round }}"
+                               value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | replace: ',', '' | round }}{% endif %}">
+                      </div>
+                      <div class="price-input-group">
+                        <label for="priceMax">{{ 'collections.filter.to' | t | default: 'Do' }}</label>
+                        <input type="number" 
+                               id="priceMax" 
+                               placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' | round }}"
+                               min="0"
+                               max="{{ filter.range_max | money_without_currency | replace: ',', '' | round }}"
+                               value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | replace: ',', '' | round }}{% endif %}">
+                      </div>
+                    </div>
+                    <button type="button" class="price-apply-btn" onclick="FilterDrawer.applyPriceFilter()">
+                      {{ 'collections.filter.apply' | t | default: 'Zastosuj' }}
+                    </button>
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        {% endif %}
+      </div>
       
-      // Run once on page load
-      updateEmptyState();
-      
-      // Update empty state when filters change
-      const observer = new MutationObserver(updateEmptyState);
-      const collectionContainer = document.querySelector('#main-collection-product-grid');
-      if (collectionContainer) {
-        observer.observe(collectionContainer, { childList: true, subtree: true });
+      <!-- Fixed Footer -->
+      <div class="filter-drawer-footer">
+        <button class="filter-apply-btn" onclick="FilterDrawer.close()" type="button">
+          <span id="filterApplyText">{{ 'collections.filter.view_results' | t | default: 'Zobacz wyniki' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+// BULLETPROOF FILTER DRAWER SYSTEM - Built from Scratch
+const FilterDrawer = {
+  isOpen: false,
+  isLoading: false,
+  activeFilters: {
+    sort: '{{ collection.sort_by | default: "manual" }}',
+    filters: {}
+  },
+  
+  init() {
+    console.log('🚀 FilterDrawer System Started');
+    this.loadFiltersFromURL();
+    this.loadExistingFilters();
+    this.setupEventListeners();
+    this.createBodyContainer();
+    console.log('✅ FilterDrawer System Ready');
+  },
+  
+  // Create container at body level for proper positioning
+  createBodyContainer() {
+    const container = document.getElementById('filterDrawerContainer');
+    if (container && !container.parentElement.matches('body')) {
+      document.body.appendChild(container);
+      console.log('✅ Drawer moved to body level');
+    }
+  },
+  
+  setupEventListeners() {
+    // Escape key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.close();
       }
     });
-   </script>
-</section>
+    
+    // Prevent body scroll when drawer is open
+    document.addEventListener('touchmove', (e) => {
+      if (this.isOpen && !e.target.closest('.filter-drawer')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  },
+  
+  // BULLETPROOF OPEN - Works from any scroll position
+  open() {
+    if (this.isLoading) return;
+    
+    const container = document.getElementById('filterDrawerContainer');
+    const backdrop = document.getElementById('filterBackdrop');
+    const drawer = document.getElementById('filterDrawer');
+    
+    if (!container || !backdrop || !drawer) {
+      console.error('❌ Drawer elements not found');
+      return;
+    }
+    
+    // Ensure container is at body level
+    if (!container.parentElement.matches('body')) {
+      document.body.appendChild(container);
+    }
+    
+    // Store current scroll position
+    this.scrollPosition = window.pageYOffset;
+    
+    // Show with bulletproof method
+    container.style.display = 'block';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100vw';
+    container.style.height = '100vh';
+    container.style.zIndex = '999999';
+    
+    // Trigger animations
+    requestAnimationFrame(() => {
+      backdrop.classList.add('active');
+      drawer.classList.add('active');
+    });
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${this.scrollPosition}px`;
+    document.body.style.width = '100%';
+    
+    this.isOpen = true;
+    
+    // Focus management
+    setTimeout(() => {
+      const firstFocusable = drawer.querySelector('button, input');
+      if (firstFocusable) firstFocusable.focus();
+    }, 100);
+    
+    console.log('✅ Drawer opened successfully');
+  },
+  
+  // BULLETPROOF CLOSE - Restores scroll position
+  close() {
+    const container = document.getElementById('filterDrawerContainer');
+    const backdrop = document.getElementById('filterBackdrop');
+    const drawer = document.getElementById('filterDrawer');
+    
+    if (!container || !backdrop || !drawer) return;
+    
+    // Remove active classes for animation
+    backdrop.classList.remove('active');
+    drawer.classList.remove('active');
+    
+    // Hide after animation
+    setTimeout(() => {
+      container.style.display = 'none';
+    }, 300);
+    
+    // Restore body scroll and position
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    
+    // Restore scroll position
+    if (this.scrollPosition !== undefined) {
+      window.scrollTo(0, this.scrollPosition);
+    }
+    
+    this.isOpen = false;
+    
+    // Return focus to filter button
+    const filterButton = document.querySelector('.modern-filter-button');
+    if (filterButton) filterButton.focus();
+    
+    console.log('✅ Drawer closed successfully');
+  },
+  
+  toggleSection(sectionId) {
+    const content = document.getElementById(`filterSection${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}`);
+    const header = event.target.closest('.filter-section-header');
+    const arrow = header?.querySelector('.filter-section-arrow');
+    
+    if (!content || !header || !arrow) return;
+    
+    const isOpen = content.classList.contains('active');
+    
+    if (isOpen) {
+      content.classList.remove('active');
+      arrow.classList.remove('rotated');
+      content.style.maxHeight = '0';
+    } else {
+      content.classList.add('active');
+      arrow.classList.add('rotated');
+      content.style.maxHeight = content.scrollHeight + 'px';
+    }
+  },
+  
+  handleSort(sortValue) {
+    this.activeFilters.sort = sortValue;
+    this.applyFilters();
+  },
+  
+  handleFilterChange(checkbox) {
+    const param = checkbox.dataset.param;
+    const value = checkbox.dataset.value;
+    const label = checkbox.dataset.label;
+    
+    if (!this.activeFilters.filters[param]) {
+      this.activeFilters.filters[param] = [];
+    }
+    
+    if (checkbox.checked) {
+      if (!this.activeFilters.filters[param].includes(value)) {
+        this.activeFilters.filters[param].push(value);
+        this.addFilterTag(param, value, label);
+      }
+    } else {
+      const index = this.activeFilters.filters[param].indexOf(value);
+      if (index > -1) {
+        this.activeFilters.filters[param].splice(index, 1);
+        if (this.activeFilters.filters[param].length === 0) {
+          delete this.activeFilters.filters[param];
+        }
+        this.removeFilterTag(param, value);
+      }
+    }
+    
+    this.updateDrawerState();
+  },
+  
+  applyPriceFilter() {
+    const minInput = document.getElementById('priceMin');
+    const maxInput = document.getElementById('priceMax');
+    
+    if (!minInput || !maxInput) return;
+    
+    const minValue = parseInt(minInput.value) || 0;
+    const maxValue = parseInt(maxInput.value) || 0;
+    
+    // Remove existing price filters
+    Object.keys(this.activeFilters.filters).forEach(key => {
+      if (key.includes('price')) {
+        this.removeFilterTag(key, this.activeFilters.filters[key][0]);
+        delete this.activeFilters.filters[key];
+      }
+    });
+    
+    // Add new price filters
+    if (minValue > 0) {
+      this.activeFilters.filters['filter.v.price.gte'] = [minValue * 100];
+      this.addFilterTag('filter.v.price.gte', minValue * 100, `Od ${minValue} zł`);
+    }
+    
+    if (maxValue > 0) {
+      this.activeFilters.filters['filter.v.price.lte'] = [maxValue * 100];
+      this.addFilterTag('filter.v.price.lte', maxValue * 100, `Do ${maxValue} zł`);
+    }
+    
+    this.applyFilters();
+  },
+  
+  removeFilter(param, value) {
+    if (this.activeFilters.filters[param]) {
+      const index = this.activeFilters.filters[param].indexOf(value);
+      if (index > -1) {
+        this.activeFilters.filters[param].splice(index, 1);
+        if (this.activeFilters.filters[param].length === 0) {
+          delete this.activeFilters.filters[param];
+        }
+      }
+    }
+    
+    this.removeFilterTag(param, value);
+    this.updateDrawerState();
+    this.applyFilters();
+  },
+  
+  clearAll() {
+    this.activeFilters.filters = {};
+    this.activeFilters.sort = 'manual';
+    
+    // Clear all filter tags
+    const list = document.getElementById('modernCurrentFiltersList');
+    if (list) list.innerHTML = '';
+    
+    // Hide filter container
+    const container = document.getElementById('modernCurrentFilters');
+    if (container) container.style.display = 'none';
+    
+    // Update drawer
+    this.updateDrawerState();
+    
+    // Navigate to clean URL
+    const url = new URL(window.location.href);
+    url.search = '';
+    window.location.href = url.toString();
+  },
+  
+  addFilterTag(param, value, label) {
+    const container = document.getElementById('modernCurrentFilters');
+    const list = document.getElementById('modernCurrentFiltersList');
+    
+    if (!list || !container) return;
+    
+    // Check if already exists
+    if (list.querySelector(`[data-filter-param="${param}"][data-filter-value="${value}"]`)) return;
+    
+    const li = document.createElement('li');
+    li.className = 'modern-current-filter-item';
+    li.innerHTML = `
+      <button class="modern-current-filter-tag" 
+              type="button"
+              data-filter-param="${param}"
+              data-filter-value="${value}"
+              onclick="FilterDrawer.removeFilter('${param}', '${value}')"
+              aria-label="Usuń filtr ${label}">
+        ${label}<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+      </button>
+    `;
+    
+    list.appendChild(li);
+    container.style.display = 'block';
+    
+    // Add clear all button if needed
+    if (!list.querySelector('.modern-clear-all-filters')) {
+      const clearLi = document.createElement('li');
+      clearLi.className = 'modern-current-filter-item';
+      clearLi.innerHTML = `
+        <button class="modern-clear-all-filters" 
+                type="button" 
+                onclick="FilterDrawer.clearAll()"
+                aria-label="Wyczyść wszystkie filtry">
+          Wyczyść wszystkie
+        </button>
+      `;
+      list.appendChild(clearLi);
+    }
+  },
+  
+  removeFilterTag(param, value) {
+    const list = document.getElementById('modernCurrentFiltersList');
+    if (!list) return;
+    
+    const tag = list.querySelector(`[data-filter-param="${param}"][data-filter-value="${value}"]`);
+    if (tag) {
+      const li = tag.closest('.modern-current-filter-item');
+      if (li) li.remove();
+    }
+    
+    // Hide container if no more filters
+    const remainingTags = list.querySelectorAll('.modern-current-filter-tag');
+    if (remainingTags.length === 0) {
+      const container = document.getElementById('modernCurrentFilters');
+      if (container) container.style.display = 'none';
+    }
+  },
+  
+  updateDrawerState() {
+    // Update checkboxes to match active filters
+    document.querySelectorAll('.filter-option-item input[type="checkbox"]').forEach(checkbox => {
+      const param = checkbox.dataset.param;
+      const value = checkbox.dataset.value;
+      
+      if (this.activeFilters.filters[param] && this.activeFilters.filters[param].includes(value)) {
+        checkbox.checked = true;
+        checkbox.closest('.filter-option-item').classList.add('active');
+      } else {
+        checkbox.checked = false;
+        checkbox.closest('.filter-option-item').classList.remove('active');
+      }
+    });
+    
+    // Update sort radio buttons
+    document.querySelectorAll('.sort-option input[type="radio"]').forEach(radio => {
+      radio.checked = radio.value === this.activeFilters.sort;
+    });
+    
+    // Update apply button text
+    const applyBtn = document.getElementById('filterApplyText');
+    if (applyBtn) {
+      const filterCount = Object.keys(this.activeFilters.filters).length;
+      if (filterCount > 0) {
+        applyBtn.textContent = `Zobacz wyniki (${filterCount})`;
+      } else {
+        applyBtn.textContent = 'Zobacz wyniki';
+      }
+    }
+  },
+  
+  loadFiltersFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Load sort
+    const sortBy = urlParams.get('sort_by');
+    if (sortBy) {
+      this.activeFilters.sort = sortBy;
+    }
+    
+    // Load filters
+    urlParams.forEach((value, key) => {
+      if (key.startsWith('filter.')) {
+        if (!this.activeFilters.filters[key]) {
+          this.activeFilters.filters[key] = [];
+        }
+        this.activeFilters.filters[key].push(value);
+      }
+    });
+  },
+  
+  loadExistingFilters() {
+    // Load from existing filter tags in DOM
+    const existingTags = document.querySelectorAll('.modern-current-filter-tag[data-filter-param]');
+    existingTags.forEach(tag => {
+      const param = tag.getAttribute('data-filter-param');
+      const value = tag.getAttribute('data-filter-value');
+      if (param && value) {
+        if (!this.activeFilters.filters[param]) {
+          this.activeFilters.filters[param] = [];
+        }
+        if (!this.activeFilters.filters[param].includes(value)) {
+          this.activeFilters.filters[param].push(value);
+        }
+      }
+    });
+  },
+  
+  applyFilters() {
+    if (this.isLoading) return;
+    this.isLoading = true;
+    
+    // Build URL
+    const url = new URL(window.location.href);
+    url.search = '';
+    
+    // Add sort
+    if (this.activeFilters.sort !== 'manual') {
+      url.searchParams.set('sort_by', this.activeFilters.sort);
+    }
+    
+    // Add filters
+    Object.keys(this.activeFilters.filters).forEach(param => {
+      this.activeFilters.filters[param].forEach(value => {
+        url.searchParams.append(param, value);
+      });
+    });
+    
+    console.log('🔄 Applying filters:', url.toString());
+    
+    // Show loading state
+    this.showLoading();
+    
+    // Fetch new content
+    fetch(url.toString(), {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.text())
+    .then(html => {
+      this.updateContent(html);
+      window.history.pushState({}, '', url.toString());
+      this.isLoading = false;
+      this.hideLoading();
+      console.log('✅ Filters applied successfully');
+    })
+    .catch(error => {
+      console.error('❌ Filter error:', error);
+      this.isLoading = false;
+      this.hideLoading();
+      // Fallback to page reload
+      window.location.href = url.toString();
+    });
+  },
+  
+  updateContent(html) {
+    const parser = new DOMParser();
+    const newDoc = parser.parseFromString(html, 'text/html');
+    
+    // Update product grid
+    const currentGrid = document.querySelector('#main-collection-product-grid');
+    const newGrid = newDoc.querySelector('#main-collection-product-grid');
+    
+    if (currentGrid && newGrid) {
+      currentGrid.innerHTML = newGrid.innerHTML;
+    }
+    
+    // Update product count
+    const newCount = newDoc.querySelectorAll('.product-listing, .product-item, [data-product-id]').length;
+    const countElement = document.getElementById('modernProductCount');
+    if (countElement) {
+      let countText;
+      if (newCount === 0) {
+        countText = 'Brak produktów';
+      } else if (newCount === 1) {
+        countText = '1 produkt';
+      } else if (newCount >= 2 && newCount <= 4) {
+        countText = `${newCount} produkty`;
+      } else {
+        countText = `${newCount} produktów`;
+      }
+      countElement.textContent = countText;
+    }
+  },
+  
+  showLoading() {
+    const wrapper = document.querySelector('.modern-collection-filters');
+    if (wrapper) wrapper.classList.add('loading');
+  },
+  
+  hideLoading() {
+    const wrapper = document.querySelector('.modern-collection-filters');
+    if (wrapper) wrapper.classList.remove('loading');
+  }
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  FilterDrawer.init();
+});
+</script>
+
+{% style %}
+/* BULLETPROOF FILTER DRAWER STYLES - Built from Scratch */
+
+/* Main collection styles reset */
+.modern-collection-filters {
+  --filter-primary: #1d4ed8;
+  --filter-dark: #323232;
+  --filter-light: #eeeeee;
+  --filter-white: #ffffff;
+  position: relative;
+}
+
+.modern-collection-filters * {
+  box-sizing: border-box;
+}
+
+/* Filter Top Bar */
+.modern-filter-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--filter-light);
+}
+
+.modern-filter-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  border: 1px solid var(--text-color, var(--filter-dark)) !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--text-color, var(--filter-dark)) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.modern-filter-button:hover {
+  background: var(--text-color, var(--filter-dark)) !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Prevent any animation on page load */
+.modern-filter-button:not(:hover) {
+  animation: none !important;
+  transition-delay: 0s !important;
+}
+
+.modern-filter-button svg {
+  margin-left: 8px;
+  width: 12px;
+  height: 12px;
+}
+
+.modern-product-count {
+  font-size: 16px !important;
+  color: var(--filter-dark) !important;
+  font-weight: bold !important;
+}
+
+/* Current Filters Display */
+.modern-current-filters {
+  margin: 16px 0 24px 0;
+  padding: 0;
+}
+
+.modern-current-filters-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--filter-dark) !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-current-filters-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modern-current-filter-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.modern-current-filter-tag {
+  border: 1px solid var(--text-color) !important;
+  padding: 4px 8px !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: var(--filter-primary) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  line-height: 1.4 !important;
+}
+
+.modern-current-filter-tag:hover {
+  background: var(--text-color, var(--filter-dark)) !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-1px);
+}
+
+.modern-filter-remove-icon {
+  margin-left: 4px;
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+.modern-clear-all-filters {
+  border: 1px solid #dc2626 !important;
+  padding: 4px 8px !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  color: #dc2626 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  line-height: 1.4 !important;
+  text-transform: uppercase;
+}
+
+.modern-clear-all-filters:hover {
+  background: #dc2626 !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-1px);
+}
+
+.modern-clear-all-filters::before {
+  content: '×';
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* BULLETPROOF DRAWER CONTAINER - Always works regardless of page structure */
+.filter-drawer-container {
+  display: none;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  pointer-events: none;
+}
+
+.filter-drawer-container * {
+  box-sizing: border-box;
+}
+
+/* Backdrop Overlay */
+.filter-backdrop {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.filter-backdrop.active {
+  opacity: 1;
+}
+
+/* The Actual Drawer */
+.filter-drawer {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 400px !important;
+  height: 100% !important;
+  background: #ffffff !important;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15) !important;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  font-family: inherit;
+  color: var(--filter-dark);
+  border-left: 1px solid #e5e7eb !important;
+}
+
+.filter-drawer.active {
+  transform: translateX(0);
+}
+
+/* Fixed Header */
+.filter-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff !important;
+  flex-shrink: 0;
+  min-height: 70px;
+}
+
+.filter-drawer-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--filter-dark) !important;
+  margin: 0 !important;
+}
+
+.filter-drawer-close {
+  background: none !important;
+  border: none !important;
+  padding: 8px !important;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.filter-drawer-close:hover {
+  background: var(--filter-light) !important;
+}
+
+.filter-drawer-close svg {
+  width: 20px;
+  height: 20px;
+  color: #323232 !important;
+  stroke: #323232 !important;
+}
+
+/* Scrollable Content */
+.filter-drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 0 100px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Enhanced scrollbar for webkit browsers */
+.filter-drawer-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-drawer-content::-webkit-scrollbar-track {
+  background: #f1f3f4;
+}
+
+.filter-drawer-content::-webkit-scrollbar-thumb {
+  background: #c1c8cd;
+  border-radius: 4px;
+}
+
+.filter-drawer-content::-webkit-scrollbar-thumb:hover {
+  background: #a1a8ad;
+}
+
+/* Filter Sections */
+.filter-section {
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff !important;
+}
+
+.filter-section-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #ffffff !important;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--filter-dark);
+  text-align: left;
+}
+
+.filter-section-header:hover {
+  background: #f8f9fa !important;
+}
+
+.filter-section-arrow {
+  transition: transform 0.3s ease;
+  color: var(--filter-dark);
+  opacity: 0.7;
+}
+
+.filter-section-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.filter-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #ffffff !important;
+}
+
+.filter-section-content.active {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Filter Options */
+.filter-options {
+  padding: 16px 24px;
+  background: #ffffff !important;
+}
+
+.filter-option-item {
+  display: flex !important;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.filter-option-item:hover {
+  border-color: var(--filter-primary);
+  background: #f8f9ff !important;
+  transform: translateY(-1px);
+}
+
+.filter-option-item.active {
+  background: var(--filter-primary) !important;
+  border-color: var(--filter-primary);
+  color: #ffffff !important;
+}
+
+.filter-option-item[data-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.filter-option-item input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter-option-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 3px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background: #ffffff !important;
+}
+
+.filter-option-item.active .filter-option-checkbox {
+  background: #ffffff !important;
+  border-color: #ffffff;
+}
+
+.filter-option-item.active .filter-option-checkbox::after {
+  content: '✓';
+  color: var(--filter-primary);
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.filter-option-item:not(.active) .filter-option-checkbox {
+  background: #ffffff !important;
+}
+
+.filter-option-item:not(.active):hover .filter-option-checkbox {
+  border-color: var(--filter-primary);
+}
+
+.filter-option-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.filter-option-count {
+  font-size: 11px;
+  opacity: 0.7;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.filter-option-item.active .filter-option-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Sort Options */
+.sort-option input {
+  margin-right: 10px;
+}
+
+/* Price Range */
+.price-range-inputs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.price-input-group {
+  flex: 1;
+}
+
+.price-input-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--filter-dark);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #ffffff !important;
+  color: var(--filter-dark);
+  transition: border-color 0.2s ease;
+}
+
+.price-input-group input:focus {
+  outline: none;
+  border-color: var(--filter-primary);
+}
+
+.price-apply-btn {
+  width: 100%;
+  padding: 12px;
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
+}
+
+.price-apply-btn:hover {
+  background: #1e40af !important;
+  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
+}
+
+/* Fixed Footer */
+.filter-drawer-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff !important;
+}
+
+.filter-apply-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.filter-apply-btn:hover {
+  background: #1e40af !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
+}
+
+/* Loading State */
+.modern-collection-filters.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.modern-collection-filters.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--filter-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .filter-drawer {
+    width: 100vw !important;
+  }
+  
+  .modern-filter-topbar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .modern-filter-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modern-current-filters-list {
+    gap: 4px;
+  }
+
+  .modern-current-filter-tag,
+  .modern-clear-all-filters {
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+
+  .filter-section-header {
+    padding: 14px 16px;
+  }
+
+  .filter-options {
+    padding: 8px 16px 16px 16px;
+  }
+
+  .filter-drawer-header {
+    padding: 16px 20px;
+  }
+
+  .filter-drawer-title {
+    font-size: 16px !important;
+  }
+}
+
+/* Hide original filter elements */
+.collection__page--topbar .button:not(.modern-filter-button),
+.slideout[data-wau-slideout="collection-filters"],
+.filter-drawer__filtering__results:not(.modern-current-filters) {
+  display: none !important;
+}
+
+.product-loop {
+  margin-top: 20px;
+}
+
+/* Enhanced focus states for accessibility */
+.modern-filter-button:focus,
+.modern-current-filter-tag:focus,
+.modern-clear-all-filters:focus,
+.filter-drawer-close:focus,
+.filter-section-header:focus,
+.filter-option-item:focus,
+.price-input-group input:focus,
+.price-apply-btn:focus,
+.filter-apply-btn:focus {
+  outline: 2px solid var(--filter-primary) !important;
+  outline-offset: 2px !important;
+}
+{% endstyle %}
 
 {% schema %}
 {
-  "name": "Collection page",
+  "name": "Enhanced Collection page",
   "max_blocks": 10,
   "settings": [
     {

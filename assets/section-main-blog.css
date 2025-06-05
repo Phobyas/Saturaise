@@ -285,15 +285,15 @@
   color: var(--text-color-secondary, #666);
 }
 
-/* Article excerpt - more compact with line clamping */
+/* Article excerpt - shows full excerpt to entice readers */
 .blog__article--excerpt {
   color: var(--text-color-secondary, #666);
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 12px;
   flex-grow: 1;
   font-size: 14px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
