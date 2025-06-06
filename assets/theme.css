@@ -1,3 +1,159 @@
+button.modern-filter-button,
+.button.modern-filter-button,
+.btn.modern-filter-button,
+.modern-filter-button.button,
+.modern-filter-button.btn,
+input[type="button"].modern-filter-button,
+input[type="submit"].modern-filter-button,
+.modern-collection-filters button.modern-filter-button,
+.modern-collection-filters .button.modern-filter-button {
+  /* Reset all default button styles */
+  all: unset !important;
+  
+  /* Apply our specific styles with maximum priority */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  
+  /* Fixed dimensions to prevent size changes */
+  width: auto !important;
+  min-width: 100px !important;
+  max-width: 140px !important;
+  min-height: 40px !important;
+  height: auto !important;
+  
+  /* Spacing and appearance */
+  padding: 10px 14px !important;
+  margin: 0 !important;
+  border: 2px solid var(--text-color, #323232) !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  
+  /* Typography */
+  color: var(--text-color, #323232) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: inherit !important;
+  font-style: normal !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+  line-height: normal !important;
+  white-space: nowrap !important;
+  
+  /* Layout and positioning */
+  position: relative !important;
+  vertical-align: baseline !important;
+  flex-shrink: 0 !important;
+  gap: 6px !important;
+  
+  /* Interaction */
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  
+  /* Disable animations during load */
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+  
+  /* Remove any shadows or effects */
+  box-shadow: none !important;
+  outline: none !important;
+  filter: none !important;
+}
+
+/* SVG icon inside button - prevent size changes */
+button.modern-filter-button svg,
+.modern-filter-button svg {
+  display: inline-block !important;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  max-width: 14px !important;
+  max-height: 14px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2 !important;
+  vertical-align: middle !important;
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Mobile specific overrides */
+@media screen and (max-width: 768px) {
+  button.modern-filter-button,
+  .modern-filter-button {
+    width: auto !important;
+    min-width: 100px !important;
+    max-width: 140px !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    gap: 6px !important;
+    border-width: 2px !important;
+  }
+  
+  button.modern-filter-button svg,
+  .modern-filter-button svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+/* Hover states - only apply after load */
+.loaded button.modern-filter-button:hover,
+.loaded .modern-filter-button:hover {
+  background: var(--text-color, #323232) !important;
+  color: var(--bg-color, #ffffff) !important;
+  transform: translateY(-1px) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Re-enable transitions after page load */
+.loaded button.modern-filter-button,
+.loaded .modern-filter-button {
+  transition: all 0.2s ease !important;
+}
+
+/* Override any theme button classes that might conflict */
+.modern-filter-button.button--primary,
+.modern-filter-button.button--secondary,
+.modern-filter-button.btn-primary,
+.modern-filter-button.btn-secondary,
+.modern-filter-button.button-primary,
+.modern-filter-button.button-secondary {
+  all: unset !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: auto !important;
+  min-width: 100px !important;
+  max-width: 140px !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+  border: 2px solid var(--text-color, #323232) !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--text-color, #323232) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: none !important;
+}
+
 /* ---- Contents ----
   - Theme Module: Space
   - Theme Vendor: Flickity
@@ -3606,4 +3762,853 @@ section#shopify-section-template--24156831154469__3a259e86-1d8c-4b1e-b9b4-342fc4
 
 .product__image {
   mix-blend-mode: multiply;
+}
+
+/* ENHANCED FILTER DRAWER STYLES - Complete Code */
+
+/* Scoped container to prevent style conflicts */
+.modern-collection-filters {
+  --filter-primary: #1d4ed8;
+  --filter-dark: #323232;
+  --filter-light: #eeeeee;
+  --filter-white: #ffffff;
+  position: relative;
+}
+
+/* Only apply box-sizing to our filter elements */
+.modern-collection-filters .modern-filter-topbar,
+.modern-collection-filters .modern-filter-topbar *,
+.modern-collection-filters .modern-current-filters,
+.modern-collection-filters .modern-current-filters *,
+.filter-drawer-container,
+.filter-drawer-container * {
+  box-sizing: border-box;
+}
+
+/* Filter Top Bar - scoped to avoid conflicts */
+.modern-collection-filters .modern-filter-topbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 20px !important;
+  padding: 16px 0 !important;
+  border-bottom: 1px solid var(--filter-light) !important;
+}
+
+.modern-collection-filters .modern-filter-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  border: 1px solid var(--text-color, var(--filter-dark)) !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  color: var(--text-color, var(--filter-dark)) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  font-family: inherit !important;
+  line-height: normal !important;
+  margin: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  vertical-align: baseline !important;
+  white-space: nowrap !important;
+}
+
+.modern-collection-filters .modern-filter-button:hover,
+.modern-collection-filters .modern-filter-button:focus {
+  background: var(--text-color, var(--filter-dark)) !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-1px) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.modern-collection-filters .modern-filter-button:active {
+  transform: translateY(0) !important;
+  transition: all 0.1s ease !important;
+}
+
+.modern-collection-filters .modern-filter-button svg {
+  margin-left: 8px !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.modern-collection-filters .modern-product-count {
+  font-size: 16px !important;
+  color: var(--filter-dark) !important;
+  font-weight: bold !important;
+      display: flex;
+      align-self: end;
+}
+
+/* Current Filters Display - scoped */
+.modern-collection-filters .modern-current-filters {
+  margin: 16px 0 24px 0 !important;
+  padding: 0 !important;
+}
+
+.modern-collection-filters .modern-current-filters-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--filter-dark) !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.modern-collection-filters .modern-current-filters-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.modern-collection-filters .modern-current-filter-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Enhanced filter tags with proper icon positioning */
+.modern-collection-filters .modern-current-filter-tag {
+  border: 1px solid var(--text-color) !important;
+  padding: 6px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+  color: var(--filter-primary) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  line-height: 1.4 !important;
+  gap: 8px !important;
+  max-width: 200px !important;
+  min-width: 60px !important;
+}
+
+.modern-collection-filters .modern-current-filter-tag:hover {
+  background: var(--text-color, var(--filter-dark)) !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Enhanced remove icon - properly positioned on the right */
+.modern-collection-filters .modern-filter-remove-icon {
+  margin-left: 0 !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  order: 2 !important;
+}
+
+/* Remove icon hover state */
+.modern-collection-filters .modern-current-filter-tag:hover .modern-filter-remove-icon {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: inherit !important;
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced "Clear All" button */
+.modern-collection-filters .modern-clear-all-filters {
+  border: 2px solid #dc2626 !important;
+  padding: 8px 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  border-radius: 20px !important;
+  background: transparent !important;
+  color: #dc2626 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  line-height: 1.4 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  gap: 8px !important;
+  min-height: 36px !important;
+  max-width: 180px !important;
+  min-width: 120px !important;
+}
+
+.modern-collection-filters .modern-clear-all-filters:hover {
+  background: #dc2626 !important;
+  color: var(--bg-color, var(--filter-white)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Enhanced × icon for clear all button */
+.modern-collection-filters .modern-clear-all-filters::before {
+  content: '×' !important;
+  margin-right: 0 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: rgba(220, 38, 38, 0.1) !important;
+  transition: all 0.2s ease !important;
+  order: 2 !important;
+  flex-shrink: 0 !important;
+}
+
+.modern-collection-filters .modern-clear-all-filters:hover::before {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: rotate(90deg) !important;
+}
+
+/* Text elements inside filter tags */
+.modern-collection-filters .filter-tag-text,
+.modern-collection-filters .clear-all-text {
+  flex: 1 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  order: 1 !important;
+}
+
+/* DRAWER CONTAINER - Completely isolated */
+.filter-drawer-container {
+  display: none;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+/* Backdrop Overlay */
+.filter-drawer-container .filter-backdrop {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.filter-drawer-container .filter-backdrop.active {
+  opacity: 1;
+}
+
+/* The Actual Drawer */
+.filter-drawer-container .filter-drawer {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 400px !important;
+  height: 100% !important;
+  background: #ffffff !important;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15) !important;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  color: var(--filter-dark);
+  border-left: 1px solid #e5e7eb !important;
+}
+
+.filter-drawer-container .filter-drawer.active {
+  transform: translateX(0);
+}
+
+/* Fixed Header */
+.filter-drawer-container .filter-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff !important;
+  flex-shrink: 0;
+  min-height: 70px;
+}
+
+.filter-drawer-container .filter-drawer-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--filter-dark) !important;
+  margin: 0 !important;
+}
+
+.filter-drawer-container .filter-drawer-close {
+  background: none !important;
+  border: none !important;
+  padding: 8px !important;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.filter-drawer-container .filter-drawer-close:hover {
+  background: var(--filter-light) !important;
+}
+
+.filter-drawer-container .filter-drawer-close svg {
+  width: 20px;
+  height: 20px;
+  color: #323232 !important;
+  stroke: #323232 !important;
+}
+
+/* Scrollable Content */
+.filter-drawer-container .filter-drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 0 100px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Enhanced scrollbar for webkit browsers */
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-track {
+  background: #f1f3f4;
+}
+
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-thumb {
+  background: #c1c8cd;
+  border-radius: 4px;
+}
+
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-thumb:hover {
+  background: #a1a8ad;
+}
+
+/* Filter Sections */
+.filter-drawer-container .filter-section {
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff !important;
+}
+
+.filter-drawer-container .filter-section-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #ffffff !important;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--filter-dark);
+  text-align: left;
+}
+
+.filter-drawer-container .filter-section-header:hover {
+  background: #f8f9fa !important;
+}
+
+.filter-drawer-container .filter-section-arrow {
+  transition: transform 0.3s ease;
+  color: var(--filter-dark);
+  opacity: 0.7;
+}
+
+.filter-drawer-container .filter-section-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.filter-drawer-container .filter-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #ffffff !important;
+}
+
+.filter-drawer-container .filter-section-content.active {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Filter Options - Enhanced specificity to override Shopify theme */
+.filter-drawer-container .filter-options {
+  padding: 16px 24px;
+  background: #ffffff !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px 12px !important;
+  margin-bottom: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  color: #323232 !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item:hover {
+  border-color: var(--filter-primary) !important;
+  background: #f8f9ff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.1) !important;
+}
+
+/* ACTIVE STATE - Selected filters - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active,
+.filter-drawer-container .filter-drawer .filter-option-item.active {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3) !important;
+}
+
+/* Active state hover effect - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active:hover,
+.filter-drawer-container .filter-drawer .filter-option-item.active:hover {
+  background: #1e40af !important;
+  border-color: #1e40af !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4) !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item[data-disabled="true"] {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item input[type="checkbox"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 3px !important;
+  margin-right: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  background: #ffffff !important;
+  position: relative !important;
+}
+
+/* Active checkbox styling - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-checkbox,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-checkbox {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-checkbox::after,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-checkbox::after {
+  content: '✓' !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item:not(.active) .filter-option-checkbox {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-item:not(.active):hover .filter-option-checkbox {
+  border-color: var(--filter-primary) !important;
+  background: #f8f9ff !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-label {
+  flex: 1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  margin-right: 8px !important;
+  transition: color 0.2s ease !important;
+  color: inherit !important;
+}
+
+/* Active label text color - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-label,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-count {
+  font-size: 11px !important;
+  opacity: 0.7 !important;
+  padding: 2px 6px !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+  color: inherit !important;
+}
+
+/* Active count styling - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-count,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-count {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* Sort Options */
+.filter-drawer-container .sort-option input {
+  margin-right: 10px;
+}
+
+/* Price Range */
+.filter-drawer-container .price-range-inputs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-drawer-container .price-input-group {
+  flex: 1;
+}
+
+.filter-drawer-container .price-input-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--filter-dark);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-drawer-container .price-input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #ffffff !important;
+  color: var(--filter-dark);
+  transition: border-color 0.2s ease;
+}
+
+.filter-drawer-container .price-input-group input:focus {
+  outline: none;
+  border-color: var(--filter-primary);
+}
+
+.filter-drawer-container .price-apply-btn {
+  width: 100%;
+  padding: 12px;
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
+}
+
+.filter-drawer-container .price-apply-btn:hover {
+  background: #1e40af !important;
+  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
+}
+
+/* Fixed Footer */
+.filter-drawer-container .filter-drawer-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff !important;
+}
+
+.filter-drawer-container .filter-apply-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.filter-drawer-container .filter-apply-btn:hover {
+  background: #1e40af !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
+}
+
+/* Loading State */
+.modern-collection-filters.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.modern-collection-filters.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--filter-primary);
+  border-radius: 50%;
+  animation: modernFilterSpin 1s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes modernFilterSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive - REPLACE THIS ENTIRE SECTION */
+@media (max-width: 768px) {
+  .filter-drawer-container .filter-drawer {
+    width: 100vw !important;
+  }
+  
+  /* Enhanced Mobile Filter Topbar - Better Layout */
+  .modern-collection-filters .modern-filter-topbar {
+    flex-direction: row !important; /* Keep horizontal layout */
+    gap: 16px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 0 !important;
+    margin-bottom: 16px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Mobile Filter Button - Compact and Stylish */
+  .modern-collection-filters .modern-filter-button {
+    width: auto !important; /* Remove full width */
+    min-width: 100px !important;
+    max-width: 140px !important;
+    justify-content: space-between !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+    border: 2px solid var(--text-color, var(--filter-dark)) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .modern-collection-filters .modern-filter-button:hover,
+  .modern-collection-filters .modern-filter-button:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .modern-collection-filters .modern-filter-button svg {
+    margin-left: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  .modern-collection-filters .modern-filter-button:hover svg {
+    transform: scale(1.1) !important;
+  }
+
+  /* Mobile Product Count - Enhanced with Badge Style */
+  .modern-collection-filters .modern-product-count {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--filter-dark) !important;
+    text-align: right !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-self: flex-end !important;
+  }
+
+  .modern-collection-filters .modern-product-count span {
+    display: inline-block !important;
+    
+
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+ 
+    letter-spacing: 0.3px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* Mobile Current Filters Adjustments */
+  .modern-collection-filters .modern-current-filters-list {
+    gap: 6px !important;
+  }
+
+  .modern-collection-filters .modern-current-filter-tag,
+  .modern-collection-filters .modern-clear-all-filters {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+    min-height: 32px !important;
+    border-radius: 16px !important;
+  }
+  
+  .modern-collection-filters .modern-filter-remove-icon {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 14px !important;
+  }
+  
+  .modern-collection-filters .modern-clear-all-filters {
+    min-height: 36px !important;
+    padding: 8px 12px !important;
+  }
+  
+  .modern-collection-filters .modern-clear-all-filters::before {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 16px !important;
+  }
+
+  /* Mobile Drawer Adjustments */
+  .filter-drawer-container .filter-section-header {
+    padding: 14px 16px;
+    font-size : 14px !important;
+  }
+
+  .filter-drawer-container .filter-section-header span {
+    font-size: 14px !important;
+  }
+
+  .filter-drawer-container .filter-options {
+    padding: 8px 16px 16px 16px;
+  }
+
+  .filter-drawer-container .filter-drawer-header {
+    padding: 16px 20px;
+  }
+
+  .filter-drawer-container .filter-drawer-title {
+    font-size: 16px !important;
+  }
+}
+
+/* Extra Small Mobile Devices - 480px and below */
+@media (max-width: 480px) {
+  .modern-collection-filters .modern-filter-topbar {
+    gap: 12px !important;
+    padding: 10px 0 !important;
+  }
+
+  .modern-collection-filters .modern-filter-button {
+    min-width: 80px !important;
+    max-width: 120px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .modern-collection-filters .modern-filter-button svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .modern-collection-filters .modern-product-count {
+    font-size: 13px !important;
+  }
+
+  .modern-collection-filters .modern-product-count span {
+    font-size: 13px !important;
+
+  }
+}
+
+/* Large Mobile Devices - 481px to 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .modern-collection-filters .modern-filter-button {
+    min-width: 110px !important;
+    max-width: 150px !important;
+  }
+
 }

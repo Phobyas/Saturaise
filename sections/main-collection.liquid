@@ -1,3 +1,10 @@
+<style>
+/* CRITICAL: Load immediately to prevent layout shift */
+.desc p, .rte.desc p { font-size: 16px !important; margin-top: 6px !important; margin-bottom: 0 !important; transition: none !important; animation: none !important; }
+.desc h3, .rte.desc h3, { font-size: 16px !important; font-weight: 700 !important; margin: 0 !important; transition: none !important; animation: none !important; }
+@media (max-width: 1024px) { .desc p, .rte.desc p { font-size: 14px !important; } .desc h3, .rte.desc h3 { font-size: 14px !important; } }
+</style>
+
 {% comment %} Collection Page Assets {% endcomment %}
 <link rel="preload" href="{{ 'section-main-collection.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-main-collection.css' | asset_url }}"></noscript>
@@ -74,7 +81,7 @@
   data-empty="{{ empty_collection }}">
 
   {% paginate collection.products by page_limit %}
-    <div id="CollectionProductGrid" class="grid__wrapper">
+    <div id="CollectionProductGrid" class="grid__wrapper px-3 lg:px-0">
       
       {%- comment -%} Collection Header {%- endcomment -%}
       {%- if collection.description != blank -%}
@@ -142,66 +149,92 @@
      {% endif %}
 
      {%- comment -%} Enhanced Current Filters Display {%- endcomment -%}
-     <div class="modern-current-filters span-12 auto" id="modernCurrentFilters" {% unless filter_count > 0 %}style="display: none;"{% endunless %}>
-       <h3 class="modern-current-filters-title">{{ 'collections.filter.filtering_by_label' | t | default: 'Aktywne filtry:' }}</h3>
-       <ul class="modern-current-filters-list" id="modernCurrentFiltersList">
-         {%- comment -%} Load existing active filters {%- endcomment -%}
-         {% for filter in collection.filters %}
-           {% for value in filter.active_values %}
-             <li class="modern-current-filter-item">
-               <button class="modern-current-filter-tag" 
-                       type="button"
-                       data-filter-param="{{ value.param_name }}"
-                       data-filter-value="{{ value.value }}"
-                       onclick="FilterDrawer.removeFilter('{{ value.param_name }}', '{{ value.value }}')"
-                       aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} {{ value.label | escape }}">
-                 {{ value.label | escape }}<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
-               </button>
-             </li>
-           {% endfor %}
-           {% if filter.type == 'price_range' %}
-             {% if filter.min_value.value != nil %}
-               <li class="modern-current-filter-item">
-                 <button class="modern-current-filter-tag" 
-                         type="button"
-                         data-filter-param="filter.v.price.gte"
-                         data-filter-value="{{ filter.min_value.value }}"
-                         onclick="FilterDrawer.removeFilter('filter.v.price.gte', '{{ filter.min_value.value }}')"
-                         aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny minimalnej">
-                   Od {{ filter.min_value.value | money_without_currency | replace: ',', '' | round }} zł<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
-                 </button>
-               </li>
-             {% endif %}
-             {% if filter.max_value.value != nil %}
-               <li class="modern-current-filter-item">
-                 <button class="modern-current-filter-tag" 
-                         type="button"
-                         data-filter-param="filter.v.price.lte"
-                         data-filter-value="{{ filter.max_value.value }}"
-                         onclick="FilterDrawer.removeFilter('filter.v.price.lte', '{{ filter.max_value.value }}')"
-                         aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny maksymalnej">
-                   Do {{ filter.max_value.value | money_without_currency | replace: ',', '' | round }} zł<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
-                 </button>
-               </li>
-             {% endif %}
-           {% endif %}
-         {% endfor %}
-         {% if filter_count > 0 %}
-           <li class="modern-current-filter-item">
-             <button class="modern-clear-all-filters" 
-                     type="button" 
-                     onclick="FilterDrawer.clearAll()"
-                     aria-label="{{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie filtry' }}">
-               {{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie' }}
-             </button>
-           </li>
-         {% endif %}
-       </ul>
-     </div>
+     {%- comment -%} Enhanced Current Filters Display with Mobile Support {%- endcomment -%}
+{% comment %} <div class="modern-current-filters span-12 auto" id="modernCurrentFilters" {% unless filter_count > 0 %}style="display: none;"{% endunless %}>
+  <div class="modern-current-filters-wrapper">
+   
+    <div class="modern-current-filters-header">
+      <h3 class="modern-current-filters-title">{{ 'collections.filter.filtering_by_label' | t | default: 'Bieżące filtry:' }}</h3>
+  
+      <div class="modern-clear-all-mobile" style="display: none;">
+        {% if filter_count > 0 %}
+          <button class="modern-clear-all-filters" 
+                  type="button" 
+                  onclick="FilterDrawer.clearAll()"
+                  aria-label="{{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie filtry' }}">
+            <span class="clear-all-text">{{ 'collections.filter.clear_all' | t | default: 'Wyczyść' }}</span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+    
+
+    <div class="modern-current-filters-scroll-container">
+      <ul class="modern-current-filters-list" id="modernCurrentFiltersList">
+     
+        {% for filter in collection.filters %}
+          {% for value in filter.active_values %}
+            <li class="modern-current-filter-item">
+              <button class="modern-current-filter-tag" 
+                      type="button"
+                      data-filter-param="{{ value.param_name }}"
+                      data-filter-value="{{ value.value }}"
+                      onclick="FilterDrawer.removeFilter('{{ value.param_name }}', '{{ value.value }}')"
+                      aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} {{ value.label | escape }}">
+                <span class="filter-tag-text">{{ value.label | escape }}</span>
+                <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+              </button>
+            </li>
+          {% endfor %}
+          {% if filter.type == 'price_range' %}
+            {% if filter.min_value.value != nil %}
+              <li class="modern-current-filter-item">
+                <button class="modern-current-filter-tag" 
+                        type="button"
+                        data-filter-param="filter.v.price.gte"
+                        data-filter-value="{{ filter.min_value.value }}"
+                        onclick="FilterDrawer.removeFilter('filter.v.price.gte', '{{ filter.min_value.value }}')"
+                        aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny minimalnej">
+                  <span class="filter-tag-text">Od {{ filter.min_value.value | money_without_currency | replace: ',', '' | round }} zł</span>
+                  <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+                </button>
+              </li>
+            {% endif %}
+            {% if filter.max_value.value != nil %}
+              <li class="modern-current-filter-item">
+                <button class="modern-current-filter-tag" 
+                        type="button"
+                        data-filter-param="filter.v.price.lte"
+                        data-filter-value="{{ filter.max_value.value }}"
+                        onclick="FilterDrawer.removeFilter('filter.v.price.lte', '{{ filter.max_value.value }}')"
+                        aria-label="{{ 'collections.filter.remove_filter' | t | default: 'Usuń filtr' }} ceny maksymalnej">
+                  <span class="filter-tag-text">Do {{ filter.max_value.value | money_without_currency | replace: ',', '' | round }} zł</span>
+                  <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+                </button>
+              </li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        
+
+        {% if filter_count > 0 %}
+          <li class="modern-current-filter-item modern-clear-all-desktop">
+            <button class="modern-clear-all-filters" 
+                    type="button" 
+                    onclick="FilterDrawer.clearAll()"
+                    aria-label="{{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie filtry' }}">
+              <span class="clear-all-text">{{ 'collections.filter.clear_all' | t | default: 'Wyczyść wszystkie' }}</span>
+            </button>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div> {% endcomment %}
 
       {%- if collection.products.size >= 1 -%}
-        <div class="collection span-12" id="main-collection-product-grid" data-id="{{ section.id }}">
-          <div class="product-loop grid__wrapper {{ grid_type }} edge">
+        <div class="collection span-12 " id="main-collection-product-grid" data-id="{{ section.id }}">
+          <div class="product-loop grid__wrapper  {{ grid_type }} edge">
             {% if collection != blank %}
               {% for product in collection.products limit: page_limit %}
                 {% liquid
@@ -409,6 +442,8 @@
 {% endif %}
 
 <script>
+
+  
 // BULLETPROOF FILTER DRAWER SYSTEM - Built from Scratch
 const FilterDrawer = {
   isOpen: false,
@@ -424,7 +459,61 @@ const FilterDrawer = {
     this.loadExistingFilters();
     this.setupEventListeners();
     this.createBodyContainer();
+    this.disableThemeFilters();
+    
+    // Initialize drawer state to reflect current filters
+    setTimeout(() => {
+      this.updateDrawerState();
+    }, 200);
+    
     console.log('✅ FilterDrawer System Ready');
+  },
+  
+  // Safely disable existing theme filter system to prevent conflicts
+  disableThemeFilters() {
+    // Hide existing theme filter buttons (but NOT product elements)
+    const themeFilterButtons = document.querySelectorAll('[data-wau-slideout-target="collection-filters"]:not(.modern-filter-button)');
+    themeFilterButtons.forEach(btn => {
+      btn.style.display = 'none';
+    });
+    
+    // Hide original collection filtering elements (but NOT product containers)
+    const selectors = [
+      '.slideout__trigger-filters:not(.modern-filter-button)',
+      '.slideout[data-wau-slideout="collection-filters"]:not(#filterDrawerContainer *)',
+      '.filter-drawer__filtering__results:not(.modern-current-filters)',
+      '.collection__page--topbar .button:not(.modern-filter-button)',
+      '.collection__horizontal-toolbar .slideout__trigger-filters:not(.modern-filter-button)'
+    ];
+    
+    selectors.forEach(selector => {
+      try {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          // Only hide if it's not within a product container
+          if (!el.closest('.product-listing, .product-item, .product-loop, .grid__wrapper .span-3, .grid__wrapper .span-4, .grid__wrapper .span-6')) {
+            el.style.display = 'none';
+            el.style.visibility = 'hidden';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+          }
+        });
+      } catch (e) {
+        console.warn('Could not hide selector:', selector, e);
+      }
+    });
+    
+    // Disable WAU slideout for collection-filters only
+    if (window.WAU && window.WAU.Slideout) {
+      const originalInit = window.WAU.Slideout.init;
+      window.WAU.Slideout.init = function(target) {
+        if (target === 'collection-filters') {
+          console.log('🚫 Blocked WAU slideout init for collection-filters');
+          return;
+        }
+        return originalInit.call(this, target);
+      };
+    }
   },
   
   // Create container at body level for proper positioning
@@ -469,6 +558,9 @@ const FilterDrawer = {
     if (!container.parentElement.matches('body')) {
       document.body.appendChild(container);
     }
+    
+    // Update drawer state before opening to reflect current filters
+    this.updateDrawerState();
     
     // Store current scroll position
     this.scrollPosition = window.pageYOffset;
@@ -571,6 +663,7 @@ const FilterDrawer = {
     const param = checkbox.dataset.param;
     const value = checkbox.dataset.value;
     const label = checkbox.dataset.label;
+    const filterItem = checkbox.closest('.filter-option-item');
     
     if (!this.activeFilters.filters[param]) {
       this.activeFilters.filters[param] = [];
@@ -580,6 +673,10 @@ const FilterDrawer = {
       if (!this.activeFilters.filters[param].includes(value)) {
         this.activeFilters.filters[param].push(value);
         this.addFilterTag(param, value, label);
+        // Add active class to the filter item
+        if (filterItem) {
+          filterItem.classList.add('active');
+        }
       }
     } else {
       const index = this.activeFilters.filters[param].indexOf(value);
@@ -589,10 +686,14 @@ const FilterDrawer = {
           delete this.activeFilters.filters[param];
         }
         this.removeFilterTag(param, value);
+        // Remove active class from the filter item
+        if (filterItem) {
+          filterItem.classList.remove('active');
+        }
       }
     }
     
-    this.updateDrawerState();
+    this.applyFilters();
   },
   
   applyPriceFilter() {
@@ -681,7 +782,8 @@ const FilterDrawer = {
               data-filter-value="${value}"
               onclick="FilterDrawer.removeFilter('${param}', '${value}')"
               aria-label="Usuń filtr ${label}">
-        ${label}<span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+        <span class="filter-tag-text">${label}</span>
+        <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
       </button>
     `;
     
@@ -697,7 +799,7 @@ const FilterDrawer = {
                 type="button" 
                 onclick="FilterDrawer.clearAll()"
                 aria-label="Wyczyść wszystkie filtry">
-          Wyczyść wszystkie
+          <span class="clear-all-text">Wyczyść wszystkie</span>
         </button>
       `;
       list.appendChild(clearLi);
@@ -723,22 +825,31 @@ const FilterDrawer = {
   },
   
   updateDrawerState() {
-    // Update checkboxes to match active filters
-    document.querySelectorAll('.filter-option-item input[type="checkbox"]').forEach(checkbox => {
+    // Update checkboxes and labels to match active filters
+    document.querySelectorAll('#filterDrawer .filter-option-item').forEach(filterItem => {
+      const checkbox = filterItem.querySelector('input[type="checkbox"]');
+      if (!checkbox) return;
+      
       const param = checkbox.dataset.param;
       const value = checkbox.dataset.value;
       
-      if (this.activeFilters.filters[param] && this.activeFilters.filters[param].includes(value)) {
-        checkbox.checked = true;
-        checkbox.closest('.filter-option-item').classList.add('active');
+      // Check if this filter is active
+      const isActive = this.activeFilters.filters[param] && 
+                      this.activeFilters.filters[param].includes(value);
+      
+      // Update checkbox state
+      checkbox.checked = isActive;
+      
+      // Update visual state
+      if (isActive) {
+        filterItem.classList.add('active');
       } else {
-        checkbox.checked = false;
-        checkbox.closest('.filter-option-item').classList.remove('active');
+        filterItem.classList.remove('active');
       }
     });
     
     // Update sort radio buttons
-    document.querySelectorAll('.sort-option input[type="radio"]').forEach(radio => {
+    document.querySelectorAll('#filterDrawer .sort-option input[type="radio"]').forEach(radio => {
       radio.checked = radio.value === this.activeFilters.sort;
     });
     
@@ -747,11 +858,13 @@ const FilterDrawer = {
     if (applyBtn) {
       const filterCount = Object.keys(this.activeFilters.filters).length;
       if (filterCount > 0) {
-        applyBtn.textContent = `Zobacz wyniki (${filterCount})`;
+        applyBtn.textContent = `Zobacz wyniki`;
       } else {
         applyBtn.textContent = 'Zobacz wyniki';
       }
     }
+    
+    console.log('🔄 Drawer state updated. Active filters:', this.activeFilters.filters);
   },
   
   loadFiltersFromURL() {
@@ -816,11 +929,28 @@ const FilterDrawer = {
     // Show loading state
     this.showLoading();
     
-    // Fetch new content
+    // Fetch new content with timeout and better error handling
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      this.isLoading = false;
+      this.hideLoading();
+      console.error('❌ Filter request timed out');
+      // Fallback to page reload
+      window.location.href = url.toString();
+    }, 10000);
+    
     fetch(url.toString(), {
+      signal: controller.signal,
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
-    .then(response => response.text())
+    .then(response => {
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.text();
+    })
     .then(html => {
       this.updateContent(html);
       window.history.pushState({}, '', url.toString());
@@ -829,11 +959,17 @@ const FilterDrawer = {
       console.log('✅ Filters applied successfully');
     })
     .catch(error => {
+      clearTimeout(timeoutId);
       console.error('❌ Filter error:', error);
       this.isLoading = false;
       this.hideLoading();
-      // Fallback to page reload
-      window.location.href = url.toString();
+      
+      // Graceful fallback to page reload
+      if (error.name !== 'AbortError') {
+        setTimeout(() => {
+          window.location.href = url.toString();
+        }, 1000);
+      }
     });
   },
   
@@ -849,22 +985,94 @@ const FilterDrawer = {
       currentGrid.innerHTML = newGrid.innerHTML;
     }
     
-    // Update product count
-    const newCount = newDoc.querySelectorAll('.product-listing, .product-item, [data-product-id]').length;
+    // Update product count - try multiple methods to get accurate count
+    let newCount = 0;
+    
+    // Method 1: Try to get count from the new HTML's product count element
+    const newCountElement = newDoc.getElementById('modernProductCount');
+    if (newCountElement) {
+      const countMatch = newCountElement.textContent.match(/(\d+)/);
+      if (countMatch) {
+        newCount = parseInt(countMatch[1]);
+      }
+    }
+    
+    // Method 2: If that fails, count products in the updated grid
+    if (newCount === 0) {
+      newCount = newDoc.querySelectorAll('.product-listing, .product-item, [data-product-id], .product-loop .span-3, .product-loop .span-4, .product-loop .span-6').length;
+    }
+    
+    // Method 3: If still 0, count in current updated grid
+    if (newCount === 0) {
+      setTimeout(() => {
+        newCount = document.querySelectorAll('#main-collection-product-grid .product-listing, #main-collection-product-grid .product-item, #main-collection-product-grid [data-product-id]').length;
+        this.updateProductCountDisplay(newCount);
+      }, 100);
+    }
+    
+    // Update the product count display
+    this.updateProductCountDisplay(newCount);
+    
+    // Update drawer filter counts and active states
+    this.updateFilterStatesFromHTML(newDoc);
+  },
+  
+  updateProductCountDisplay(count) {
     const countElement = document.getElementById('modernProductCount');
     if (countElement) {
       let countText;
-      if (newCount === 0) {
+      if (count === 0) {
         countText = 'Brak produktów';
-      } else if (newCount === 1) {
+      } else if (count === 1) {
         countText = '1 produkt';
-      } else if (newCount >= 2 && newCount <= 4) {
-        countText = `${newCount} produkty`;
+      } else if (count >= 2 && count <= 4) {
+        countText = `${count} produkty`;
       } else {
-        countText = `${newCount} produktów`;
+        countText = `${count} produktów`;
       }
       countElement.textContent = countText;
+      console.log(`✅ Product count updated: ${countText}`);
     }
+  },
+  
+  updateFilterStatesFromHTML(newDoc) {
+    // Update filter counts and active states from the new HTML
+    const newFilterSections = newDoc.querySelectorAll('.filter-section');
+    const currentFilterSections = document.querySelectorAll('#filterDrawer .filter-section');
+    
+    newFilterSections.forEach((newSection, index) => {
+      const currentSection = currentFilterSections[index];
+      if (!currentSection) return;
+      
+      // Update filter option counts and availability
+      const newOptions = newSection.querySelectorAll('.filter-option-item');
+      const currentOptions = currentSection.querySelectorAll('.filter-option-item');
+      
+      newOptions.forEach((newOption, optionIndex) => {
+        const currentOption = currentOptions[optionIndex];
+        if (!currentOption) return;
+        
+        // Update count
+        const newCount = newOption.querySelector('.filter-option-count');
+        const currentCount = currentOption.querySelector('.filter-option-count');
+        if (newCount && currentCount) {
+          currentCount.textContent = newCount.textContent;
+        }
+        
+        // Update disabled state
+        const newInput = newOption.querySelector('input');
+        const currentInput = currentOption.querySelector('input');
+        if (newInput && currentInput) {
+          if (newInput.disabled) {
+            currentInput.disabled = true;
+            currentOption.setAttribute('data-disabled', 'true');
+          } else {
+            currentInput.disabled = false;
+            currentOption.removeAttribute('data-disabled');
+          }
+        }
+      });
+    });
   },
   
   showLoading() {
@@ -880,14 +1088,32 @@ const FilterDrawer = {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  FilterDrawer.init();
+  // Wait a moment for theme to load, then override
+  setTimeout(() => {
+    FilterDrawer.init();
+    
+    // Enhanced button protection - ensure our filter button works correctly
+    const filterButton = document.querySelector('.modern-filter-button');
+    if (filterButton) {
+      // Remove any existing event listeners by cloning
+      const newButton = filterButton.cloneNode(true);
+      filterButton.parentNode.replaceChild(newButton, filterButton);
+      
+      // Add only our event listener
+      newButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        FilterDrawer.open();
+      });
+    }
+  }, 100);
 });
 </script>
 
 {% style %}
-/* BULLETPROOF FILTER DRAWER STYLES - Built from Scratch */
+/* ENHANCED FILTER DRAWER STYLES - Complete Code */
 
-/* Main collection styles reset */
+/* Scoped container to prevent style conflicts */
 .modern-collection-filters {
   --filter-primary: #1d4ed8;
   --filter-dark: #323232;
@@ -896,24 +1122,30 @@ document.addEventListener('DOMContentLoaded', () => {
   position: relative;
 }
 
-.modern-collection-filters * {
+/* Only apply box-sizing to our filter elements */
+.modern-collection-filters .modern-filter-topbar,
+.modern-collection-filters .modern-filter-topbar *,
+.modern-collection-filters .modern-current-filters,
+.modern-collection-filters .modern-current-filters *,
+.filter-drawer-container,
+.filter-drawer-container * {
   box-sizing: border-box;
 }
 
-/* Filter Top Bar */
-.modern-filter-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--filter-light);
+/* Filter Top Bar - scoped to avoid conflicts */
+.modern-collection-filters .modern-filter-topbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  /* margin-bottom: 20px !important; */
+  padding: 16px 0 !important;
+  border-bottom: 1px solid var(--filter-light) !important;
 }
 
-.modern-filter-button {
+.modern-collection-filters .modern-filter-button {
   display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
+  align-items: center !important;
+  justify-content: center !important;
   min-height: 40px !important;
   padding: 8px 16px !important;
   border: 1px solid var(--text-color, var(--filter-dark)) !important;
@@ -922,127 +1154,196 @@ document.addEventListener('DOMContentLoaded', () => {
   color: var(--text-color, var(--filter-dark)) !important;
   font-size: 14px !important;
   font-weight: 700 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
   transition: all 0.2s ease !important;
   text-decoration: none !important;
-  opacity: 1 !important;
-  transform: none !important;
+  font-family: inherit !important;
+  line-height: normal !important;
+  margin: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  vertical-align: baseline !important;
+  white-space: nowrap !important;
 }
 
-.modern-filter-button:hover {
+.modern-collection-filters .modern-filter-button:hover,
+.modern-collection-filters .modern-filter-button:focus {
   background: var(--text-color, var(--filter-dark)) !important;
   color: var(--bg-color, var(--filter-white)) !important;
   transform: translateY(-1px) !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-/* Prevent any animation on page load */
-.modern-filter-button:not(:hover) {
-  animation: none !important;
-  transition-delay: 0s !important;
+.modern-collection-filters .modern-filter-button:active {
+  transform: translateY(0) !important;
+  transition: all 0.1s ease !important;
 }
 
-.modern-filter-button svg {
-  margin-left: 8px;
-  width: 12px;
-  height: 12px;
+.modern-collection-filters .modern-filter-button svg {
+  margin-left: 8px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
-.modern-product-count {
+.modern-collection-filters .modern-product-count {
   font-size: 16px !important;
   color: var(--filter-dark) !important;
   font-weight: bold !important;
 }
 
-/* Current Filters Display */
-.modern-current-filters {
-  margin: 16px 0 24px 0;
-  padding: 0;
+/* Current Filters Display - scoped */
+.modern-collection-filters .modern-current-filters {
+  margin: 16px 0 24px 0 !important;
+  padding: 0 !important;
 }
 
-.modern-current-filters-title {
+.modern-collection-filters .modern-current-filters-title {
   font-size: 12px !important;
   font-weight: 600 !important;
   color: var(--filter-dark) !important;
   margin: 0 0 8px 0 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
-.modern-current-filters-list {
+.modern-collection-filters .modern-current-filters-list {
   list-style: none !important;
   margin: 0 !important;
   padding: 0 !important;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
 }
 
-.modern-current-filter-item {
+.modern-collection-filters .modern-current-filter-item {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.modern-current-filter-tag {
+/* Enhanced filter tags with proper icon positioning */
+.modern-collection-filters .modern-current-filter-tag {
   border: 1px solid var(--text-color) !important;
-  padding: 4px 8px !important;
-  display: inline-block !important;
+  padding: 6px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   margin: 0 !important;
-  border-radius: 12px !important;
+  border-radius: 16px !important;
   background: transparent !important;
   color: var(--filter-primary) !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
   text-decoration: none !important;
-  transition: all 0.2s ease;
-  cursor: pointer;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
   line-height: 1.4 !important;
+  gap: 8px !important;
+  max-width: 200px !important;
+  min-width: 60px !important;
 }
 
-.modern-current-filter-tag:hover {
+.modern-collection-filters .modern-current-filter-tag:hover {
   background: var(--text-color, var(--filter-dark)) !important;
   color: var(--bg-color, var(--filter-white)) !important;
-  transform: translateY(-1px);
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
-.modern-filter-remove-icon {
-  margin-left: 4px;
-  font-size: 9px;
-  opacity: 0.7;
+/* Enhanced remove icon - properly positioned on the right */
+.modern-collection-filters .modern-filter-remove-icon {
+  margin-left: 0 !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  order: 2 !important;
 }
 
-.modern-clear-all-filters {
-  border: 1px solid #dc2626 !important;
-  padding: 4px 8px !important;
-  display: inline-block !important;
+/* Remove icon hover state */
+.modern-collection-filters .modern-current-filter-tag:hover .modern-filter-remove-icon {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: inherit !important;
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced "Clear All" button */
+.modern-collection-filters .modern-clear-all-filters {
+  border: 2px solid #dc2626 !important;
+  padding: 8px 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
   margin: 0 !important;
-  border-radius: 12px !important;
+  border-radius: 20px !important;
   background: transparent !important;
   color: #dc2626 !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
   text-decoration: none !important;
-  transition: all 0.2s ease;
-  cursor: pointer;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
   line-height: 1.4 !important;
-  text-transform: uppercase;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  gap: 8px !important;
+  min-height: 36px !important;
+  max-width: 180px !important;
+  min-width: 120px !important;
 }
 
-.modern-clear-all-filters:hover {
+.modern-collection-filters .modern-clear-all-filters:hover {
   background: #dc2626 !important;
   color: var(--bg-color, var(--filter-white)) !important;
-  transform: translateY(-1px);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
 }
 
-.modern-clear-all-filters::before {
-  content: '×';
-  margin-right: 4px;
-  font-size: 12px;
-  font-weight: bold;
+/* Enhanced × icon for clear all button */
+.modern-collection-filters .modern-clear-all-filters::before {
+  content: '×' !important;
+  margin-right: 0 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: rgba(220, 38, 38, 0.1) !important;
+  transition: all 0.2s ease !important;
+  order: 2 !important;
+  flex-shrink: 0 !important;
 }
 
-/* BULLETPROOF DRAWER CONTAINER - Always works regardless of page structure */
+.modern-collection-filters .modern-clear-all-filters:hover::before {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: rotate(90deg) !important;
+}
+
+/* Text elements inside filter tags */
+.modern-collection-filters .filter-tag-text,
+.modern-collection-filters .clear-all-text {
+  flex: 1 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  order: 1 !important;
+}
+
+/* DRAWER CONTAINER - Completely isolated */
 .filter-drawer-container {
   display: none;
   position: fixed !important;
@@ -1052,14 +1353,11 @@ document.addEventListener('DOMContentLoaded', () => {
   height: 100vh !important;
   z-index: 999999 !important;
   pointer-events: none;
-}
-
-.filter-drawer-container * {
-  box-sizing: border-box;
+  font-family: inherit;
 }
 
 /* Backdrop Overlay */
-.filter-backdrop {
+.filter-drawer-container .filter-backdrop {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -1073,12 +1371,12 @@ document.addEventListener('DOMContentLoaded', () => {
   -webkit-backdrop-filter: blur(2px);
 }
 
-.filter-backdrop.active {
+.filter-drawer-container .filter-backdrop.active {
   opacity: 1;
 }
 
 /* The Actual Drawer */
-.filter-drawer {
+.filter-drawer-container .filter-drawer {
   position: absolute !important;
   top: 0 !important;
   right: 0 !important;
@@ -1091,17 +1389,16 @@ document.addEventListener('DOMContentLoaded', () => {
   display: flex;
   flex-direction: column;
   pointer-events: auto;
-  font-family: inherit;
   color: var(--filter-dark);
   border-left: 1px solid #e5e7eb !important;
 }
 
-.filter-drawer.active {
+.filter-drawer-container .filter-drawer.active {
   transform: translateX(0);
 }
 
 /* Fixed Header */
-.filter-drawer-header {
+.filter-drawer-container .filter-drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1112,14 +1409,14 @@ document.addEventListener('DOMContentLoaded', () => {
   min-height: 70px;
 }
 
-.filter-drawer-title {
+.filter-drawer-container .filter-drawer-title {
   font-size: 18px !important;
   font-weight: 600 !important;
   color: var(--filter-dark) !important;
   margin: 0 !important;
 }
 
-.filter-drawer-close {
+.filter-drawer-container .filter-drawer-close {
   background: none !important;
   border: none !important;
   padding: 8px !important;
@@ -1133,11 +1430,11 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: background-color 0.2s ease;
 }
 
-.filter-drawer-close:hover {
+.filter-drawer-container .filter-drawer-close:hover {
   background: var(--filter-light) !important;
 }
 
-.filter-drawer-close svg {
+.filter-drawer-container .filter-drawer-close svg {
   width: 20px;
   height: 20px;
   color: #323232 !important;
@@ -1145,7 +1442,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 /* Scrollable Content */
-.filter-drawer-content {
+.filter-drawer-container .filter-drawer-content {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -1154,30 +1451,30 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 /* Enhanced scrollbar for webkit browsers */
-.filter-drawer-content::-webkit-scrollbar {
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar {
   width: 8px;
 }
 
-.filter-drawer-content::-webkit-scrollbar-track {
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-track {
   background: #f1f3f4;
 }
 
-.filter-drawer-content::-webkit-scrollbar-thumb {
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-thumb {
   background: #c1c8cd;
   border-radius: 4px;
 }
 
-.filter-drawer-content::-webkit-scrollbar-thumb:hover {
+.filter-drawer-container .filter-drawer-content::-webkit-scrollbar-thumb:hover {
   background: #a1a8ad;
 }
 
 /* Filter Sections */
-.filter-section {
+.filter-drawer-container .filter-section {
   border-bottom: 1px solid #e5e7eb;
   background: #ffffff !important;
 }
 
-.filter-section-header {
+.filter-drawer-container .filter-section-header {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -1187,152 +1484,203 @@ document.addEventListener('DOMContentLoaded', () => {
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  font-size: 15px;
+  font-size: 16px !important;
   font-weight: 600;
   color: var(--filter-dark);
   text-align: left;
 }
 
-.filter-section-header:hover {
+
+
+.filter-drawer-container .filter-section-header:hover {
   background: #f8f9fa !important;
 }
 
-.filter-section-arrow {
+.filter-drawer-container .filter-section-arrow {
   transition: transform 0.3s ease;
   color: var(--filter-dark);
   opacity: 0.7;
 }
 
-.filter-section-arrow.rotated {
+.filter-drawer-container .filter-section-arrow.rotated {
   transform: rotate(180deg);
 }
 
-.filter-section-content {
+.filter-drawer-container .filter-section-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
   background: #ffffff !important;
 }
 
-.filter-section-content.active {
+.filter-drawer-container .filter-section-content.active {
   max-height: 400px;
   overflow-y: auto;
 }
 
-/* Filter Options */
-.filter-options {
+/* Filter Options - Enhanced specificity to override Shopify theme */
+.filter-drawer-container .filter-options {
   padding: 16px 24px;
   background: #ffffff !important;
 }
 
-.filter-option-item {
+.filter-drawer-container .filter-drawer .filter-option-item {
   display: flex !important;
-  align-items: center;
-  padding: 10px 12px;
-  margin-bottom: 8px;
+  align-items: center !important;
+  padding: 10px 12px !important;
+  margin-bottom: 8px !important;
   background: #ffffff !important;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  color: #323232 !important;
 }
 
-.filter-option-item:hover {
-  border-color: var(--filter-primary);
+.filter-drawer-container .filter-drawer .filter-option-item:hover {
+  border-color: var(--filter-primary) !important;
   background: #f8f9ff !important;
-  transform: translateY(-1px);
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.1) !important;
 }
 
-.filter-option-item.active {
-  background: var(--filter-primary) !important;
-  border-color: var(--filter-primary);
+/* ACTIVE STATE - Selected filters - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active,
+.filter-drawer-container .filter-drawer .filter-option-item.active {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
   color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3) !important;
 }
 
-.filter-option-item[data-disabled="true"] {
-  opacity: 0.5;
-  pointer-events: none;
+/* Active state hover effect - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active:hover,
+.filter-drawer-container .filter-drawer .filter-option-item.active:hover {
+  background: #1e40af !important;
+  border-color: #1e40af !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4) !important;
 }
 
-.filter-option-item input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+.filter-drawer-container .filter-drawer .filter-option-item[data-disabled="true"] {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
 }
 
-.filter-option-checkbox {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 3px;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+.filter-drawer-container .filter-drawer .filter-option-item input[type="checkbox"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+.filter-drawer-container .filter-drawer .filter-option-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 3px !important;
+  margin-right: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
   background: #ffffff !important;
+  position: relative !important;
 }
 
-.filter-option-item.active .filter-option-checkbox {
+/* Active checkbox styling - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-checkbox,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-checkbox {
   background: #ffffff !important;
-  border-color: #ffffff;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
 }
 
-.filter-option-item.active .filter-option-checkbox::after {
-  content: '✓';
-  color: var(--filter-primary);
-  font-size: 10px;
-  font-weight: bold;
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-checkbox::after,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-checkbox::after {
+  content: '✓' !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
 }
 
-.filter-option-item:not(.active) .filter-option-checkbox {
+.filter-drawer-container .filter-drawer .filter-option-item:not(.active) .filter-option-checkbox {
   background: #ffffff !important;
+  border-color: #e5e7eb !important;
 }
 
-.filter-option-item:not(.active):hover .filter-option-checkbox {
-  border-color: var(--filter-primary);
+.filter-drawer-container .filter-drawer .filter-option-item:not(.active):hover .filter-option-checkbox {
+  border-color: var(--filter-primary) !important;
+  background: #f8f9ff !important;
 }
 
-.filter-option-label {
-  flex: 1;
-  font-size: 13px;
-  font-weight: 500;
-  margin-right: 8px;
+.filter-drawer-container .filter-drawer .filter-option-label {
+  flex: 1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  margin-right: 8px !important;
+  transition: color 0.2s ease !important;
+  color: inherit !important;
 }
 
-.filter-option-count {
-  font-size: 11px;
-  opacity: 0.7;
-  padding: 2px 6px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  transition: all 0.2s ease;
+/* Active label text color - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-label,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
-.filter-option-item.active .filter-option-count {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+.filter-drawer-container .filter-drawer .filter-option-count {
+  font-size: 14px !important;
+  opacity: 0.7 !important;
+  padding: 2px 6px !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+  color: inherit !important;
+}
+
+/* Active count styling - Maximum specificity */
+.filter-drawer-container .filter-drawer .filter-section .filter-option-item.active .filter-option-count,
+.filter-drawer-container .filter-drawer .filter-option-item.active .filter-option-count {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
 }
 
 /* Sort Options */
-.sort-option input {
+.filter-drawer-container .sort-option input {
   margin-right: 10px;
 }
 
 /* Price Range */
-.price-range-inputs {
+.filter-drawer-container .price-range-inputs {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
 }
 
-.price-input-group {
+.filter-drawer-container .price-input-group {
   flex: 1;
 }
 
-.price-input-group label {
+.filter-drawer-container .price-input-group label {
   display: block;
   font-size: 11px;
   font-weight: 600;
@@ -1342,7 +1690,7 @@ document.addEventListener('DOMContentLoaded', () => {
   letter-spacing: 0.5px;
 }
 
-.price-input-group input {
+.filter-drawer-container .price-input-group input {
   width: 100%;
   padding: 10px 12px;
   border: 2px solid #e5e7eb;
@@ -1353,12 +1701,12 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: border-color 0.2s ease;
 }
 
-.price-input-group input:focus {
+.filter-drawer-container .price-input-group input:focus {
   outline: none;
   border-color: var(--filter-primary);
 }
 
-.price-apply-btn {
+.filter-drawer-container .price-apply-btn {
   width: 100%;
   padding: 12px;
   background: #1d4ed8 !important;
@@ -1374,13 +1722,13 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
 }
 
-.price-apply-btn:hover {
+.filter-drawer-container .price-apply-btn:hover {
   background: #1e40af !important;
   box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
 }
 
 /* Fixed Footer */
-.filter-drawer-footer {
+.filter-drawer-container .filter-drawer-footer {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1390,7 +1738,7 @@ document.addEventListener('DOMContentLoaded', () => {
   background: #ffffff !important;
 }
 
-.filter-apply-btn {
+.filter-drawer-container .filter-apply-btn {
   width: 100%;
   padding: 16px;
   background: #1d4ed8 !important;
@@ -1410,7 +1758,7 @@ document.addEventListener('DOMContentLoaded', () => {
   justify-content: center !important;
 }
 
-.filter-apply-btn:hover {
+.filter-drawer-container .filter-apply-btn:hover {
   background: #1e40af !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(29, 78, 216, 0.3);
@@ -1434,82 +1782,128 @@ document.addEventListener('DOMContentLoaded', () => {
   border: 3px solid #f3f3f3;
   border-top: 3px solid var(--filter-primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: modernFilterSpin 1s linear infinite;
   z-index: 1000;
 }
 
-@keyframes spin {
+@keyframes modernFilterSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .filter-drawer {
+  .filter-drawer-container .filter-drawer {
     width: 100vw !important;
   }
   
-  .modern-filter-topbar {
+  .modern-collection-filters .modern-filter-topbar {
     flex-direction: column;
     gap: 12px;
     align-items: flex-start;
   }
 
-  .modern-filter-button {
+  .modern-collection-filters .modern-filter-button {
     width: 100%;
     justify-content: center;
   }
 
-  .modern-current-filters-list {
+  .modern-collection-filters .modern-current-filters-list {
     gap: 4px;
   }
 
-  .modern-current-filter-tag,
-  .modern-clear-all-filters {
+  .modern-collection-filters .modern-current-filter-tag,
+  .modern-collection-filters .modern-clear-all-filters {
     font-size: 10px !important;
-    padding: 3px 6px !important;
+    padding: 8px 12px !important;
+    min-height: 40px !important;
+  }
+  
+  .modern-collection-filters .modern-filter-remove-icon {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 16px !important;
+  }
+  
+  .modern-collection-filters .modern-clear-all-filters {
+    min-height: 44px !important;
+  }
+  
+  .modern-collection-filters .modern-clear-all-filters::before {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 18px !important;
   }
 
-  .filter-section-header {
+  .filter-drawer-container .filter-section-header {
     padding: 14px 16px;
   }
 
-  .filter-options {
+  .filter-drawer-container .filter-options {
     padding: 8px 16px 16px 16px;
   }
 
-  .filter-drawer-header {
+  .filter-drawer-container .filter-drawer-header {
     padding: 16px 20px;
   }
 
-  .filter-drawer-title {
+  .filter-drawer-container .filter-drawer-title {
     font-size: 16px !important;
   }
 }
 
-/* Hide original filter elements */
-.collection__page--topbar .button:not(.modern-filter-button),
-.slideout[data-wau-slideout="collection-filters"],
-.filter-drawer__filtering__results:not(.modern-current-filters) {
-  display: none !important;
-}
-
-.product-loop {
-  margin-top: 20px;
-}
-
-/* Enhanced focus states for accessibility */
-.modern-filter-button:focus,
-.modern-current-filter-tag:focus,
-.modern-clear-all-filters:focus,
-.filter-drawer-close:focus,
-.filter-section-header:focus,
-.filter-option-item:focus,
-.price-input-group input:focus,
-.price-apply-btn:focus,
-.filter-apply-btn:focus {
+/* Focus states for accessibility */
+.modern-collection-filters .modern-filter-button:focus,
+.modern-collection-filters .modern-current-filter-tag:focus,
+.modern-collection-filters .modern-clear-all-filters:focus,
+.filter-drawer-container .filter-drawer-close:focus,
+.filter-drawer-container .filter-section-header:focus,
+.filter-drawer-container .filter-option-item:focus,
+.filter-drawer-container .price-input-group input:focus,
+.filter-drawer-container .price-apply-btn:focus,
+.filter-drawer-container .filter-apply-btn:focus {
   outline: 2px solid var(--filter-primary) !important;
   outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .modern-collection-filters .modern-filter-remove-icon {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid currentColor !important;
+  }
+  
+  .modern-collection-filters .modern-clear-all-filters::before {
+    background: rgba(220, 38, 38, 0.3) !important;
+    border: 1px solid currentColor !important;
+  }
+}
+
+/* Safely hide ONLY theme filter elements - NOT product elements */
+.collection__page--topbar .button:not(.modern-filter-button),
+.collection__page--topbar .slideout__trigger-filters:not(.modern-filter-button),
+.collection__horizontal-toolbar .slideout__trigger-filters:not(.modern-filter-button),
+.slideout[data-wau-slideout="collection-filters"]:not(#filterDrawerContainer *),
+.filter-drawer__filtering__results:not(.modern-current-filters) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure product loop gets proper spacing */
+/* .modern-collection-filters .product-loop {
+  margin-top: 20px;
+} */
+
+/* Prevent any styling conflicts with existing product elements */
+.modern-collection-filters .collection,
+.modern-collection-filters .product-loop,
+.modern-collection-filters .product-listing,
+.modern-collection-filters .product-item,
+.modern-collection-filters .product-image,
+.modern-collection-filters .product-info {
+  /* Let these inherit from theme - don't override */
 }
 {% endstyle %}
 

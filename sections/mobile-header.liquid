@@ -181,73 +181,82 @@
     transform: none !important;
   }
 
-  /* Mobile Social Icons Styles */
-  .mobile-social-icons {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    background-color: {{ bg_color }};
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(100%);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  }
+/* Mobile Social Icons Styles - Delayed show, instant hide */
+.mobile-social-icons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background-color: {{ bg_color }};
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%); /* Slides from left */
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; /* No delay by default (for hiding) */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  /* Only show social icons when mobile navigation is open */
-  body.slideout-mobile-navigation--open .mobile-social-icons {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
+/* Show social icons when mobile navigation is open - slides in from left with BIG delay */
+body.slideout-mobile-navigation--open .mobile-social-icons {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition: opacity 0.3s ease 0.6s, visibility 0.3s ease 0.6s, transform 0.3s ease 0.6s; /* 0.6s delay for showing */
+}
 
-  .mobile-social-icons .social-icons-list {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-    justify-content: flex-start;
-  }
+.mobile-social-icons .social-icons-list {
+  display: flex;
+  align-items: center;
+  justify-content: left; 
+}
 
-  .mobile-social-icons a {
-    display: inline-block;
-    padding: 0;
-  }
+.mobile-social-icons a {
+  display: inline-block;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
 
-  .mobile-social-icons svg {
-    width: 28px;
-    height: 28px;
-  }
+.mobile-social-icons a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
 
-  .mobile-social-icons svg .hover-fill {
-    fill: {{ text_color }};
-    transition: fill 0.2s ease;
-  }
+.mobile-social-icons svg {
+  width: 28px;
+  height: 28px;
+}
 
-  .mobile-social-icons svg:hover .hover-fill {
-    fill: {{ hover_color }};
-  }
+.mobile-social-icons svg .hover-fill {
+  fill: {{ text_color }};
+  transition: fill 0.2s ease;
+}
 
-  /* Add padding to slideout content to prevent overlap with fixed social icons */
-  body.slideout-mobile-navigation--open .mobile-nav__wrapper {
-    padding-bottom: 80px;
-  }
+.mobile-social-icons svg:hover .hover-fill {
+  fill: {{ hover_color }};
+}
 
-  /* Ensure social icons stay above everything but don't affect layout when hidden */
-  #mobile-slideout .mobile-social-icons {
-    z-index: 9999 !important;
-    position: fixed !important;
-  }
+/* Add padding to slideout content to prevent overlap with fixed social icons */
+body.slideout-mobile-navigation--open .mobile-nav__wrapper {
+  padding-bottom: 80px;
+}
 
-  /* Prevent any layout shifts by ensuring social icons don't affect document flow */
-  .mobile-social-icons {
-    pointer-events: none;
-  }
+/* Ensure social icons stay above everything but don't affect layout when hidden */
+#mobile-slideout .mobile-social-icons {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
 
-  body.slideout-mobile-navigation--open .mobile-social-icons {
-    pointer-events: auto;
-  }
+/* Prevent any layout shifts by ensuring social icons don't affect document flow */
+.mobile-social-icons {
+  pointer-events: none;
+}
+
+body.slideout-mobile-navigation--open .mobile-social-icons {
+  pointer-events: auto;
+}
 {% endstyle %}
 
 {% comment %} Mobile Header {% endcomment %}
@@ -468,7 +477,80 @@
       {% endif %}
     </div>
 
-    {% comment %} Social Media Icons Section {% endcomment %}
+    
+  </div>
+  
+    {% style %}
+      #slideout-mobile-navigation,
+      #slideout-mobile-navigation .mobile-nav__mobile-header,
+      .mobile-nav__wrapper .c-accordion__second-level-wrapper {
+        background-color: {{ bg_color }} !important;
+      }
+      body.slideout-mobile-navigation--open .section-header__mobile,
+      body.slideout-mobile-navigation--open #mobile-search {
+        background-color: {{ bg_color }} !important;
+      }
+
+      #slideout-mobile-navigation .mobile-nav__mobile-header svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile_search--form svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg .hover-fill {
+        fill: {{ text_color }} !important;
+      }
+
+      .section-header__mobile_search--form {
+        border-color: {{ text_color }} !important;
+      }
+
+      #slideout-mobile-navigation .mobile-nav__mobile-header svg:hover .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg:hover .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg:hover .hover-fill {
+        fill: {{ hover_color }} !important;
+      }
+
+      .mobile-nav__wrapper input::placeholder,
+      .slideout-mobile-navigation--open .section-header__mobile_search--input::placeholder  {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper input:-ms-input-placeholder {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper input::-ms-input-placeholder {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper .mobile-nav__logo-wrapper a,
+      .mobile-nav__wrapper .c-accordion__link,
+      .slideout-mobile-navigation--open .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo,
+      .slideout-mobile-navigation--open .section-header__mobile_search--input {
+        color: {{ text_color }} !important;
+      }
+
+      .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
+        color: {{ bg_color }} !important;
+      }
+      .mobile-nav__wrapper .c-accordion__top-level  {
+        border-bottom: 2px solid #ccc !important;
+      }
+
+      .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
+      .slideout-mobile-navigation--open .section-header__mobile_search--input {
+        border-color: {{ text_color }};
+        text-transform: uppercase;
+      }
+      .mobile-nav__wrapper .c-accordion__link:hover {
+        color: {{ hover_color }} !important;
+      }
+    {% endstyle %}
+
+    
+  </div>
+  {% comment %} Social Media Icons Section {% endcomment %}
     {%- assign has_social_links = false -%}
     {%- if settings.facebook_url != blank or settings.twittername != blank or settings.pinterest_url != blank or settings.youtube_url != blank or settings.linkedin_url != blank or settings.instagram != blank or settings.tiktok != blank or settings.etsy != blank -%}
       {%- assign has_social_links = true -%}
@@ -576,75 +658,8 @@
         </div>
       </div>
     {%- endif -%}
-  </div>
-    {% style %}
-      #slideout-mobile-navigation,
-      #slideout-mobile-navigation .mobile-nav__mobile-header,
-      .mobile-nav__wrapper .c-accordion__second-level-wrapper {
-        background-color: {{ bg_color }} !important;
-      }
-      body.slideout-mobile-navigation--open .section-header__mobile,
-      body.slideout-mobile-navigation--open #mobile-search {
-        background-color: {{ bg_color }} !important;
-      }
 
-      #slideout-mobile-navigation .mobile-nav__mobile-header svg .hover-fill,
-      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg .hover-fill,
-      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile_search--form svg .hover-fill,
-      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg .hover-fill {
-        fill: {{ text_color }} !important;
-      }
-
-      .section-header__mobile_search--form {
-        border-color: {{ text_color }} !important;
-      }
-
-      #slideout-mobile-navigation .mobile-nav__mobile-header svg:hover .hover-fill,
-      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg:hover .hover-fill,
-      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg:hover .hover-fill {
-        fill: {{ hover_color }} !important;
-      }
-
-      .mobile-nav__wrapper input::placeholder,
-      .slideout-mobile-navigation--open .section-header__mobile_search--input::placeholder  {
-        color: {{ text_color }} !important;
-        opacity: 1;
-      }
-
-      .mobile-nav__wrapper input:-ms-input-placeholder {
-        color: {{ text_color }} !important;
-        opacity: 1;
-      }
-
-      .mobile-nav__wrapper input::-ms-input-placeholder {
-        color: {{ text_color }} !important;
-        opacity: 1;
-      }
-
-      .mobile-nav__wrapper .mobile-nav__logo-wrapper a,
-      .mobile-nav__wrapper .c-accordion__link,
-      .slideout-mobile-navigation--open .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo,
-      .slideout-mobile-navigation--open .section-header__mobile_search--input {
-        color: {{ text_color }} !important;
-      }
-
-      .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
-        color: {{ bg_color }} !important;
-      }
-      .mobile-nav__wrapper .c-accordion__top-level  {
-        border-bottom: 2px solid #ccc !important;
-      }
-
-      .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
-      .slideout-mobile-navigation--open .section-header__mobile_search--input {
-        border-color: {{ text_color }};
-        text-transform: uppercase;
-      }
-      .mobile-nav__wrapper .c-accordion__link:hover {
-        color: {{ hover_color }} !important;
-      }
-    {% endstyle %}
-  </div>
+  
 </aside>
 
 <script>

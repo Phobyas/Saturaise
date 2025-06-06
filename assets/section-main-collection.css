@@ -812,3 +812,23 @@ li.filter-item > a {
     column-count: 2;
   }
 }
+.desc p {
+  font-size: 16px !important;
+  margin-top: 6px !important;
+}
+
+.desc h3 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 1024px) {
+  .desc p {
+    font-size: 14px !important;
+    margin-top: 6px !important;
+  }
+
+  .desc h3 {
+    font-size: 14px !important;
+  }
+}

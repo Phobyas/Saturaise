@@ -79,6 +79,7 @@
   height: 100%;
   object-fit: contain;
   border-radius: 0;
+  mix-blend-mode: multiply;
 }
 
 .ajax-cart__item-remove {
