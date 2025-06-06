@@ -93,12 +93,129 @@
     display: none;
   }
 
+  /* Enhanced badge hover effects with smooth return transitions */
+  .badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother easing curve */
+    white-space: nowrap;
+    height: 64px;
+    min-width: 120px;
+    margin-right: 12px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid transparent; /* Add transparent border for smooth transition */
+  }
+
+  /* Hover effects with custom timing */
+  .badge-item:hover {
+    background-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-3px) scale(1.02);
+    border: 1px solid #ddd;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry with slight bounce */
+  }
+
+  /* Image container hover effects */
+  .badge-image-container {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Longer, smoother return */
+    box-shadow: 0 0 0 rgba(0,0,0,0); /* Start with invisible shadow for smooth transition */
+  }
+
+  .badge-item:hover .badge-image-container {
+    background-color: #e8f4f8;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
+  }
+
+  /* Image hover effects */
+  .badge-image-container img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother return */
+  }
+
+  .badge-item:hover .badge-image-container img {
+    transform: scale(1.05);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
+  }
+
+  /* Text hover effects */
+  .badge-item span {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth return */
+    font-weight: 500;
+    color: inherit; /* Explicit color for smooth transition */
+    text-shadow: 0 0 0 rgba(0,0,0,0); /* Start with invisible shadow */
+  }
+
+  .badge-item:hover span {
+    color: #2563eb;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
+  }
+
+  /* Subtle background animation on hover with smoother reset */
+  .badge-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother return */
+    z-index: 1;
+  }
+
+  .badge-item:hover::before {
+    left: 100%;
+    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
+  }
+
+  /* Ensure content stays above the animation */
+  .badge-item > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Active/pressed state with better transitions */
+  .badge-item:active {
+    transform: translateY(-1px) scale(1.01);
+    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Focus state for accessibility */
+  .badge-item:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    transition: outline 0.2s ease;
+  }
+
+  /* Enhanced arrow button styles */
   .badge-arrow-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.3s ease; /* Enhanced transition */
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -107,6 +224,30 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: relative;
     z-index: 2;
+  }
+
+  .badge-arrow-btn:hover {
+    background-color: #2563eb;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .badge-arrow-btn:active {
+    transform: scale(1.05);
+    transition: all 0.1s ease;
+  }
+
+  .badge-arrow-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .badge-arrow-btn:disabled:hover {
+    background-color: #9ca3af;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
   
   .badge-arrow-btn svg {
@@ -126,42 +267,40 @@
     .badge-arrows {
       display: none;
     }
-  }
-  
-  /* Fixed dimensions for badge items */
-  .badge-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    background-color: #EEEEEE;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    height: 64px;
-    min-width: 120px;
-    margin-right: 12px;
-  }
-  
-  /* Fixed dimensions for image container */
-  .badge-image-container {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #f5f5f5;
-    overflow: hidden;
-  }
-  
-  /* Fixed dimensions for image */
-  .badge-image-container img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
+    
+    /* Disable hover effects on mobile to prevent sticky hover */
+    .badge-item:hover {
+      background-color: #EEEEEE;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transform: none;
+      border: none;
+    }
+    
+    .badge-item:hover .badge-image-container {
+      background-color: #f5f5f5;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .badge-item:hover .badge-image-container img {
+      transform: none;
+    }
+    
+    .badge-item:hover span {
+      color: inherit;
+      font-weight: 500;
+      text-shadow: none;
+    }
+    
+    .badge-item::before {
+      display: none;
+    }
+    
+    /* Add a subtle tap effect for mobile */
+    .badge-item:active {
+      background-color: #e0e0e0;
+      transform: scale(0.98);
+    }
   }
   
   /* Responsive container max-width */
@@ -175,6 +314,25 @@
   @media (min-width: 1920px) {
     .badge-container {
       max-width: 1600px !important;
+    }
+  }
+
+  /* Smooth transition for drag prevention */
+  .badge-item.no-pointer-events {
+    pointer-events: none;
+  }
+
+  /* Optional: Add a subtle pulse animation for featured badges */
+  .badge-item.featured {
+    animation: subtle-pulse 3s infinite;
+  }
+
+  @keyframes subtle-pulse {
+    0%, 100% {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    50% {
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
     }
   }
 </style>

@@ -34,7 +34,7 @@ input[type="submit"].modern-filter-button,
   
   /* Typography */
   color: var(--text-color, #323232) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   font-family: inherit !important;
   font-style: normal !important;
@@ -57,9 +57,9 @@ input[type="submit"].modern-filter-button,
   user-select: none !important;
   
   /* Disable animations during load */
-  transition: none !important;
+ 
   transform: none !important;
-  animation: none !important;
+  transition: all .2s ease !important;
   
   /* Remove any shadows or effects */
   box-shadow: none !important;
