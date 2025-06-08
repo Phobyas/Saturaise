@@ -2,6 +2,395 @@
 <link rel="preload" href="{{ 'section-hero-image-with-text.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-hero-image-with-text.css' | asset_url }}"></noscript>
 
+<style>
+  /* Modern Hero Section - Designed to work with existing CSS */
+  
+  /* Main container override */
+  .hero-modern-wrapper {
+    max-width: 1280px;
+    margin: 0 auto 40px auto;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    position: relative;
+  }
+
+  @media (min-width: 1920px) {
+    .hero-modern-wrapper {
+      max-width: 1600px;
+    }
+  }
+
+  /* Grid system that works with your existing classes */
+  .hero-modern-wrapper .grid__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 500px;
+    align-items: stretch;
+    gap: 0;
+    background: #eeeeee;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Text section modern styling */
+  .hero-modern-wrapper .text-section {
+    margin: 48px 40px;
+    background: #eeeeee;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-modern-wrapper .text-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .hero-modern-wrapper .text-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Typography - Modern & Clean */
+  .hero-modern-wrapper h3 {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #323232;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #323232 0%, #1f2937 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-modern-wrapper .rte p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #323232;
+    margin-bottom: 28px;
+    font-weight: 400;
+    opacity: 0.9;
+  }
+
+  .hero-modern-wrapper .rte p strong {
+    color: #323232;
+    font-weight: 700;
+    font-size: 19px;
+  }
+
+  /* Modern button design */
+  .hero-modern-wrapper .btn-contact {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-modern-wrapper .btn-contact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .hero-modern-wrapper .btn-contact:hover::before {
+    left: 100%;
+  }
+
+  .hero-modern-wrapper .btn-contact:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(29, 78, 216, 0.4);
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+  }
+
+  .hero-modern-wrapper .btn-contact:active {
+    transform: translateY(-1px) scale(1.01);
+    transition: all 0.1s ease;
+  }
+
+  /* Map/Image section */
+  .hero-modern-wrapper .image-section {
+    position: relative;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .hero-modern-wrapper .map-container,
+  .hero-modern-wrapper .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .hero-modern-wrapper .image-container img,
+  .hero-modern-wrapper .image-container .placeholder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .hero-modern-wrapper:hover .image-container img {
+    transform: scale(1.05);
+  }
+
+  /* Map styling */
+  .hero-modern-wrapper .leaflet-container {
+    border-radius: 0;
+  }
+
+  .hero-modern-wrapper .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .hero-modern-wrapper .leaflet-popup-content {
+    margin: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #323232;
+  }
+
+  .hero-modern-wrapper .leaflet-control-attribution {
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero-modern-wrapper .leaflet-control-attribution:hover {
+    opacity: 0.9;
+  }
+
+  /* Mobile responsive - Enhanced UX */
+  @media (max-width: 767px) {
+    .hero-modern-wrapper {
+      margin: 0 12px 24px 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-modern-wrapper .grid__wrapper {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      background: #eeeeee;
+    }
+
+    .hero-modern-wrapper .text-section {
+      order: 2;
+      margin: 24px 20px;
+      text-align: center;
+      background: #eeeeee;
+      border-radius: 12px;
+      padding: 24px 16px;
+      
+    }
+
+    .hero-modern-wrapper .text-section::before {
+      display: none;
+    }
+
+    .hero-modern-wrapper .image-section {
+      order: 1;
+      border-radius: 12px 12px 0 0;
+      overflow: hidden;
+    }
+
+    .hero-modern-wrapper h3 {
+      font-size: 24px;
+      line-height: 1.3;
+      margin-bottom: 16px;
+      color: #323232;
+      background: none;
+      -webkit-text-fill-color: #323232;
+      font-weight: 700;
+    }
+
+    .hero-modern-wrapper .rte p {
+      font-size: 15px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      color: #323232;
+      opacity: 0.9;
+    }
+
+    .hero-modern-wrapper .map-container,
+    .hero-modern-wrapper .image-container {
+      min-height: 250px;
+      position: relative;
+    }
+
+    /* Mobile map interaction overlay */
+    .hero-modern-wrapper .map-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: transparent;
+      z-index: 1000;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-modern-wrapper .map-container.map-active::before {
+      display: none;
+    }
+
+    /* Mobile map tap indicator */
+    .hero-modern-wrapper .map-container::after {
+      content: 'Tap to interact with map';
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      z-index: 1001;
+      pointer-events: none;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-modern-wrapper .map-container.map-active::after {
+      opacity: 0;
+    }
+
+    .hero-modern-wrapper .btn-contact {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      min-height: 44px;
+      padding: 12px 24px;
+      font-size: 13px;
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(29, 78, 216, 0.25);
+    }
+
+    .hero-modern-wrapper .btn-contact:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(29, 78, 216, 0.3);
+    }
+
+    /* Better mobile spacing */
+    .hero-modern-wrapper .text-content {
+      max-width: 100%;
+    }
+
+    /* Mobile typography improvements */
+    .hero-modern-wrapper .rte p strong {
+      font-size: 16px;
+      color: #323232;
+    }
+  }
+
+  /* Tablet responsive */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .hero-modern-wrapper {
+      margin: 0 24px 40px 24px;
+    }
+
+    .hero-modern-wrapper .text-section {
+      margin: 40px 32px;
+    }
+
+    .hero-modern-wrapper h3 {
+      font-size: 36px;
+    }
+
+    .hero-modern-wrapper .rte p {
+      font-size: 17px;
+    }
+
+    .hero-modern-wrapper .map-container,
+    .hero-modern-wrapper .image-container {
+      min-height: 450px;
+    }
+  }
+
+  /* Animation states */
+  .hero-modern-wrapper[data-section-loaded="false"] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hero-modern-wrapper[data-section-loaded="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hero-modern-wrapper .animate--text {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hero-modern-wrapper[data-section-loaded="true"] .animate--text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hero-modern-wrapper .animate--text.delay--1 {
+    transition-delay: 0.2s;
+  }
+
+  .hero-modern-wrapper .animate--text.delay--3 {
+    transition-delay: 0.4s;
+  }
+
+  /* Override existing bg-main to prevent conflicts */
+  .hero-modern-wrapper .bg-main {
+    background: transparent !important;
+  }
+
+  /* Ensure no conflicts with existing CSS */
+  .hero-modern-wrapper * {
+    box-sizing: border-box;
+  }
+</style>
+
 {% comment %} Hero image with text logic {% endcomment %}
 {%- liquid
   case section.settings.text_align
@@ -47,51 +436,65 @@
 <div
   class="mb5 global__section section-text-with-image text-with-image-{{ section.id }} {{ section_padding }} {% if section.settings.color_header %}no-section-animation{% endif %} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
-  data-section-loaded="false"
-  data-section-type="hero-image-with-text"
-  data-section-loaded="false">
+  data-section-type="hero-image-with-text">
 
-  <div class="grid__wrapper px-3 md:px-0 bg-main ">
-    <article class="text span-6 auto my-auto pl-3 {{ text_align }} {{ vertical_align }}">
-      <div class="text-with-image">
-        {% if section.settings.title != blank %}
-          <h3 class="mb6 animate--text">{{ section.settings.title | escape }}</h3>
-        {% endif %}
-        {% if section.settings.text != blank %}
-          <div class="rte mb1 animate--text delay--1 px-6 md:pr-8 md:pl-0">{{ section.settings.text }}</div>
-        {% endif %}
-        {% if section.settings.button != blank and section.settings.link != blank %}
-          <a href="{{ section.settings.link }}" class="relative inline-block btn-contact mt4 animate--text transition-colors delay--3">
-            <span class="text-lg">{{ section.settings.button | escape }}</span>
-          </a>
-        {% endif %}
-      </div>
-    </article>
-    <article class="image span-6 auto relative my-12 {{ vertical_align }}">
-      {% if section.settings.use_map %}
-        <div class="map-container" id="map-{{ section.id }}">
-          <!-- Map will be initialized here -->
+  <div class="hero-modern-wrapper" data-section-loaded="false">
+    <div class="grid__wrapper">
+      <div class="text-section {{ text_align }} {{ vertical_align }}">
+        <div class="text-content">
+          {% if section.settings.title != blank %}
+            <h3 class="animate--text">{{ section.settings.title | escape }}</h3>
+          {% endif %}
+          {% if section.settings.text != blank %}
+            <div class="rte animate--text delay--1">{{ section.settings.text }}</div>
+          {% endif %}
+          {% if section.settings.button != blank and section.settings.link != blank %}
+            <a href="{{ section.settings.link }}" class="btn-contact animate--text delay--3">
+              <span>{{ section.settings.button | escape }}</span>
+            </a>
+          {% endif %}
         </div>
-        
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        
-        <script>
+      </div>
+      
+      <div class="image-section {{ vertical_align }}">
+        {% if section.settings.use_map %}
+          <div class="map-container" id="map-{{ section.id }}">
+            <!-- Map will be initialized here -->
+          </div>
+          
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+          
+          <script>
 document.addEventListener('DOMContentLoaded', function() {
   const lat = {{ section.settings.map_latitude | default: 52.2297 }};
   const lng = {{ section.settings.map_longitude | default: 21.0122 }};
   const zoom = {{ section.settings.map_zoom | default: 14 }};
   const title = "{{ section.settings.map_marker_title }}";
   
-  const map = L.map('map-{{ section.id }}').setView([lat, lng], zoom);
+  const mapContainer = document.getElementById('map-{{ section.id }}');
+  const isMobile = window.innerWidth <= 767;
+  
+  // Initialize map with mobile-specific options
+  const mapOptions = {
+    dragging: !isMobile,
+    tap: !isMobile,
+    scrollWheelZoom: !isMobile,
+    doubleClickZoom: true,
+    boxZoom: false,
+    keyboard: false,
+    zoomControl: true
+  };
+  
+  const map = L.map('map-{{ section.id }}', mapOptions).setView([lat, lng], zoom);
   
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
   
-
-  const redIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  // Modern blue marker to match the design
+  const modernIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -99,70 +502,81 @@ document.addEventListener('DOMContentLoaded', function() {
     shadowSize: [41, 41]
   });
   
-
-  const marker = L.marker([lat, lng], {icon: redIcon}).addTo(map);
+  const marker = L.marker([lat, lng], {icon: modernIcon}).addTo(map);
   
- 
   if (title && title.trim() !== '') {
     marker.bindPopup('<strong>' + title + '</strong>').openPopup();
   }
   
-
+  // Mobile tap-to-interact functionality
+  if (isMobile && mapContainer) {
+    mapContainer.addEventListener('click', function() {
+      mapContainer.classList.add('map-active');
+      map.dragging.enable();
+      map.scrollWheelZoom.enable();
+      map.tap.enable();
+      
+      // Re-disable after 30 seconds of inactivity
+      setTimeout(function() {
+        mapContainer.classList.remove('map-active');
+        map.dragging.disable();
+        map.scrollWheelZoom.disable();
+        map.tap.disable();
+      }, 30000);
+    });
+    
+    // Disable interactions when touching outside the map
+    document.addEventListener('touchstart', function(e) {
+      if (!mapContainer.contains(e.target)) {
+        mapContainer.classList.remove('map-active');
+        map.dragging.disable();
+        map.scrollWheelZoom.disable();
+        map.tap.disable();
+      }
+    });
+  }
+  
+  // Mark section as loaded after map initialization
   setTimeout(function() {
     map.invalidateSize();
+    const wrapper = document.querySelector('.hero-modern-wrapper');
+    if (wrapper) {
+      wrapper.setAttribute('data-section-loaded', 'true');
+    }
   }, 100);
 });
-        </script>
-      {% else %}
-        <div class="image-container">
-          {% if section.settings.image == blank %}
-            <div class="demo-1 color-1 placeholder-image">
-              {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-          {% else %}
-            {% render 'helper-image',
-               type: section.settings.image,
-               sm_render: sm_render,
-               md_render: md_render,
-               lg_render: lg_render,
-               loading: loading,
-               fetchpriority: fetch_priority %}
-          {% endif %}
-        </div>
-      {% endif %}
-    </article>
+          </script>
+        {% else %}
+          <div class="image-container">
+            {% if section.settings.image == blank %}
+              <div class="demo-1 color-1 placeholder-image">
+                {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            {% else %}
+              {% render 'helper-image',
+                 type: section.settings.image,
+                 sm_render: sm_render,
+                 md_render: md_render,
+                 lg_render: lg_render,
+                 loading: loading,
+                 fetchpriority: fetch_priority %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
   <style media="screen">
-    .text-with-image-{{ section.id }}.section-text-with-image {
-      background-color: #efefef;
-    }
-    
-    .text-with-image-{{ section.id }}.section-text-with-image p,
-    .text-with-image-{{ section.id }}.section-text-with-image a:not(.btn-border-link) {
-      font-size: {{ section.settings.text_size }}px;
-      color: {{ text_color }};
+    /* Dynamic font size overrides */
+    .text-with-image-{{ section.id }} .hero-modern-wrapper .rte p {
+      font-size: {{ section.settings.text_size }}px !important;
     }
 
-    .text-with-image-{{ section.id }}.section-text-with-image p strong {
-      font-size: 24px;
-    }
-    
-    .text-with-image-{{ section.id }}.section-text-with-image h3 {
-      font-size: {{ section.settings.heading_size }}px;
-      color: {{ text_color }};
+    .text-with-image-{{ section.id }} .hero-modern-wrapper h3 {
+      font-size: {{ section.settings.heading_size }}px !important;
     }
 
-    .text-with-image-{{ section.id }}.section-text-with-image h4{
-      font-size: 18px !important;
-    }
-
-    .text-with-image-{{ section.id }}.section-text-with-image h4 strong {
-       font-size: 24px !important;
-    }
-    
-
-    
     {% if section.settings.color_header %}
       .template-index #shopify-section-header,
       .template-index .section-header__mobile,
@@ -213,6 +627,33 @@ document.addEventListener('DOMContentLoaded', function() {
     {% endif %}
   </style>
 </div>
+
+<script>
+// Initialize section loading animation
+document.addEventListener('DOMContentLoaded', function() {
+  // Mark section as loaded if no map is present
+  {% unless section.settings.use_map %}
+    setTimeout(function() {
+      const wrapper = document.querySelector('.hero-modern-wrapper');
+      if (wrapper) {
+        wrapper.setAttribute('data-section-loaded', 'true');
+      }
+    }, 100);
+  {% endunless %}
+});
+
+// Re-initialize on section reload (theme editor)
+document.addEventListener('shopify:section:load', function(event) {
+  if (event.target.classList.contains('text-with-image-{{ section.id }}')) {
+    setTimeout(function() {
+      const wrapper = event.target.querySelector('.hero-modern-wrapper');
+      if (wrapper) {
+        wrapper.setAttribute('data-section-loaded', 'true');
+      }
+    }, 100);
+  }
+});
+</script>
 
 {% schema %}
 {
@@ -268,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 64
+      "default": 48
     },
     {
       "type": "range",
@@ -278,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "step": 1,
       "unit": "px",
       "label": "Text size",
-      "default": 16
+      "default": 18
     },
     {
       "type": "text",

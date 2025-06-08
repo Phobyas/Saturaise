@@ -3,7 +3,6 @@
   margin: 0px auto 40px auto !important;
   color: var(--background);
   overflow: hidden;
-  background-color: #efefef !important;
 }
 
 @media (min-width: 1920px) {

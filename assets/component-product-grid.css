@@ -47,6 +47,7 @@
 }
 .product-loop__img-wrapper {
   overflow: hidden;
+  border-radius: 12px;
 }
 .product-loop__title,
 .product-title {
@@ -88,7 +89,7 @@
   font-style: normal;
   line-height: 1.57;
   letter-spacing: 1px;
-  text-align: right;
+  text-align: left;
 }
 .product-loop__price span {
   /* font-size: var(--font-size-sm); */

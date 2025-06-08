@@ -219,6 +219,12 @@
   font-size: 24px !important;
 }
 
+@media (min-width: 768px) {
+  .section-heading {
+    font-size: 32px !important;
+  }
+}
+
 .ajax-cart__subtotal,
 .ajax-cart__total,
 .ajax-cart__discounts {
