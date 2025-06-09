@@ -1,147 +1,353 @@
-<form class="ajax-cart__cart-form js-cart-form" action="{{ routes.cart_url }}" method="post">
-  <div class="ajax-cart__cart-items">
-    {% for item in cart.items %}
-      <div class="item_{{ item.id }}-{{ forloop.index }} ajax-cart__cart-item">
-        <!-- Remove Button -->
-        <button type="button" class="ajax-cart__item-remove js-cart-remove pl-2" 
-          data-item-id="{{ item.id }}-{{ forloop.index }}" 
-          data-item-key="{{ item.key }}" 
-          data-line-item="{{ forloop.index }}">
-          {% render 'snip-icons',
-            type: 'theme',
-            icon: 'close',
-            size: '12px',
-            fill: 'currentColor' %}
-        </button>
+{% comment %} Modern Cart Form Snippet {% endcomment %}
+{%- liquid
+  assign cart_item_count = cart.item_count
+  assign cart_subtotal = cart.total_price
+  assign cart_currency = cart.currency.symbol
+-%}
 
-        <!-- Product Image -->
-        <div class="ajax-cart__item-image">
-          <a href="{{ item.url }}" class="ajax-cart__item-image__wrapper">
-            {% if item.image != blank %}
-              {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy' }}
-            {% else %}
-              {{ 'product-1' | placeholder_svg_tag }}
-            {% endif %}
-          </a>
-        </div>
-
-        <!-- Product Details -->
-        <div class="ajax-cart__item-details">
-          <div class="ajax-cart__item-info">
-            <a href="{{ item.url }}" class="ajax-cart__title">{{ item.product.title }}</a>
-            
-            {%- unless item.variant.title contains 'Default' -%}
-              <div class="ajax-cart__variant-info">
-                {% for option in item.product.options %}
-                  Rozmiar: {{ item.variant.options[forloop.index0] }}
-                  {%- unless forloop.last -%}, {% endunless -%}
-                {% endfor %}
-              </div>
-            {%- endunless -%}
-
-            <!-- Price -->
-            <div class="ajax-cart__price">
-              {% if item.original_price != item.final_price %}
-                <s>{{ item.original_price | money }}</s>
-                <span>{{ item.final_price | money }}</span>
+<!-- Modern Cart Form -->
+<form action="{{ routes.cart_url }}" method="post" novalidate class="ajax-cart__cart-form" data-cart-form>
+  
+  {% if cart_item_count == 0 %}
+    <!-- Modern Empty Cart State -->
+    <div class="js-cart-empty">
+      <div style="text-align: center; padding: 60px 20px;">
+        {% render 'snip-icons',
+           wrapper: '.js-cart-empty',
+           type: 'theme',
+           icon: 'cart',
+           size: '48px',
+           classes: 'mb-4',
+           fill: 'var(--cart-text-secondary)',
+           hover: 'var(--cart-text-secondary)' %}
+        <h2 style="font-size: 24px; color: var(--cart-text-color); margin-bottom: 16px; font-weight: 700;">
+          {{ 'cart.general.empty' | t }}
+        </h2>
+        <p style="color: var(--cart-text-secondary); margin-bottom: 24px; font-size: 16px;">
+          {{ 'cart.general.empty_message' | t }}
+        </p>
+        <a href="{{ routes.collections_url }}" class="ajax-cart__view-button" style="display: inline-flex; margin: 0 auto;">
+          {{ 'cart.general.continue_shopping' | t }}
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <!-- Cart Items Container -->
+    <div class="ajax-cart__cart-items">
+      {% for item in cart.items %}
+        <div class="ajax-cart__cart-item item_{{ item.variant_id }}" data-item-key="{{ item.key }}">
+          
+          <!-- Remove Button (positioned absolutely) -->
+          <button type="button" class="ajax-cart__item-remove js-cart-remove" 
+                  data-item-key="{{ item.key }}" 
+                  aria-label="Remove {{ item.product.title | escape }}">
+            {% render 'snip-icons',
+               wrapper: '.ajax-cart__item-remove',
+               type: 'theme',
+               icon: 'close',
+               size: '14px',
+               classes: '',
+               fill: 'currentColor',
+               hover: 'currentColor' %}
+          </button>
+          
+          <!-- Product Image -->
+          <div class="ajax-cart__item-image">
+            <a href="{{ item.product.url }}" class="ajax-cart__item-image__wrapper">
+              {% if item.image %}
+                {{ item.image | image_url: width: 200 | image_tag: 
+                  loading: 'lazy',
+                  alt: item.product.title,
+                  class: 'ajax-cart__item-image-img'
+                }}
               {% else %}
-                <span>{{ item.original_price | money }}</span>
+                {{ 'product-placeholder.svg' | asset_url | image_tag: 
+                  alt: item.product.title,
+                  class: 'ajax-cart__item-image-img'
+                }}
+              {% endif %}
+            </a>
+          </div>
+          
+          <!-- Item Details -->
+          <div class="ajax-cart__item-details">
+            <div class="ajax-cart__item-info">
+              <!-- Product Title -->
+              <a href="{{ item.product.url }}" class="ajax-cart__title">
+                {{ item.product.title | escape }}
+              </a>
+              
+              <!-- Variant Info -->
+              {% unless item.variant.title == 'Default Title' %}
+                <div class="ajax-cart__variant-info">
+                  {{ item.variant.title | escape }}
+                </div>
+              {% endunless %}
+              
+              <!-- Item Properties -->
+              {% for property in item.properties %}
+                {% unless property.last == blank %}
+                  <div class="ajax-cart__variant-info">
+                    {{ property.first }}: {{ property.last }}
+                  </div>
+                {% endunless %}
+              {% endfor %}
+              
+              <!-- Price -->
+              <div class="ajax-cart__price">
+                {% if item.original_price != item.final_price %}
+                  <s>{{ item.original_price | money }}</s>
+                  <span>{{ item.final_price | money }}</span>
+                {% else %}
+                  <span>{{ item.final_price | money }}</span>
+                {% endif %}
+                
+                {% if item.variant.available and item.variant.compare_at_price > item.variant.price %}
+                  <small style="color: var(--cart-text-secondary);">
+                    {{ 'products.product.save' | t }} {{ item.variant.compare_at_price | minus: item.variant.price | money }}
+                  </small>
+                {% endif %}
+              </div>
+            </div>
+            
+            <!-- Quantity Controls -->
+            <div class="ajax-cart__item-quantity-column">
+              <div class="ajax-cart__item-quantity js-item-quantity">
+                <button type="button" 
+                        class="ajax-cart__qty-control--down" 
+                        data-ajax-qty-decrease="{{ item.variant_id }}"
+                        data-item-key="{{ item.key }}"
+                        aria-label="Decrease quantity">
+                  −
+                </button>
+                
+                <input type="number" 
+                       class="ajax-cart__qty-input updates_{{ item.variant_id }}" 
+                       name="updates[]" 
+                       value="{{ item.quantity }}" 
+                       min="0" 
+                       max="{{ item.variant.inventory_quantity }}"
+                       data-item-key="{{ item.key }}"
+                       data-item-qty
+                       data-limit="{{ item.variant.inventory_quantity }}"
+                       aria-label="Quantity for {{ item.product.title | escape }}">
+                
+                <button type="button" 
+                        class="ajax-cart__qty-control--up"
+                        data-ajax-qty-increase="{{ item.variant_id }}"
+                        aria-label="Increase quantity">
+                  +
+                </button>
+              </div>
+              
+              <!-- Remove Link for Cart Page -->
+              {% if template.name == 'cart' %}
+<button type="button" class="ajax-cart__item-remove js-cart-remove" data-item-key="{{ item.key }}" aria-label="Remove {{ item.product.title | escape }}">
+  {% render 'snip-icons',
+     wrapper: '.ajax-cart__item-remove',
+     type: 'theme',
+     icon: 'close',
+     size: '12px',
+     classes: 'vib-center',
+     fill: '#6b7280',
+     hover: 'white' %}
+</button>
               {% endif %}
             </div>
-          </div>
-
-          <!-- Quantity Controls -->
-          <div class="ajax-cart__item-quantity js-item-quantity">
-            <button type="button" 
-              data-ajax-qty-decrease="{{ item.id }}-{{ forloop.index }}"
-              data-item-key="{{ item.key }}"
-              class="downer-{{ item.id }}-{{ forloop.index }} ajax-cart__qty-control--down">
-              −
-            </button>
             
-            <input type="number" 
-              id="updates_{{ item.id }}-{{ forloop.index }}"
-              class="updates_{{ item.id }}-{{ forloop.index }} ajax-cart__qty-input"
-              data-item-qty
-              data-item-id="{{ item.id }}-{{ forloop.index }}"
-              data-item-key="{{ item.key }}"
-              data-item-line="{{ forloop.index }}"
-              name="updates[]"
-              value="{{ item.quantity }}"
-              min="0"
-              data-limit="{{ item.variant.inventory_quantity }}" />
-            
-            <button type="button"
-              data-ajax-qty-increase="{{ item.id }}-{{ forloop.index }}"
-              class="up-{{ item.id }}-{{ forloop.index }} ajax-cart__qty-control--up">
-              +
-            </button>
+            <!-- Line Price (for cart page) -->
+            {% if template.name == 'cart' %}
+              <div class="ajax-cart__line-price">
+                {% if item.original_line_price != item.final_line_price %}
+                  <s>{{ item.original_line_price | money }}</s>
+                  <span>{{ item.final_line_price | money }}</span>
+                {% else %}
+                  {{ item.final_line_price | money }}
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
-
-  <div class="ajax-cart__summary-wrapper {% if cart.item_count < 1 %}hide{% endif %} js-cart-summary">
-    <div class="ajax-cart__final-details">
-      <div class="ajax-cart__subtotal">
-        <span>{{ 'cart.general.subtotal' | t }}<span class="js-cart-count">{{ cart.item_count }}</span></span>
-        {% comment %} <span class="js-cart-subtotal">{{ cart.items_subtotal_price | money }}</span> {% endcomment %}
-      </div>
-
-      {% if cart.cart_level_discount_applications != blank %}
-        <div class="ajax-cart__discounts">
-          {% for discount in cart.cart_level_discount_applications %}
-            <span>{{ discount.title }}</span>
-            <span>-{{ discount.total_allocated_amount | money }}</span>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      <div class="ajax-cart__total">
-        <span>{{ 'cart.general.total' | t }}</span>
-        <span>{{ cart.total_price | money }}</span>
-      </div>
-    </div>
-
-    <div class="ajax-cart__buttons">
-      <button type="submit" name="checkout" class="ajax-cart__checkout-button">
-        {{ 'cart.general.checkout' | t }}
-      </button>
-      
-      {% comment %}
-      Only show the "Sprawdź koszyk" button in the mini-cart drawer,
-      not on the cart page.
-      {% endcomment %}
-      
-      {% if template != 'cart' %}
-        <a href="/cart" class="mt-4 ajax-cart__view-button">
-          Sprawdź koszyk
-        </a>
-      {% endif %}
+      {% endfor %}
     </div>
     
-    <!-- No additional checkout buttons here - they will be added in main-cart.liquid -->
-  </div>
+    <!-- Modern Cart Summary -->
+    <div class="ajax-cart__summary-wrapper">
+      <!-- Cart Totals -->
+      <div class="ajax-cart__final-details">
+        
+        <!-- Subtotal -->
+<div class="ajax-cart__subtotal">
+  <span>Liczba produktów:</span>
+  <span class="js-cart-count">{{ cart.item_count }}</span>
+</div>
+        
+        <!-- Cart Discounts -->
+        {% if cart.cart_level_discount_applications.size > 0 %}
+          {% for discount_application in cart.cart_level_discount_applications %}
+            <div class="ajax-cart__discounts">
+              <span>{{ discount_application.title }}</span>
+              <span>-{{ discount_application.total_allocated_amount | money }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+        <!-- Shipping Notice -->
+        <div class="ajax-cart__shipping-notice" style="font-size: 14px; color: var(--cart-text-secondary); margin-top: 8px; font-weight: 700;">
+          {{ 'cart.general.shipping_notice' | t }}
+        </div>
+        
+        <!-- Total -->
+        <div class="ajax-cart__total">
+          <span>{{ 'cart.general.total' | t }}</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+      </div>
+      
+      <!-- Cart Note -->
+      {% if settings.cart_notes_enable %}
+        <div class="ajax-cart__info-wrapper">
+          <label for="cart-note" style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--cart-text-color);">
+            {{ 'cart.general.note' | t }}
+          </label>
+          <textarea name="note" 
+                    id="cart-note" 
+                    class="js-cart-note" 
+                    placeholder="{{ 'cart.general.note_placeholder' | t }}">{{ cart.note }}</textarea>
+        </div>
+      {% endif %}
+      
+      <!-- Action Buttons -->
+      <div class="ajax-cart__buttons">
+        <!-- Checkout Button -->
+        <button type="submit" 
+                name="add" 
+                class="ajax-cart__checkout-button" 
+                formaction="{{ routes.cart_url }}/checkout">
+          {{ 'cart.general.checkout' | t }}
+        </button>
+        
+        <!-- View Cart Button (added via JavaScript for drawer) -->
+      </div>
+      
+      <!-- Additional Checkout Buttons -->
+      {% if additional_checkout_buttons and settings.show_additional_buttons %}
+        <div class="ajax-cart__additional-buttons js-additional-checkout-buttons" style="margin-top: 16px;">
+          {{ content_for_additional_checkout_buttons }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 </form>
 
-<style>
-  /* Hide the View Cart button if we're on the cart page */
-  .cart-page .ajax-cart__view-button {
-    display: none !important;
+<!-- Modern Cart Form Enhancements -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Enhanced quantity input validation
+  const qtyInputs = document.querySelectorAll('.ajax-cart__qty-input');
+  qtyInputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const value = parseInt(this.value);
+      const max = parseInt(this.dataset.limit) || 999;
+      
+      if (value > max) {
+        this.value = max;
+        // Show quantity limit message
+        showQuantityMessage(this, 'Quantity limit reached');
+      } else if (value < 0) {
+        this.value = 0;
+      }
+    });
+    
+    // Add focus/blur animations
+    input.addEventListener('focus', function() {
+      this.closest('.ajax-cart__item-quantity').style.transform = 'scale(1.05)';
+      this.closest('.ajax-cart__item-quantity').style.boxShadow = '0 0 0 3px rgba(29, 78, 216, 0.1)';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.closest('.ajax-cart__item-quantity').style.transform = 'scale(1)';
+      this.closest('.ajax-cart__item-quantity').style.boxShadow = '';
+    });
+  });
+  
+  // Enhanced button interactions
+  const qtyButtons = document.querySelectorAll('.ajax-cart__qty-control--down, .ajax-cart__qty-control--up');
+  qtyButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 100);
+    });
+  });
+  
+  // Show quantity messages
+  function showQuantityMessage(input, message) {
+    // Remove existing message
+    const existingMessage = input.closest('.ajax-cart__cart-item').querySelector('.qty-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    // Create new message
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'qty-message';
+    messageDiv.style.cssText = `
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ef4444;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 100;
+      animation: fadeInOut 3s ease;
+    `;
+    messageDiv.textContent = message;
+    
+    // Add CSS animation
+    if (!document.querySelector('#qty-message-styles')) {
+      const style = document.createElement('style');
+      style.id = 'qty-message-styles';
+      style.textContent = `
+        @keyframes fadeInOut {
+          0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+          10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Position relative to quantity control
+    const qtyContainer = input.closest('.ajax-cart__item-quantity');
+    qtyContainer.style.position = 'relative';
+    qtyContainer.appendChild(messageDiv);
+    
+    // Remove message after animation
+    setTimeout(() => {
+      if (messageDiv.parentNode) {
+        messageDiv.remove();
+      }
+    }, 3000);
   }
   
-  /* Wallet button styling */
-  .ajax-cart__footer-wrapper .wallet-cart-button-container {
-    width: 50% !important;
-    display: inline-block !important;
+  // Enhanced cart note functionality
+  const cartNote = document.querySelector('.js-cart-note');
+  if (cartNote) {
+    cartNote.addEventListener('focus', function() {
+      this.style.borderColor = '#1d4ed8';
+      this.style.boxShadow = '0 0 0 3px rgba(29, 78, 216, 0.1)';
+    });
+    
+    cartNote.addEventListener('blur', function() {
+      this.style.borderColor = '#e5e7eb';
+      this.style.boxShadow = '';
+    });
   }
-  
-  .ajax-cart__footer-wrapper .wallet-cart-button {
-    width: 100% !important;
-  }
-  
-  .ajax-cart__footer-wrapper .wallet-cart-grid {
-    justify-content: center !important;
-  }
-</style>
+});
+</script>

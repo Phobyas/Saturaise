@@ -124,6 +124,7 @@
   },
   "cart": {
     "general": {
+      "shipping_notice": "Darmowa wysyłka!",
       "title": "Koszyk",
       "close_cart": "Zamknij koszyk",
       "empty_title": "Czy o czymś zapomniałeś?",

@@ -1,99 +1,960 @@
-{% comment %} Cart Assets {% endcomment %}
-<link rel="preload" href="{{ 'section-main-cart.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'section-main-cart.css' | asset_url }}"></noscript>
-
-{% comment %} Mini Cart Logic {% endcomment %}
 {%- liquid
-  if settings.cart_type == 'drawer'
-    assign cart_type_class = 'ajax-cart__drawer-wrapper'
-    assign cart_class = 'js-slideout-close'
-    assign cart_data = 'data-slideout-direction="right" aria-controls="slideout-ajax-cart"'
-  elsif settings.cart_type == 'modal_cart'
-    assign cart_type_class = 'ajax-cart__modal-wrapper'
-    assign cart_class = 'js-modal-close'
-    assign cart_data = 'aria-controls="modal-ajax-cart"'
+  # Dynamic color scheme configuration
+  assign text_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-text)'
+  assign bg_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-bg)'
+  assign hover_color = 'var(--scheme-' | append: section.settings.mobile_nav_scheme | append: '-hover)'
+
+  # Header layout determination
+  if section.settings.header_layout == 'logo_left'
+   assign mob_lay = 'left'
+  else
+   assign mob_lay = 'right'
+  endif
+
+  # Sticky header configuration
+  if section.settings.enable_sticky
+    assign sticky = 'stickynav'
+    assign sticky_js = 'js-stickynav'
   endif
 -%}
- 
 
-{% comment %} Mini Cart template {% endcomment %}
-<section id="mini-cart"
-class=" mini-cart__container js-mini-cart-wrapper {{ cart_type_class }} max-h-[100vh] py5 additional-buttons--{% if additional_checkout_buttons and settings.show_additional_buttons %}true{% else %}false{% endif %}"
-data-ajax-cart-mini>
-  <div class="loading-wrapper js-mini-cart-loader no-js-hidden">
-    <div class="loading-ripple"><div></div><div></div></div>
-  </div>
-  <div class="ajax-cart__header-wrapper grid__wrapper px-3" style="width: auto; max-width: 600px; margin: 0 auto;">
-    <div class="span-8 sm-span-8 auto a-left v-start">
-      <p class="py2 mb0 lh1 h3 cart-title">{{ 'cart.general.title' | t }}</p>
-    </div>
-    <div class="span-4 sm-span-4 auto a-right v-start">
-      <div class="py1 slideout__trigger--close" style="display: flex; justify-content: flex-end; padding: 0 !important;">
-        <button class="slideout__trigger-ajax-cart {{ cart_class }} btn-as-link lh1" {{ cart_data }} aria-label="Close cart" tabindex="0" type="button" name="button">
-          {% render 'snip-icons',
-             wrapper: '.slideout__trigger-ajax-cart',
+{% comment %} Mobile Header Assets {% endcomment %}
+<link rel="preload" href="{{ 'section-mobile-navigation.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-accordions.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-accordions.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-slideouts.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-slideouts.css' | asset_url }}"></noscript>
+<link rel="preload" href="{{ 'component-modals.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'component-modals.css' | asset_url }}"></noscript>
+
+{% style %}
+  .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo {
+    font-size: {{ section.settings.logo_size }}px !important;
+    word-break: break-word;
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight);
+  }
+  .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+    max-width: {{ section.settings.logo_max_width }}% !important;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__img-logo {
+       max-width: 80% !important;
+    }
+  }
+
+  #mobile-slideout {
+    background-color: {{ bg_color }};
+    z-index: 15;
+  }
+
+  .mobile-nav__img-wrapper{
+    width: 60% !important;
+  }
+  
+  /* Mobile Logo CLS prevention */
+  .mobile-nav__logo-wrapper a img.logo-image-mobile {
+    max-width: {{ section.settings.logo_max_width }}%;
+    height: auto;
+    aspect-ratio: 500/101;
+    object-fit: contain;
+  }
+  
+  .site-logo.mobile-nav__logo-wrapper {
+    min-height: 50px;
+    contain: layout;
+    display: flex;
+    align-items: center;
+  }
+  
+  .site-logo.mobile-nav__logo-wrapper a {
+    display: block;
+    width: {{ section.settings.logo_max_width }}%;
+  }
+
+  /* Mobile search positioning fixes */
+  #mobile-search {
+    position: fixed !important;
+    top: calc(var(--header-height, 66px) + var(--announcement-bar-height, 0px)) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 998 !important;
+    background: {{ bg_color }} !important;
+    padding: 20px 12px !important;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  #mobile-search.mobile-search--visible {
+    display: block !important;
+  }
+  
+  .mobile-search-backdrop {
+    position: fixed !important;
+    top: calc(var(--header-height, 66px) + var(--announcement-bar-height, 0px) + 60px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 997 !important;
+    display: none;
+  }
+  
+  .mobile-search-backdrop.is-active {
+    display: block !important;
+  }
+  
+  /* When announcement bar is hidden, adjust search position */
+  .mobile-nav__mobile-header.announcement-hidden ~ #mobile-search {
+    top: var(--header-height, 66px) !important;
+  }
+  
+  .mobile-nav__mobile-header.announcement-hidden ~ .mobile-search-backdrop {
+    top: calc(var(--header-height, 66px) + 60px) !important;
+  }
+  
+  .section-header__mobile_search--form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid {{ text_color }};
+    border-radius: 9999px;
+    padding: 0 10px;
+    margin: 0;
+  }
+  
+  .section-header__mobile_search--input {
+    flex: 1;
+    border: none;
+    padding: 15px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    background: transparent;
+    color: {{ text_color }};
+    width: 100% !important;
+  }
+  
+  .section-header__mobile_search--submit {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* CLS Fixes - Icon Dimensions */
+  .mobile-header__cart-links--search,
+  .mobile-header__cart-links--cart,
+  .mobile-header__cart-links--nav {
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+  }
+  
+  /* No animations for icons - prevent CLS */
+  .js-mobile-search-toggle svg,
+  .js-mobile-search-toggle,
+  .slideout__trigger-mobile-menu svg,
+  .mobile-header__cart-links--cart svg {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Prevent any button transformations on click */
+  button.btn-as-link:active,
+  button.btn-as-link:focus,
+  button.btn-as-link:hover {
+    transform: none !important;
+  }
+  
+  /* Set fixed icon sizes */
+  svg .hover-fill {
+    transition: fill 0.2s !important;
+    transform: none !important;
+  }
+
+/* Mobile Social Icons Styles - Delayed show, instant hide */
+.mobile-social-icons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background-color: {{ bg_color }};
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%); /* Slides from left */
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; /* No delay by default (for hiding) */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Show social icons ONLY when mobile navigation is specifically open */
+body.mobile-nav-open .mobile-social-icons {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition: opacity 0.3s ease 0.6s, visibility 0.3s ease 0.6s, transform 0.3s ease 0.6s; /* 0.6s delay for showing */
+}
+
+.mobile-social-icons .social-icons-list {
+  display: flex;
+  align-items: center;
+  justify-content: left; 
+}
+
+.mobile-social-icons a {
+  display: inline-block;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.mobile-social-icons a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.mobile-social-icons svg {
+  width: 28px;
+  height: 28px;
+}
+
+.mobile-social-icons svg .hover-fill {
+  fill: {{ text_color }};
+  transition: fill 0.2s ease;
+}
+
+.mobile-social-icons svg:hover .hover-fill {
+  fill: {{ hover_color }};
+}
+
+/* Add padding to slideout content to prevent overlap with fixed social icons - ONLY for mobile nav */
+body.mobile-nav-open .mobile-nav__wrapper {
+  padding-bottom: 80px;
+}
+
+/* Ensure social icons stay above everything but don't affect layout when hidden */
+#mobile-slideout .mobile-social-icons {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* Prevent any layout shifts by ensuring social icons don't affect document flow */
+.mobile-social-icons {
+  pointer-events: none;
+}
+
+/* Only enable pointer events when mobile nav is open */
+body.mobile-nav-open .mobile-social-icons {
+  pointer-events: auto;
+}
+{% endstyle %}
+
+{% comment %} Mobile Header {% endcomment %}
+<section
+  class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide l0 z5 js-mobile-header relative z-50"
+  data-section-id="{{ section.id }}"
+  data-asset-url="{{ 'section-mobile-navigation.js' | asset_url }}"
+  data-asset-preload="true"
+  data-section-type="mobile-header">
+  {%- capture mobile_cart_link -%}
+    <li class="mobile-header__cart-links--search mr-3">
+      <button class="js-mobile-search-toggle btn-as-link" aria-label="Toggle search" type="button">
+        {% render 'saturaise-icons',
+           wrapper: '.mobile-header__cart-links--search',
+           type: 'theme',
+           icon: 'search',
+           size: '24px',
+           classes: 'mt0 mr2 mb0 ml0',
+           fill: text_color,
+           hover: hover_color %}
+      </button>
+    </li>
+    <li class="mobile-header__cart-links--cart cart-link relative">
+      {%- liquid
+        if settings.cart_type == 'drawer'
+          assign cart_classes = 'js-slideout-open'
+          assign cart_settings = 'data-wau-slideout-target="ajax-cart" data-slideout-direction="right"'
+        elsif settings.cart_type == 'modal_cart'
+          assign cart_classes = 'js-modal-open'
+          assign cart_settings = 'data-wau-modal-target="ajax-cart"'
+        endif
+      -%}
+      <div class="slideout__trigger--open lh0 cart-trigger-wrapper">
+        <a class="js-mini-cart-trigger {{ cart_classes }}"
+          {{ cart_settings }}
+          aria-label="Open cart"
+          href="{{ routes.cart_url }}">
+          {% render 'saturaise-icons',
+             wrapper: '.mobile-header__cart-links--cart',
              type: 'theme',
-             icon: 'close',
-             size: '16px',
-             classes: 'vib-center',
-             fill: 'var(--text-color)',
-             hover: 'var(--text-color)' %}
-        </button>
+             icon: 'cart',
+             size: '32px',
+             classes: 'cart-icon',
+             fill: text_color,
+             hover: hover_color %}
+          <span class="js-cart-count cart-count-bubble">{{ cart.item_count }}</span>
+        </a>
       </div>
+    </li>
+   {%- endcapture -%}
+  {%- capture mobile_nav_link -%}
+    <li class="mobile-header__cart-links--nav relative">
+      <div class="slideout__trigger--open mobile-header--open">
+        <button class="slideout__trigger-mobile-menu js-slideout-open btn-as-link" 
+        data-wau-slideout-target="mobile-navigation" 
+        data-slideout-direction="top" 
+        aria-label="Open navigation" 
+        type="button">
+        {% render 'saturaise-icons',
+           type: 'theme',
+           icon: 'menu-new',
+           size: '32px',
+           classes: 'mt0 mr0 mb0 ml0',
+           fill: 'var(--header-text)',
+           hover: 'var(--header-hover)' %}
+      </button>
+      </div>
+    </li>
+  {%- endcapture -%}
+  <article id="mobile-menu" class="grid__wrapper mb-1 px-4">
+    {%- if section.settings.header_layout == 'logo_left' -%}
+      <div class="site-logo mobile-nav__logo-wrapper span-8 md-span-8 sm-span-8 auto a-left v-center shrink-wrap">
+        {% if section.settings.logo != blank %}
+          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
+            {{ section.settings.logo | image_url: width: 500 | image_tag: 
+              loading: 'eager', 
+              fetchpriority: 'high',
+              width: 500, 
+              height: 101,
+              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
+              style: 'aspect-ratio: 500/101;'
+            }}
+          </a>
+        {% else %}
+          <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
+        {% endif %}
+      </div>
+      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 inline-block ">
+       {{ mobile_cart_link }}
+       {{ mobile_nav_link }}
+      </ul>
+    {%- else -%}
+      <ul class="span-4 md-span-4 sm-span-4 auto a-left v-center list-style-none mb0 inline-block">
+        {{ mobile_nav_link }}
+      </ul>
+      <div class="site-logo mobile-nav__logo-wrapper span-4 md-span-4 sm-span-4 auto a-center v-center shrink-wrap">
+        {% if section.settings.logo != blank %}
+          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
+            {{ section.settings.logo | image_url: width: 500 | image_tag: 
+              loading: 'eager', 
+              fetchpriority: 'high',
+              width: 500, 
+              height: 101,
+              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
+              style: 'aspect-ratio: 500/101;'
+            }}
+          </a>
+        {% else %}
+          <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
+        {% endif %}
+      </div>
+      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 flex justify-end">
+        {{ mobile_cart_link }}
+      </ul>
+    {%- endif -%}
+  </article>
+</section>
+<div class="clear js-clear-element"></div>
+
+{% comment %} Mobile Search {% endcomment %}
+{%- if section.settings.show_searchbox -%}
+  {%- unless template contains 'search' -%}
+    <section id="mobile-search" class="grid__wrapper narrow lg-hide relative">
+      <form class="section-header__mobile_search--form span-12 auto" action="{{ routes.search_url }}" method="get" role="search">
+        <input
+          class="section-header__mobile_search--input mb0 no-bg-color"
+          type="text"
+          name="q"
+          placeholder="{{ 'general.search.placeholder' | t }}"
+          aria-label="{{ 'general.search.placeholder' | t }}"/>
+        <button type="submit" class="button btn-as-link section-header__mobile_search--submit">
+          {% render 'saturaise-icons',
+             wrapper: '.section-header__mobile_search--submit',
+             type: 'theme',
+             icon: 'search',
+             size: '16px',
+             classes: 'mr0',
+             fill: text_color,
+             hover: hover_color %}
+        </button>
+      </form>
+    </section>
+    <div class="mobile-search-backdrop"></div>
+  {%- endunless -%}
+{%- endif -%}
+
+{% comment %} Mobile Navigation Slideout {% endcomment %}
+<aside id="mobile-slideout" class="slideout slideout__drawer-left" data-wau-overlay="false" data-wau-slideout="mobile-navigation" id="slideout-mobile-navigation">
+  <div class="slideout__trigger--close mobile-header--close">
+    <div class="flex px-6">
+    {% if section.settings.menu_image != blank %}
+      <div class="grid__wrapper pt-12 pb-2 mt-3">
+        <div class="mobile-nav__img-wrapper span-6 auto relative">
+          {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
+            {% render 'helper-image',
+             type: section.settings.menu_image,
+             sm_render: '360px'
+             md_render: '360px',
+             lg_render: '360px' %}
+            {%- if section.settings.menu_image_text -%}
+              <p class="h2 absolute-center">{{ section.settings.menu_image_text }}</p>
+            {%- endif -%}
+          {%- if section.settings.menu_image_url -%}</a>{%- endif -%}
+        </div>
+      </div>
+      
+      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  mt-12" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
+        {% render 'snip-icons',
+           wrapper: '.section-header__mobile',
+           type: 'theme',
+           icon: 'close',
+           size: '18px',
+           classes: 'mt0 mr0 mb0 ml0',
+           fill: 'var(--header-text)',
+           hover: 'var(--header-hover)' %}
+      </button>
+    {% endif %}
     </div>
   </div>
+  <div
+  class="mobile-nav__wrapper no-section-animation">
+    <div class="mobile-nav__menu-blocks pt0">
+      {% if section.settings.main_nav != blank %}
+        <div class="mobile-nav__mobile-menu-wrapper px6">
+          {% assign unique_id = section.id | slice: 0, 7 %}
+          {% assign mobile_menu_allow_multiple = false %}
 
-  <div class="ajax-cart__form-wrapper cart-wrapper js-ajax-cart-content">
-    <!-- This is where the cart-form.liquid content is loaded -->
+          <ul class="js-accordion js-accordion-mobile-nav m c-accordion c-accordion--mobile-nav c-accordion--outer__wrapper c-accordion--{{ unique_id }}"
+            id="c-accordion--mobile"
+            {% if mobile_menu_allow_multiple %}data-accordion-allow-multiple{% endif %}>
+
+          {% assign menu = linklists[section.settings.main_nav] %}
+
+          {%- render 'snip-linklist', menu: menu, text_color: text_color, hover_color: hover_color -%}
+
+          {% if shop.customer_accounts_enabled %}
+            <hr class="links--divider mt4 mb4">
+            {% if customer %}
+              <li class="c-accordion__top-level">
+                <a class="js-accordion-link c-accordion__link mb0" href="{{ routes.account_url }}">
+                  {{ 'general.header.account' | t }}
+                </a>
+              </li>
+              <li class="c-accordion__top-level">
+                <a class="js-accordion-link c-accordion__link mb0" href="{{ routes.account_logout_url }}">
+                  {{ 'general.header.logout' | t }}
+                </a>
+              </li>
+            {% else %}
+              <li class="c-accordion__top-level">
+                <a class="js-accordion-link c-accordion__link mb0" href="{{ routes.account_login_url }}">{{ 'general.header.login' | t }}</a>
+              </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+
+        </div>
+      {% endif %}
+    </div>
+
+    
   </div>
   
-  <!-- Make sure "Sprawdź koszyk" button appears in drawer by adding it directly -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function addViewCartButton() {
-        // Check if we're on the cart page (don't add button on cart page)
-        if (window.location.pathname === '/cart') {
-          return;
-        }
-        
-        // Find the checkout button within the drawer
-        const checkoutButtons = document.querySelectorAll('.ajax-cart__checkout-button');
-        if (checkoutButtons.length > 0) {
-          // For each checkout button, check if it needs a "View Cart" button after it
-          checkoutButtons.forEach(checkoutBtn => {
-            // Only proceed if we're in the drawer (not on cart page)
-            if (document.querySelector('#mini-cart') && 
-                checkoutBtn.closest('.ajax-cart__buttons') &&
-                !checkoutBtn.nextElementSibling ||
-                !checkoutBtn.nextElementSibling.classList.contains('ajax-cart__view-button')) {
-              
-              // Create the "View Cart" button
-              const viewCartBtn = document.createElement('a');
-              viewCartBtn.href = '/cart';
-              viewCartBtn.className = 'mt-4 ajax-cart__view-button';
-              viewCartBtn.textContent = 'Sprawdź koszyk';
-              
-              // Insert after the checkout button
-              checkoutBtn.parentNode.appendChild(viewCartBtn);
-            }
-          });
-        }
+    {% style %}
+      #slideout-mobile-navigation,
+      #slideout-mobile-navigation .mobile-nav__mobile-header,
+      .mobile-nav__wrapper .c-accordion__second-level-wrapper {
+        background-color: {{ bg_color }} !important;
       }
+      body.slideout-mobile-navigation--open .section-header__mobile,
+      body.slideout-mobile-navigation--open #mobile-search {
+        background-color: {{ bg_color }} !important;
+      }
+
+      #slideout-mobile-navigation .mobile-nav__mobile-header svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile_search--form svg .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg .hover-fill {
+        fill: {{ text_color }} !important;
+      }
+
+      .section-header__mobile_search--form {
+        border-color: {{ text_color }} !important;
+      }
+
+      #slideout-mobile-navigation .mobile-nav__mobile-header svg:hover .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .section-header__mobile svg:hover .hover-fill,
+      .slideout-mobile-navigation--open #shopify-section-mobile-header .mobile-nav__mobile-header svg:hover .hover-fill {
+        fill: {{ hover_color }} !important;
+      }
+
+      .mobile-nav__wrapper input::placeholder,
+      .slideout-mobile-navigation--open .section-header__mobile_search--input::placeholder  {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper input:-ms-input-placeholder {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper input::-ms-input-placeholder {
+        color: {{ text_color }} !important;
+        opacity: 1;
+      }
+
+      .mobile-nav__wrapper .mobile-nav__logo-wrapper a,
+      .mobile-nav__wrapper .c-accordion__link,
+      .slideout-mobile-navigation--open .mobile-nav__mobile-header .mobile-nav__logo-wrapper a.mobile-nav__text-logo,
+      .slideout-mobile-navigation--open .section-header__mobile_search--input {
+        color: {{ text_color }} !important;
+      }
+
+      .slideout-mobile-navigation--open .mobile-header__cart-links--cart a {
+        color: {{ bg_color }} !important;
+      }
+      .mobile-nav__wrapper .c-accordion__top-level  {
+        border-bottom: 2px solid #ccc !important;
+      }
+
+      .mobile-nav__wrapper .c-accordion.c-accordion--mobile-nav li:not(.c-accordion__panel),
+      .slideout-mobile-navigation--open .section-header__mobile_search--input {
+        border-color: {{ text_color }};
+        text-transform: uppercase;
+      }
+      .mobile-nav__wrapper .c-accordion__link:hover {
+        color: {{ hover_color }} !important;
+      }
+    {% endstyle %}
+
+    
+  </div>
+  {% comment %} Social Media Icons Section {% endcomment %}
+    {%- assign has_social_links = false -%}
+    {%- if settings.facebook_url != blank or settings.twittername != blank or settings.pinterest_url != blank or settings.youtube_url != blank or settings.linkedin_url != blank or settings.instagram != blank or settings.tiktok != blank or settings.etsy != blank -%}
+      {%- assign has_social_links = true -%}
+    {%- endif -%}
+    
+    {%- if section.settings.show_social_icons and has_social_links -%}
+      <div class="mobile-social-icons">
+        <div class="social-icons-list">
+          {% if settings.facebook_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.facebook_url }}" title="Facebook" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'facebook',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.twittername != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.twittername }}" title="Twitter" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'twitter',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.pinterest_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.pinterest_url }}" title="Pinterest" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'pinterest',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.youtube_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.youtube_url }}" title="Youtube" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'youtube',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.linkedin_url != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.linkedin_url }}" title="Linkedin" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'linkedin',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.instagram != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.instagram }}" title="Instagram" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'instagram',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.tiktok != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.tiktok }}" title="Tiktok" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'tiktok',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+          {% if settings.etsy != blank %}
+            <a class="inline-block v-center mt0 mr3 mb0 ml0" href="{{ settings.etsy }}" title="Etsy" target="_blank" rel="noopener">
+              {% render 'snip-icons',
+                 wrapper: '.mobile-social-icons',
+                 type: 'social',
+                 icon: 'etsy',
+                 size: '20px',
+                 classes: 'm0 p0',
+                 fill: text_color,
+                 hover: hover_color %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {%- endif -%}
+
+  
+</aside>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize fixed sizes to prevent CLS
+  document.documentElement.style.setProperty('--header-mobile-height', '66px');
+  document.documentElement.style.setProperty('--header-height', '66px');
+  
+  // Fix dimensions for icon containers
+  const iconContainers = document.querySelectorAll(
+    '.mobile-header__cart-links--search, .mobile-header__cart-links--cart, .mobile-header__cart-links--nav'
+  );
+  
+  iconContainers.forEach(container => {
+    if (container) {
+      container.style.width = '32px';
+      container.style.height = '32px';
+    }
+  });
+  
+  // Disable search icon animations
+  const searchButtons = document.querySelectorAll('.js-mobile-search-toggle');
+  searchButtons.forEach(button => {
+    button.style.transform = 'none';
+    button.style.transition = 'none';
+  });
+  
+  // Menu item animations
+  const menuItems = document.querySelectorAll('.c-accordion__top-level');
+  menuItems.forEach((item, index) => {
+    item.style.setProperty('--item-index', index);
+  });
+  
+  // Mobile navigation specific slideout handling
+  const mobileNavTriggers = document.querySelectorAll('[data-wau-slideout-target="mobile-navigation"]');
+  const mobileSlideout = document.getElementById('mobile-slideout');
+
+  mobileNavTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      document.body.classList.add('mobile-nav-open');
+    });
+  });
+
+  // Mobile navigation close buttons - be specific to mobile nav only
+  const mobileNavCloseButtons = document.querySelectorAll('#mobile-slideout .js-slideout-close');
+  mobileNavCloseButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      document.body.classList.remove('mobile-nav-open');
+    });
+  });
+
+  // Cart drawer handling - ensure it closes mobile nav
+  const cartTriggers = document.querySelectorAll('[data-wau-slideout-target="ajax-cart"], .js-mini-cart-trigger');
+  cartTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      // Close mobile nav when cart opens
+      document.body.classList.remove('mobile-nav-open');
+    });
+  });
+
+  // Listen for other slideouts and ensure they don't affect mobile nav state
+  const otherSlideoutTriggers = document.querySelectorAll('.js-slideout-open:not([data-wau-slideout-target="mobile-navigation"])');
+  otherSlideoutTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      // Close mobile nav when other slideouts open
+      document.body.classList.remove('mobile-nav-open');
+    });
+  });
+  
+  // Mobile search handling
+  const searchToggle = document.querySelector('.js-mobile-search-toggle');
+  const mobileSearch = document.getElementById('mobile-search');
+  const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+  const backdrop = document.querySelector('.mobile-search-backdrop');
+  
+  if (searchToggle && mobileSearch && backdrop) {
+    searchToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       
-      // Initial check
-      addViewCartButton();
+      mobileSearch.classList.toggle('mobile-search--visible');
+      backdrop.classList.toggle('is-active');
       
-      // Set up observer to watch for cart content changes
-      const observer = new MutationObserver(addViewCartButton);
-      
-      // Target the cart content area
-      const cartContent = document.querySelector('.js-ajax-cart-content');
-      if (cartContent) {
-        observer.observe(cartContent, { 
-          childList: true,
-          subtree: true 
-        });
+      if (mobileSearch.classList.contains('mobile-search--visible')) {
+        // Focus search input
+        const searchInput = mobileSearch.querySelector('.section-header__mobile_search--input');
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 50);
+        }
       }
     });
-  </script>
-</section>
+    
+    // Close search when clicking backdrop
+    backdrop.addEventListener('click', function() {
+      mobileSearch.classList.remove('mobile-search--visible');
+      backdrop.classList.remove('is-active');
+    });
+    
+    // Close search on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileSearch.classList.contains('mobile-search--visible')) {
+        mobileSearch.classList.remove('mobile-search--visible');
+        backdrop.classList.remove('is-active');
+      }
+    });
+  }
+  
+  // Update search position on scroll to keep it below header
+  let lastScrollTop = 0;
+  window.addEventListener('scroll', function() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+    const mobileSearch = document.getElementById('mobile-search');
+    const backdrop = document.querySelector('.mobile-search-backdrop');
+    
+    if (mobileSearch && mobileSearch.classList.contains('mobile-search--visible')) {
+      if (mobileHeader && mobileHeader.classList.contains('announcement-hidden')) {
+        mobileSearch.style.top = `${mobileHeader.offsetHeight}px`;
+        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + 60}px`;
+      } else {
+        const announcementHeight = document.querySelector('.announcement-bar.wrapper')?.offsetHeight || 0;
+        mobileSearch.style.top = `${mobileHeader.offsetHeight + announcementHeight}px`;
+        if (backdrop) backdrop.style.top = `${mobileHeader.offsetHeight + announcementHeight + 60}px`;
+      }
+    }
+    
+    lastScrollTop = currentScrollTop;
+  }, { passive: true });
+  
+  // Set initial CSS variables for fixed dimensions
+  const setHeaderDimensions = function() {
+    const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
+    const announcementBar = document.querySelector('.announcement-bar.wrapper');
+    
+    if (mobileHeader) {
+      const headerHeight = mobileHeader.offsetHeight || 66;
+      const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
+      
+      document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+      document.documentElement.style.setProperty('--announcement-bar-height', `${announcementHeight}px`);
+    }
+  };
+  
+  // Run on load and resize
+  setHeaderDimensions();
+  window.addEventListener('resize', setHeaderDimensions, { passive: true });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Mobile header",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Use mobile view to edit settings."
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Header layout",
+      "options": [
+        {
+          "value": "logo_left",
+          "label": "Logo left"
+        },
+        {
+          "value": "logo_center",
+          "label": "Logo center"
+        }
+      ],
+      "default": "logo_left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_searchbox",
+      "label": "Show searchbox",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "default": false,
+      "label": "Enable sticky header"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Logo width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Logo text",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "mobile_nav_scheme",
+      "label": "Color scheme",
+      "info": "Colors apply to mobile header and mobile navigation when it is opened.",
+      "default": "1",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_nav",
+      "label": "Choose mobile menu",
+      "default": "main-menu",
+      "info": "It is best practice to select the same menu used in the Header. [Learn More](https://developers.google.com/search/mobile-sites/mobile-first-indexing)"
+    },
+    {
+      "type": "header",
+      "content": "Menu image"
+    },
+    {
+      "type": "image_picker",
+      "id": "menu_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "menu_image_text",
+      "label": "Heading",
+      "default": "Browse the Lookbook"
+    },
+    {
+      "type": "url",
+      "id": "menu_image_url",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Menu text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "menu_bg_color",
+      "label": "Menu background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "menu_text_size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Menu text size",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social media icons",
+      "default": true,
+      "info": "Icons will display based on your theme's social media settings"
+    }
+  ]
+}

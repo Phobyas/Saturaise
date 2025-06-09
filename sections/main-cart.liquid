@@ -2,15 +2,18 @@
 <link rel="preload" href="{{ 'section-main-cart.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-main-cart.css' | asset_url }}"></noscript>
 
-{% comment %} Cart template {% endcomment %}
+{% comment %} Cart template - keeping your existing structure {% endcomment %}
 <section class="cart-page ajax-cart__page-wrapper pt8 mb8 cart-type--{{ settings.cart_type }} cart__section--main"
   data-section-id="{{ section.id }}"
   data-section-type="cart-template"
   data-section-loaded="false">
+  
+  <!-- Keep existing loading wrapper -->
   <div class="loading-wrapper js-mini-cart-loader no-js-hidden">
     <div class="loading-ripple"><div></div><div></div></div>
   </div> 
  
+  <!-- Keep existing header structure with modern styling -->
   <div class="ajax-cart__header-wrapper grid__wrapper pb-12">
     <div class="span-4 sm-span-4 auto a-left v-center">
       {%- if section.settings.link != blank -%}
@@ -38,15 +41,17 @@
     </div>
   </div>
 
+  <!-- Keep existing no-js fallback -->
   <div class="ajax-cart__form-wrapper--nojs js-ajax-cart-content-nojs">
     {% render "cart-no-js", cart: cart %}
   </div>
   
+  <!-- Keep existing cart form -->
   <div class="ajax-cart__form-wrapper cart-wrapper js-ajax-cart-content">
     {% render 'cart-form' %}
   </div>
 
-{% comment %} Product Recommendations Block {% endcomment %}
+{% comment %} Keep existing product recommendations {% endcomment %}
 {%- for block in section.blocks -%}
   {%- case block.type -%}
     {%- when 'product_recommendations' -%}
@@ -123,4 +128,4 @@
       }
     ]
   }
-  {% endschema %}
+{% endschema %}

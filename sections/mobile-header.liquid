@@ -197,8 +197,8 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Show social icons when mobile navigation is open - slides in from left with BIG delay */
-body.slideout-mobile-navigation--open .mobile-social-icons {
+/* Show social icons ONLY when mobile navigation is specifically open */
+body.mobile-nav-open .mobile-social-icons {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
@@ -238,8 +238,8 @@ body.slideout-mobile-navigation--open .mobile-social-icons {
   fill: {{ hover_color }};
 }
 
-/* Add padding to slideout content to prevent overlap with fixed social icons */
-body.slideout-mobile-navigation--open .mobile-nav__wrapper {
+/* Add padding to slideout content to prevent overlap with fixed social icons - ONLY for mobile nav */
+body.mobile-nav-open .mobile-nav__wrapper {
   padding-bottom: 80px;
 }
 
@@ -254,7 +254,8 @@ body.slideout-mobile-navigation--open .mobile-nav__wrapper {
   pointer-events: none;
 }
 
-body.slideout-mobile-navigation--open .mobile-social-icons {
+/* Only enable pointer events when mobile nav is open */
+body.mobile-nav-open .mobile-social-icons {
   pointer-events: auto;
 }
 {% endstyle %}
@@ -693,19 +694,39 @@ document.addEventListener('DOMContentLoaded', function() {
     item.style.setProperty('--item-index', index);
   });
   
-  // Slideout triggers
-  const slideoutTriggers = document.querySelectorAll('.js-slideout-open');
-  slideoutTriggers.forEach(trigger => {
+  // Mobile navigation specific slideout handling
+  const mobileNavTriggers = document.querySelectorAll('[data-wau-slideout-target="mobile-navigation"]');
+  const mobileSlideout = document.getElementById('mobile-slideout');
+
+  mobileNavTriggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
-      document.body.classList.add('slideout-mobile-navigation--open');
+      document.body.classList.add('mobile-nav-open');
     });
   });
-  
-  // Close buttons
-  const closeButtons = document.querySelectorAll('.js-slideout-close');
-  closeButtons.forEach(button => {
+
+  // Mobile navigation close buttons - be specific to mobile nav only
+  const mobileNavCloseButtons = document.querySelectorAll('#mobile-slideout .js-slideout-close');
+  mobileNavCloseButtons.forEach(button => {
     button.addEventListener('click', () => {
-      document.body.classList.remove('slideout-mobile-navigation--open');
+      document.body.classList.remove('mobile-nav-open');
+    });
+  });
+
+  // Cart drawer handling - ensure it closes mobile nav
+  const cartTriggers = document.querySelectorAll('[data-wau-slideout-target="ajax-cart"], .js-mini-cart-trigger');
+  cartTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      // Close mobile nav when cart opens
+      document.body.classList.remove('mobile-nav-open');
+    });
+  });
+
+  // Listen for other slideouts and ensure they don't affect mobile nav state
+  const otherSlideoutTriggers = document.querySelectorAll('.js-slideout-open:not([data-wau-slideout-target="mobile-navigation"])');
+  otherSlideoutTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      // Close mobile nav when other slideouts open
+      document.body.classList.remove('mobile-nav-open');
     });
   });
   
@@ -938,3 +959,4 @@ document.addEventListener('DOMContentLoaded', function() {
   ]
 }
 {% endschema %}
+

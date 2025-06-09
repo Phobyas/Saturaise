@@ -175,12 +175,11 @@
   background-color: rgba(255, 255, 255, 0.5) !important;
   font-size: 9px !important;
   padding: 2px 4px !important;
-  opacity: 0.1;
-  transition: opacity 2s ease;
+  opacity: 0 !important;
 }
 
 .section-text-with-image .leaflet-control-attribution:hover {
-  opacity: 0.3;
+  opacity: 0 !important;
 }
 
 .section-text-with-image .leaflet-control-attribution a {
