@@ -102,11 +102,11 @@
                   <span>{{ item.final_price | money }}</span>
                 {% endif %}
                 
-                {% if item.variant.available and item.variant.compare_at_price > item.variant.price %}
+                {% comment %} {% if item.variant.available and item.variant.compare_at_price > item.variant.price %}
                   <small style="color: var(--cart-text-secondary);">
                     {{ 'products.product.save' | t }} {{ item.variant.compare_at_price | minus: item.variant.price | money }}
                   </small>
-                {% endif %}
+                {% endif %} {% endcomment %}
               </div>
             </div>
             
@@ -142,21 +142,21 @@
               
               <!-- Remove Link for Cart Page -->
               {% if template.name == 'cart' %}
-<button type="button" class="ajax-cart__item-remove js-cart-remove" data-item-key="{{ item.key }}" aria-label="Remove {{ item.product.title | escape }}">
-  {% render 'snip-icons',
-     wrapper: '.ajax-cart__item-remove',
-     type: 'theme',
-     icon: 'close',
-     size: '12px',
-     classes: 'vib-center',
-     fill: '#6b7280',
-     hover: 'white' %}
-</button>
+                <button type="button" class="ajax-cart__item-remove js-cart-remove" data-item-key="{{ item.key }}" aria-label="Remove {{ item.product.title | escape }}">
+                  {% render 'snip-icons',
+                     wrapper: '.ajax-cart__item-remove',
+                     type: 'theme',
+                     icon: 'close',
+                     size: '12px',
+                     classes: 'vib-center',
+                     fill: '#6b7280',
+                     hover: 'white' %}
+                </button>
               {% endif %}
             </div>
             
             <!-- Line Price (for cart page) -->
-            {% if template.name == 'cart' %}
+            {% comment %} {% if template.name == 'cart' %}
               <div class="ajax-cart__line-price">
                 {% if item.original_line_price != item.final_line_price %}
                   <s>{{ item.original_line_price | money }}</s>
@@ -165,7 +165,7 @@
                   {{ item.final_line_price | money }}
                 {% endif %}
               </div>
-            {% endif %}
+            {% endif %} {% endcomment %}
           </div>
         </div>
       {% endfor %}
@@ -177,10 +177,10 @@
       <div class="ajax-cart__final-details">
         
         <!-- Subtotal -->
-<div class="ajax-cart__subtotal">
-  <span>Liczba produktów:</span>
-  <span class="js-cart-count">{{ cart.item_count }}</span>
-</div>
+        <div class="ajax-cart__subtotal">
+          <span>Liczba produktów:</span>
+          <span class="js-cart-count">{{ cart.item_count }}</span>
+        </div>
         
         <!-- Cart Discounts -->
         {% if cart.cart_level_discount_applications.size > 0 %}

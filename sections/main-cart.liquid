@@ -14,30 +14,23 @@
   </div> 
  
   <!-- Keep existing header structure with modern styling -->
-  <div class="ajax-cart__header-wrapper grid__wrapper pb-12">
-    <div class="span-4 sm-span-4 auto a-left v-center">
-      {%- if section.settings.link != blank -%}
-        {%- assign continue_link = section.settings.link -%}
-      {%- else -%}
-        {%- assign continue_link = routes.collections_url -%}
-      {%- endif -%}
-      <a class="ajax-cart__header__continue-link mb0" href="{{ continue_link }}">
-        {% render 'snip-icons',
-           wrapper: '.ajax-cart__header-wrapper',
-           type: 'theme',
-           icon: 'left-arrow',
-           size: '15px',
-           classes: 'vib-center',
-           fill: 'var(--text-color)',
-           hover: 'var(--text-color)' %}
-        <span class="ajax-cart__header__continue-link-text pl-2 font-[600] text-lg sm-hide vib-center">{{ 'products.product.continue' | t }}</span>
+<div class="ajax-cart__header-wrapper grid__wrapper pb-12">
+    <div class="span-4 sm-span-4 auto a-left v-center"><a class="ajax-cart__header__continue-link mb0" href="/collections/buty">
+        
+<svg class="icon--forge-left-arrow vib-center" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" height="15px" viewBox="0 0 11.5 20" xml:space="preserve">
+         <g class="hover-fill" fill="var(--text-color)">
+           <path d="M10.5,20L0.1,10.5C0,10.4-0.1,10.2-0.1,10S0,9.6,0.1,9.5L10.5,0l0.9,1l-9.9,9l9.9,9L10.5,20z"></path>
+         </g>
+         <style>.ajax-cart__header-wrapper .icon--forge-left-arrow:hover .hover-fill { fill: var(--text-color);}</style>
+    </svg>
+        <span class="ajax-cart__header__continue-link-text pl-2 font-[600] text-lg sm-hide vib-center">Kontynuuj zakupy</span>
       </a>
     </div>
     <div class="span-4 sm-span-4 auto v-center">
-      <h1 class="section-heading a-center mb0 head">{{ 'cart.general.title' | t }}</h1>
+      <h1 class="section-heading a-center mb0 head">Koszyk</h1>
     </div>
     <div class="span-4 sm-span-4 auto a-right v-center">
-      <p class="ajax-cart__header__count font-[600] text-lg mb0"><span class="js-cart-count font-[600] text-lg inline-block">{{ cart.item_count }}</span> {{ 'cart.general.items' | t }}</p>
+      <!-- Product count removed but div kept for layout -->
     </div>
   </div>
 

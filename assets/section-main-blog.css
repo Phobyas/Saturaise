@@ -24,7 +24,7 @@
   .modern-blog {
     padding: 0 12px;
   }
-  
+
   .modern-blog {
     --blog-spacing: 16px;
   }
@@ -477,11 +477,11 @@
   .blog__tags--section {
     padding: 16px;
   }
-  
+
   .blog__tags--list {
     gap: 8px;
   }
-  
+
   .blog__tag--item {
     padding: 6px 12px;
     font-size: 13px;
