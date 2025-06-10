@@ -1,0 +1,540 @@
+/* Modern Article Page Styles - Override Shopify defaults */
+
+/* Base article template styling with modern approach */
+.article-template {
+  background: #f8f9fa;
+  padding: 40px 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Container matching other sections max-width pattern */
+.article-template .grid__wrapper {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+@media (min-width: 1920px) {
+  .article-template .grid__wrapper {
+    max-width: 1600px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .article-template {
+    padding: 24px 0;
+  }
+
+  .article-template .grid__wrapper {
+    padding: 0 12px !important;
+    border-radius: 8px;
+  }
+}
+
+/* Article content area */
+.article-template .span-9,
+.article-template .span-12 {
+  background: white;
+  padding: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 767px) {
+  .article-template .span-9,
+  .article-template .span-12 {
+    padding: 24px 16px;
+  }
+}
+
+/* Featured image styling */
+.article-template img {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 100%;
+  height: auto;
+}
+
+.article-template img:hover {
+  transform: scale(1.02);
+}
+
+/* Article content (RTE) styling */
+.article-template .rte {
+  font-family: inherit;
+  line-height: 1.7;
+  color: #323232;
+  font-size: 16px;
+  max-width: none;
+}
+
+@media (max-width: 767px) {
+  .article-template .rte {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+/* Typography overrides */
+.article-template .rte h1,
+.article-template .rte h2,
+.article-template .rte h3,
+.article-template .rte h4,
+.article-template .rte h5,
+.article-template .rte h6 {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin: 32px 0 16px 0 !important;
+}
+
+.article-template .rte h1 {
+  font-size: 32px !important;
+}
+
+.article-template .rte h2 {
+  font-size: 28px !important;
+}
+
+.article-template .rte h3 {
+  font-size: 24px !important;
+}
+
+.article-template .rte h4 {
+  font-size: 20px !important;
+}
+
+.article-template .rte h5 {
+  font-size: 18px !important;
+}
+
+.article-template .rte h6 {
+  font-size: 16px !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .rte h1 {
+    font-size: 26px !important;
+  }
+
+  .article-template .rte h2 {
+    font-size: 22px !important;
+  }
+
+  .article-template .rte h3 {
+    font-size: 20px !important;
+  }
+
+  .article-template .rte h4 {
+    font-size: 18px !important;
+  }
+}
+
+/* Paragraph styling */
+.article-template .rte p {
+  margin-bottom: 20px !important;
+  color: #323232 !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .rte p {
+    font-size: 15px !important;
+    margin-bottom: 16px !important;
+  }
+}
+
+/* List styling */
+.article-template .rte ul,
+.article-template .rte ol {
+  margin: 20px 0 !important;
+  padding-left: 24px !important;
+}
+
+.article-template .rte li {
+  margin-bottom: 8px !important;
+  color: #323232 !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .rte li {
+    font-size: 15px !important;
+  }
+}
+
+/* Blockquote styling matching modern design */
+.article-template .rte blockquote {
+  background: #f8f9fa !important;
+  border-left: 4px solid #1d4ed8 !important;
+  margin: 24px 0 !important;
+  padding: 20px 24px !important;
+  border-radius: 0 8px 8px 0 !important;
+  font-style: italic !important;
+  color: #555 !important;
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .rte blockquote {
+    padding: 16px 20px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Link styling with brand color */
+.article-template .rte a {
+  color: #1d4ed8 !important;
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.article-template .rte a:hover {
+  color: #1e40af !important;
+  text-decoration: none !important;
+}
+
+/* Code styling */
+.article-template .rte code {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  font-family: "Monaco", "Consolas", monospace !important;
+  font-size: 14px !important;
+  color: #e11d48 !important;
+}
+
+.article-template .rte pre {
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  overflow-x: auto !important;
+  margin: 24px 0 !important;
+}
+
+.article-template .rte pre code {
+  background: none !important;
+  border: none !important;
+  color: #f8fafc !important;
+  padding: 0 !important;
+}
+
+/* Table styling */
+.article-template .rte table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 24px 0 !important;
+  background: white !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.article-template .rte th,
+.article-template .rte td {
+  padding: 12px 16px !important;
+  text-align: left !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.article-template .rte th {
+  background: #f9fafb !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+}
+
+.article-template .rte tr:hover {
+  background: #f9fafb !important;
+}
+
+/* Social sharing section */
+.article-template .pb3 {
+  background: #f8f9fa;
+  margin: 32px -40px 32px -40px;
+  padding: 24px 40px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+@media (max-width: 767px) {
+  .article-template .pb3 {
+    margin: 24px -16px 24px -16px;
+    padding: 20px 16px;
+  }
+}
+
+/* Previous/Next pagination styling */
+.prev-next-pagination {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 32px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.prev-next-pagination a {
+  color: #323232 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  background: #f8f9fa !important;
+  border: 1px solid #e9ecef !important;
+  display: flex !important;
+  align-items: center !important;
+  max-width: 45% !important;
+}
+
+.prev-next-pagination a:hover {
+  background: #1d4ed8 !important;
+  color: white !important;
+  border-color: #1d4ed8 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+.prev-next-pagination a span {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+@media (max-width: 767px) {
+  .prev-next-pagination {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 20px !important;
+  }
+
+  .prev-next-pagination a {
+    max-width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+/* Sidebar styling */
+.article-template aside {
+  background: #f8f9fa;
+  padding: 32px 24px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+}
+
+.article-template aside h3 {
+  color: #1f2937 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+  border-bottom: 2px solid #1d4ed8 !important;
+  padding-bottom: 8px !important;
+}
+
+.article-template aside ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.article-template aside li {
+  margin-bottom: 8px !important;
+}
+
+.article-template aside a {
+  color: #323232 !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  display: block !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid transparent !important;
+}
+
+.article-template aside a:hover {
+  background: #1d4ed8 !important;
+  color: white !important;
+  border-color: #1d4ed8 !important;
+  transform: translateX(4px) !important;
+}
+
+@media (max-width: 767px) {
+  .article-template aside {
+    margin-top: 32px;
+    position: static;
+    padding: 20px 16px;
+  }
+}
+
+/* Comments section styling */
+.article-template .comments-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 32px;
+  margin-top: 32px;
+  border: 1px solid #e9ecef;
+}
+
+.article-template .comments-section h3 {
+  color: #1f2937 !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin-bottom: 24px !important;
+  border-bottom: 2px solid #1d4ed8 !important;
+  padding-bottom: 12px !important;
+}
+
+/* Form styling */
+.article-template form input,
+.article-template form textarea,
+.article-template form select {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+  background: white !important;
+  transition: all 0.3s ease !important;
+}
+
+.article-template form input:focus,
+.article-template form textarea:focus,
+.article-template form select:focus {
+  outline: none !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1) !important;
+}
+
+.article-template form button,
+.article-template form input[type="submit"] {
+  background: #1d4ed8 !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.article-template form button:hover,
+.article-template form input[type="submit"]:hover {
+  background: #1e40af !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3) !important;
+}
+
+/* Override any conflicting grid or layout styles */
+.article-template .grid__wrapper.cg8 {
+  gap: 32px !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .grid__wrapper.cg8 {
+    gap: 0 !important;
+  }
+
+  .article-template .grid__wrapper.sm-cg0 {
+    gap: 0 !important;
+  }
+}
+
+/* Narrow class override */
+.article-template .narrow {
+  max-width: none !important;
+}
+
+/* Responsive image handling */
+.article-template .rte img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  margin: 16px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Video embed styling */
+.article-template .rte iframe {
+  max-width: 100% !important;
+  border-radius: 8px !important;
+  margin: 24px 0 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* HR styling */
+.article-template .rte hr {
+  border: none !important;
+  height: 2px !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #e5e7eb,
+    transparent
+  ) !important;
+  margin: 32px 0 !important;
+}
+
+/* Override Shopify's default margins and paddings */
+.article-template .pt8 {
+  padding-top: 0 !important;
+}
+
+.article-template .pb8 {
+  padding-bottom: 0 !important;
+}
+
+.article-template .mt4 {
+  margin-top: 32px !important;
+}
+
+.article-template .sm-mt3 {
+  margin-top: 24px !important;
+}
+
+@media (max-width: 767px) {
+  .article-template .sm-pt4 {
+    padding-top: 0 !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .article-template {
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  .article-template .grid__wrapper {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  .prev-next-pagination,
+  .article-template aside,
+  .article-template .pb3 {
+    display: none !important;
+  }
+}

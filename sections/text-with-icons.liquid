@@ -79,244 +79,453 @@
     assign fetch_priority = 'high'
   endif
 -%}
-
+ 
 {% comment %} Text With Icons Template {% endcomment %}
 <div
-  class="bg-[#eeeeee] mb-6 section-txt-icons max-w-[1280px] mx-auto text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="section-txt-icons text-icons-{{ section.id }} global__section {{ section_padding }} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="text-with-icons"
   data-section-loaded="false">
 
-  <div class="section-txt-icons__outer-wrapper rounded-[12px] pt-3">
-    <div class="grid__wrapper pt-6 md:pt-12">
-      {% render 'snip-headings', align: heading_align, classes: 'section-txt-icons__section-heading pb5', grid: 'span-12', heading: section.settings.title %}
-    </div>
-    <div class="section-txt-icons__inner-wrapper grid__wrapper  pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
-      {% for block in section.blocks %}
-        <article class="mr-3 pr-5 section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
-          {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="section-txt-icons__content-wrapper">{% endif %}
-            <div class="section-txt-icons__image">
-              {%- liquid
-                assign has_image = false
+  <div class="section-txt-icons__outer-wrapper">
+    <div class="section-txt-icons__container">
+      <div class="grid__wrapper pt-6 md:pt-12">
+        {% render 'snip-headings', align: heading_align, classes: 'section-txt-icons__section-heading pb5', grid: 'span-12', heading: section.settings.title %}
+      </div>
+      <div class="section-txt-icons__inner-wrapper grid__wrapper pb-4 md:pb-8 sm-cg0 {{ wrapper_class }}">
+        {% for block in section.blocks %}
+          <article class="section-txt-icons__item text-promo-{{ block.id }} animate--text delay--{{ forloop.index0 }}{% cycle ' odd', ' even' %}{% if forloop.last %} last_item{% endif %}" {{ block.shopify_attributes }}>
+            {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="section-txt-icons__content-wrapper">{% endif %}
+              <div class="section-txt-icons__image">
+                {%- liquid
+                  assign has_image = false
 
-                if block.settings.image != blank
-                  assign has_image = true
-                endif
+                  if block.settings.image != blank
+                    assign has_image = true
+                  endif
 
-                if block.settings.icon contains 'jewelry_'
-                  assign icon = block.settings.icon | split: 'jewelry_' | last
-                  assign icon_type = 'theme'
-                else
-                  assign icon = block.settings.icon
-                  assign icon_type = 'apollo'
-                endif
-              -%}
-              {% unless has_image %}
-                <div class="section-txt-icons__text-icon--icon lh0">
-                  {% if block.settings.icon contains 'jewelry_' %}
-                  {% render 'snip-icons-jewelry',
-                     wrapper: '.product-form__text-icon',
-                     type: icon_type,
-                     icon: icon,
-                     size: icon_size,
-                     classes: 'absolute-center',
-                     fill: text_color,
-                     hover: text_color %}
-                  {% else %}
-                  {% render 'snip-icons',
-                     wrapper: '.product-form__text-icon',
-                     type: icon_type,
-                     icon: icon,
-                     size: icon_size,
-                     classes: 'absolute-center',
-                     fill: text_color,
-                     hover: text_color %}
-                  {% endif %}
-                </div>
-              {% endunless %}
-              {% if has_image %}
-                <div class="section-txt-icons__text-icon--image lh0">
-                  {{ block.settings.image | image_url: width: 150 | image_tag: loading: 'lazy', loading: loading, fetchpriority: fetch_priority }}
-                </div>
-              {% endif %}
-            </div>
-            <div class="section-txt-icons__content">
-              {% if block.settings.title != blank %}
-                <p class="section-txt-icons__block-heading mb1 h5 text-center">{{ block.settings.title }}</p>
-              {% endif %}
-              {% if block.settings.subheading != blank %}
-                <div class="section-txt-icons__block-subheading">
-                  {{ block.settings.subheading }}
-                </div>
-              {% endif %}
-            </div>
-          {% if block.settings.link != blank %}</a>{% endif %}
-        </article>
-      {% endfor %}
+                  if block.settings.icon contains 'jewelry_'
+                    assign icon = block.settings.icon | split: 'jewelry_' | last
+                    assign icon_type = 'theme'
+                  else
+                    assign icon = block.settings.icon
+                    assign icon_type = 'apollo'
+                  endif
+                -%}
+                {% unless has_image %}
+                  <div class="section-txt-icons__text-icon--icon lh0">
+                    {% if block.settings.icon contains 'jewelry_' %}
+                    {% render 'snip-icons-jewelry',
+                       wrapper: '.product-form__text-icon',
+                       type: icon_type,
+                       icon: icon,
+                       size: icon_size,
+                       classes: 'absolute-center',
+                       fill: text_color,
+                       hover: text_color %}
+                    {% else %}
+                    {% render 'snip-icons',
+                       wrapper: '.product-form__text-icon',
+                       type: icon_type,
+                       icon: icon,
+                       size: icon_size,
+                       classes: 'absolute-center',
+                       fill: text_color,
+                       hover: text_color %}
+                    {% endif %}
+                  </div>
+                {% endunless %}
+                {% if has_image %}
+                  <div class="section-txt-icons__text-icon--image lh0">
+                    {{ block.settings.image | image_url: width: 150 | image_tag: loading: 'lazy', loading: loading, fetchpriority: fetch_priority }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="section-txt-icons__content">
+                {% if block.settings.title != blank %}
+                  <p class="section-txt-icons__block-heading mb1 h5 text-center">{{ block.settings.title }}</p>
+                {% endif %}
+                {% if block.settings.subheading != blank %}
+                  <div class="section-txt-icons__block-subheading">
+                    {{ block.settings.subheading }}
+                  </div>
+                {% endif %}
+              </div>
+            {% if block.settings.link != blank %}</a>{% endif %}
+          </article>
+        {% endfor %}
 
-      {% if section.blocks.size == 0 %}
-        {% render 'onboard-no-blocks' %}
-      {% endif %}
+        {% if section.blocks.size == 0 %}
+          {% render 'onboard-no-blocks' %}
+        {% endif %}
+      </div>
     </div>
   </div>
+  
   {% style %}
-    /* Apply the 1280px/1600px responsive max-width pattern */
+    /* Main section with megamenu max-width pattern */
     .section-txt-icons {
+      background: #f8f9fa !important;
+      padding: 40px 0 !important;
+      margin: 40px 0 !important;
+      position: relative !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
       max-width: 1280px !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
+      margin: 40px auto !important;
     }
-    
-    /* Use 1600px max-width when viewport is at least 1920px */
+
     @media (min-width: 1920px) {
       .section-txt-icons {
         max-width: 1600px !important;
       }
     }
+
+    /* Add subtle pattern overlay */
+    .section-txt-icons::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Inner container simplified */
+    .section-txt-icons__container {
+      padding: 0 20px !important;
+      position: relative !important;
+      z-index: 2 !important;
+      width: 100% !important;
+    }
+
+    @media (max-width: 767px) {
+      .section-txt-icons {
+        padding: 24px 0 !important;
+        margin: 24px auto !important;
+      }
+      
+      .section-txt-icons__container {
+        padding: 0 12px !important;
+      }
+    }
     
-    /* Main container */
-    .text-promo-{{ block.id }},
+    /* Section heading styling matching other sections */
+    .section-txt-icons__section-heading h2,
+    .section-txt-icons__section-heading h3 {
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      margin-bottom: 0 !important;
+      text-align: center !important;
+      color: #1f2937 !important;
+      letter-spacing: -0.025em !important;
+      position: relative !important;
+      z-index: 3 !important;
+    }
+
+    @media (min-width: 768px) {
+      .section-txt-icons__section-heading h2,
+      .section-txt-icons__section-heading h3 {
+        font-size: 28px !important;
+      }
+    }
+    
+    /* Modern card design with enhanced contrast */
     .section-txt-icons__item {
       display: flex !important;
-      flex-direction: column !important; /* Changed to column for vertical layout */
+      flex-direction: column !important;
       align-items: center !important;
       width: 100% !important;
-      margin-bottom: 15px !important;
-      justify-content: flex-start !important;
-      padding: 0 10px !important;
+      margin-bottom: 24px !important;
+      padding: 0 !important;
+      position: relative !important;
+      z-index: 3 !important;
     }
   
-    /* Content wrapper when link exists */
+    /* Content wrapper with enhanced white card styling */
     .section-txt-icons__item a.section-txt-icons__content-wrapper {
       display: flex !important;
-      flex-direction: column !important; /* Changed to column for vertical layout */
+      flex-direction: column !important;
       align-items: center !important;
       width: 100% !important;
-      max-width: 400px !important;
+      max-width: 280px !important;
       text-decoration: none !important;
-      padding: 0 !important;
+      padding: 28px 24px !important;
+      background: white !important;
+      border-radius: 16px !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04) !important;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+      transition: all 0.4s ease !important;
+      cursor: pointer !important;
+      overflow: hidden !important;
+      position: relative !important;
+    }
+
+    /* Enhanced hover effects with more lift */
+    .section-txt-icons__item a.section-txt-icons__content-wrapper:hover {
+      transform: translateY(-8px) scale(1.03) !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.08) !important;
+      border-color: rgba(29, 78, 216, 0.2) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    /* Non-link items with same enhanced styling */
+    .section-txt-icons__item {
+      padding: 28px 24px !important;
+      background: white !important;
+      border-radius: 16px !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04) !important;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+      max-width: 280px !important;
+      margin: 0 auto 24px auto !important;
     }
     
-    /* Image/Icon container */
+    /* Enhanced icon container with better contrast */
     .section-txt-icons__image {
-      margin-bottom: 15px !important; /* Changed from margin-right to margin-bottom */
+      margin-bottom: 20px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
+      width: 84px !important;
+      height: 84px !important;
+      background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%) !important;
+      border-radius: 50% !important;
+      transition: all 0.4s ease !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__image {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+      transform: scale(1.15) !important;
+      box-shadow: 0 8px 20px rgba(29, 78, 216, 0.25) !important;
+      transition: all 0.3s ease !important;
     }
     
-    /* Icon specific styles */
+    /* Icon sizing */
     .section-txt-icons__text-icon--icon {
       width: {{ section.settings.icon_size }}px !important;
       height: {{ section.settings.icon_size }}px !important;
       position: relative !important;
+      transition: transform 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__text-icon--icon {
+      transform: scale(1.05) !important;
+      transition: transform 0.3s ease !important;
     }
     
-    /* SVG sizing */
+    /* SVG colors */
     .section-txt-icons__text-icon--icon svg {
       width: 100% !important;
       height: 100% !important;
+      fill: #323232 !important;
+      transition: fill 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__text-icon--icon svg {
+      fill: #1d4ed8 !important;
+      transition: fill 0.3s ease !important;
     }
     
-    /* Image sizing */
+    /* Image styling */
     .section-txt-icons__text-icon--image {
       width: {{ section.settings.icon_size }}px !important;
-      max-width: 100% !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      transition: transform 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__text-icon--image {
+      transform: scale(1.05) !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    .section-txt-icons__text-icon--image img {
+      border-radius: 8px !important;
+      transition: transform 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__text-icon--image img {
+      transform: scale(1.08) !important;
+      transition: transform 0.3s ease !important;
     }
     
-    /* Text container */
+    /* Text styling */
     .section-txt-icons__content {
       display: flex !important;
       flex-direction: column !important;
       justify-content: center !important;
       flex: 1 !important;
-      text-align: center !important; /* Changed to center */
-      padding-left: 0 !important;
-      width: 100% !important; /* Changed from min-height to width */
-      max-width: 100% !important; /* Changed max-width to 100% */
+      text-align: center !important;
+      width: 100% !important;
     }
     
-    /* Heading styles */
     .section-txt-icons__block-heading {
       margin: 0 !important;
-      line-height: 1.4 !important;
-      text-align: center !important; /* Changed to center */
-      font-size: 14px !important;
-      font-weight: 700 !important;
+      line-height: 1.3 !important;
+      text-align: center !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: #323232 !important;
+      transition: color 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__block-heading {
+      color: #1d4ed8 !important;
+      transition: color 0.3s ease !important;
     }
   
     .section-txt-icons__block-subheading {
-      margin-top: 5px !important;
-      line-height: 1.3 !important;
-      text-align: center !important; /* Changed to center */
+      margin-top: 0 !important;
+      line-height: 1.5 !important;
+      text-align: center !important;
+      font-size: 14px !important;
+      color: #666 !important;
+      transition: color 0.4s ease !important;
+    }
+
+    .section-txt-icons__item a:hover .section-txt-icons__block-subheading {
+      color: #555 !important;
+      transition: color 0.3s ease !important;
     }
     
     .section-txt-icons__block-subheading p {
       margin: 0 !important;
-      text-align: center !important; /* Changed to center */
+      text-align: center !important;
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+    }
+
+    /* Focus states */
+    .section-txt-icons__item a:focus {
+      outline: 2px solid #1d4ed8 !important;
+      outline-offset: 2px !important;
     }
     
-    /* Grid layout overrides - reduced padding */
+    /* Grid layout */
     .section-txt-icons__inner-wrapper {
-      padding-left: 32px !important;
-      padding-right: 32px !important;
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+      gap: 24px !important;
+    }
+
+    @media (max-width: 767px) {
+      .section-txt-icons__inner-wrapper {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        gap: 16px !important;
+      }
     }
     
-    /* Mobile responsiveness */
+    /* Mobile responsiveness with horizontal layout */
     @media (max-width: 767px) {
+      /* Switch to horizontal layout on mobile */
       .section-txt-icons__item,
       .section-txt-icons__item a.section-txt-icons__content-wrapper {
-        padding: 5px !important;
-        margin-bottom: 10px !important;
-        flex-direction: row !important; /* Keep horizontal layout on mobile */
-        justify-content: flex-start !important;
+        flex-direction: row !important;
+        text-align: left !important;
+        align-items: flex-start !important;
+        padding: 16px 20px !important;
+        margin-bottom: 16px !important;
+        max-width: 100% !important;
+        min-height: 80px !important;
       }
-      
+
+      /* Icon container on the left */
       .section-txt-icons__image {
-        margin-right: 15px !important;
-        margin-bottom: 0 !important; /* Reset margin-bottom for mobile */
-        flex: 0 0 40px !important;
-        min-width: 40px !important;
+        width: 56px !important;
+        height: 56px !important;
+        margin-bottom: 0 !important;
+        margin-right: 16px !important;
+        flex-shrink: 0 !important;
+        align-self: flex-start !important;
       }
   
       .section-txt-icons__text-icon--icon {
-        width: 40px !important;
-        height: 40px !important;
+        width: 32px !important;
+        height: 32px !important;
       }
-  
+
+      .section-txt-icons__text-icon--image {
+        width: 32px !important;
+      }
+
+      /* Text content on the right */
       .section-txt-icons__content {
-        min-height: 40px !important;
-        padding-right: 5px !important;
-        max-width: calc(100% - 55px) !important;
+        flex: 1 !important;
         text-align: left !important;
+        padding-left: 0 !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        min-height: 56px !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       
-  
-      .section-txt-icons__block-heading,
-      .section-txt-icons__block-subheading,
+      .section-txt-icons__block-heading {
+        font-size: 15px !important;
+        margin-bottom: 4px !important;
+        text-align: left !important;
+      }
+
+      .section-txt-icons__block-subheading {
+        font-size: 13px !important;
+        text-align: left !important;
+      }
+
       .section-txt-icons__block-subheading p {
-        text-align: left !important; 
-        font-size: 14px !important;
-        font-weight: 700 !important;
+        text-align: left !important;
       }
-  
-      .section-txt-icons__inner-wrapper {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+
+      /* Disable complex hover effects on mobile */
+      .section-txt-icons__item a:hover {
+        transform: none !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04) !important;
       }
-  
+      
+      .section-txt-icons__item a:hover .section-txt-icons__image {
+        transform: none !important;
+        background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+      }
+      
+      .section-txt-icons__item a:hover .section-txt-icons__text-icon--icon,
+      .section-txt-icons__item a:hover .section-txt-icons__text-icon--image,
+      .section-txt-icons__item a:hover .section-txt-icons__text-icon--image img {
+        transform: none !important;
+      }
+
+      /* Add subtle tap effect for mobile */
+      .section-txt-icons__item a:active {
+        background-color: #f8f9fa !important;
+        transform: scale(0.98) !important;
+      }
+
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
         grid-column: auto/span 12 !important;
       }
     }
     
-    /* Desktop grid adjustments */
+    /* Desktop grid */
     @media (min-width: 768px) {
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
         grid-template-columns: {{ grid_wrapper }} !important;
+        gap: 32px !important;
       }
       .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper .section-txt-icons__item {
         grid-column: {{ block_width }} !important;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .text-icons-{{ section.id }} .section-txt-icons__inner-wrapper {
+        gap: 26px !important;
       }
     }
   {% endstyle %}
@@ -325,19 +534,19 @@
 {% schema %}
 {
   "name": "Text with icons",
-  "tag": "section",
+  "tag": "section", 
   "class": "dynamic-section",
   "max_blocks": 12,
   "settings": [
     {
-      "type": "text", 
+      "type": "text",
       "id": "title",
       "label": "Heading",
       "default": "Text with Icons"
     },
     {
       "type": "range",
-      "id": "icon_size",
+      "id": "icon_size", 
       "min": 10,
       "max": 100,
       "step": 5,
@@ -360,7 +569,7 @@
           "label": "None"
         },
         {
-          "value": "1",
+          "value": "1", 
           "label": "1"
         },
         {
@@ -383,7 +592,7 @@
           "label": "Top"
         },
         {
-          "value": "bottom",
+          "value": "bottom", 
           "label": "Bottom"
         },
         {
@@ -415,18 +624,18 @@
             },
             {
               "value": "jewelry_earrings",
-              "label": "Earrings", 
+              "label": "Earrings",
               "group": "Jewelry"
             },
             {
-              "value": "jewelry_necklaces",
+              "value": "jewelry_necklaces", 
               "label": "Necklaces",
               "group": "Jewelry"
             },
             {
               "value": "jewelry_rings",
               "label": "Rings",
-              "group": "Jewelry" 
+              "group": "Jewelry"
             },
             {
               "value": "jewelry_pendants",
@@ -439,8 +648,8 @@
               "group": "Jewelry"
             },
             {
-              "value": "jewelry_baguette", 
-              "label": "Baguette",
+              "value": "jewelry_baguette",
+              "label": "Baguette", 
               "group": "Jewelry"
             },
             {
@@ -460,7 +669,7 @@
             },
             {
               "value": "jewelry_marquise",
-              "label": "Marquise", 
+              "label": "Marquise",
               "group": "Jewelry"
             },
             {
