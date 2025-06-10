@@ -55,7 +55,7 @@
             <div class="filter-search-wrapper">
               <input type="text" 
                      id="tagSearch" 
-                     placeholder="Search tags..." 
+                     placeholder="Wyszukaj tagi..." 
                      class="filter-search-input"
                      onkeyup="searchTags()">
             </div>
@@ -493,23 +493,37 @@
       min-height: 150px;
     }
 
+    /* Article image section - 1:1 aspect ratio */
     .blog__article--image {
       flex: 0 0 25%;
       max-width: 25%;
       position: relative;
       overflow: hidden;
+      aspect-ratio: 1 / 1; /* Modern browsers - perfect 1:1 ratio */
+    }
+
+    /* Fallback for older browsers */
+    .blog__article--image::before {
+      content: '';
+      display: block;
+      width: 100%;
+      padding-top: 100%; /* 1:1 aspect ratio fallback */
     }
 
     .blog__article--image .image-link {
       display: block;
       width: 100%;
       height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .blog__article--image img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
       transition: transform 0.3s ease;
     }
 
@@ -623,7 +637,7 @@
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    /* Mobile Responsive */
+    /* Mobile Responsive - maintain 1:1 ratio */
     @media (max-width: 767px) {
       .blog__articles--list {
         gap: 16px;
@@ -637,7 +651,8 @@
       .blog__article--image {
         flex: none;
         max-width: 100%;
-        height: 160px;
+        aspect-ratio: 1 / 1; /* Maintain 1:1 ratio on mobile */
+        height: auto !important; /* Override any fixed heights */
       }
 
       .blog__article--content {
@@ -915,7 +930,6 @@
           }
         };
         window.removeFilter = function(tagHandle) {
-        window.removeFilter = function(tagHandle) {
           console.log('removeFilter called for:', tagHandle);
           const index = activeFilters.findIndex(filter => filter.handle === tagHandle);
           if (index > -1) {
@@ -931,7 +945,6 @@
             
             updateDisplay();
           }
-        };
         };
 
         // Filter section toggle
