@@ -14,6 +14,10 @@
   --cart-transition: all 0.3s ease;
 }
 
+.slideout {
+  box-shadow: none !important;
+}
+
 /* ===== SHARED CART STYLES ===== */
 
 /* Hide line price in drawer only */
@@ -29,9 +33,6 @@
 /* ===== CART DRAWER STYLES ===== */
 
 /* Drawer container */
-.slideout {
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15) !important;
-}
 
 /* Drawer header */
 .ajax-cart__header-wrapper {

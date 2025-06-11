@@ -341,7 +341,7 @@
   /* font-size: var(--font-size); */
   line-height: normal;
   margin-left: var(--space-0);
-  font-weight: bold;
+  font-weight: 500;
   font-size: 14px;
 }
 

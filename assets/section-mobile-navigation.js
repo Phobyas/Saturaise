@@ -271,3 +271,219 @@ document.addEventListener("DOMContentLoaded", function () {
     mobileHeader.style.contain = "layout";
   }
 });
+
+// Mobile Search Drawer - Using Existing Predictive Search System
+// Add this to your section-mobile-navigation.js
+
+(function () {
+  function initMobileSearch() {
+    const searchInput = document.querySelector(
+      "#mobile-search-drawer .mobile-search-input"
+    );
+    const predictiveSearchContainer = document.querySelector(
+      "#mobile-search-drawer #predictive-search"
+    );
+    const loadingState = document.querySelector(
+      "#mobile-search-drawer .mobile-search-loading"
+    );
+    const emptyState = document.querySelector(
+      "#mobile-search-drawer .mobile-search-empty"
+    );
+    const suggestionsContainer = document.querySelector(
+      "#mobile-search-drawer .mobile-search-suggestions"
+    );
+
+    if (!searchInput || !predictiveSearchContainer) return;
+
+    let searchTimeout;
+
+    // Handle search input
+    searchInput.addEventListener("input", function (e) {
+      const query = e.target.value.trim();
+
+      clearTimeout(searchTimeout);
+
+      if (!query) {
+        showSuggestions();
+        return;
+      }
+
+      // Show loading state
+      hideAllStates();
+      showLoading();
+
+      // Debounce search - use same timing as desktop
+      searchTimeout = setTimeout(() => {
+        performPredictiveSearch(query);
+      }, 300);
+    });
+
+    // Handle suggestion clicks
+    document.addEventListener("click", function (e) {
+      if (e.target.matches(".mobile-search-suggestion")) {
+        e.preventDefault();
+        const query = e.target.textContent.trim();
+        searchInput.value = query;
+        hideAllStates();
+        showLoading();
+        setTimeout(() => performPredictiveSearch(query), 100);
+      }
+    });
+
+    // Focus search input when drawer opens
+    if (typeof Events !== "undefined") {
+      Events.on("slideout:open:mobile-search", function () {
+        setTimeout(() => {
+          searchInput.focus();
+          showSuggestions();
+        }, 300);
+      });
+
+      Events.on("slideout:close:mobile-search", function () {
+        searchInput.value = "";
+        showSuggestions();
+      });
+    }
+
+    // Use existing predictive search system
+    function performPredictiveSearch(query) {
+      // Use the same endpoint as desktop predictive search
+      const predictiveSearchURL = "/search/suggest";
+
+      fetch(
+        `${predictiveSearchURL}?q=${encodeURIComponent(
+          query
+        )}&section_id=predictive-search&resources[limit]=8&resources[limit_scope]=each`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then((text) => {
+          hideLoading();
+
+          const resultsMarkup = new DOMParser()
+            .parseFromString(text, "text/html")
+            .querySelector("#shopify-section-predictive-search");
+
+          if (resultsMarkup && resultsMarkup.innerHTML.trim()) {
+            // Process the results to add mobile-specific enhancements
+            const processedHTML = processPredictiveResults(
+              resultsMarkup.innerHTML,
+              query
+            );
+            predictiveSearchContainer.innerHTML = processedHTML;
+            predictiveSearchContainer.style.display = "block";
+          } else {
+            showEmptyState();
+          }
+        })
+        .catch((error) => {
+          console.error("Mobile search error:", error);
+          hideLoading();
+          showEmptyState();
+        });
+    }
+
+    // Process predictive search results for mobile
+    function processPredictiveResults(html, query) {
+      // Create a temporary container to manipulate the HTML
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+
+      // Find the predictive search results
+      const resultsContainer = tempDiv.querySelector(
+        ".predictive-search__results"
+      );
+
+      if (!resultsContainer) {
+        return html;
+      }
+
+      // Add mobile-specific classes and structure
+      const productsList = resultsContainer.querySelector(
+        ".predictive-search__results-list"
+      );
+      if (productsList) {
+        productsList.classList.add("mobile-search-results-grid");
+
+        // Process each product item to match mobile layout
+        const productItems = productsList.querySelectorAll(
+          ".predictive-search__results-list-item"
+        );
+        productItems.forEach((item) => {
+          item.classList.add("mobile-search-product-item");
+
+          // Ensure proper image aspect ratio
+          const imageContainer = item.querySelector(
+            ".predictive-search__results-list-item-image"
+          );
+          if (imageContainer) {
+            imageContainer.style.aspectRatio = "1/1";
+            imageContainer.style.backgroundColor = "#eeeeee";
+          }
+        });
+      }
+
+      // Add "Zobacz wszystkie wyniki" button
+      const seeAllButton = `
+        <div class="search-see-all-wrapper">
+          <a href="/search?q=${encodeURIComponent(
+            query
+          )}" class="search-see-all-btn">
+            Zobacz wszystkie wyniki
+          </a>
+        </div>
+      `;
+
+      resultsContainer.insertAdjacentHTML("afterend", seeAllButton);
+
+      return tempDiv.innerHTML;
+    }
+
+    // State management functions
+    function showLoading() {
+      if (loadingState) loadingState.classList.add("active");
+    }
+
+    function hideLoading() {
+      if (loadingState) loadingState.classList.remove("active");
+    }
+
+    function showEmptyState() {
+      if (emptyState) emptyState.classList.add("active");
+    }
+
+    function showSuggestions() {
+      hideAllStates();
+      if (suggestionsContainer) suggestionsContainer.style.display = "block";
+    }
+
+    function hideAllStates() {
+      if (loadingState) loadingState.classList.remove("active");
+      if (emptyState) emptyState.classList.remove("active");
+      if (predictiveSearchContainer)
+        predictiveSearchContainer.style.display = "none";
+      if (suggestionsContainer) suggestionsContainer.style.display = "none";
+    }
+
+    // Initialize with suggestions
+    showSuggestions();
+  }
+
+  // Initialize when ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobileSearch);
+  } else {
+    initMobileSearch();
+  }
+
+  // Re-initialize on section load
+  document.addEventListener("shopify:section:load", function (event) {
+    if (event.target.querySelector('[data-section-type="mobile-header"]')) {
+      initMobileSearch();
+    }
+  });
+})();
