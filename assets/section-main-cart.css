@@ -63,7 +63,7 @@
   height: 36px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: end !important;
   transition: var(--cart-transition) !important;
   padding: 0 !important;
 }

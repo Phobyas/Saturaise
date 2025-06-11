@@ -327,11 +327,6 @@
   margin: 0 !important;
 }
 
-.mobile-search-close svg {
-  width: 24px;
-  height: 24px;
-}
-
 /* Search Content - Scrollable Area */
 .mobile-search-content {
   padding: 0;

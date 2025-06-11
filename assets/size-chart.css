@@ -1,22 +1,15 @@
-/* Size Chart Modal - No Parent Scroll, Only Content Scroll */
+/* Size Chart Modal - Fixed CSS to prevent auto-display */
 
-/* Remove all scrolling from modal container and wrappers */
-[data-wau-modal="size-chart-modal"],
-.modal__container,
-.modal__inner-wrapper,
-.modal__inner-content-container,
-.sizing-modal__main,
-.tab-block {
-  overflow: hidden !important;
-}
-
-/* Ensure the modal has fixed height and no scrolling */
+/* Ensure modal is hidden by default - UPDATED for top-anchored positioning */
 [data-wau-modal="size-chart-modal"] {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
   position: fixed !important;
-  top: 15vh !important;
+  top: 10vh !important; /* Fixed top position */
   left: 50% !important;
-  transform: translateX(-50%) !important;
-  max-height: 75vh !important;
+  transform: translateX(-50%) !important; /* Only translate horizontally */
+  max-height: 80vh !important;
   max-width: 90vw !important;
   width: 800px !important;
   z-index: 9999 !important;
@@ -24,23 +17,136 @@
   border-radius: 8px !important;
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15) !important;
   overflow: hidden !important;
-  margin-bottom: 10vh !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+  /* Add these for bottom expansion only */
+  min-height: 400px !important; /* Set minimum height */
+  height: auto !important; /* Allow height to adjust */
 }
 
-/* Tab navigation - always visible */
+/* Only show when explicitly active */
+[data-wau-modal="size-chart-modal"].modal--active {
+  display: flex !important; /* Changed to flex for better control */
+  flex-direction: column !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure modal wrapper doesn't force display */
+.modal__container {
+  display: none !important;
+}
+
+.modal__container.modal--active {
+  display: block !important;
+}
+
+/* Backdrop styles - Enhanced visibility */
+.js-modal-overlay,
+#size-chart-backdrop {
+  display: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  z-index: 9998 !important;
+  cursor: pointer !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+/* Show backdrop when modal is active - Multiple selectors for compatibility */
+body.modal-open .js-modal-overlay,
+body.modal-open #size-chart-backdrop,
+.modal--open .js-modal-overlay,
+.modal--open #size-chart-backdrop,
+.modal-size-chart-modal--open .js-modal-overlay,
+.modal-size-chart-modal--open #size-chart-backdrop,
+.js-modal-overlay.modal-open,
+#size-chart-backdrop.modal-open {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Body scroll lock when modal is open */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+/* Modal wrapper states for backdrop visibility */
+.js-modal-toggle-wrapper.modal--open,
+.js-modal-toggle-wrapper.modal-size-chart-modal--open {
+  position: relative;
+}
+
+.js-modal-toggle-wrapper.modal--open .js-modal-overlay,
+.js-modal-toggle-wrapper.modal-size-chart-modal--open .js-modal-overlay,
+.js-modal-toggle-wrapper.modal--open #size-chart-backdrop,
+.js-modal-toggle-wrapper.modal-size-chart-modal--open #size-chart-backdrop {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Modal inner wrapper - flex container for controlled expansion */
+.modal__inner-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  padding: 20px !important;
+}
+
+/* Modal inner content - flex container */
+.modal__inner-content-container {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  max-height: none !important;
+}
+
+/* Sizing modal main - flex container */
+.sizing-modal__main {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  max-height: none !important;
+  height: 100% !important;
+}
+
+.slideout__trigger-size-chart-modal__wrapper {
+  text-align: right !important;
+}
+
+.slideout__trigger-size-chart-modal__wrapper button {
+  padding: 0 !important;
+}
+
+/* Tab navigation - always visible at top */
 .tab-mnu {
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: center !important;
   list-style: none !important;
   padding: 0 !important;
-  margin: 0 0 15px !important;
+  margin-bottom: 15px !important;
   gap: 8px !important;
   border-bottom: 1px solid #eee !important;
   padding-bottom: 15px !important;
   background: #fff !important;
-  z-index: 5 !important;
   position: relative !important;
+  z-index: 5 !important;
+  flex-shrink: 0 !important;
 }
 
 .tab-mnu li {
@@ -52,6 +158,7 @@
   cursor: pointer !important;
   font-size: 14px !important;
   white-space: nowrap !important;
+  transition: all 0.2s ease !important;
 }
 
 .tab-mnu li:hover {
@@ -65,25 +172,58 @@
   font-weight: bold !important;
 }
 
-/* Tab content container - ONLY this element should scroll */
+/* Tab content container - ONLY this scrolls, with fixed height calculation */
 .tab-cont {
   overflow-y: auto !important;
-  max-height: calc(
-    75vh - 120px
-  ) !important; /* Adjusted height to account for tabs, padding, and headers */
+  overflow-x: hidden !important;
+  /* Calculate height based on fixed modal height minus tabs and padding */
+  height: calc(
+    80vh - 180px
+  ) !important; /* Fixed height instead of max-height */
+  min-height: 300px !important; /* Minimum content height */
   padding-right: 10px !important;
-  height: auto !important; /* Allow it to shrink if content is small */
+  flex: 1 !important;
 }
 
-/* Table header sticky position */
-.tabe-pane__content.active table th {
+/* Tab content panes */
+.tabe-pane__content {
+  display: none !important;
+}
+
+.tabe-pane__content.active {
+  display: block !important;
+}
+
+.tabe-pane__content.active table {
+  display: table !important;
+  width: 100% !important;
+}
+
+/* Table styles */
+.tabe-pane__content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+}
+
+.tabe-pane__content table th {
   position: sticky !important;
   top: 0 !important;
   background-color: #f5f5f5 !important;
   z-index: 2 !important;
+  padding: 12px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #e0e0e0 !important;
 }
 
-/* Close button adjustment */
+.tabe-pane__content table td {
+  padding: 10px !important;
+  text-align: center !important;
+  border-bottom: 1px solid #eee !important;
+}
+
+/* Close button */
 .modal__trigger--close {
   position: absolute !important;
   top: 10px !important;
@@ -91,12 +231,27 @@
   z-index: 10 !important;
 }
 
-/* Responsive adjustments */
+.modal__trigger--close button {
+  background: none !important;
+  border: none !important;
+  font-size: 24px !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  line-height: 1 !important;
+  color: #666 !important;
+}
+
+.modal__trigger--close button:hover {
+  color: #333 !important;
+}
+
+/* Responsive adjustments - maintain top positioning */
 @media (max-width: 767px) {
   [data-wau-modal="size-chart-modal"] {
     width: 92vw !important;
-    max-height: 80vh !important;
-    top: 10vh !important;
+    max-height: 85vh !important;
+    top: 5vh !important; /* Closer to top on mobile */
+    min-height: 350px !important; /* Smaller minimum on mobile */
   }
 
   .tab-mnu {
@@ -104,9 +259,65 @@
     overflow-x: auto !important;
     justify-content: flex-start !important;
     padding-right: 40px !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .tab-mnu::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tab-mnu li {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
   }
 
   .tab-cont {
-    max-height: calc(80vh - 130px) !important;
+    height: calc(85vh - 160px) !important; /* Adjusted for mobile */
+    min-height: 250px !important;
   }
+
+  .tabe-pane__content table th,
+  .tabe-pane__content table td {
+    padding: 8px 5px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Hide any elements that might force modal visibility */
+.slideout--active[data-wau-slideout="size-chart-modal"],
+.modal--open[data-wau-modal="size-chart-modal"]:not(.modal--active) {
+  display: none !important;
+}
+
+/* Update the animation to not center vertically */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50%) translateY(-20px); /* Slide down from slightly above */
+  }
+  to {
+    transform: translateX(-50%) translateY(0); /* To normal position */
+  }
+}
+
+[data-wau-modal="size-chart-modal"].modal--active {
+  animation: fadeIn 0.3s ease, slideIn 0.3s ease !important;
+}
+
+/* Ensure tab block maintains structure */
+.tab-block {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
 }

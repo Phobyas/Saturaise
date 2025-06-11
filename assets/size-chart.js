@@ -1,102 +1,92 @@
 /**
- * Size Chart Modal JS - Only Table Content Scrolls
+ * Fixed Size Chart Modal JS - Prevents Auto-Display and Ensures Proper Closing
  */
 (function () {
-  // Initialize on document ready
-  document.addEventListener("DOMContentLoaded", initialize);
+  "use strict";
 
-  // Initialize on load
-  window.addEventListener("load", initialize);
+  let isInitialized = false;
+  let modalContainer = null;
+  let backdrop = null;
 
-  // Initialize function
+  // Initialize function with proper error handling
   function initialize() {
-    setupTabFunctionality();
-    enhanceWAUModal();
-    setupCloseOnEscape();
+    if (isInitialized) return;
 
-    // Apply overflow fixes
-    applyOverflowFixes();
-  }
-
-  // Function to force overflow settings
-  function applyOverflowFixes() {
-    // Apply once on init
-    forceOverflowSettings();
-
-    // And check again after a short delay to catch any late DOM changes
-    setTimeout(forceOverflowSettings, 300);
-
-    // Add a mutation observer to watch for DOM changes
-    const modalContainer = document.querySelector(
-      '[data-wau-modal="size-chart-modal"]'
-    );
-    if (modalContainer) {
-      const observer = new MutationObserver(forceOverflowSettings);
-      observer.observe(modalContainer, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
+    try {
+      setupModal();
+      setupTabFunctionality();
+      setupCloseHandlers();
+      setupKeyboardHandlers();
+      isInitialized = true;
+      console.log("Size chart modal initialized successfully");
+    } catch (error) {
+      console.error("Error initializing size chart modal:", error);
     }
   }
 
-  // Function to force correct overflow settings
-  function forceOverflowSettings() {
-    // Force modal and all wrappers to have no overflow
-    const selectors = [
-      '[data-wau-modal="size-chart-modal"]',
-      ".modal__container",
-      ".modal__inner-wrapper",
-      ".modal__inner-content-container",
-      ".sizing-modal__main",
-      ".tab-block",
-    ];
+  // Setup modal container and ensure it's hidden by default
+  function setupModal() {
+    modalContainer = document.querySelector(
+      '[data-wau-modal="size-chart-modal"]'
+    );
 
-    selectors.forEach((selector) => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach((el) => {
-        el.style.overflow = "hidden";
-      });
-    });
+    if (!modalContainer) {
+      console.warn("Size chart modal container not found");
+      return;
+    }
 
-    // Force the tab-cont to be the only scrollable element
-    const tabContElements = document.querySelectorAll(".tab-cont");
-    tabContElements.forEach((el) => {
-      el.style.overflowY = "auto";
+    // Force modal to be hidden initially
+    modalContainer.style.display = "none";
+    modalContainer.classList.remove("modal--active");
+    modalContainer.setAttribute("aria-hidden", "true");
 
-      // Calculate proper height
-      const modal = el.closest('[data-wau-modal="size-chart-modal"]');
-      if (modal) {
-        const modalHeight = modal.clientHeight;
-        const tabMenu = modal.querySelector(".tab-mnu");
-        const tabMenuHeight = tabMenu ? tabMenu.offsetHeight : 0;
-        const padding = 60; // Approximate padding
+    // Create or find backdrop
+    backdrop =
+      document.querySelector(".js-modal-overlay") ||
+      document.getElementById("size-chart-backdrop");
 
-        const availableHeight = modalHeight - tabMenuHeight - padding;
-        el.style.maxHeight = availableHeight + "px";
-      }
-    });
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.id = "size-chart-backdrop";
+      backdrop.className = "js-modal-overlay";
+      backdrop.style.cssText = `
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        cursor: pointer;
+      `;
+      document.body.appendChild(backdrop);
+    }
+
+    // Ensure backdrop is hidden initially
+    backdrop.style.display = "none";
+    backdrop.classList.remove("modal-open");
   }
 
-  // Function to set up tab functionality
+  // Setup tab functionality with error handling
   function setupTabFunctionality() {
-    // Add click handler for tab navigation
     document.addEventListener("click", function (e) {
-      // Check if clicked element is a tab
-      if (
-        e.target.getAttribute &&
-        e.target.getAttribute("data-name") === "table-nav"
-      ) {
-        // Handle tab click
-        const tab = e.target;
+      const tab = e.target.closest('[data-name="table-nav"]');
+      if (!tab) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
         const tabId = tab.getAttribute("data-tab");
         const tabBlock = tab.closest(".tab-block");
 
-        if (!tabBlock) return;
+        if (!tabBlock || !tabId) return;
 
         // Remove active class from all tabs
-        const allTabs = tabBlock.querySelectorAll('[data-name="table-nav"]');
-        allTabs.forEach(function (t) {
+        tabBlock.querySelectorAll('[data-name="table-nav"]').forEach((t) => {
           t.classList.remove("active");
         });
 
@@ -104,13 +94,12 @@
         tab.classList.add("active");
 
         // Hide all content panes
-        const allContent = tabBlock.querySelectorAll(
-          '[data-name="table-content"]'
-        );
-        allContent.forEach(function (content) {
-          content.classList.remove("active");
-          content.style.display = "none";
-        });
+        tabBlock
+          .querySelectorAll('[data-name="table-content"]')
+          .forEach((content) => {
+            content.classList.remove("active");
+            content.style.display = "none";
+          });
 
         // Show clicked content pane
         const activeContent = tabBlock.querySelector(
@@ -120,212 +109,279 @@
           activeContent.classList.add("active");
           activeContent.style.display = "block";
 
-          // Make sure table is visible
           const table = activeContent.querySelector("table");
           if (table) {
             table.style.display = "table";
           }
         }
-
-        // Reapply overflow settings after tab change
-        forceOverflowSettings();
+      } catch (error) {
+        console.error("Error in tab functionality:", error);
       }
     });
 
-    // Activate first tab if none active
-    setTimeout(activateFirstTabIfNeeded, 300);
+    // Activate first tab after a delay to ensure DOM is ready
+    setTimeout(activateFirstTab, 100);
   }
 
-  // Function to activate first tab if none are active
-  function activateFirstTabIfNeeded() {
-    const tabContainers = document.querySelectorAll(".tab-block");
+  // Activate first tab if none are active
+  function activateFirstTab() {
+    try {
+      const tabContainer = document.querySelector(".tab-block");
+      if (!tabContainer) return;
 
-    tabContainers.forEach(function (container) {
-      const activeTab = container.querySelector(
+      const activeTab = tabContainer.querySelector(
         '[data-name="table-nav"].active'
       );
+      if (activeTab) return; // Already has active tab
 
-      if (!activeTab) {
-        const firstTab = container.querySelector('[data-name="table-nav"]');
-        if (firstTab) {
-          // Simulate click
-          const event = new MouseEvent("click", {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-          });
-          firstTab.dispatchEvent(event);
-        }
+      const firstTab = tabContainer.querySelector('[data-name="table-nav"]');
+      if (firstTab) {
+        firstTab.click();
+      }
+    } catch (error) {
+      console.error("Error activating first tab:", error);
+    }
+  }
+
+  // Setup close handlers
+  function setupCloseHandlers() {
+    // Close button handler
+    document.addEventListener("click", function (e) {
+      if (e.target.closest(".js-modal-close, .modal__trigger--close")) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
       }
     });
-  }
 
-  // Variable to store the backdrop element
-  let backdropElement = null;
-
-  // Function to enhance WAU.Modal with our additions
-  function enhanceWAUModal() {
-    if (typeof WAU === "undefined" || !WAU.Modal) return;
-
-    // Store original functions
-    const originalOpenByName = WAU.Modal._openByName;
-    const originalCloseByName = WAU.Modal._closeByName;
-
-    // Override open function
-    WAU.Modal._openByName = function (name) {
-      // Call original function
-      originalOpenByName.call(this, name);
-
-      // If it's our size chart modal, enhance it
-      if (name === "size-chart-modal") {
-        // Lock body scroll
-        lockBodyScroll();
-
-        // Force create and show backdrop
-        forceShowBackdrop();
-
-        // Make sure tabs work
-        activateFirstTabIfNeeded();
-
-        // Force correct overflow settings
-        forceOverflowSettings();
-
-        // Listen for window resize to maintain correct settings
-        window.addEventListener("resize", forceOverflowSettings);
-      }
-    };
-
-    // Override close function
-    WAU.Modal._closeByName = function (name) {
-      // Call original function
-      originalCloseByName.call(this, name);
-
-      // If it's the size chart modal, clean up
-      if (name === "size-chart-modal") {
-        // Unlock body scroll
-        unlockBodyScroll();
-
-        // Force hide backdrop
-        forceHideBackdrop();
-
-        // Remove resize listener
-        window.removeEventListener("resize", forceOverflowSettings);
-      }
-    };
-
-    // Make sure all size chart buttons use our enhanced modal
-    setupSizeChartButtons();
-  }
-
-  // Function to force show backdrop
-  function forceShowBackdrop() {
-    // Create backdrop if it doesn't exist
-    if (!backdropElement) {
-      backdropElement = document.createElement("div");
-      backdropElement.id = "size-chart-backdrop";
-      backdropElement.style.position = "fixed";
-      backdropElement.style.top = "0";
-      backdropElement.style.left = "0";
-      backdropElement.style.right = "0";
-      backdropElement.style.bottom = "0";
-      backdropElement.style.width = "100%";
-      backdropElement.style.height = "100%";
-      backdropElement.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-      backdropElement.style.zIndex = "9998";
-      backdropElement.style.cursor = "pointer";
-
-      // Add click event
-      backdropElement.addEventListener("click", function () {
+    // Backdrop click handler
+    if (backdrop) {
+      backdrop.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         closeModal();
       });
-
-      // Add to body
-      document.body.appendChild(backdropElement);
     }
 
-    // Force backdrop to be visible
-    backdropElement.style.display = "block";
-  }
-
-  // Function to force hide backdrop
-  function forceHideBackdrop() {
-    if (backdropElement) {
-      backdropElement.style.display = "none";
-    }
-  }
-
-  // Function to set up close on escape key
-  function setupCloseOnEscape() {
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        const modal = document.querySelector(
-          '[data-wau-modal="size-chart-modal"].modal--active'
-        );
-        if (modal) {
-          closeModal();
-        }
-      }
-    });
-  }
-
-  // Function to close modal
-  function closeModal() {
-    if (typeof WAU !== "undefined" && WAU.Modal) {
-      WAU.Modal._closeByName("size-chart-modal");
-    }
-  }
-
-  // Variable to track scroll position
-  let scrollPosition = 0;
-
-  // Function to lock body scroll
-  function lockBodyScroll() {
-    // Store current scroll position
-    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-
-    // Add scroll-lock styles to body
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollPosition}px`;
-    document.body.style.width = "100%";
-  }
-
-  // Function to unlock body scroll
-  function unlockBodyScroll() {
-    // Remove scroll-lock styles from body
-    document.body.style.removeProperty("overflow");
-    document.body.style.removeProperty("position");
-    document.body.style.removeProperty("top");
-    document.body.style.removeProperty("width");
-
-    // Restore scroll position
-    window.scrollTo(0, scrollPosition);
-  }
-
-  // Function to set up size chart buttons
-  function setupSizeChartButtons() {
-    const buttons = document.querySelectorAll(
-      '[data-wau-modal-target="size-chart-modal"]'
-    );
-
-    buttons.forEach(function (button) {
-      // Remove existing event listeners
-      const newButton = button.cloneNode(true);
-      if (button.parentNode) {
-        button.parentNode.replaceChild(newButton, button);
-      }
-
-      // Add new click event
-      newButton.addEventListener("click", function (e) {
+    // Setup size chart trigger buttons
+    document.addEventListener("click", function (e) {
+      const trigger = e.target.closest(
+        '[data-wau-modal-target="size-chart-modal"]'
+      );
+      if (trigger) {
         e.preventDefault();
-
-        if (typeof WAU !== "undefined" && WAU.Modal) {
-          WAU.Modal._openByName("size-chart-modal");
-        }
-      });
+        e.stopPropagation();
+        openModal();
+      }
     });
   }
 
-  // Initialize immediately
-  initialize();
+  // Setup keyboard handlers
+  function setupKeyboardHandlers() {
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && isModalOpen()) {
+        e.preventDefault();
+        closeModal();
+      }
+    });
+  }
+
+  // Check if modal is open
+  function isModalOpen() {
+    return (
+      modalContainer &&
+      modalContainer.classList.contains("modal--active") &&
+      modalContainer.style.display !== "none"
+    );
+  }
+
+  // Open modal function
+  function openModal() {
+    if (!modalContainer) {
+      console.error("Modal container not found");
+      return;
+    }
+
+    try {
+      // Ensure we have a backdrop
+      if (!backdrop) {
+        setupModal();
+      }
+
+      // Show and activate backdrop first
+      if (backdrop) {
+        backdrop.style.display = "block";
+        backdrop.classList.add("modal-open");
+        // Force backdrop to be visible
+        backdrop.style.opacity = "1";
+        backdrop.style.visibility = "visible";
+      }
+
+      // Add modal wrapper classes to body/document
+      const wrapper =
+        document.querySelector(".js-modal-toggle-wrapper") || document.body;
+      wrapper.classList.add("modal--open");
+
+      // Show modal
+      modalContainer.style.display = "block";
+      modalContainer.classList.add("modal--active");
+      modalContainer.setAttribute("aria-hidden", "false");
+
+      // Lock body scroll
+      document.body.style.overflow = "hidden";
+      document.body.classList.add("modal-open");
+
+      // Add specific modal class to wrapper
+      wrapper.classList.add("modal-size-chart-modal--open");
+
+      // Ensure first tab is active
+      setTimeout(activateFirstTab, 50);
+
+      console.log("Size chart modal opened with backdrop");
+    } catch (error) {
+      console.error("Error opening modal:", error);
+    }
+  }
+
+  // Close modal function
+  function closeModal() {
+    if (!modalContainer) return;
+
+    try {
+      // Hide and deactivate backdrop
+      if (backdrop) {
+        backdrop.style.display = "none";
+        backdrop.classList.remove("modal-open");
+        backdrop.style.opacity = "0";
+        backdrop.style.visibility = "hidden";
+      }
+
+      // Remove modal wrapper classes from body/document
+      const wrapper =
+        document.querySelector(".js-modal-toggle-wrapper") || document.body;
+      wrapper.classList.remove("modal--open");
+      wrapper.classList.remove("modal-size-chart-modal--open");
+
+      // Hide modal
+      modalContainer.style.display = "none";
+      modalContainer.classList.remove("modal--active");
+      modalContainer.setAttribute("aria-hidden", "true");
+
+      // Unlock body scroll
+      document.body.style.removeProperty("overflow");
+      document.body.classList.remove("modal-open");
+
+      console.log("Size chart modal closed with backdrop hidden");
+    } catch (error) {
+      console.error("Error closing modal:", error);
+    }
+  }
+
+  // Force close any open modals on page load
+  function forceCloseOnLoad() {
+    // Close all modals
+    const openModals = document.querySelectorAll(
+      ".modal--active, [data-wau-modal].modal--active"
+    );
+    openModals.forEach((modal) => {
+      modal.style.display = "none";
+      modal.classList.remove("modal--active");
+      modal.setAttribute("aria-hidden", "true");
+    });
+
+    // Close all backdrops
+    const openBackdrops = document.querySelectorAll(
+      ".js-modal-overlay, #size-chart-backdrop"
+    );
+    openBackdrops.forEach((backdrop) => {
+      backdrop.style.display = "none";
+      backdrop.classList.remove("modal-open");
+      backdrop.style.opacity = "0";
+      backdrop.style.visibility = "hidden";
+    });
+
+    // Remove modal classes from wrapper and body
+    const wrapper =
+      document.querySelector(".js-modal-toggle-wrapper") || document.body;
+    wrapper.classList.remove("modal--open", "modal-size-chart-modal--open");
+
+    document.body.style.removeProperty("overflow");
+    document.body.classList.remove("modal-open");
+  }
+
+  // Override WAU.Modal if it exists to prevent conflicts
+  function overrideWAUModal() {
+    if (typeof WAU !== "undefined" && WAU.Modal) {
+      const originalOpen = WAU.Modal._openByName;
+      const originalClose = WAU.Modal._closeByName;
+
+      WAU.Modal._openByName = function (name) {
+        if (name === "size-chart-modal") {
+          openModal();
+          return;
+        }
+        if (originalOpen) {
+          originalOpen.call(this, name);
+        }
+      };
+
+      WAU.Modal._closeByName = function (name) {
+        if (name === "size-chart-modal") {
+          closeModal();
+          return;
+        }
+        if (originalClose) {
+          originalClose.call(this, name);
+        }
+      };
+    }
+  }
+
+  // Initialize when DOM is ready
+  function initWhenReady() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
+        forceCloseOnLoad();
+        setTimeout(initialize, 100);
+        setTimeout(overrideWAUModal, 200);
+      });
+    } else {
+      forceCloseOnLoad();
+      setTimeout(initialize, 100);
+      setTimeout(overrideWAUModal, 200);
+    }
+  }
+
+  // Also initialize on window load as backup
+  window.addEventListener("load", function () {
+    if (!isInitialized) {
+      forceCloseOnLoad();
+      initialize();
+      overrideWAUModal();
+    }
+  });
+
+  // Handle Shopify section reloads
+  document.addEventListener("shopify:section:load", function () {
+    isInitialized = false;
+    setTimeout(function () {
+      forceCloseOnLoad();
+      initialize();
+      overrideWAUModal();
+    }, 100);
+  });
+
+  // Expose global functions for debugging
+  window.SizeChartModal = {
+    open: openModal,
+    close: closeModal,
+    isOpen: isModalOpen,
+    reinitialize: function () {
+      isInitialized = false;
+      initialize();
+    },
+  };
+
+  // Start initialization
+  initWhenReady();
 })();

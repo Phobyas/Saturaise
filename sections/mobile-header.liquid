@@ -208,7 +208,6 @@
 
   .mobile-search-drawer .mobile-search-close {
     color: {{ text_color }} !important;
-    
   }
 
   .mobile-search-drawer .mobile-search-close:hover {
@@ -218,30 +217,13 @@
 
 {% comment %} Mobile Header {% endcomment %}
 <section
-  class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide l0 z5 js-mobile-header relative z-50"
+  class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide z5 js-mobile-header relative z-50"
   data-section-id="{{ section.id }}"
   data-asset-url="{{ 'mobile-search-drawer.js' | asset_url }}"
   data-asset-preload="true"
   data-section-type="mobile-header">
+  
   {%- capture mobile_cart_link -%}
-    {%- if section.settings.show_searchbox -%}
-      <li class="mobile-header__cart-links--search mr-3">
-        <button class="js-slideout-open btn-as-link" 
-                data-wau-slideout-target="mobile-search" 
-                data-slideout-direction="top"
-                aria-label="Open search" 
-                type="button">
-          {% render 'saturaise-icons',
-             wrapper: '.mobile-header__cart-links--search',
-             type: 'theme',
-             icon: 'search',
-             size: '24px',
-             classes: 'mt0 mr2 mb0 ml0',
-             fill: text_color,
-             hover: hover_color %}
-        </button>
-      </li>
-    {%- endif -%}
     <li class="mobile-header__cart-links--cart cart-link relative">
       {%- liquid
         if settings.cart_type == 'drawer'
@@ -270,6 +252,7 @@
       </div>
     </li>
    {%- endcapture -%}
+   
   {%- capture mobile_nav_link -%}
     <li class="mobile-header__cart-links--nav relative">
       <div class="slideout__trigger--open mobile-header--open">
@@ -289,52 +272,52 @@
       </div>
     </li>
   {%- endcapture -%}
+  
+  {%- capture mobile_search_link -%}
+    <li class="mobile-header__cart-links--search mr-3">
+      <button class="js-slideout-open btn-as-link" 
+              data-wau-slideout-target="mobile-search" 
+              data-slideout-direction="top"
+              aria-label="Open search" 
+              type="button">
+        {% render 'saturaise-icons',
+           wrapper: '.mobile-header__cart-links--search',
+           type: 'theme',
+           icon: 'search',
+           size: '24px',
+           classes: 'mt0 mr2 mb0 ml0',
+           fill: text_color,
+           hover: hover_color %}
+      </button>
+    </li>
+  {%- endcapture -%}
+  
   <article id="mobile-menu" class="grid__wrapper mb-1 px-4">
-    {%- if section.settings.header_layout == 'logo_left' -%}
-      <div class="site-logo mobile-nav__logo-wrapper span-8 md-span-8 sm-span-8 auto a-left v-center shrink-wrap">
-        {% if section.settings.logo != blank %}
-          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
-            {{ section.settings.logo | image_url: width: 500 | image_tag: 
-              loading: 'eager', 
-              fetchpriority: 'high',
-              width: 500, 
-              height: 101,
-              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
-              style: 'aspect-ratio: 500/101;'
-            }}
-          </a>
-        {% else %}
-          <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
-        {% endif %}
-      </div>
-      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 inline-block ">
-       {{ mobile_cart_link }}
-       {{ mobile_nav_link }}
-      </ul>
-    {%- else -%}
-      <ul class="span-4 md-span-4 sm-span-4 auto a-left v-center list-style-none mb0 inline-block">
-        {{ mobile_nav_link }}
-      </ul>
-      <div class="site-logo mobile-nav__logo-wrapper span-4 md-span-4 sm-span-4 auto a-center v-center shrink-wrap">
-        {% if section.settings.logo != blank %}
-          <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
-            {{ section.settings.logo | image_url: width: 500 | image_tag: 
-              loading: 'eager', 
-              fetchpriority: 'high',
-              width: 500, 
-              height: 101,
-              class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
-              style: 'aspect-ratio: 500/101;'
-            }}
-          </a>
-        {% else %}
-          <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
-        {% endif %}
-      </div>
-      <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 flex justify-end">
-        {{ mobile_cart_link }}
-      </ul>
-    {%- endif -%}
+    <ul class="span-4 md-span-4 sm-span-4 auto a-left v-center list-style-none mb0 inline-block">
+      {{ mobile_nav_link }}
+    </ul>
+    <div class="site-logo mobile-nav__logo-wrapper span-4 md-span-4 sm-span-4 auto a-center v-center shrink-wrap">
+      {% if section.settings.logo != blank %}
+        <a class="mobile-nav__img-logo inline-block lh0 mb0 shrink-wrap" href="{{ routes.root_url }}">
+          {{ section.settings.logo | image_url: width: 500 | image_tag: 
+            loading: 'eager', 
+            fetchpriority: 'high',
+            width: 500, 
+            height: 101,
+            class: 'w-full max-w-sm mx-auto h-auto object-contain logo-image-mobile', 
+            style: 'aspect-ratio: 500/101;'
+          }}
+        </a>
+      {% else %}
+        <a class="mobile-nav__text-logo inline-block v-center m0" href="{{ routes.root_url }}">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+    <ul class="span-4 md-span-4 sm-span-4 auto a-right v-center list-style-none mb0 flex justify-end">
+      {%- if section.settings.show_searchbox -%}
+        {{ mobile_search_link }}
+      {%- endif -%}
+      {{ mobile_cart_link }}
+    </ul>
   </article>
 </section>
 <div class="clear js-clear-element"></div>
@@ -368,10 +351,14 @@
               class="mobile-search-close js-slideout-close" 
               data-slideout-direction="top"
               aria-label="Zamknij wyszukiwanie">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+        {% render 'snip-icons',
+           wrapper: '.mobile-search-close',
+           type: 'theme',
+           icon: 'close',
+           size: '16px',
+           classes: 'vib-center',
+           fill: 'var(--text-color)',
+           hover: 'var(--text-color)' %}
       </button>
     </div>
   </div>
@@ -442,7 +429,7 @@
            wrapper: '.section-header__mobile',
            type: 'theme',
            icon: 'close',
-           size: '18px',
+           size: '14px',
            classes: 'mt0 mr0 mb0 ml0',
            fill: 'var(--header-text)',
            hover: 'var(--header-hover)' %}
@@ -601,14 +588,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set initial CSS variables for fixed dimensions
   const setHeaderDimensions = function() {
     const mobileHeader = document.querySelector('.mobile-nav__mobile-header');
-    const announcementBar = document.querySelector('.announcement-bar.wrapper');
     
     if (mobileHeader) {
-      const headerHeight = mobileHeader.offsetHeight || 66;
-      const announcementHeight = announcementBar ? announcementBar.offsetHeight : 0;
+      const headerHeight = 66; // Fixed height
       
       document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
-      document.documentElement.style.setProperty('--announcement-bar-height', `${announcementHeight}px`);
     }
   };
   
@@ -653,7 +637,7 @@ window.routes.account_url = {{ routes.account_url | json }};
           "label": "Logo center"
         }
       ],
-      "default": "logo_left"
+      "default": "logo_center"
     },
     {
       "type": "checkbox",
@@ -758,3 +742,4 @@ window.routes.account_url = {{ routes.account_url | json }};
     }
   ]
 }
+{% endschema %}

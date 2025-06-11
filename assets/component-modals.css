@@ -277,7 +277,7 @@ body.modal-open {
 .tab-cont {
   max-height: 70vh;
   overflow-y: auto;
-  padding-right: 10px;
+  margin-bottom: 20px;
 }
 
 .tabe-pane__content {
