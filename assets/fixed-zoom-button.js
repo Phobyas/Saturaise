@@ -330,12 +330,6 @@
           window.resetImageZoom();
         }
 
-        // Add slide transition effect
-        imageContainer.style.transform = `translateX(${
-          direction > 0 ? "100px" : "-100px"
-        })`;
-        imageContainer.style.opacity = "0.7";
-
         setTimeout(() => {
           // Add loading state
           modalImage.classList.remove("loaded");
