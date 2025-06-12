@@ -1699,3 +1699,589 @@
     display: none !important;
   }
 }
+/* Your existing CSS content stays above this line */
+
+/* ===== PRODUCT GALLERY FIXES - ADD THESE TO THE END ===== */
+
+/* Ensure images are visible and loaded properly */
+.product__section-images .scroll--gallery_item img {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Fix for images that might be hidden */
+.product__section-images .scroll--gallery_item img[loading="lazy"] {
+  loading: eager !important;
+}
+
+/* Remove margin-bottom from first gallery item */
+.product__section-images .scroll--gallery_item:first-of-type {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ===== DESKTOP: CSS GRID LAYOUT ===== */
+@media (min-width: 1024px) {
+  /* Container uses CSS Grid for proper layout */
+  .product-images__scroll-gallery-container {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+
+  /* First image spans both columns */
+  .product__section-images .scroll--gallery_item:first-of-type {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    padding-right: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* All other images fit in grid cells equally */
+  .product__section-images .scroll--gallery_item:not(:first-of-type) {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Container adjustments for desktop */
+  .product__section-images .scroll--gallery_item {
+    padding-left: 0 !important;
+    display: block !important;
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .product__section-images .product-gallery__media-container {
+    background-color: #f6f6f6 !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Hide page dots on desktop */
+  .product__section-images .flickity-page-dots {
+    display: none !important;
+  }
+
+  /* Remove hover animations on desktop */
+  .product__section-images .scroll--gallery_item:hover {
+    transform: none !important;
+  }
+}
+
+/* ===== MOBILE: FLICKITY WITH PROPER IMAGE HANDLING ===== */
+@media (max-width: 1023px) {
+  /* Remove any padding on mobile */
+  .product__section-images .scroll--gallery_item {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-bottom: 0 !important;
+    width: 100% !important;
+    position: relative !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    margin-bottom: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Special handling for first item */
+  .product__section-images .scroll--gallery_item:first-of-type {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  /* Ensure Flickity viewport has dynamic height and grey background */
+  .product__section-images .flickity-viewport {
+    overflow: hidden !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    background-color: #f6f6f6 !important;
+    border-radius: 8px !important;
+  }
+
+  .product__section-images .flickity-slider {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Style the gallery container */
+  .product-images__scroll-gallery-container {
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .product__section-images .product-gallery__media-container {
+    background-color: #f6f6f6 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    aspect-ratio: 1 / 1 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Force Flickity dots to be visible OUTSIDE the container */
+  .product__section-images .flickity-page-dots,
+  .flickity-page-dots,
+  #main-image-gallery .flickity-page-dots {
+    display: block !important;
+    margin-top: 20px !important;
+    position: relative !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    text-align: center !important;
+    clear: both !important;
+    height: auto !important;
+  }
+
+  /* Style the dots nicely */
+  .product__section-images .flickity-page-dots .dot {
+    background: #ddd !important;
+    border-radius: 50% !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin: 0 5px !important;
+    opacity: 0.5 !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+  }
+
+  .product__section-images .flickity-page-dots .dot.is-selected {
+    background: #333 !important;
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
+  /* Simple navigation fallback styles */
+  .simple-nav {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 20px !important;
+    gap: 10px !important;
+  }
+
+  .simple-dot {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    background: #ddd !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+  }
+
+  .simple-dot.active {
+    background: #333 !important;
+  }
+}
+
+/* ===== TABLET SPECIFIC ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .product-images__scroll-gallery-container {
+    height: auto !important;
+    margin: 0 15px !important;
+  }
+
+  .product__section-images .product-gallery__media-container {
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  /* Apply grey background to Flickity viewport on tablet too */
+  .product__section-images .flickity-viewport {
+    background-color: #f6f6f6 !important;
+    border-radius: 8px !important;
+  }
+
+  .product__section-images .scroll--gallery_item {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+    padding-right: 0 !important;
+    position: relative !important;
+    margin-bottom: 0 !important;
+  }
+
+  .product__section-images .scroll--gallery_item img {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+  }
+}
+
+/* ===== IMAGE LOADING STATES ===== */
+.product__section-images .scroll--gallery_item img {
+  min-height: 200px; /* Ensure container has height while loading */
+}
+
+.product__section-images .scroll--gallery_item img[data-loading="true"] {
+  opacity: 0.5;
+}
+
+.product__section-images .scroll--gallery_item img[data-loaded="true"] {
+  opacity: 1;
+}
+
+/* Ensure images don't break layout while loading */
+.product__section-images .scroll--gallery_item {
+  min-height: 200px;
+  background-color: #f6f6f6;
+}
+
+/* ===== FLICKITY BUTTON STYLING ===== */
+.product__section-images .flickity-prev-next-button {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.product__section-images .flickity-prev-next-button:hover {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.product__section-images .flickity-prev-next-button.previous {
+  left: 15px !important;
+}
+
+.product__section-images .flickity-prev-next-button.next {
+  right: 15px !important;
+}
+
+/* Hide navigation buttons on desktop */
+@media (min-width: 1024px) {
+  .product__section-images .flickity-prev-next-button {
+    display: none !important;
+  }
+}
+
+/* ===== OVERRIDE EXISTING PROBLEMATIC RULES ===== */
+/* Ensure single image galleries don't show dots */
+.single_image--true .flickity-page-dots,
+.single_image--true .simple-nav {
+  display: none !important;
+}
+
+/* Force visibility for all gallery images */
+.product__section-images .scroll--gallery_item img,
+.product__section-images
+  .scroll--gallery_item
+  .product-gallery__media-container
+  img {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Emergency fallback for completely hidden images */
+.product__section-images img[style*="display: none"],
+.product__section-images img[style*="visibility: hidden"],
+.product__section-images img[style*="opacity: 0"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===== FIXED ZOOM BUTTON STYLES ===== */
+.fixed-zoom-btn {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+  z-index: 100 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(5px) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  color: #333 !important;
+}
+
+.fixed-zoom-btn:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.fixed-zoom-btn:active {
+  transform: scale(0.95) !important;
+}
+
+.fixed-zoom-btn svg {
+  pointer-events: none !important;
+  transition: transform 0.2s ease !important;
+}
+
+.fixed-zoom-btn:hover svg {
+  transform: scale(1.1) !important;
+}
+
+/* Hide on screens smaller than tablet where zoom isn't as useful */
+@media (max-width: 480px) {
+  .fixed-zoom-btn {
+    width: 48px !important;
+    height: 48px !important;
+    top: 15px !important;
+    right: 15px !important;
+  }
+
+  .fixed-zoom-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+/* Zoom Modal Styles */
+.zoom-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 10000 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+.zoom-modal--active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.zoom-modal__backdrop {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  cursor: pointer !important;
+}
+
+.zoom-modal__container {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+.zoom-modal__close {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 10001 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  color: #333 !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+}
+
+.zoom-modal__close:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.1) !important;
+}
+
+.zoom-modal__image-container {
+  height: 60vh !important;
+  position: relative !important;
+  max-width: 85vw !important;
+  max-height: 85vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background-color: #f6f6f6 !important;
+  border-radius: 8px !important;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+}
+
+.zoom-modal__navigation {
+  margin-top: 24px !important;
+}
+
+.zoom-modal__image {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  mix-blend-mode: multiply !important;
+  transform-origin: center center !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .zoom-modal__container {
+    padding: 10px !important;
+  }
+
+  .zoom-modal__close {
+    top: 10px !important;
+    right: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 20px !important;
+  }
+
+  .zoom-modal__image-container {
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+  }
+}
+
+/* Loading state */
+.zoom-modal__image {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.zoom-modal__image.loaded {
+  opacity: 1 !important;
+}
+
+/* Zoom states */
+.zoom-modal__image[style*="scale"] {
+  cursor: grab !important;
+}
+
+.zoom-modal__image[style*="scale"]:active {
+  cursor: grabbing !important;
+}
+
+/* Ensure smooth zooming */
+.zoom-modal__image {
+  will-change: transform !important;
+}
+
+/* Prevent text selection during interactions */
+.zoom-modal__image-container {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Focus styles for accessibility */
+.fixed-zoom-btn:focus,
+.zoom-modal__close:focus {
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure gallery container is positioned for absolute button */
+.product-images__scroll-gallery-container {
+  position: relative !important;
+}
+
+/* Hide original zoom buttons when fixed button is active */
+.product-images__scroll-gallery-container .js-zoom-btn,
+.product-images__scroll-gallery-container .product-gallery__zoom-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Smooth transitions for button appearance */
+.fixed-zoom-btn {
+  animation: fadeInZoom 0.3s ease !important;
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0 !important;
+    transform: scale(0.8) !important;
+  }
+  to {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .fixed-zoom-btn {
+    background: rgba(40, 40, 40, 0.9) !important;
+    color: #fff !important;
+  }
+
+  .fixed-zoom-btn:hover {
+    background: rgba(40, 40, 40, 1) !important;
+  }
+
+  .zoom-modal__close {
+    background: rgba(40, 40, 40, 0.9) !important;
+    color: #fff !important;
+  }
+
+  .zoom-modal__close:hover {
+    background: rgba(40, 40, 40, 1) !important;
+  }
+}

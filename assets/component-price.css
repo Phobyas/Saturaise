@@ -89,6 +89,7 @@
 }
 .price-item--sale {
   color: var(--sale-color);
+  font-weight: 700;
 }
 .price--on-sale .price-item--regular {
   text-decoration: line-through;

@@ -14,8 +14,8 @@
               assign is_selected = 'is-selected'
             endif
 
-            assign loading = 'lazy'
-            assign fetch_priority = 'auto'
+            assign loading = 'eager'
+            assign fetch_priority = 'high'
 
             if section.index == 1 and forloop.first
               assign loading = 'eager'
@@ -59,23 +59,6 @@
                        loading="{{ loading }}"
                        fetchpriority="{{ fetch_priority }}"
                        data-index="{{ counter }}">
-
-                      {% if section.settings.click_to_enlarge %}
-                      <a class="js-zoom-btn product-gallery__zoom-btn no-js-hidden lg-hide" 
-                         title="click to zoom-in" 
-                         data-index="{{ counter }}" 
-                         href="{{ media | image_url: width: 2400 }}" 
-                         tabindex="-1">
-                        {% render 'snip-icons',
-                           wrapper: '.product-gallery__zoom-btn',
-                           type: 'theme',
-                           icon: 'search',
-                           size: '16px',
-                           classes: 'mr0',
-                           fill: 'var(--directional-text)',
-                           hover: 'var(--directional-text)' %}
-                      </a>
-                    {% endif %}
 
                 {% when 'external_video' %}
                   <div class="product-gallery__product-video videoWrapper video-wrapper product-single__media js-video-external-wrapper">
@@ -153,10 +136,11 @@
     {%- endstyle -%}
   {% endif %}
 </div>
+
 <script>
-// Fixed Product Gallery JavaScript - No Scroll Interference
+// Fixed Product Gallery JavaScript - Image Loading Fix
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Initializing gallery without scroll interference...');
+  console.log('Initializing gallery with image loading fixes...');
   initializeGallery();
   
   // Only reinitialize on actual resize, not scroll
@@ -165,13 +149,20 @@ document.addEventListener('DOMContentLoaded', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(initializeGallery, 250);
   });
+  
+  // Force image loading after initialization
+  setTimeout(forceImageLoading, 500);
 });
 
 function initializeGallery() {
   const galleryContainer = document.getElementById('scrollGalleryContainer');
-  if (!galleryContainer) return;
+  if (!galleryContainer) {
+    console.log('Gallery container not found');
+    return;
+  }
   
   const screenWidth = window.innerWidth;
+  console.log('Screen width:', screenWidth);
   
   if (screenWidth < 1024) {
     setupMobileCarousel(galleryContainer);
@@ -195,14 +186,22 @@ function setupMobileCarousel(container) {
   
   // Check if Flickity exists
   if (typeof Flickity === 'undefined') {
-    console.log('Flickity not available');
+    console.log('Flickity not available, falling back to basic mobile layout');
+    setupBasicMobileLayout(container);
     return;
   }
   
   const slides = container.querySelectorAll('.scroll--gallery_item');
-  console.log('Found slides:', slides.length);
+  console.log('Found slides for mobile:', slides.length);
   
   if (slides.length === 0) return;
+  
+  // Force all images to be visible first
+  slides.forEach(slide => {
+    slide.style.display = 'block';
+    slide.style.opacity = '1';
+    slide.style.visibility = 'visible';
+  });
   
   // Initialize Flickity
   try {
@@ -218,28 +217,32 @@ function setupMobileCarousel(container) {
       selectedAttraction: 0.025,
       friction: 0.28,
       groupCells: false,
-      adaptiveHeight: false,
+      adaptiveHeight: true,
       cellSelector: '.scroll--gallery_item',
       resize: true,
-      watchCSS: false
+      watchCSS: false,
+      imagesLoaded: true
     });
     
     console.log('Flickity initialized successfully');
     
     // Restore previous slide position
     if (currentIndex > 0 && currentIndex < slides.length) {
-      flickityInstance.select(currentIndex, false, true); // No animation on restore
+      flickityInstance.select(currentIndex, false, true);
     }
     
     flickityInstance.on('ready', function() {
       console.log('Flickity ready');
       ensureDotsVisible(container);
+      forceImageLoading();
     });
     
     flickityInstance.on('change', function(index) {
       console.log('Changed to slide:', index);
-      // Store the current selection
       container.setAttribute('data-current-slide', index);
+      
+      // Force load images in current and adjacent slides
+      loadSlideImages(slides, index);
     });
     
     flickityInstance.on('settle', function(index) {
@@ -247,19 +250,91 @@ function setupMobileCarousel(container) {
       container.setAttribute('data-current-slide', index);
     });
     
-    // IMPORTANT: Prevent scroll events from interfering
-    // Remove any existing scroll listeners that might reset the gallery
-    window.removeEventListener('scroll', handleScrollReset, true);
-    document.removeEventListener('scroll', handleScrollReset, true);
-    
-    // Don't let intersection observers reset the gallery
-    preventIntersectionReset(container);
+    // Load initial images
+    loadSlideImages(slides, currentIndex);
     
     return flickityInstance;
     
   } catch (error) {
     console.error('Flickity initialization error:', error);
+    setupBasicMobileLayout(container);
   }
+}
+
+function setupBasicMobileLayout(container) {
+  console.log('Setting up basic mobile layout');
+  
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  
+  // Show only first slide initially
+  slides.forEach((slide, index) => {
+    if (index === 0) {
+      slide.style.display = 'block';
+      slide.classList.add('is-selected');
+    } else {
+      slide.style.display = 'none';
+    }
+  });
+  
+  // Create simple navigation if multiple slides
+  if (slides.length > 1) {
+    createSimpleNavigation(container, slides);
+  }
+  
+  forceImageLoading();
+}
+
+function createSimpleNavigation(container, slides) {
+  // Remove existing navigation
+  const existingNav = container.querySelector('.simple-nav');
+  if (existingNav) existingNav.remove();
+  
+  const nav = document.createElement('div');
+  nav.className = 'simple-nav';
+  nav.style.cssText = `
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+  `;
+  
+  slides.forEach((slide, index) => {
+    const dot = document.createElement('button');
+    dot.className = 'simple-dot';
+    dot.style.cssText = `
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: ${index === 0 ? '#333' : '#ddd'};
+      cursor: pointer;
+      transition: background 0.3s ease;
+    `;
+    
+    dot.addEventListener('click', () => {
+      // Hide all slides
+      slides.forEach(s => {
+        s.style.display = 'none';
+        s.classList.remove('is-selected');
+      });
+      
+      // Show selected slide
+      slide.style.display = 'block';
+      slide.classList.add('is-selected');
+      
+      // Update dots
+      nav.querySelectorAll('.simple-dot').forEach((d, i) => {
+        d.style.background = i === index ? '#333' : '#ddd';
+      });
+      
+      // Force load this image
+      loadSlideImages(slides, index);
+    });
+    
+    nav.appendChild(dot);
+  });
+  
+  container.appendChild(nav);
 }
 
 function setupDesktopGrid(container) {
@@ -273,43 +348,99 @@ function setupDesktopGrid(container) {
     }
   }
   
+  // Remove any mobile navigation
+  const simpleNav = container.querySelector('.simple-nav');
+  if (simpleNav) simpleNav.remove();
+  
+  // Ensure all slides are visible for desktop grid
+  const slides = container.querySelectorAll('.scroll--gallery_item');
+  slides.forEach(slide => {
+    slide.style.display = 'block';
+    slide.style.opacity = '1';
+    slide.style.visibility = 'visible';
+    slide.style.position = 'static';
+  });
+  
   // Clean up any scroll prevention
   container.removeAttribute('data-current-slide');
+  
+  // Force load all images for desktop
+  forceImageLoading();
 }
 
-function preventIntersectionReset(container) {
-  // Override any intersection observer that might be resetting the gallery
-  const originalObserve = IntersectionObserver.prototype.observe;
-  const originalUnobserve = IntersectionObserver.prototype.unobserve;
+function loadSlideImages(slides, currentIndex) {
+  // Load current slide and adjacent slides
+  const indicesToLoad = [
+    Math.max(0, currentIndex - 1),
+    currentIndex,
+    Math.min(slides.length - 1, currentIndex + 1)
+  ];
   
-  // Track observers that might be interfering
-  const galleryObservers = new Set();
-  
-  IntersectionObserver.prototype.observe = function(target) {
-    // If this observer is watching our gallery or its children, track it
-    if (target === container || container.contains(target)) {
-      galleryObservers.add(this);
-      console.log('Tracked intersection observer on gallery');
+  indicesToLoad.forEach(index => {
+    const slide = slides[index];
+    if (slide) {
+      const img = slide.querySelector('img');
+      if (img) {
+        forceImageLoad(img);
+      }
     }
-    return originalObserve.call(this, target);
-  };
-  
-  IntersectionObserver.prototype.unobserve = function(target) {
-    if (target === container || container.contains(target)) {
-      galleryObservers.delete(this);
-    }
-    return originalUnobserve.call(this, target);
-  };
-  
-  // Store reference to clean up later if needed
-  container._galleryObservers = galleryObservers;
+  });
 }
 
-function handleScrollReset(event) {
-  // This function should be removed/prevented
-  console.log('Scroll reset prevented');
-  event.stopPropagation();
-  return false;
+function forceImageLoading() {
+  console.log('Force loading all images...');
+  
+  const images = document.querySelectorAll('.scroll--gallery_item img');
+  images.forEach((img, index) => {
+    forceImageLoad(img);
+  });
+}
+
+function forceImageLoad(img) {
+  // If image is already loaded, skip
+  if (img.complete && img.naturalHeight !== 0) {
+    return;
+  }
+  
+  // Set loading to eager
+  img.loading = 'eager';
+  
+  // Force decode if available
+  if (img.decode) {
+    img.decode().catch(err => {
+      console.log('Image decode failed:', err);
+    });
+  }
+  
+  // If src is empty but srcset exists, set src from srcset
+  if (!img.src && img.srcset) {
+    const srcsetUrls = img.srcset.split(',');
+    if (srcsetUrls.length > 0) {
+      const firstUrl = srcsetUrls[0].trim().split(' ')[0];
+      img.src = firstUrl;
+    }
+  }
+  
+  // Add error handling
+  img.onerror = function() {
+    console.error('Image failed to load:', img.src);
+    // Try to load from srcset if src fails
+    if (img.srcset && !img.getAttribute('data-fallback-attempted')) {
+      img.setAttribute('data-fallback-attempted', 'true');
+      const srcsetUrls = img.srcset.split(',');
+      for (let srcsetUrl of srcsetUrls) {
+        const url = srcsetUrl.trim().split(' ')[0];
+        if (url !== img.src) {
+          img.src = url;
+          break;
+        }
+      }
+    }
+  };
+  
+  img.onload = function() {
+    console.log('Image loaded successfully:', img.src);
+  };
 }
 
 function ensureDotsVisible(container) {
@@ -351,7 +482,33 @@ function switchToImage(mediaId) {
         flickityInstance.select(slideIndex);
         container.setAttribute('data-current-slide', slideIndex);
       }
+    } else {
+      // Handle simple navigation
+      const slides = document.querySelectorAll('.scroll--gallery_item');
+      const slideIndex = Array.from(slides).indexOf(targetSlide);
+      
+      slides.forEach(slide => {
+        slide.style.display = 'none';
+        slide.classList.remove('is-selected');
+      });
+      
+      targetSlide.style.display = 'block';
+      targetSlide.classList.add('is-selected');
+      
+      // Update simple navigation dots if they exist
+      const nav = document.querySelector('.simple-nav');
+      if (nav) {
+        nav.querySelectorAll('.simple-dot').forEach((dot, index) => {
+          dot.style.background = index === slideIndex ? '#333' : '#ddd';
+        });
+      }
     }
+  }
+  
+  // Force load the target image
+  const img = targetSlide.querySelector('img');
+  if (img) {
+    forceImageLoad(img);
   }
 }
 
@@ -359,7 +516,6 @@ function switchToImage(mediaId) {
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
-    // Don't debounce if this is triggered by scroll
     if (args[0] && args[0].type === 'scroll') {
       return;
     }
@@ -373,32 +529,38 @@ function debounce(func, wait) {
   };
 }
 
-// Prevent any theme-level scroll handlers from resetting gallery
-document.addEventListener('DOMContentLoaded', function() {
-  // Remove common scroll handlers that might interfere
-  const scrollHandlers = [
-    'theme-scroll-handler',
-    'gallery-scroll-reset',
-    'product-scroll-handler',
-    'intersection-scroll'
-  ];
-  
-  scrollHandlers.forEach(handlerName => {
-    const elements = document.querySelectorAll(`[data-${handlerName}]`);
-    elements.forEach(el => {
-      if (el.closest('#scrollGalleryContainer')) {
-        el.removeAttribute(`data-${handlerName}`);
-        console.log(`Removed ${handlerName} from gallery`);
-      }
-    });
-  });
-});
-
+// Export functions for global use
 window.switchToImage = switchToImage;
+window.forceImageLoading = forceImageLoading;
 
+// Handle variant changes
 document.addEventListener('variant:change', function(e) {
   if (e.detail && e.detail.variant && e.detail.variant.featured_media) {
     switchToImage(e.detail.variant.featured_media.id);
   }
 });
+
+// Add intersection observer to load images when they come into view
+function addImageIntersectionObserver() {
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          forceImageLoad(img);
+          observer.unobserve(img);
+        }
+      });
+    });
+
+    // Observe all gallery images
+    document.querySelectorAll('.scroll--gallery_item img').forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+}
+
+// Initialize intersection observer
+setTimeout(addImageIntersectionObserver, 1000);
 </script>
+<script src="{{ 'fixed-zoom-button.js' | asset_url }}" defer></script>
