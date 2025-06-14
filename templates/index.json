@@ -316,13 +316,20 @@
           "settings": {
             "collection": "bestsellery"
           }
+        },
+        "collection_kPBwPQ": {
+          "type": "collection",
+          "settings": {
+            "collection": "air-jordan"
+          }
         }
       },
       "block_order": [
         "collection_gn6jxm",
         "collection_4QViLA",
         "collection_KAK9q3",
-        "collection_bG6CPA"
+        "collection_bG6CPA",
+        "collection_kPBwPQ"
       ],
       "settings": {
         "title": "Odkrywaj Marki",
