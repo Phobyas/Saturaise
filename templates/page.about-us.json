@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "about_us_main": {
+      "type": "about-us-page-section",
+      "settings": {
+        "hero_title": "O Saturaise",
+        "hero_subtitle": "Twój zaufany partner w świecie autentycznych sneakersów i streetwearu"
+      }
+    }
+  },
+  "order": ["about_us_main"]
+}
