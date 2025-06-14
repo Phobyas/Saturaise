@@ -91,9 +91,6 @@
           "menu_image": "shopify://shop_images/logo-new-saturaise2.png",
           "menu_image_text": "",
           "menu_image_url": "shopify://pages/lookbook",
-          "menu_text_color": "#000000",
-          "menu_bg_color": "#ffffff",
-          "menu_text_size": 24,
           "show_social_icons": true
         }
       },
