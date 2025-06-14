@@ -69,6 +69,298 @@
   {% render 'snip-social-meta-tags' %}
   {% render 'snip-structured-data' %}
   
+ {% if template == 'index' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://saturaise.com/#organization",
+        "name": "Saturaise",
+        "alternateName": "Saturaise Sneakers",
+        "url": "https://saturaise.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+          "width": 600,
+          "height": 60
+        },
+        "image": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+        "description": "Saturaise to działająca od trzech lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Ogrodowa 9a",
+          "addressLocality": "Żyrowa",
+          "postalCode": "47-330",
+          "addressCountry": "PL"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+48451108247",
+          "email": "saturaisekontakt@gmail.com",
+          "contactType": "customer service",
+          "availableLanguage": "Polish",
+          "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "09:00",
+            "closes": "16:00"
+          }
+        },
+        "foundingDate": "2022",
+        "areaServed": "PL",
+        "sameAs": [
+          "https://saturaise.com"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://saturaise.com/#website",
+        "url": "https://saturaise.com",
+        "name": "Saturaise",
+        "description": "Limitowane sneakersy Nike, Adidas, Jordan - oryginalne buty i kolekcjonerskie figurki",
+        "publisher": {
+          "@id": "https://saturaise.com/#organization"
+        },
+        "inLanguage": "pl-PL",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://saturaise.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://saturaise.com/#webpage",
+        "url": "https://saturaise.com",
+        "name": "Saturaise | Limitowane Sneakersy Nike, Adidas, Jordan | Sklep Online",
+        "description": "Saturaise to sklep online oferujący limitowane sneakersy marek Nike, Adidas i Jordan. Kup oryginalne buty i kolekcjonerskie figurki – dostawa 24h, 100% autentyczności.",
+        "isPartOf": {
+          "@id": "https://saturaise.com/#website"
+        },
+        "about": {
+          "@id": "https://saturaise.com/#organization"
+        },
+        "inLanguage": "pl-PL",
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://saturaise.com"
+            }
+          ]
+        }
+      },
+      {
+        "@type": "Store",
+        "@id": "https://saturaise.com/#store",
+        "name": "Saturaise",
+        "description": "Sklep z limitowanymi sneakersami i kolekcjonerskimi figurkami",
+        "url": "https://saturaise.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Ogrodowa 9a",
+          "addressLocality": "Żyrowa", 
+          "postalCode": "47-330",
+          "addressCountry": "PL"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "50.45473949051039",
+          "longitude": "18.131082121558123"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "16:00"
+        },
+        "telephone": "+48451108247",
+        "email": "saturaisekontakt@gmail.com",
+        "currenciesAccepted": "PLN",
+        "paymentAccepted": ["Credit Card", "PayPal", "Bank Transfer"],
+        "priceRange": "$$"
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://saturaise.com/#featured-collections",
+        "name": "Kolekcje produktów Saturaise",
+        "description": "Główne kategorie produktów dostępnych w sklepie Saturaise",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Nike Air Max",
+              "url": "https://saturaise.com/collections/air-max",
+              "description": "Limitowane modele Nike Air Max"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Nike Dunk Low",
+              "url": "https://saturaise.com/collections/dunk-low",
+              "description": "Kolekcja Nike Dunk Low"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Air Force 1",
+              "url": "https://saturaise.com/collections/air-force-1",
+              "description": "Klasyczne i limitowane modele Air Force 1"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Adidas Campus",
+              "url": "https://saturaise.com/collections/campus",
+              "description": "Adidas Campus - ikona lat 80."
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "UGG",
+              "url": "https://saturaise.com/collections/ugg",
+              "description": "Oryginalne buty UGG"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Yeezy Slide",
+              "url": "https://saturaise.com/collections/yeezy-slide",
+              "description": "Klapki Yeezy Slide"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Air Jordan 4",
+              "url": "https://saturaise.com/collections/air-jordan-4",
+              "description": "Legendarny model Air Jordan 4"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 8,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Air Jordan 3",
+              "url": "https://saturaise.com/collections/air-jordan-3",
+              "description": "Kultowy Air Jordan 3"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 9,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Nike Cortez",
+              "url": "https://saturaise.com/collections/cortez",
+              "description": "Klasyczne Nike Cortez"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 10,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "New Balance",
+              "url": "https://saturaise.com/collections/new-balance",
+              "description": "Limitowane modele New Balance"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 11,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Travis Scott",
+              "url": "https://saturaise.com/collections/travis-scott",
+              "description": "Kolaboracje Travis Scott"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 12,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Adidas Handball Spezial",
+              "url": "https://saturaise.com/collections/handball-spezial",
+              "description": "Sportowe dziedzictwo Adidas"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 13,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Air Jordan 11",
+              "url": "https://saturaise.com/collections/air-jordan-11",
+              "description": "Ikoniczny Air Jordan 11"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 14,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Yeezy 350",
+              "url": "https://saturaise.com/collections/yeezy-350",
+              "description": "Awangardowe Yeezy Boost 350"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 15,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Labubu",
+              "url": "https://saturaise.com/collections/labubu",
+              "description": "Kolekcjonerskie figurki Labubu"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 16,
+            "item": {
+              "@type": "CollectionPage",
+              "name": "Akcesoria",
+              "url": "https://saturaise.com/collections/akcesoria",
+              "description": "Kolekcjonerskie figurki i akcesoria"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  {% endif %}
+  <!-- End Enhanced Schema.org markup -->
+  
+  <!-- Inline critical CSS to prevent layout shifting -->
+
   <!-- Inline critical CSS to prevent layout shifting -->
   <style>
     /* Fixed header spacer height to prevent CLS */

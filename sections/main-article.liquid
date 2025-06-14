@@ -835,17 +835,104 @@
     assign fetch_priority = 'high'
   endif
 -%}
- 
-{% comment %} Clean Article Template with Simple Header {% endcomment %}
+
+{% comment %} Schema.org JSON-LD Structured Data {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ article.title | json }},
+  "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+  "datePublished": {{ article.published_at | date: "%Y-%m-%dT%H:%M:%S%z" | json }},
+  "dateModified": {{ article.updated_at | date: "%Y-%m-%dT%H:%M:%S%z" | json }},
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | default: shop.name | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }}
+    {%- if shop.brand.logo -%}
+    ,
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ shop.brand.logo | image_url: width: 600 | prepend: "https:" | json }},
+      "width": {{ shop.brand.logo.width | json }},
+      "height": {{ shop.brand.logo.height | json }}
+    }
+    {%- endif -%}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ canonical_url | json }}
+  },
+  "url": {{ canonical_url | json }}
+  {%- if article.image -%}
+  ,
+  "image": {
+    "@type": "ImageObject",
+    "url": {{ article.image | image_url: width: 1200 | prepend: "https:" | json }},
+    "width": {{ article.image.width | json }},
+    "height": {{ article.image.height | json }}
+  }
+  {%- endif -%}
+  {%- if article.tags.size > 0 -%}
+  ,
+  "keywords": {{ article.tags | join: ", " | json }}
+  {%- endif -%}
+  {%- if blog.comments_enabled? -%}
+  ,
+  "commentCount": {{ article.comments_count | json }},
+  "interactionStatistic": {
+    "@type": "InteractionCounter",
+    "interactionType": "https://schema.org/CommentAction",
+    "userInteractionCount": {{ article.comments_count | json }}
+  }
+  {%- endif -%}
+}
+</script>
+
+{% comment %} Breadcrumb Schema {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ shop.url | json }}
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ blog.title | json }},
+      "item": {{ blog.url | prepend: shop.url | json }}
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ article.title | json }},
+      "item": {{ article.url | prepend: shop.url | json }}
+    }
+  ]
+}
+</script>
+
+{% comment %} Clean Article Template with Semantic HTML {% endcomment %}
 <section class="article-template" data-section-id="{{ section.id }}" data-section-type="article-template" data-section-loaded="false">
   
   <!-- Simple Article Header -->
-  <div class="article-header">
-    <h1 class="article-title">{{ article.title }}</h1>
+  <header class="article-header">
+    <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
     <div class="article-meta">
       {% if article.published_at %}
         <div class="meta-item">
-          <span>{{ article.published_at | date: format: 'month_date_year' }}</span>
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+            {{ article.published_at | date: format: 'month_date_year' }}
+          </time>
         </div>
       {% endif %}
       
@@ -855,7 +942,9 @@
       
       {% if article.author != blank %}
         <div class="meta-item">
-          <span>{{ article.author }}</span>
+          <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+            <span itemprop="name">{{ article.author }}</span>
+          </span>
         </div>
       {% endif %}
       
@@ -866,11 +955,21 @@
         </div>
       {% endif %}
     </div>
-  </div>
+  </header>
 
   <!-- Article Content -->
   <div class="main-container">
-    <div class="article-content">
+    <article class="article-content" itemscope itemtype="https://schema.org/Article">
+      <!-- Hidden meta elements for Schema.org -->
+      <meta itemprop="datePublished" content="{{ article.published_at | date: '%Y-%m-%d' }}">
+      <meta itemprop="dateModified" content="{{ article.updated_at | date: '%Y-%m-%d' }}">
+      <meta itemprop="author" content="{{ article.author | default: shop.name }}">
+      <meta itemprop="publisher" content="{{ shop.name }}">
+      <meta itemprop="url" content="{{ canonical_url }}">
+      {% if article.excerpt != blank %}
+        <meta itemprop="description" content="{{ article.excerpt | strip_html | escape }}">
+      {% endif %}
+      
       {% if article.image and section.settings.show_featured_image %}
         <img src="{{ article.image | image_url: width: 1200 }}" 
              alt="{{ article.image.alt | escape }}" 
@@ -878,22 +977,23 @@
              loading="{{ loading }}"
              fetchpriority="{{ fetch_priority }}"
              width="1200" 
-             height="600">
+             height="600"
+             itemprop="image">
       {% endif %}
 
-      <div class="rte">
+      <div class="rte" itemprop="articleBody">
         {{ article.content }}
       </div>
 
       {% if article.tags.size > 0 %}
-        <div class="article-tags">
+        <footer class="article-tags">
           <h4>Tags</h4>
-          <div class="tag-list">
+          <div class="tag-list" itemprop="keywords">
             {% for tag in article.tags %}
-              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tag-item">{{ tag }}</a>
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tag-item" rel="tag">{{ tag }}</a>
             {% endfor %}
           </div>
-        </div>
+        </footer>
       {% endif %}
 
       <div class="social-sharing">
@@ -905,9 +1005,9 @@
       </div>
 
       {%- if blog.previous_article or blog.next_article -%}
-        <div class="article-navigation">
+        <nav class="article-navigation" aria-label="Article navigation">
           {% if blog.previous_article != blank %}
-            <a href="{{ blog.previous_article.url }}" class="nav-button prev">
+            <a href="{{ blog.previous_article.url }}" class="nav-button prev" rel="prev">
               <div class="nav-text">← {{ blog.previous_article.title | truncate: 40 }}</div>
             </a>
           {% else %}
@@ -915,25 +1015,26 @@
           {% endif %}
           
           {% if blog.next_article != blank %}
-            <a href="{{ blog.next_article.url }}" class="nav-button next">
+            <a href="{{ blog.next_article.url }}" class="nav-button next" rel="next">
               <div class="nav-text">{{ blog.next_article.title | truncate: 40 }} →</div>
             </a>
           {% else %}
             <div></div>
           {% endif %}
-        </div>
+        </nav>
       {%- endif -%}
       
       {%- if blog.comments_enabled? -%}
-        <div class="comments-wrapper">
+        <section class="comments-wrapper" id="comments">
+          <meta itemprop="commentCount" content="{{ article.comments_count }}">
           {% render 'article-comments',
             blog: blog,
             article: article,
             number_of_comments: number_of_comments
            %}
-        </div>
+        </section>
       {%- endif -%}
-    </div>
+    </article>
   </div>
 </section>
 

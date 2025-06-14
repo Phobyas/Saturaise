@@ -1,66 +1,268 @@
 {% comment %}
-  Enhanced structured data for better SEO
+  Enhanced structured data for Saturaise - Optimized for competitive SEO
+  Final version with search page schema and no conflicts
 {% endcomment %}
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
-    {
+    {% unless template == 'index' or template contains 'collection' %}
+   {
       "@type": "Organization",
-      "@id": "{{ shop.url }}/#organization",
-      "name": "{{ shop.name }}",
-      "url": "{{ shop.url }}",
-      {% if settings.social_logo != blank %}
+      "@id": "https://saturaise.com/#organization",
+      "name": "Saturaise",
+      "alternateName": "Saturaise Sneakers",
+      "url": "https://saturaise.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "{{ settings.social_logo | image_url: width: 600 }}"
+        "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+        "width": 600,
+        "height": 60
       },
-      {% endif %}
+      "image": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+      "description": "Saturaise to działająca od trzech lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ogrodowa 9a",
+        "addressLocality": "Żyrowa",
+        "postalCode": "47-330",
+        "addressCountry": "PL"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+48451108247",
+        "email": "saturaisekontakt@gmail.com",
+        "contactType": "customer service",
+        "availableLanguage": "Polish",
+        "hoursAvailable": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "16:00"
+        }
+      },
+      "foundingDate": "2022",
+      "areaServed": "PL",
       "sameAs": [
-        {{ shop.url | json }}
+        "https://saturaise.com"
         {%- if settings.facebook_url != blank -%},{{ settings.facebook_url | json }}{%- endif -%}
         {%- if settings.twitter_url != blank -%},{{ settings.twitter_url | json }}{%- endif -%}
         {%- if settings.pinterest_url != blank -%},{{ settings.pinterest_url | json }}{%- endif -%}
         {%- if settings.instagram_url != blank -%},{{ settings.instagram_url | json }}{%- endif -%}
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer service",
-        "email": "{{ shop.email }}",
-        "telephone": "{{ shop.phone }}"
-      }
+      ]
     },
+    {% endunless %}
     {
       "@type": "WebSite",
-      "@id": "{{ shop.url }}/#website",
-      "url": "{{ shop.url }}",
-      "name": "{{ shop.name }}",
-      "description": "{{ shop.description | strip_html | escape }}",
+      "@id": "https://saturaise.com/#website",
+      "url": "https://saturaise.com",
+      "name": "Saturaise",
+      "description": "Limitowane sneakersy Nike, Adidas, Jordan - oryginalne buty i kolekcjonerskie figurki",
       "publisher": {
-        "@id": "{{ shop.url }}/#organization"
+        "@id": "https://saturaise.com/#organization"
       },
+      "inLanguage": "pl-PL",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "{{ shop.url }}/search?q={search_term_string}",
+        "target": "https://saturaise.com/search?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
+    {% if template contains 'search' %}
+    ,{
+      "@type": "SearchResultsPage",
+      "@id": "{{ shop.url }}/search?q={{ search.terms | url_encode }}#searchresultspage",
+      "url": "{{ shop.url }}/search?q={{ search.terms | url_encode }}",
+      "name": "Wyniki wyszukiwania: {{ search.terms }} | Saturaise",
+      "description": "Znaleziono {{ search.results_count }} {% if search.results_count == 1 %}wynik{% elsif search.results_count < 5 %}wyniki{% else %}wyników{% endif %} dla \"{{ search.terms }}\" w sklepie Saturaise",
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      },
+      {% if search.results_count > 0 %}
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ search.results_count }},
+        "itemListElement": [
+          {% assign result_count = 0 %}
+          {% for item in search.results limit: 20 %}
+            {% if item.object_type == 'product' %}
+              {% assign result_count = result_count | plus: 1 %}
+              {
+                "@type": "ListItem",
+                "position": {{ result_count }},
+                "item": {
+                  "@type": "Product",
+                  "@id": "{{ shop.url }}{{ item.url }}#product",
+                  "name": {{ item.title | json }},
+                  "url": "{{ shop.url }}{{ item.url }}",
+                  {% if item.featured_image %}
+                  "image": "{{ item.featured_image | image_url: width: 800 }}",
+                  {% endif %}
+                  "description": {% if item.description != blank %}{{ item.description | strip_html | truncatewords: 50 | json }}{% else %}{{ item.title | json }}{% endif %},
+                  {% if item.vendor != blank %}
+                  "brand": {
+                    "@type": "Brand",
+                    "name": {{ item.vendor | json }}
+                  },
+                  {% endif %}
+                  "sku": {{ item.selected_or_first_available_variant.sku | default: item.selected_or_first_available_variant.id | json }},
+                  {% if item.available %}
+                  "offers": {
+                    "@type": "{% if item.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
+                    "priceCurrency": "{{ shop.currency }}",
+                    {% if item.variants.size > 1 %}
+                    "lowPrice": "{{ item.price_min | money_without_currency | remove: ',' }}",
+                    "highPrice": "{{ item.price_max | money_without_currency | remove: ',' }}",
+                    "offerCount": {{ item.variants.size }},
+                    {% else %}
+                    "price": "{{ item.price | money_without_currency | remove: ',' }}",
+                    {% endif %}
+                    "availability": "https://schema.org/InStock",
+                    "seller": {
+                      "@id": "https://saturaise.com/#organization"
+                    },
+                    "url": "{{ shop.url }}{{ item.url }}",
+                    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
+                  }
+                  {% else %}
+                  "offers": {
+                    "@type": "Offer",
+                    "priceCurrency": "{{ shop.currency }}",
+                    "price": "{{ item.price | money_without_currency | remove: ',' }}",
+                    "availability": "https://schema.org/OutOfStock",
+                    "seller": {
+                      "@id": "https://saturaise.com/#organization"
+                    },
+                    "url": "{{ shop.url }}{{ item.url }}"
+                  }
+                  {% endif %}
+                }
+              }{% unless forloop.last %},{% endunless %}
+            {% endif %}
+          {% endfor %}
+        ]
+      },
+      {% endif %}
+      "query": {{ search.terms | json }},
+      "resultStats": {
+        "@type": "SearchAction",
+        "result": {
+          "@type": "EntryPoint",
+          "name": "Saturaise Search Results",
+          "description": "{{ search.results_count }} {% if search.results_count == 1 %}produkt znaleziony{% elsif search.results_count < 5 %}produkty znalezione{% else %}produktów znalezionych{% endif %} dla zapytania {{ search.terms }}"
+        }
+      }
+    }
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ shop.url }}/search?q={{ search.terms | url_encode }}#breadcrumblist",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://saturaise.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Wyszukiwanie: {{ search.terms }}",
+          "item": "{{ shop.url }}/search?q={{ search.terms | url_encode }}"
+        }
+      ]
+    }
+    {% endif %}
+    {% if template contains 'blog' and blog %}
+    ,{
+      "@type": "Blog",
+      "@id": "{{ shop.url }}{{ blog.url }}#blog",
+      "url": "{{ shop.url }}{{ blog.url }}",
+      "name": {{ blog.title | json }},
+      "description": {% if blog.summary != blank %}{{ blog.summary | strip_html | json }}{% else %}"{{ blog.title }} - aktualności ze świata sneakersów"{% endif %},
+      "inLanguage": "pl-PL",
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      },
+      "publisher": {
+        "@id": "https://saturaise.com/#organization"
+      },
+      {% if blog.tags.size > 0 %}
+      "keywords": {{ blog.tags | join: ', ' | json }},
+      {% endif %}
+      "blogPost": [
+        {% for article in blog.articles limit: 10 %}
+        {
+          "@type": "BlogPosting",
+          "@id": "{{ shop.url }}{{ article.url }}#blogposting",
+          "headline": {{ article.title | strip_html | json }},
+          "description": {% if article.summary != blank %}{{ article.summary | strip_html | json }}{% else %}{{ article.excerpt_or_content | strip_html | truncatewords: 30 | json }}{% endif %},
+          "url": "{{ shop.url }}{{ article.url }}",
+          "datePublished": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+          "dateModified": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+          {% if article.image %}
+          "image": {
+            "@type": "ImageObject",
+            "url": "{{ article.image | image_url: width: 1200 }}",
+            "width": 1200,
+            "height": 630
+          },
+          {% endif %}
+          "author": {
+            "@type": "Person",
+            "name": {% if article.author != blank %}{{ article.author | json }}{% else %}"Saturaise"{% endif %}
+          },
+          "publisher": {
+            "@id": "https://saturaise.com/#organization"
+          },
+          {% if article.tags.size > 0 %}
+          "keywords": {{ article.tags | join: ', ' | json }},
+          {% endif %}
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ shop.url }}{{ article.url }}"
+          },
+          "isPartOf": {
+            "@id": "{{ shop.url }}{{ blog.url }}#blog"
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ shop.url }}{{ blog.url }}#breadcrumblist",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://saturaise.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": "{{ shop.url }}{{ blog.url }}"
+        }
+      ]
+    }
+    {% endif %}
     {% if template contains 'article' %}
     ,{
       "@type": "BlogPosting",
-      "@id": "{{ article.url }}#blogposting",
+      "@id": "{{ shop.url }}{{ article.url }}#blogposting",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "{{ shop.url }}{{ article.url }}"
       },
-      "headline": "{{ article.title | strip_html | escape }}",
-      "description": "{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}",
+      "headline": {{ article.title | strip_html | json }},
+      "description": {% if article.summary != blank %}{{ article.summary | strip_html | json }}{% else %}{{ article.excerpt_or_content | strip_html | truncatewords: 30 | json }}{% endif %},
       "datePublished": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
       "dateModified": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
       "author": {
         "@type": "Person",
-        "name": "{{ article.author }}"
+        "name": {% if article.author != blank %}{{ article.author | json }}{% else %}"Saturaise"{% endif %}
       },
       {% if article.image %}
       "image": {
@@ -70,139 +272,253 @@
         "height": 630
       },
       {% endif %}
+      {% if article.tags.size > 0 %}
+      "keywords": {{ article.tags | join: ', ' | json }},
+      {% endif %}
       "publisher": {
-        "@id": "{{ shop.url }}/#organization"
+        "@id": "https://saturaise.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "{{ shop.url }}{{ blog.url }}#blog"
       }
+    }
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ shop.url }}{{ article.url }}#breadcrumblist",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://saturaise.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": "{{ shop.url }}{{ blog.url }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ article.title | json }},
+          "item": "{{ shop.url }}{{ article.url }}"
+        }
+      ]
     }
     {% endif %}
     {% if template contains 'product' %}
     ,{
       "@type": "BreadcrumbList",
-      "@id": "{{ product.url }}#breadcrumblist",
+      "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@id": "{{ shop.url }}",
-            "name": "Home"
-          }
+          "name": "Home",
+          "item": "https://saturaise.com"
         }
         {% if collection.url %}
         ,{
           "@type": "ListItem",
           "position": 2,
-          "item": {
-            "@id": "{{ shop.url }}{{ collection.url }}",
-            "name": "{{ collection.title }}"
-          }
+          "name": {{ collection.title | json }},
+          "item": "{{ shop.url }}{{ collection.url }}"
         }
         ,{
           "@type": "ListItem",
           "position": 3,
-          "item": {
-            "@id": "{{ shop.url }}{{ product.url }}",
-            "name": "{{ product.title }}"
-          }
+          "name": {{ product.title | json }},
+          "item": "{{ shop.url }}{{ product.url }}"
         }
         {% else %}
         ,{
           "@type": "ListItem",
           "position": 2,
-          "item": {
-            "@id": "{{ shop.url }}{{ product.url }}",
-            "name": "{{ product.title }}"
-          }
+          "name": {{ product.title | json }},
+          "item": "{{ shop.url }}{{ product.url }}"
         }
         {% endif %}
       ]
     }
     ,{
       "@type": "Product",
-      "@id": "{{ product.url }}#product",
+      "@id": "{{ shop.url }}{{ product.url }}#product",
       "url": "{{ shop.url }}{{ product.url }}",
-      "name": "{{ product.title | strip_html | escape }}",
-      "description": "{{ product.description | strip_html | escape | truncatewords: 150 }}",
+      "name": {{ product.title | strip_html | json }},
+      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 150 | json }}{% else %}{{ product.title | json }}{% endif %},
       {% if product.vendor != blank %}
       "brand": {
         "@type": "Brand",
-        "name": "{{ product.vendor | escape }}"
+        "name": {{ product.vendor | json }}
+      },
+      "manufacturer": {
+        "@type": "Organization",
+        "name": {{ product.vendor | json }}
       },
       {% endif %}
-      "sku": "{{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id }}",
-      {% if product.variants.first.barcode.size == 12 %}
-      "gtin12": "{{ product.variants.first.barcode }}",
+      "category": {% if product.type != blank %}{{ product.type | json }}{% else %}"Sneakers"{% endif %},
+      "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
+      "productID": {{ product.id | json }},
+      {% if product.selected_or_first_available_variant.barcode != blank %}
+        {% assign barcode_length = product.selected_or_first_available_variant.barcode | size %}
+        {% if barcode_length == 12 %}
+      "gtin12": {{ product.selected_or_first_available_variant.barcode | json }},
+        {% elsif barcode_length == 13 %}
+      "gtin13": {{ product.selected_or_first_available_variant.barcode | json }},
+        {% elsif barcode_length == 14 %}
+      "gtin14": {{ product.selected_or_first_available_variant.barcode | json }},
+        {% else %}
+      "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
+        {% endif %}
       {% endif %}
-      {% if product.variants.first.barcode.size == 13 %}
-      "gtin13": "{{ product.variants.first.barcode }}",
-      {% endif %}
-      {% if product.variants.first.barcode.size == 14 %}
-      "gtin14": "{{ product.variants.first.barcode }}",
-      {% endif %}
+      {% if product.images.size > 0 %}
       "image": [
-        {% for image in product.images limit: 6 %}
-        "{{ image | image_url: width: 1024 }}"{% unless forloop.last %},{% endunless %}
+        {% for image in product.images limit: 8 %}
+        "{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ],
+      {% endif %}
+      {% if product.available %}
+      "offers": [
+        {% for variant in product.variants %}
+        {
+          "@type": "Offer",
+          "name": "{{ product.title }}{% if variant.title != 'Default Title' %} - {{ variant.title }}{% endif %}",
+          "price": "{{ variant.price | money_without_currency | remove: ',' }}",
+          "priceCurrency": "{{ shop.currency }}",
+          "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+          "sku": {{ variant.sku | default: variant.id | json }},
+          {% if variant.barcode != blank %}
+          "gtin": {{ variant.barcode | json }},
+          {% endif %}
+          "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+          "seller": {
+            "@id": "https://saturaise.com/#organization"
+          },
+          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+          "itemCondition": "https://schema.org/NewCondition"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      {% else %}
       "offers": {
-        "@type": "{% if product.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
-        "url": "{{ shop.url }}{{ product.url }}",
-        "priceCurrency": "{{ cart.currency.iso_code }}",
-        {% if product.variants.size > 1 %}
-        "lowPrice": "{{ product.price_min | money_without_currency }}",
-        "highPrice": "{{ product.price_max | money_without_currency }}",
-        "offerCount": "{{ product.variants.size }}",
-        {% else %}
-        "price": "{{ product.price | money_without_currency }}",
-        {% endif %}
-        "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
-        "priceValidUntil": "{{ 'now' | date: '%Y' | plus: 1 }}-12-31",
+        "@type": "Offer",
+        "price": "{{ product.price | money_without_currency | remove: ',' }}",
+        "priceCurrency": "{{ shop.currency }}",
+        "availability": "https://schema.org/OutOfStock",
         "seller": {
-          "@type": "Organization",
-          "name": "{{ shop.name }}"
-        }
-      }
+          "@id": "https://saturaise.com/#organization"
+        },
+        "url": "{{ shop.url }}{{ product.url }}",
+        "itemCondition": "https://schema.org/NewCondition"
+      },
+      {% endif %}
       {% if product.metafields.reviews.rating %}
-      ,"aggregateRating": {
+      "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "{{ product.metafields.reviews.rating.value }}",
         "reviewCount": "{{ product.metafields.reviews.rating_count.value }}",
         "bestRating": "5",
         "worstRating": "1"
-      }
+      },
       {% endif %}
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      }
     }
     {% endif %}
     {% if template contains 'collection' %}
     ,{
       "@type": "CollectionPage",
-      "@id": "{{ collection.url }}#collectionpage",
+      "@id": "{{ shop.url }}{{ collection.url }}#collectionpage",
       "url": "{{ shop.url }}{{ collection.url }}",
-      "name": "{{ collection.title | strip_html | escape }}",
-      "description": "{{ collection.description | strip_html | escape | truncatewords: 150 }}",
+      "name": {{ collection.title | strip_html | json }},
+      "description": {% if collection.description != blank %}{{ collection.description | strip_html | truncatewords: 150 | json }}{% else %}"Kolekcja {{ collection.title }} w sklepie Saturaise - limitowane sneakersy i oryginalne produkty"{% endif %},
+      {% if collection.image %}
+      "image": "{{ collection.image | image_url: width: 1200 }}",
+      {% endif %}
       "isPartOf": {
-        "@id": "{{ shop.url }}/#website"
+        "@id": "https://saturaise.com/#website"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ collection.products_count }},
+        "itemListElement": [
+          {% assign product_count = 0 %}
+          {% for product in collection.products limit: 20 %}
+            {% assign product_count = product_count | plus: 1 %}
+            {
+              "@type": "ListItem",
+              "position": {{ product_count }},
+              "item": {
+                "@type": "Product",
+                "@id": "{{ shop.url }}{{ product.url }}#product",
+                "name": {{ product.title | json }},
+                "url": "{{ shop.url }}{{ product.url }}",
+                {% if product.featured_image %}
+                "image": "{{ product.featured_image | image_url: width: 800 }}",
+                {% endif %}
+                "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 50 | json }}{% else %}{{ product.title | json }}{% endif %},
+                {% if product.vendor != blank %}
+                "brand": {
+                  "@type": "Brand",
+                  "name": {{ product.vendor | json }}
+                },
+                {% endif %}
+                "category": {{ collection.title | json }},
+                "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
+                {% if product.available %}
+                "offers": {
+                  "@type": "{% if product.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
+                  "priceCurrency": "{{ shop.currency }}",
+                  {% if product.variants.size > 1 %}
+                  "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' }}",
+                  "highPrice": "{{ product.price_max | money_without_currency | remove: ',' }}",
+                  "offerCount": {{ product.variants.size }},
+                  {% else %}
+                  "price": "{{ product.price | money_without_currency | remove: ',' }}",
+                  {% endif %}
+                  "availability": "https://schema.org/InStock",
+                  "seller": {
+                    "@id": "https://saturaise.com/#organization"
+                  },
+                  "url": "{{ shop.url }}{{ product.url }}",
+                  "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
+                }
+                {% else %}
+                "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "{{ shop.currency }}",
+                  "price": "{{ product.price | money_without_currency | remove: ',' }}",
+                  "availability": "https://schema.org/OutOfStock",
+                  "seller": {
+                    "@id": "https://saturaise.com/#organization"
+                  },
+                  "url": "{{ shop.url }}{{ product.url }}"
+                }
+                {% endif %}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ]
       }
     }
     ,{
       "@type": "BreadcrumbList",
-      "@id": "{{ collection.url }}#breadcrumblist",
+      "@id": "{{ shop.url }}{{ collection.url }}#breadcrumblist",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@id": "{{ shop.url }}",
-            "name": "Home"
-          }
+          "name": "Home",
+          "item": "https://saturaise.com"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "item": {
-            "@id": "{{ shop.url }}{{ collection.url }}",
-            "name": "{{ collection.title }}"
-          }
+          "name": {{ collection.title | json }},
+          "item": "{{ shop.url }}{{ collection.url }}"
         }
       ]
     }
@@ -210,33 +526,133 @@
     {% if template contains 'page' %}
     ,{
       "@type": "WebPage",
-      "@id": "{{ page.url }}#webpage",
+      "@id": "{{ shop.url }}{{ page.url }}#webpage",
       "url": "{{ shop.url }}{{ page.url }}",
-      "name": "{{ page.title | strip_html | escape }}",
-      "description": "{{ page.content | strip_html | escape | truncatewords: 150 }}",
+      "name": {{ page.title | strip_html | json }},
+      "description": {% if page.content != blank %}{{ page.content | strip_html | truncatewords: 150 | json }}{% else %}{{ page.title | json }}{% endif %},
       "isPartOf": {
-        "@id": "{{ shop.url }}/#website"
+        "@id": "https://saturaise.com/#website"
       }
     }
+    {% if page.handle == 'faq' %}
+    ,{
+      "@type": "FAQPage",
+      "@id": "{{ shop.url }}{{ page.url }}#faqpage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Dlaczego warto wybrać Saturaise?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Działamy na rynku od 3 lat, zapewniamy szybką realizację zamówień, a konkurencyjne ceny czynią naszą ofertę wyjątkowo atrakcyjną dla klientów. Saturaise może poszczycić się wieloma pozytywnymi opiniami, które są najlepszym potwierdzeniem naszej wiarygodności i profesjonalnego podejścia do obsługi klienta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy oferujecie wyłącznie oryginalne produkty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zapewniamy, że w sklepie internetowym Saturaise znajdziesz tylko i wyłącznie oryginalne produkty. Nasza rozbudowana i zaufana sieć dostawców umożliwia nam pozyskiwanie wyłącznie autentycznych towarów, których pochodzenie możemy w pełni udokumentować. Nasz wykwalifikowany zespół starannie weryfikuje każdy produkt przed wprowadzeniem go do oferty sklepowej."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "W jaki sposób pozyskujemy limitowane i trudno dostępne produkty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Wszystkie produkty w Saturaise pochodzą bezpośrednio od naszej sieci zaufanych partnerów detalicznych i profesjonalnych dostawców. Specjalizujemy się w oferowaniu limitowanych edycji produktów, które błyskawicznie wyprzedają się w standardowych sklepach. Współpracując z siecią detalistów, kolekcjonerów i specjalistów w całej Europie, jesteśmy w stanie dostarczać te wyjątkowe produkty."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak przebiega proces realizacji zamówienia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Po złożeniu zamówienia otrzymasz wiadomość e-mail z potwierdzeniem i numerem zamówienia. Jeśli zamówiony produkt wymaga sprowadzenia, rozpoczynamy jego poszukiwanie w naszej sieci europejskich partnerów. Po zlokalizowaniu produktu jest dostarczany do naszego centrum logistycznego, gdzie przeprowadzamy weryfikację autentyczności i kontrolę jakości. Po weryfikacji produkt jest starannie zapakowany i przekazany do wysyłki z numerem przesyłki."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Koszt wysyłki",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zapewniamy darmową wysyłkę na terenie całej Polski. W przypadku zamówień międzynarodowych, koszt dostawy jest ustalany indywidualnie w zależności od kraju docelowego i zostanie wyświetlony podczas procesu finalizacji zakupu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak dobrać odpowiedni rozmiar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dla każdego produktu udostępniamy szczegółową tabelę rozmiarów z informacjami o długości wkładki. Jeśli nadal masz wątpliwości, zachęcamy do kontaktu z naszym zespołem. W przypadku gdy zamówiony produkt nie pasuje rozmiarem, masz prawo odstąpić od umowy w ciągu 14 dni od otrzymania przesyłki. Produkt powinien być jedynie przymierzony, a nie noszony."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Dostępne metody płatności",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oferujemy szeroki wybór metod płatności: płatność BLIK, przelew tradycyjny, przelew na telefon, płatność kartą płatniczą, PayPal, płatność za pobraniem oraz Apple Pay. Wszystkie metody są bezpieczne i dostosowane do Twoich preferencji."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Nie znalazłeś produktu, którego szukasz?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Jeśli nie możesz znaleźć odpowiedniego rozmiaru, modelu lub wersji kolorystycznej, skontaktuj się z nami. Możemy na specjalne zamówienie sprowadzić dla Ciebie produkt, który dokładnie odpowiada Twoim oczekiwaniom. Twoja satysfakcja jest naszym najwyższym priorytetem!"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Dlaczego ceny mogą różnić się w zależności od rozmiaru?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Różnice w cenach poszczególnych rozmiarów wynikają głównie z zasad podaży i popytu. Rzadziej spotykane rozmiary lub te, które cieszą się szczególnie dużym zainteresowaniem, mogą mieć wyższe ceny ze względu na ich ograniczoną dostępność na rynku."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Procedura zwrotu lub wymiany",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aby dokonać zwrotu lub wymiany, prosimy o kontakt mailowy w celu zgłoszenia sprawy. Następnie należy wypełnić formularz zwrotu i umieścić go w paczce razem z produktem. Przyjmujemy zwroty wyłącznie w terminie 14 dni od daty dostarczenia produktu i tylko w nienaruszonym stanie. Po pozytywnej weryfikacji zwrotu, środki zostaną zwrócone w ciągu 14 dni roboczych."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy skupujemy produkty lub poszukujemy nowych dostawców?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nieustannie poszukujemy nowych produktów i dostawców do naszego modelu Consignment. Skup najczęściej odbywa się za pośrednictwem naszego Messengera, ale z przyjemnością rozpatrzymy również propozycje przekazane poprzez inne formy kontaktu."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak mogę uzyskać więcej informacji o produktach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Zachęcamy do kontaktu z nami poprzez e-mail saturaisekontakt@gmail.com lub telefon +48 451 108 247 (godziny 9:00-16:00), aby uzyskać szczegółowe informacje o produktach lub być na bieżąco z nowościami w naszej ofercie."
+          }
+        }
+      ]
+    }
+    {% endif %}
     ,{
       "@type": "BreadcrumbList",
-      "@id": "{{ page.url }}#breadcrumblist",
+      "@id": "{{ shop.url }}{{ page.url }}#breadcrumblist",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@id": "{{ shop.url }}",
-            "name": "Home"
-          }
+          "name": "Home",
+          "item": "https://saturaise.com"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "item": {
-            "@id": "{{ shop.url }}{{ page.url }}",
-            "name": "{{ page.title }}"
-          }
+          "name": {{ page.title | json }},
+          "item": "{{ shop.url }}{{ page.url }}"
         }
       ]
     }
