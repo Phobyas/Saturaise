@@ -1,1 +1,160 @@
-{"sections":{"banner":{"type":"template-header","settings":{"full_width":true,"scale":2,"banner_height":400,"heading":"","subheading":"","heading_placement":"center","alignment":"a-center","color_scheme":"3"}},"main":{"type":"main-page","blocks":{"7d909784-cab3-4de7-830e-ae0c0df7a740":{"type":"page_content","settings":{"block_position":"content"}}},"block_order":["7d909784-cab3-4de7-830e-ae0c0df7a740"],"settings":{}},"image_with_text_tNt7Wt":{"type":"image-with-text","settings":{"full_width":true,"iwt_layout":"image_left","iwt_heading":"Heading","iwt_text":"<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>","iwt_button":"Button","iwt_link":"","color_scheme":"none","iwt_section_height":500,"section_padding":"top"}},"image_with_text_p9myRb":{"type":"image-with-text","settings":{"full_width":true,"iwt_layout":"image_right","iwt_heading":"Heading","iwt_text":"<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>","iwt_button":"Button","iwt_link":"","color_scheme":"none","iwt_section_height":500,"section_padding":"bottom"}},"image_gallery_8J4wpU":{"type":"image-gallery","blocks":{"image_EFHh3n":{"type":"image","settings":{"image_width":"33","image_padding":false,"text_alignment":"bottom_center","title":"Heading","subheading_text":"Subheading","link_text":"Shop collection","link":"","text_color":"#fff","bg_color":"#f0eeeb","overlay_color":"#000","overlay_opacity":0}},"image_QCnKjE":{"type":"image","settings":{"image_width":"33","image_padding":false,"text_alignment":"bottom_center","title":"Heading","subheading_text":"Subheading","link_text":"Shop collection","link":"","text_color":"#fff","bg_color":"#f0eeeb","overlay_color":"#000","overlay_opacity":0}},"image_fzphq4":{"type":"image","settings":{"image_width":"33","image_padding":false,"text_alignment":"bottom_center","title":"Heading","subheading_text":"Subheading","link_text":"Shop collection","link":"","text_color":"#fff","bg_color":"#f0eeeb","overlay_color":"#000","overlay_opacity":0}}},"block_order":["image_EFHh3n","image_QCnKjE","image_fzphq4"],"settings":{"full_width":false,"title":"Image gallery","image_height_range":350,"mobile_image_height_range":300,"heading_size":24,"subheading_size":18,"image_padding":"padding","mobile_scroll":true,"section_padding":"both"}}},"order":["banner","main","image_with_text_tNt7Wt","image_with_text_p9myRb","image_gallery_8J4wpU"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "template-header",
+      "settings": {
+        "full_width": true,
+        "scale": 2,
+        "banner_height": 400,
+        "heading": "",
+        "subheading": "",
+        "heading_placement": "center",
+        "alignment": "a-center",
+        "color_scheme": "3"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "title": "Kontakt",
+        "subtitle": "Masz pytania? Skontaktuj się z nami!",
+        "show_contact_info": true,
+        "contact_title": "Obsługa klienta",
+        "email": "kontakt@twojsklep.pl",
+        "phone": "+48 123 456 789",
+        "show_address": true,
+        "address_title": "Adres",
+        "address_line1": "ul. Przykładowa 123",
+        "address_line2": "00-000 Warszawa",
+        "show_hours": true,
+        "hours_title": "Godziny pracy",
+        "hours_weekdays": "Poniedziałek - Piątek: 9:00 - 17:00",
+        "hours_weekend": "Sobota - Niedziela: Zamknięte",
+        "form_title": "Napisz do nas",
+        "subject_label": "Temat",
+        "primary_color": "#323232",
+        "heading_color": "#000000",
+        "text_color": "#333333",
+        "bg_color": "#ffffff",
+        "card_bg_color": "#f8f8f8"
+      }
+    },
+    "image_with_text_tNt7Wt": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "iwt_layout": "image_left",
+        "iwt_heading": "Heading",
+        "iwt_text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+        "iwt_button": "Button",
+        "iwt_link": "",
+        "color_scheme": "none",
+        "iwt_section_height": 500,
+        "section_padding": "top"
+      }
+    },
+    "image_with_text_p9myRb": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "iwt_layout": "image_right",
+        "iwt_heading": "Heading",
+        "iwt_text": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+        "iwt_button": "Button",
+        "iwt_link": "",
+        "color_scheme": "none",
+        "iwt_section_height": 500,
+        "section_padding": "bottom"
+      }
+    },
+    "image_gallery_8J4wpU": {
+      "type": "image-gallery",
+      "blocks": {
+        "image_EFHh3n": {
+          "type": "image",
+          "settings": {
+            "image_width": "33",
+            "image_padding": false,
+            "text_alignment": "bottom_center",
+            "title": "Heading",
+            "subheading_text": "Subheading",
+            "link_text": "Shop collection",
+            "link": "",
+            "text_color": "#ffffff",
+            "bg_color": "#f0eeeb",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0
+          }
+        },
+        "image_QCnKjE": {
+          "type": "image",
+          "settings": {
+            "image_width": "33",
+            "image_padding": false,
+            "text_alignment": "bottom_center",
+            "title": "Heading",
+            "subheading_text": "Subheading",
+            "link_text": "Shop collection",
+            "link": "",
+            "text_color": "#ffffff",
+            "bg_color": "#f0eeeb",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0
+          }
+        },
+        "image_fzphq4": {
+          "type": "image",
+          "settings": {
+            "image_width": "33",
+            "image_padding": false,
+            "text_alignment": "bottom_center",
+            "title": "Heading",
+            "subheading_text": "Subheading",
+            "link_text": "Shop collection",
+            "link": "",
+            "text_color": "#ffffff",
+            "bg_color": "#f0eeeb",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0
+          }
+        }
+      },
+      "block_order": [
+        "image_EFHh3n",
+        "image_QCnKjE",
+        "image_fzphq4"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": false,
+        "title": "Image gallery",
+        "image_height_range": 350,
+        "mobile_image_height_range": 300,
+        "heading_size": 24,
+        "subheading_size": 18,
+        "image_padding": "padding",
+        "mobile_scroll": true,
+        "section_padding": "both"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main",
+    "image_with_text_tNt7Wt",
+    "image_with_text_p9myRb",
+    "image_gallery_8J4wpU"
+  ]
+}
