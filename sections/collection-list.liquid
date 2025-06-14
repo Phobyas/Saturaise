@@ -118,6 +118,12 @@
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
     border: 1px solid rgba(0,0,0,0.05);
+    height: 100%;
+    /* Prevent dragging conflicts */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   .collection-card:hover {
@@ -141,6 +147,14 @@
     object-fit: cover;
     object-position: center;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Prevent image dragging */
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
   }
 
   .collection-card:hover .collection-image {
@@ -162,6 +176,7 @@
     );
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
   }
 
   .collection-card:hover .collection-overlay {
@@ -189,6 +204,7 @@
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     white-space: nowrap;
     min-width: 140px;
+    pointer-events: none;
   }
 
   .collection-card:hover .collection-title {
@@ -320,6 +336,7 @@
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     transition: left 0.6s ease;
     z-index: 1;
+    pointer-events: none;
   }
 
   .collection-card:hover .collection-image-container::before {
@@ -327,7 +344,7 @@
   }
 {%- endstyle -%}
 
-<div class="section-collection-carousel mx-auto px-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
+<div class="section-collection-carousel mx-auto pl-3 md:px-0" data-section-id="{{ section.id }}" data-section-type="collection-carousel">
   <!-- Header with heading and arrows -->
   <div class="collection-header">
     {% if section.settings.title != blank %}
@@ -336,12 +353,12 @@
       <div></div>
     {% endif %}
     <div class="collection-badge-arrows flex gap-3">
-      <button id="collectionPrev" class="collection-badge-arrow-btn" aria-label="Previous collections" disabled>
+      <button id="collectionPrev-{{ section.id }}" class="collection-badge-arrow-btn" aria-label="Previous collections" disabled>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
           <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
         </svg>
       </button>
-      <button id="collectionNext" class="collection-badge-arrow-btn" aria-label="Next collections">
+      <button id="collectionNext-{{ section.id }}" class="collection-badge-arrow-btn" aria-label="Next collections">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
           <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
         </svg>
@@ -373,6 +390,7 @@
                 loading="lazy"
                 width="800"
                 height="1000"
+                draggable="false"
               >
               
               <div class="collection-overlay"></div>
@@ -388,43 +406,25 @@
 </div>
 
 {% comment %}
-  Collection Carousel with Badge-style Navigation
+  Collection Carousel with Swiper.js for Perfect Responsive Layout
 {% endcomment %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  var sectionId = '{{ section.id }}';
   var swiper;
-  var prevBtn = document.getElementById('collectionPrev');
-  var nextBtn = document.getElementById('collectionNext');
-  var scrollAmount = 200; // Default scroll amount like badges
+  var prevBtn = document.getElementById('collectionPrev-' + sectionId);
+  var nextBtn = document.getElementById('collectionNext-' + sectionId);
   
   function updateArrowState() {
     if (!swiper || !prevBtn || !nextBtn) return;
     
-    // Check if we're at the beginning or end
-    var atBeginning = swiper.isBeginning;
-    var atEnd = swiper.isEnd;
+    // Disable previous button when at the beginning
+    prevBtn.disabled = swiper.isBeginning;
     
-    // For loop mode, check differently
-    if (swiper.params.loop) {
-      var totalSlides = swiper.slides.length;
-      var slidesPerView = swiper.params.slidesPerView || 1;
-      
-      if (typeof slidesPerView === 'string') {
-        slidesPerView = parseFloat(slidesPerView);
-      }
-      
-      // If we have enough slides to justify navigation
-      if (totalSlides > slidesPerView) {
-        prevBtn.disabled = false;
-        nextBtn.disabled = false;
-      } else {
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
-      }
-    } else {
-      prevBtn.disabled = atBeginning;
-      nextBtn.disabled = atEnd;
-    }
+    // Disable next button when at the end
+    nextBtn.disabled = swiper.isEnd;
+    
+    console.log('Arrow state updated - isBeginning:', swiper.isBeginning, 'isEnd:', swiper.isEnd);
   }
 
   function isSwiperLoaded() {
@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function initializeSwiper() {
     if (!isSwiperLoaded()) {
-      console.error('Swiper is not loaded. Make sure to include the Swiper library.');
+      console.error('Swiper is not loaded. Loading Swiper library...');
       loadSwiper();
       return;
     }
@@ -443,16 +443,20 @@ document.addEventListener('DOMContentLoaded', function() {
       swiper.destroy(true, true);
     }
 
-    swiper = new Swiper(".swiper-collection-carousel", {
+    // Find the swiper container for this specific section
+    var swiperContainer = document.querySelector('[data-section-id="' + sectionId + '"] .swiper-collection-carousel');
+    if (!swiperContainer) return;
+
+    swiper = new Swiper(swiperContainer, {
       slidesPerView: 1.2,
       spaceBetween: 16,
-      loop: true,
+      loop: false, // Disable loop for proper start/end detection
       grabCursor: true,
       centeredSlides: false,
       // Remove automatic navigation
       navigation: false,
       pagination: {
-        el: '.swiper-pagination',
+        el: swiperContainer.querySelector('.swiper-pagination'),
         clickable: true,
         dynamicBullets: true,
       },
@@ -473,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
           pagination: false,
         },
       },
+      speed: 300,
       touchRatio: 1,
       touchAngle: 45,
       simulateTouch: true,
@@ -484,33 +489,70 @@ document.addEventListener('DOMContentLoaded', function() {
         slideChange: function() {
           updateArrowState();
         },
+        slideChangeTransitionEnd: function() {
+          updateArrowState();
+        },
         resize: function() {
+          updateArrowState();
+        },
+        reachBeginning: function() {
+          updateArrowState();
+        },
+        reachEnd: function() {
           updateArrowState();
         }
       }
     });
 
-    // Manual button event handlers
+    // Manual button event handlers - PRECISE SLIDE CONTROL
     if (prevBtn) {
+      // Remove any existing event listeners first
+      var newPrevBtn = prevBtn.cloneNode(true);
+      prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+      prevBtn = newPrevBtn;
+      
       prevBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         if (!prevBtn.disabled && swiper) {
-          swiper.slidePrev();
-          setTimeout(updateArrowState, 100);
+          console.log('Previous button clicked - current index:', swiper.realIndex);
+          
+          // Get current real index and calculate previous
+          var currentIndex = swiper.realIndex;
+          var totalSlides = swiper.slides.filter(slide => !slide.classList.contains('swiper-slide-duplicate')).length;
+          var prevIndex = currentIndex === 0 ? totalSlides - 1 : currentIndex - 1;
+          
+          // Use slideToLoop for precise control
+          swiper.slideToLoop(prevIndex, 300);
+          
+          setTimeout(updateArrowState, 50);
         }
       });
     }
 
     if (nextBtn) {
+      // Remove any existing event listeners first
+      var newNextBtn = nextBtn.cloneNode(true);
+      nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+      nextBtn = newNextBtn;
+      
       nextBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         if (!nextBtn.disabled && swiper) {
-          swiper.slideNext();
-          setTimeout(updateArrowState, 100);
+          console.log('Next button clicked - current index:', swiper.realIndex);
+          
+          // Get current real index and calculate next
+          var currentIndex = swiper.realIndex;
+          var totalSlides = swiper.slides.filter(slide => !slide.classList.contains('swiper-slide-duplicate')).length;
+          var nextIndex = currentIndex === totalSlides - 1 ? 0 : currentIndex + 1;
+          
+          // Use slideToLoop for precise control
+          swiper.slideToLoop(nextIndex, 300);
+          
+          setTimeout(updateArrowState, 50);
         }
       });
     }
@@ -558,18 +600,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Handle Shopify section reloads
 document.addEventListener('shopify:section:load', function(event) {
-  if (event.target.contains(document.querySelector('.swiper-collection-carousel'))) {
+  if (event.target.querySelector('[data-section-type="collection-carousel"]')) {
     setTimeout(function() {
       // Re-run the initialization
       if (typeof Swiper !== 'undefined') {
-        var existingSwiper = document.querySelector('.swiper-collection-carousel').swiper;
-        if (existingSwiper) {
-          existingSwiper.destroy(true, true);
+        var existingSwiper = event.target.querySelector('.swiper-collection-carousel');
+        if (existingSwiper && existingSwiper.swiper) {
+          existingSwiper.swiper.destroy(true, true);
         }
       }
       
-      // Re-initialize
-      initializeSwiper();
+      // Re-initialize - the script will re-run automatically
+      location.reload();
     }, 100);
   }
 });
