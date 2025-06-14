@@ -1,1 +1,38 @@
-{"sections":{"banner":{"type":"article-header","settings":{"full_width":true,"scale":2,"banner_height":400,"heading":"","heading_placement":"left","alignment":"a-left","color_scheme":"3","show_date":true,"show_author":true}},"main":{"type":"main-article","settings":{"show_sidebar":true}}},"order":["banner","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "article-header",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "scale": 2,
+        "banner_height": 400,
+        "heading": "",
+        "heading_placement": "left",
+        "alignment": "a-left",
+        "color_scheme": "3",
+        "show_date": true,
+        "show_author": true
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_featured_image": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main"
+  ]
+}
