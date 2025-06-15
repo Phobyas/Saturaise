@@ -1,187 +1,507 @@
-{% schema %}
-    {
-      "name": "About Us",
-      "tag": "section",
-      "class": "spaced-section",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "logo",
-          "label": "Logo Image"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "About Our Company"
-        },
-        {
-          "type": "select",
-          "id": "heading_size",
-          "label": "Heading Size",
-          "options": [
-            {
-              "value": "small",
-              "label": "Small"
-            },
-            {
-              "value": "medium",
-              "label": "Medium"
-            },
-            {
-              "value": "large",
-              "label": "Large"
-            }
-          ],
-          "default": "medium"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Share your story and connect with customers. Describe what makes your business unique.</p>"
-        },
-        {
-          "type": "select",
-          "id": "content_size",
-          "label": "Content Text Size",
-          "options": [
-            {
-              "value": "small",
-              "label": "Small"
-            },
-            {
-              "value": "medium",
-              "label": "Medium"
-            },
-            {
-              "value": "large",
-              "label": "Large"
-            },
-            {
-              "value": "xlarge",
-              "label": "Extra Large"
-            }
-          ],
-          "default": "medium"
-        },
-        {
-          "type": "select",
-          "id": "text_position",
-          "label": "Text Position",
-          "options": [
-            {
-              "value": "left",
-              "label": "Left"
-            },
-            {
-              "value": "right",
-              "label": "Right"
-            }
-          ],
-          "default": "right"
-        },
-        {
-          "type": "select",
-          "id": "section_padding",
-          "label": "Section Padding",
-          "options": [
-            {
-              "value": "none",
-              "label": "None"
-            },
-            {
-              "value": "both",
-              "label": "Both"
-            },
-            {
-              "value": "top",
-              "label": "Top"
-            },
-            {
-              "value": "bottom",
-              "label": "Bottom"
-            }
-          ],
-          "default": "both"
-        }
-      ],
-      "presets": [
-        {
-          "name": "About Us",
-          "category": "Content"
-        }
-      ]
+{% comment %} About Us Section for Index Page - Styled to Match New About Us Page {% endcomment %}
+
+<style>
+/* About Us Section - Index Page - Professional Blue Theme */
+.about-us-index-section {
+  background: white;
+  padding: 80px 0;
+  position: relative;
+}
+
+.about-us-index-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+@media (max-width: 767px) {
+  .about-us-index-container {
+    padding: 0 12px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .about-us-index-container {
+    max-width: 1600px;
+  }
+}
+
+/* Main Grid Layout */
+.about-us-index-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  min-height: 500px;
+}
+
+@media (max-width: 1024px) {
+  .about-us-index-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+    min-height: auto;
+  }
+}
+
+/* Text Content */
+.about-us-index-content {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px 60px 0;
+}
+
+.about-us-index-content h2 {
+
+  font-size: 32px;
+}
+
+@media (max-width: 1024px) {
+  .about-us-index-content {
+    order: 2;
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-us-index-content {
+    padding: 30px 0;
+    font-size: 24px;
+  }
+}
+
+.about-us-index-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.about-us-index-content .prose {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 32px;
+}
+
+.about-us-index-content .prose p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+/* Responsive heading sizes */
+@media (max-width: 767px) {
+  .about-us-index-content h2 {
+    font-size: 2rem;
+  }
+  
+  .about-us-index-content .prose {
+    font-size: 1rem;
+  }
+}
+
+/* Custom font size overrides */
+{% case section.settings.heading_size %}
+  {% when 'small' %}
+    .about-us-index-content h2 {
+      font-size: 1.875rem !important;
     }
-    {% endschema %}
-    
-    {% style %}
-    #shopify-section-{{ section.id }} .about-us-custom-heading * {
-      {% case section.settings.heading_size %}
-        {% when 'small' %}
-          font-size: 1.5rem !important;
-        {% when 'medium' %}
-          font-size: 1.875rem !important;
-        {% when 'large' %}
-          font-size: 2.25rem !important;
-      {% endcase %}
-    }
-    
-    #shopify-section-{{ section.id }} .about-us-custom-content * {
-      {% case section.settings.content_size %}
-        {% when 'small' %}
-          font-size: 0.875rem !important;
-        {% when 'medium' %}
-          font-size: 1rem !important;
-        {% when 'large' %}
-          font-size: 1.125rem !important;
-        {% when 'xlarge' %}
-          font-size: 1.25rem !important;
-      {% endcase %}
-    }
-    
-    @media screen and (min-width: 768px) {
-      #shopify-section-{{ section.id }} .about-us-custom-heading * {
-        {% case section.settings.heading_size %}
-          {% when 'small' %}
-            font-size: 1.875rem !important;
-          {% when 'medium' %}
-            font-size: 2.25rem !important;
-          {% when 'large' %}
-            font-size: 3rem !important;
-        {% endcase %}
+    @media (min-width: 768px) {
+      .about-us-index-content h2 {
+        font-size: 2.25rem !important;
       }
     }
-    {% endstyle %}
-    
-    <section class=" px-3 {% if section.settings.section_padding contains 'both' %}py-16 my-6{% elsif section.settings.section_padding contains 'top' %}pt-16{% elsif section.settings.section_padding contains 'bottom' %}pb-16{% endif %}">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col {% if section.settings.text_position == 'left' %}md:flex-row{% else %}md:flex-row-reverse{% endif %} items-center gap-8 md:gap-24">
-          {%- if section.settings.logo -%}
-            <div class="w-full md:w-2/5">
-              {{ section.settings.logo | image_url: width: 500 | image_tag: 
-                class: 'w-full max-w-sm mx-auto h-auto object-contain',
-                loading: 'lazy',
-                alt: shop.name
-              }}
-            </div>
-          {%- endif -%}
-    
-          <div class="w-full md:w-3/5 text-center md:text-left">
-            {%- if section.settings.heading != blank -%}
-              <div class="about-us-custom-heading">
-                <h2 class="font-bold mb-6 px-2">
-                  {{ section.settings.heading }}
-                </h2>
-              </div>
-            {%- endif -%}
-    
-            {%- if section.settings.content != blank -%}
-              <div class="about-us-custom-content prose max-w-none px-2">
-                {{ section.settings.content }}
-              </div>
-            {%- endif -%}
+  {% when 'medium' %}
+    .about-us-index-content h2 {
+      font-size: 2.25rem !important;
+    }
+    @media (min-width: 768px) {
+      .about-us-index-content h2 {
+        font-size: 2.5rem !important;
+      }
+    }
+  {% when 'large' %}
+    .about-us-index-content h2 {
+      font-size: 2.5rem !important;
+    }
+    @media (min-width: 768px) {
+      .about-us-index-content h2 {
+        font-size: 3rem !important;
+      }
+    }
+{% endcase %}
+
+{% case section.settings.content_size %}
+  {% when 'small' %}
+    .about-us-index-content .prose {
+      font-size: 0.875rem !important;
+    }
+  {% when 'medium' %}
+    .about-us-index-content .prose {
+      font-size: 1rem !important;
+    }
+  {% when 'large' %}
+    .about-us-index-content .prose {
+      font-size: 1.125rem !important;
+    }
+  {% when 'xlarge' %}
+    .about-us-index-content .prose {
+      font-size: 1.25rem !important;
+    }
+{% endcase %}
+
+/* Image Section */
+.about-us-index-image {
+  order: 2;
+  background: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+@media (max-width: 1024px) {
+  .about-us-index-image {
+    order: 1;
+    padding: 40px;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-us-index-image {
+    padding: 30px;
+    min-height: 250px;
+  }
+}
+
+.about-us-index-image-container {
+  position: relative;
+  max-width: 350px;
+  width: 100%;
+}
+
+.about-us-index-image-container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* CTA Button */
+.about-us-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #2563eb;
+  color: white !important;
+  padding: 14px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.025em;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+
+.about-us-cta-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  color: white;
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .about-us-cta-button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Quick Stats */
+.about-us-quick-stats {
+  display: flex;
+  gap: 24px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .about-us-quick-stats {
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+.quick-stat-item {
+  text-align: center;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  min-width: 100px;
+  transition: border-color 0.3s ease;
+}
+
+.quick-stat-item:hover {
+  border-color: #2563eb;
+}
+
+.quick-stat-number {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 2px;
+}
+
+.quick-stat-label {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Section Padding */
+{% if section.settings.section_padding contains 'both' %}
+  .about-us-index-section {
+    padding: 80px 0;
+  }
+{% elsif section.settings.section_padding contains 'top' %}
+  .about-us-index-section {
+    padding-top: 80px;
+    padding-bottom: 0;
+  }
+{% elsif section.settings.section_padding contains 'bottom' %}
+  .about-us-index-section {
+    padding-top: 0;
+    padding-bottom: 80px;
+  }
+{% elsif section.settings.section_padding == 'none' %}
+  .about-us-index-section {
+    padding: 40px 0;
+  }
+{% endif %}
+
+@media (max-width: 767px) {
+  .about-us-index-section {
+    padding: 60px 0;
+  }
+  
+  {% if section.settings.section_padding == 'none' %}
+    .about-us-index-section {
+      padding: 20px 0;
+    }
+  {% endif %}
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .about-us-index-container {
+    padding: 0 12px;
+  }
+}
+</style>
+
+<section class="about-us-index-section" data-section-id="{{ section.id }}" data-section-type="about-us-index">
+  <div class="about-us-index-container">
+    <div class="about-us-index-grid">
+      
+      <!-- Text Content -->
+      <div class="about-us-index-content">
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.content != blank -%}
+          <div class="prose">
+            {{ section.settings.content }}
+          </div>
+        {%- endif -%}
+
+        <!-- Quick Stats -->
+        <div class="about-us-quick-stats">
+          <div class="quick-stat-item">
+            <span class="quick-stat-number">3+</span>
+            <span class="quick-stat-label">Lata</span>
+          </div>
+          <div class="quick-stat-item">
+            <span class="quick-stat-number">100%</span>
+            <span class="quick-stat-label">Oryginalne</span>
+          </div>
+          <div class="quick-stat-item">
+            <span class="quick-stat-number">1000+</span>
+            <span class="quick-stat-label">Klientów</span>
           </div>
         </div>
+
+        <!-- CTA Button -->
+        <a href="{{ section.settings.cta_link | default: '/pages/o-nas' }}" class="about-us-cta-button">
+          {{ section.settings.cta_text | default: "Poznaj naszą historię" }}
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </a>
       </div>
-    </section>
+
+      <!-- Image Section -->
+      {%- if section.settings.logo -%}
+        <div class="about-us-index-image">
+          <div class="about-us-index-image-container">
+            {{ section.settings.logo | image_url: width: 600 | image_tag: 
+              class: 'w-full h-auto',
+              loading: 'lazy',
+              alt: section.settings.heading | default: shop.name
+            }}
+          </div>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Us",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo/Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "O Saturaise"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Saturaise to renomowany sklep internetowy specjalizujący się w sprzedaży autentycznych sneakersów i streetwearu. Od 3 lat zapewniamy klientom dostęp do najnowszych i najbardziej pożądanych modeli od top marek.</p><p>Każdy produkt przechodzi profesjonalną weryfikację autentyczności, gwarantując 100% oryginalność.</p>"
+    },
+    {
+      "type": "select",
+      "id": "content_size",
+      "label": "Content Text Size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "xlarge",
+          "label": "Extra Large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "label": "Section Padding",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "both",
+          "label": "Both"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "both"
+    },
+    {
+      "type": "header",
+      "content": "CTA Settings"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Poznaj naszą historię"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us",
+      "category": "Content",
+      "settings": {
+        "heading": "O Saturaise",
+        "content": "<p>Saturaise to renomowany sklep internetowy specjalizujący się w sprzedaży autentycznych sneakersów i streetwearu. Od 3 lat zapewniamy klientom dostęp do najnowszych i najbardziej pożądanych modeli od top marek.</p><p>Każdy produkt przechodzi profesjonalną weryfikację autentyczności, gwarantując 100% oryginalność.</p>",
+        "content_size": "large",
+        "cta_text": "Poznaj naszą historię"
+      }
+    }
+  ]
+}
+{% endschema %}
