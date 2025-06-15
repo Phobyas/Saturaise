@@ -1,12 +1,44 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "about_us_main": {
       "type": "about-us-page-section",
       "settings": {
         "hero_title": "O Saturaise",
-        "hero_subtitle": "Twój zaufany partner w świecie autentycznych sneakersów i streetwearu"
+        "hero_subtitle": "Twój zaufany partner w świecie autentycznych sneakersów i streetwearu",
+        "story_title": "Nasza Historia",
+        "story_text": "",
+        "story_image": "shopify://shop_images/logo-new-saturaise.png",
+        "image_overlay_title": "",
+        "image_overlay_text": "",
+        "values_title": "Nasze Wartości",
+        "stat_1_number": "3+",
+        "stat_1_label": "Lata Doświadczenia",
+        "stat_2_number": "100%",
+        "stat_2_label": "Oryginalne Produkty",
+        "stat_3_number": "1000+",
+        "stat_3_label": "Zadowolonych Klientów",
+        "stat_4_number": "24h",
+        "stat_4_label": "Czas Realizacji",
+        "team_title": "Nasz Zespół",
+        "team_description": "Jesteśmy zespołem pasjonatów sneakersów, którzy każdego dnia pracują nad tym, aby zapewnić Ci najlepsze produkty i obsługę.",
+        "cta_title": "Masz Pytania?",
+        "cta_description": "Skontaktuj się z nami! Nasz zespół chętnie pomoże Ci w wyborze idealnych sneakersów.",
+        "cta_link": "",
+        "cta_button_text": "Skontaktuj się z nami",
+        "meta_description": "Poznaj historię Saturaise - sklepu z autentycznymi sneakersami i streetwearem. 3+ lata doświadczenia, 100% oryginalne produkty, profesjonalna weryfikacja."
       }
     }
   },
-  "order": ["about_us_main"]
+  "order": [
+    "about_us_main"
+  ]
 }
