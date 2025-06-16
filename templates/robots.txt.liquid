@@ -1,15 +1,178 @@
-# we use Shopify as our ecommerce platform
-{%- comment -%}
-# Caution! Please read https://help.shopify.com/en/manual/promoting-marketing/seo/editing-robots-txt before proceeding to make changes to this file.
-{% endcomment %}
+# Ultimate SEO-optimized robots.txt for Saturaise.com
+# Shopify ecommerce platform - Sneakers & Streetwear Dominance
+
 {% for group in robots.default_groups %}
   {{- group.user_agent -}}
-
   {% for rule in group.rules %}
     {{- rule -}}
   {% endfor %}
-
   {%- if group.sitemap != blank -%}
     {{ group.sitemap }}
   {%- endif -%}
 {% endfor %}
+
+User-agent: *
+Allow: /
+
+Allow: /search
+Allow: /collections/
+Allow: /products/
+Allow: /blogs/
+Allow: /*.json$
+Allow: /sitemap.xml
+
+Disallow: /a/downloads/-/*
+Disallow: /admin
+Disallow: /cart
+Disallow: /orders
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /{{ shop.id }}/checkouts
+Disallow: /{{ shop.id }}/orders
+Disallow: /carts
+Disallow: /account
+Disallow: /gift_card
+Disallow: /challenge
+Disallow: /command
+Disallow: /apps/
+Disallow: /tools/
+Disallow: /content/
+Disallow: /.well-known/
+Disallow: /cdn/
+Disallow: /400
+Disallow: /404
+Disallow: /500
+
+Disallow: /collections/*+*
+Disallow: /collections/*%2B*
+Disallow: /collections/*%2b*
+Disallow: /*/collections/*+*
+Disallow: /*/collections/*%2B*
+Disallow: /*/collections/*%2b*
+Disallow: /collections/*%20*
+
+Disallow: */collections/*filter*&*filter*&*filter*
+
+Disallow: /*?*oseid=*
+Disallow: /*preview_theme_id*
+Disallow: /*preview_script_id*
+Disallow: /*variant=*
+Disallow: /*/*?*ls=*&ls=*
+Disallow: /*/*?*ls%3D*%3Fls%3D*
+Disallow: /*/*?*ls%3d*%3fls%3d*
+
+Disallow: /blogs/*+*
+Disallow: /blogs/*%2B*
+Disallow: /blogs/*%2b*
+Disallow: /*/blogs/*+*
+Disallow: /*/blogs/*%2B*
+Disallow: /*/blogs/*%2b*
+
+Disallow: /policies/
+Disallow: /*/policies/
+Disallow: /apple-app-site-association
+Disallow: /.well-known/shopify/monorail
+Disallow: /cdn/wpm/*.js
+Disallow: /recommendations/products
+Disallow: /*/recommendations/products
+
+User-agent: adsbot-google
+Allow: /collections/
+Allow: /products/
+Allow: /search
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /carts
+Disallow: /orders
+Disallow: /{{ shop.id }}/checkouts
+Disallow: /{{ shop.id }}/orders
+Disallow: /*?*oseid=*
+Disallow: /*preview_theme_id*
+Disallow: /*preview_script_id*
+Disallow: /cdn/wpm/*.js
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+Allow: /collections/
+Allow: /products/
+Allow: /search
+Allow: /blogs/
+Disallow: /a/downloads/-/*
+Disallow: /admin
+Disallow: /cart
+Disallow: /orders
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /{{ shop.id }}/checkouts
+Disallow: /{{ shop.id }}/orders
+Disallow: /carts
+Disallow: /account
+Disallow: /collections/*+*
+Disallow: /collections/*%2B*
+Disallow: /collections/*%2b*
+Disallow: */collections/*filter*&*filter*&*filter*
+Disallow: /*?*oseid=*
+Disallow: /*preview_theme_id*
+Disallow: /*preview_script_id*
+Disallow: /policies/
+Disallow: /apple-app-site-association
+Disallow: /.well-known/shopify/monorail
+Disallow: /cdn/wpm/*.js
+
+User-agent: AhrefsSiteAudit
+Crawl-delay: 10
+Allow: /collections/
+Allow: /products/
+Allow: /search
+Allow: /blogs/
+Disallow: /a/downloads/-/*
+Disallow: /admin
+Disallow: /cart
+Disallow: /orders
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /{{ shop.id }}/checkouts
+Disallow: /{{ shop.id }}/orders
+Disallow: /carts
+Disallow: /account
+Disallow: /collections/*+*
+Disallow: /collections/*%2B*
+Disallow: /collections/*%2b*
+Disallow: */collections/*filter*&*filter*&*filter*
+Disallow: /*?*oseid=*
+Disallow: /*preview_theme_id*
+Disallow: /*preview_script_id*
+Disallow: /policies/
+Disallow: /apple-app-site-association
+Disallow: /.well-known/shopify/monorail
+Disallow: /cdn/wpm/*.js
+
+User-agent: Pinterest
+Crawl-delay: 1
+Allow: /products/
+Allow: /collections/
+Allow: /blogs/
+
+User-agent: facebookexternalhit
+Allow: /products/
+Allow: /collections/
+Allow: /blogs/
+
+User-agent: MJ12bot
+Crawl-delay: 10
+Allow: /collections/
+Allow: /products/
+
+User-agent: SemrushBot
+Crawl-delay: 10
+Allow: /collections/
+Allow: /products/
+Allow: /search
+
+User-agent: MegaIndex
+Crawl-delay: 30
+
+User-agent: BLEXBot
+Crawl-delay: 30
+
+Sitemap: {{ shop.url }}/sitemap.xml
