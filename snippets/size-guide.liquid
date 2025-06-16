@@ -1,0 +1,1046 @@
+{% comment %}
+  DYNAMIC PRODUCT INFO HUB - SEO Optimized
+  Enhanced with multi-color support and variant analysis
+  Styled to match your About Us section design
+  FIXED: Proper metaobject color handling
+{% endcomment %}
+
+<style>
+/* Product Info Hub - Matching About Us Section Style */
+.product-info-hub {
+  background: white !important;
+  margin: 32px auto !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  overflow: hidden !important;
+  max-width: 1280px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Dynamic container sizing - 1600px only when screen is 1920px+ */
+@media (min-width: 1920px) {
+  .product-info-hub {
+    max-width: 1600px !important;
+  }
+}
+
+/* Responsive margins for smaller screens */
+@media (max-width: 1300px) {
+  .product-info-hub {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    max-width: calc(100% - 40px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-info-hub {
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+    max-width: calc(100% - 24px) !important;
+    margin-top: 24px !important;
+    margin-bottom: 24px !important;
+  }
+}
+
+.product-info-header {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: white !important;
+  padding: 24px !important;
+  text-align: center !important;
+}
+
+.product-info-header h3 {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.2 !important;
+  color: white !important;
+  text-align: center !important;
+}
+
+.product-info-header p {
+  font-size: 16px !important;
+  margin: 0 !important;
+  opacity: 0.9 !important;
+  line-height: 1.4 !important;
+  color: white !important;
+  text-align: center !important;
+}
+
+.product-info-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 0 !important;
+}
+
+.info-section {
+  padding: 24px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  background: white !important;
+}
+
+.info-section:last-child {
+  border-bottom: none !important;
+}
+
+.info-section h4 {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin: 0 0 16px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  line-height: 1.3 !important;
+}
+
+.info-section p {
+  font-size: 15px !important;
+  color: #475569 !important;
+  line-height: 1.6 !important;
+  margin: 0 0 12px 0 !important;
+}
+
+.info-section ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.info-section li {
+  padding: 8px 0 !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  line-height: 1.4 !important;
+}
+
+.info-section li:last-child {
+  border-bottom: none !important;
+}
+
+.info-section li span {
+  color: #64748b !important;
+}
+
+.info-section li strong {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Enhanced Color badges styling */
+.color-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  align-items: center !important;
+  flex: 1 !important;
+  justify-content: flex-end !important;
+}
+
+.color-badge {
+  display: inline-block !important;
+  padding: 4px 8px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #475569 !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+.color-badge:hover {
+  background: #e2e8f0 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Quick Stats Grid */
+.quick-stats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  gap: 16px !important;
+  margin: 16px 0 !important;
+}
+
+.stat-item {
+  text-align: center !important;
+  padding: 16px !important;
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 0.3s ease !important;
+}
+
+.stat-item:hover {
+  border-color: #2563eb !important;
+  background: #eff6ff !important;
+}
+
+.stat-number {
+  display: block !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #2563eb !important;
+  margin-bottom: 4px !important;
+  line-height: 1 !important;
+}
+
+.stat-label {
+  font-size: 12px !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
+}
+
+/* Size Grid */
+.size-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+  gap: 8px !important;
+  margin: 16px 0 !important;
+}
+
+.size-badge {
+  text-align: center !important;
+  padding: 12px 8px !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.size-badge.available {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid #bbf7d0 !important;
+}
+
+.size-badge.available:hover {
+  background: #bbf7d0 !important;
+  transform: translateY(-1px) !important;
+}
+
+.size-badge.unavailable {
+  background: #fecaca !important;
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  opacity: 0.6 !important;
+  text-decoration: line-through !important;
+}
+
+.size-price {
+  font-size: 11px !important;
+  margin-top: 4px !important;
+  font-weight: 600 !important;
+  color: inherit !important;
+}
+
+/* CTA Section */
+.info-cta {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  padding: 24px !important;
+  text-align: center !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+.info-cta h4 {
+  margin: 0 0 8px 0 !important;
+  color: #1e293b !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.info-cta p {
+  margin: 0 0 16px 0 !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+}
+
+.cta-buttons {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  margin-top: 16px !important;
+}
+
+.cta-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+  letter-spacing: 0.025em !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.cta-button.primary {
+  background: #2563eb !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
+}
+
+.cta-button.primary:hover {
+  background: #1d4ed8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.cta-button.secondary {
+  background: white !important;
+  color: #2563eb !important;
+  border: 1px solid #2563eb !important;
+}
+
+.cta-button.secondary:hover {
+  background: #2563eb !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .info-section {
+    padding: 16px !important;
+  }
+  
+  .product-info-header {
+    padding: 16px !important;
+  }
+  
+  .product-info-header h3 {
+    font-size: 18px !important;
+  }
+  
+  .product-info-header p {
+    font-size: 14px !important;
+  }
+  
+  .info-section h4 {
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .info-section p {
+    font-size: 14px !important;
+  }
+  
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  
+  .stat-item {
+    padding: 12px !important;
+  }
+  
+  .stat-number {
+    font-size: 20px !important;
+  }
+  
+  .size-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)) !important;
+    gap: 6px !important;
+  }
+  
+  .size-badge {
+    padding: 8px 4px !important;
+    font-size: 12px !important;
+  }
+  
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  
+  .cta-button {
+    width: 100% !important;
+    max-width: 280px !important;
+    justify-content: center !important;
+  }
+  
+  .info-cta {
+    padding: 16px !important;
+  }
+
+  .color-list {
+    justify-content: flex-start !important;
+    margin-top: 4px !important;
+  }
+  
+  .color-badge {
+    font-size: 11px !important;
+    padding: 3px 6px !important;
+  }
+
+  .info-section li {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .color-list {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+}
+
+/* Medium screens optimization */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .product-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .info-section {
+    padding: 20px !important;
+  }
+  
+  .quick-stats {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  
+  .size-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important;
+  }
+}
+</style>
+
+{% comment %} Only show for products {% endcomment %}
+{% if template contains 'product' %}
+<div class="product-info-hub">
+  
+  {% comment %} Header Section {% endcomment %}
+  <div class="product-info-header">
+    {% assign brand_detected = product.vendor | default: 'Nike' %}
+    {% if product.title contains 'Jordan' %}{% assign brand_detected = 'Air Jordan' %}{% endif %}
+    {% if product.title contains 'Yeezy' %}{% assign brand_detected = 'Yeezy' %}{% endif %}
+    {% if product.title contains 'UGG' %}{% assign brand_detected = 'UGG' %}{% endif %}
+    {% if product.title contains 'New Balance' %}{% assign brand_detected = 'New Balance' %}{% endif %}
+    
+    <h3>Wszystko o {{ brand_detected }}</h3>
+    <p>Kompletne informacje o {{ product.title }} - gwarancja autentyczności Saturaise</p>
+  </div>
+
+  <div class="product-info-grid">
+    
+    {% comment %} Product Details Section {% endcomment %}
+    <div class="info-section">
+      <h4>
+        <span style="color: #2563eb;">●</span>
+        Szczegóły produktu
+      </h4>
+      
+      <ul>
+        <li>
+          <span>Marka:</span>
+          <strong>{{ product.vendor | default: brand_detected }}</strong>
+        </li>
+        <li>
+          <span>Model:</span>
+          <strong>{{ product.title }}</strong>
+        </li>
+        {% if product.selected_or_first_available_variant.sku != blank %}
+        <li>
+          <span>SKU:</span>
+          <strong>{{ product.selected_or_first_available_variant.sku }}</strong>
+        </li>
+        {% endif %}
+        
+        {% comment %} FIXED MULTI-COLOR DETECTION WITH METAOBJECT SUPPORT {% endcomment %}
+        {% assign all_detected_colors = "" %}
+        {% assign color_set = "" %}
+        
+        {% comment %} 1. Check Shopify metafields with proper metaobject handling {% endcomment %}
+        {% assign metafield_colors = "" %}
+        
+        {% comment %} Check different metafield variations for colors {% endcomment %}
+        {% if product.metafields.custom.color.value != blank %}
+          {% assign color_metafield = product.metafields.custom.color %}
+        {% elsif product.metafields.custom.colour.value != blank %}
+          {% assign color_metafield = product.metafields.custom.colour %}
+        {% elsif product.metafields.details.color.value != blank %}
+          {% assign color_metafield = product.metafields.details.color %}
+        {% elsif product.metafields.specifications.color.value != blank %}
+          {% assign color_metafield = product.metafields.specifications.color %}
+        {% else %}
+          {% assign color_metafield = null %}
+        {% endif %}
+        
+        {% comment %} Handle metaobject references properly {% endcomment %}
+        {% if color_metafield != null %}
+          {% if color_metafield.type == 'metaobject_reference' %}
+            {% comment %} Single metaobject reference {% endcomment %}
+            {% if color_metafield.value.name != blank %}
+              {% assign metafield_colors = color_metafield.value.name %}
+            {% elsif color_metafield.value.title != blank %}
+              {% assign metafield_colors = color_metafield.value.title %}
+            {% elsif color_metafield.value.display_name != blank %}
+              {% assign metafield_colors = color_metafield.value.display_name %}
+            {% endif %}
+          {% elsif color_metafield.type == 'list.metaobject_reference' %}
+            {% comment %} List of metaobject references {% endcomment %}
+            {% assign temp_colors = "" %}
+            {% for color_ref in color_metafield.value %}
+              {% if color_ref.name != blank %}
+                {% assign temp_colors = temp_colors | append: color_ref.name | append: ', ' %}
+              {% elsif color_ref.title != blank %}
+                {% assign temp_colors = temp_colors | append: color_ref.title | append: ', ' %}
+              {% elsif color_ref.display_name != blank %}
+                {% assign temp_colors = temp_colors | append: color_ref.display_name | append: ', ' %}
+              {% endif %}
+            {% endfor %}
+            {% assign metafield_colors = temp_colors | remove_last: ', ' %}
+          {% elsif color_metafield.type == 'single_line_text_field' or color_metafield.type == 'multi_line_text_field' %}
+            {% comment %} Plain text metafield {% endcomment %}
+            {% assign metafield_colors = color_metafield.value %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %} 2. If metafield colors found, use them {% endcomment %}
+        {% if metafield_colors != blank %}
+          {% assign all_detected_colors = metafield_colors %}
+        {% else %}
+          {% comment %} 3. Check all variants for color options (fallback) {% endcomment %}
+          {% assign variant_colors = "" %}
+          {% for variant in product.variants %}
+            {% assign variant_title_lower = variant.title | downcase %}
+            
+            {% comment %} Advanced color detection with more patterns {% endcomment %}
+            {% if variant_title_lower contains 'biały' or variant_title_lower contains 'white' or variant_title_lower contains 'sail' or variant_title_lower contains 'cream' or variant_title_lower contains 'off white' %}
+              {% unless variant_colors contains 'Biały' %}{% assign variant_colors = variant_colors | append: 'Biały, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'czarny' or variant_title_lower contains 'black' or variant_title_lower contains 'noir' or variant_title_lower contains 'core black' %}
+              {% unless variant_colors contains 'Czarny' %}{% assign variant_colors = variant_colors | append: 'Czarny, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'czerwony' or variant_title_lower contains 'red' or variant_title_lower contains 'rouge' or variant_title_lower contains 'university red' %}
+              {% unless variant_colors contains 'Czerwony' %}{% assign variant_colors = variant_colors | append: 'Czerwony, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'niebieski' or variant_title_lower contains 'blue' or variant_title_lower contains 'navy' or variant_title_lower contains 'bleu' or variant_title_lower contains 'royal blue' %}
+              {% unless variant_colors contains 'Niebieski' %}{% assign variant_colors = variant_colors | append: 'Niebieski, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'zielony' or variant_title_lower contains 'green' or variant_title_lower contains 'seafoam' or variant_title_lower contains 'mint' or variant_title_lower contains 'pine green' %}
+              {% unless variant_colors contains 'Zielony' %}{% assign variant_colors = variant_colors | append: 'Zielony, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'żółty' or variant_title_lower contains 'yellow' or variant_title_lower contains 'jaune' or variant_title_lower contains 'university gold' %}
+              {% unless variant_colors contains 'Żółty' %}{% assign variant_colors = variant_colors | append: 'Żółty, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'pomarańczowy' or variant_title_lower contains 'orange' or variant_title_lower contains 'starfish' %}
+              {% unless variant_colors contains 'Pomarańczowy' %}{% assign variant_colors = variant_colors | append: 'Pomarańczowy, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'fioletowy' or variant_title_lower contains 'purple' or variant_title_lower contains 'violet' or variant_title_lower contains 'court purple' %}
+              {% unless variant_colors contains 'Fioletowy' %}{% assign variant_colors = variant_colors | append: 'Fioletowy, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'różowy' or variant_title_lower contains 'pink' or variant_title_lower contains 'rose' or variant_title_lower contains 'arctic pink' %}
+              {% unless variant_colors contains 'Różowy' %}{% assign variant_colors = variant_colors | append: 'Różowy, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'brązowy' or variant_title_lower contains 'brown' or variant_title_lower contains 'tan' or variant_title_lower contains 'beige' or variant_title_lower contains 'mocha' %}
+              {% unless variant_colors contains 'Brązowy' %}{% assign variant_colors = variant_colors | append: 'Brązowy, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'szary' or variant_title_lower contains 'grey' or variant_title_lower contains 'gray' or variant_title_lower contains 'gris' or variant_title_lower contains 'wolf grey' %}
+              {% unless variant_colors contains 'Szary' %}{% assign variant_colors = variant_colors | append: 'Szary, ' %}{% endunless %}
+            {% endif %}
+            
+            {% comment %} Special colorways and collaborations {% endcomment %}
+            {% if variant_title_lower contains 'bred' %}
+              {% unless variant_colors contains 'Czarno-czerwony' %}{% assign variant_colors = variant_colors | append: 'Czarno-czerwony, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'royal' %}
+              {% unless variant_colors contains 'Królewski niebieski' %}{% assign variant_colors = variant_colors | append: 'Królewski niebieski, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'travis scott' %}
+              {% unless variant_colors contains 'Brązowo-beżowy' %}{% assign variant_colors = variant_colors | append: 'Brązowo-beżowy, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'off-white' or variant_title_lower contains 'off white' %}
+              {% unless variant_colors contains 'Kremowo-biały' %}{% assign variant_colors = variant_colors | append: 'Kremowo-biały, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'zebra' %}
+              {% unless variant_colors contains 'Biało-czarny' %}{% assign variant_colors = variant_colors | append: 'Biało-czarny, ' %}{% endunless %}
+            {% endif %}
+            {% if variant_title_lower contains 'chicago' %}
+              {% unless variant_colors contains 'Biało-czerwony' %}{% assign variant_colors = variant_colors | append: 'Biało-czerwony, ' %}{% endunless %}
+            {% endif %}
+          {% endfor %}
+          
+          {% comment %} 4. Use variant colors if found {% endcomment %}
+          {% if variant_colors != "" %}
+            {% assign all_detected_colors = variant_colors | remove_last: ', ' %}
+          
+          {% comment %} 5. Check product description {% endcomment %}
+          {% elsif product.description != blank %}
+            {% assign desc_lower = product.description | downcase | strip_html %}
+            {% assign temp_colors = "" %}
+            
+            {% if desc_lower contains 'biały' or desc_lower contains 'white' or desc_lower contains 'sail' or desc_lower contains 'cream' %}
+              {% assign temp_colors = temp_colors | append: 'Biały, ' %}
+            {% endif %}
+            {% if desc_lower contains 'czarny' or desc_lower contains 'black' or desc_lower contains 'noir' %}
+              {% assign temp_colors = temp_colors | append: 'Czarny, ' %}
+            {% endif %}
+            {% if desc_lower contains 'czerwony' or desc_lower contains 'red' or desc_lower contains 'rouge' %}
+              {% assign temp_colors = temp_colors | append: 'Czerwony, ' %}
+            {% endif %}
+            {% if desc_lower contains 'niebieski' or desc_lower contains 'blue' or desc_lower contains 'navy' or desc_lower contains 'bleu' %}
+              {% assign temp_colors = temp_colors | append: 'Niebieski, ' %}
+            {% endif %}
+            {% if desc_lower contains 'zielony' or desc_lower contains 'green' or desc_lower contains 'seafoam' or desc_lower contains 'mint' %}
+              {% assign temp_colors = temp_colors | append: 'Zielony, ' %}
+            {% endif %}
+            {% if desc_lower contains 'żółty' or desc_lower contains 'yellow' or desc_lower contains 'jaune' %}
+              {% assign temp_colors = temp_colors | append: 'Żółty, ' %}
+            {% endif %}
+            {% if desc_lower contains 'pomarańczowy' or desc_lower contains 'orange' %}
+              {% assign temp_colors = temp_colors | append: 'Pomarańczowy, ' %}
+            {% endif %}
+            {% if desc_lower contains 'fioletowy' or desc_lower contains 'purple' or desc_lower contains 'violet' %}
+              {% assign temp_colors = temp_colors | append: 'Fioletowy, ' %}
+            {% endif %}
+            {% if desc_lower contains 'różowy' or desc_lower contains 'pink' or desc_lower contains 'rose' %}
+              {% assign temp_colors = temp_colors | append: 'Różowy, ' %}
+            {% endif %}
+            {% if desc_lower contains 'brązowy' or desc_lower contains 'brown' or desc_lower contains 'tan' or desc_lower contains 'beige' %}
+              {% assign temp_colors = temp_colors | append: 'Brązowy, ' %}
+            {% endif %}
+            {% if desc_lower contains 'szary' or desc_lower contains 'grey' or desc_lower contains 'gray' or desc_lower contains 'gris' %}
+              {% assign temp_colors = temp_colors | append: 'Szary, ' %}
+            {% endif %}
+            
+            {% assign all_detected_colors = temp_colors | remove_last: ', ' %}
+          
+          {% comment %} 6. Check product title as fallback {% endcomment %}
+          {% else %}
+            {% assign title_lower = product.title | downcase %}
+            {% assign temp_colors = "" %}
+            
+            {% if title_lower contains 'white' or title_lower contains 'biały' or title_lower contains 'sail' %}
+              {% assign temp_colors = temp_colors | append: 'Biały, ' %}
+            {% endif %}
+            {% if title_lower contains 'black' or title_lower contains 'czarny' or title_lower contains 'noir' %}
+              {% assign temp_colors = temp_colors | append: 'Czarny, ' %}
+            {% endif %}
+            {% if title_lower contains 'red' or title_lower contains 'czerwony' %}
+              {% assign temp_colors = temp_colors | append: 'Czerwony, ' %}
+            {% endif %}
+            {% if title_lower contains 'blue' or title_lower contains 'niebieski' or title_lower contains 'navy' %}
+              {% assign temp_colors = temp_colors | append: 'Niebieski, ' %}
+            {% endif %}
+            {% if title_lower contains 'green' or title_lower contains 'zielony' or title_lower contains 'seafoam' %}
+              {% assign temp_colors = temp_colors | append: 'Zielony, ' %}
+            {% endif %}
+            {% if title_lower contains 'yellow' or title_lower contains 'żółty' %}
+              {% assign temp_colors = temp_colors | append: 'Żółty, ' %}
+            {% endif %}
+            {% if title_lower contains 'orange' or title_lower contains 'pomarańczowy' %}
+              {% assign temp_colors = temp_colors | append: 'Pomarańczowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'purple' or title_lower contains 'fioletowy' %}
+              {% assign temp_colors = temp_colors | append: 'Fioletowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'pink' or title_lower contains 'różowy' %}
+              {% assign temp_colors = temp_colors | append: 'Różowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'brown' or title_lower contains 'brązowy' or title_lower contains 'tan' %}
+              {% assign temp_colors = temp_colors | append: 'Brązowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'grey' or title_lower contains 'gray' or title_lower contains 'szary' %}
+              {% assign temp_colors = temp_colors | append: 'Szary, ' %}
+            {% endif %}
+            
+            {% comment %} Special colorways {% endcomment %}
+            {% if title_lower contains 'travis scott' %}
+              {% assign temp_colors = temp_colors | append: 'Brązowo-beżowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'off white' or title_lower contains 'off-white' %}
+              {% assign temp_colors = temp_colors | append: 'Kremowo-biały, ' %}
+            {% endif %}
+            {% if title_lower contains 'seafoam' %}
+              {% assign temp_colors = temp_colors | append: 'Miętowy, ' %}
+            {% endif %}
+            {% if title_lower contains 'bred' %}
+              {% assign temp_colors = temp_colors | append: 'Czarno-czerwony, ' %}
+            {% endif %}
+            {% if title_lower contains 'royal' %}
+              {% assign temp_colors = temp_colors | append: 'Królewski niebieski, ' %}
+            {% endif %}
+            {% if title_lower contains 'chicago' %}
+              {% assign temp_colors = temp_colors | append: 'Biało-czerwony, ' %}
+            {% endif %}
+            
+            {% assign all_detected_colors = temp_colors | remove_last: ', ' %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %} 7. Default colors based on brand if nothing found {% endcomment %}
+        {% if all_detected_colors == "" %}
+          {% if brand_detected contains 'Jordan' %}
+            {% assign all_detected_colors = "Wielokolorowy" %}
+          {% elsif brand_detected contains 'Yeezy' %}
+            {% assign all_detected_colors = "Neutralny" %}
+          {% elsif brand_detected contains 'UGG' %}
+            {% assign all_detected_colors = "Naturalny" %}
+          {% else %}
+            {% assign all_detected_colors = "Mix kolorów" %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %} Display colors with enhanced styling {% endcomment %}
+        {% if all_detected_colors != "" %}
+        <li>
+          <span>Kolory:</span>
+          <div class="color-list">
+            {% assign color_array = all_detected_colors | split: ',' %}
+            {% assign color_count = color_array.size %}
+            {% for color in color_array %}
+              {% assign trimmed_color = color | strip %}
+              {% if trimmed_color != "" %}
+                <span class="color-badge">{{ trimmed_color }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+        {% endif %}
+        
+        <li>
+          <span>Stan:</span>
+          <strong>Nowy, w oryginalnym opakowaniu</strong>
+        </li>
+        <li>
+          <span>Autentyczność:</span>
+          <strong style="color: #059669;">100% oryginalne</strong>
+        </li>
+        {% if product.type != blank %}
+        <li>
+          <span>Kategoria:</span>
+          <strong>{{ product.type }}</strong>
+        </li>
+        {% endif %}
+        {% comment %} Smart material detection - Priority: metafields > description > title > brand defaults {% endcomment %}
+        {% assign detected_material = "" %}
+        
+        {% comment %} 1. Check Shopify metafields first with proper metaobject handling {% endcomment %}
+        {% assign material_metafield = null %}
+        
+        {% if product.metafields.custom.material.value != blank %}
+          {% assign material_metafield = product.metafields.custom.material %}
+        {% elsif product.metafields.custom.materials.value != blank %}
+          {% assign material_metafield = product.metafields.custom.materials %}
+        {% elsif product.metafields.details.material.value != blank %}
+          {% assign material_metafield = product.metafields.details.material %}
+        {% elsif product.metafields.specifications.material.value != blank %}
+          {% assign material_metafield = product.metafields.specifications.material %}
+        {% endif %}
+        
+        {% comment %} Handle material metaobject references properly {% endcomment %}
+        {% if material_metafield != null %}
+          {% if material_metafield.type == 'metaobject_reference' %}
+            {% comment %} Single metaobject reference {% endcomment %}
+            {% if material_metafield.value.name != blank %}
+              {% assign detected_material = material_metafield.value.name %}
+            {% elsif material_metafield.value.title != blank %}
+              {% assign detected_material = material_metafield.value.title %}
+            {% elsif material_metafield.value.display_name != blank %}
+              {% assign detected_material = material_metafield.value.display_name %}
+            {% endif %}
+          {% elsif material_metafield.type == 'list.metaobject_reference' %}
+            {% comment %} List of metaobject references {% endcomment %}
+            {% assign temp_materials = "" %}
+            {% for material_ref in material_metafield.value %}
+              {% if material_ref.name != blank %}
+                {% assign temp_materials = temp_materials | append: material_ref.name | append: ', ' %}
+              {% elsif material_ref.title != blank %}
+                {% assign temp_materials = temp_materials | append: material_ref.title | append: ', ' %}
+              {% elsif material_ref.display_name != blank %}
+                {% assign temp_materials = temp_materials | append: material_ref.display_name | append: ', ' %}
+              {% endif %}
+            {% endfor %}
+            {% assign detected_material = temp_materials | remove_last: ', ' %}
+          {% elsif material_metafield.type == 'single_line_text_field' or material_metafield.type == 'multi_line_text_field' %}
+            {% comment %} Plain text metafield {% endcomment %}
+            {% assign detected_material = material_metafield.value %}
+          {% endif %}
+        
+        {% comment %} 2. Check product description {% endcomment %}
+        {% elsif product.description != blank %}
+          {% assign desc_lower = product.description | downcase | strip_html %}
+          
+          {% if desc_lower contains 'skóra naturalna' or desc_lower contains 'genuine leather' or desc_lower contains 'real leather' %}
+            {% assign detected_material = "Skóra naturalna" %}
+          {% elsif desc_lower contains 'skóra' or desc_lower contains 'leather' %}
+            {% assign detected_material = "Skóra" %}
+          {% elsif desc_lower contains 'zamsz' or desc_lower contains 'suede' %}
+            {% assign detected_material = "Zamsz premium" %}
+          {% elsif desc_lower contains 'canvas' or desc_lower contains 'płótno' %}
+            {% assign detected_material = "Canvas" %}
+          {% elsif desc_lower contains 'mesh' or desc_lower contains 'siateczka' or desc_lower contains 'breathable' %}
+            {% assign detected_material = "Mesh/Siateczka" %}
+          {% elsif desc_lower contains 'primeknit' or desc_lower contains 'flyknit' or desc_lower contains 'dzianina' %}
+            {% assign detected_material = "Dzianina techniczna" %}
+          {% elsif desc_lower contains 'textile' or desc_lower contains 'tkanina' %}
+            {% assign detected_material = "Materiał tekstylny" %}
+          {% elsif desc_lower contains 'synthetic' or desc_lower contains 'syntetyczny' %}
+            {% assign detected_material = "Materiały syntetyczne" %}
+          {% elsif desc_lower contains 'rubber' or desc_lower contains 'guma' %}
+            {% assign detected_material = "Guma" %}
+          {% elsif desc_lower contains 'nylon' %}
+            {% assign detected_material = "Nylon" %}
+          {% elsif desc_lower contains 'wool' or desc_lower contains 'wełna' %}
+            {% assign detected_material = "Wełna" %}
+          {% endif %}
+          
+        {% comment %} 3. Check product title {% endcomment %}
+        {% else %}
+          {% assign title_lower = product.title | downcase %}
+          
+          {% if title_lower contains 'leather' or title_lower contains 'skóra' %}
+            {% assign detected_material = "Skóra naturalna" %}
+          {% elsif title_lower contains 'suede' or title_lower contains 'zamsz' %}
+            {% assign detected_material = "Zamsz premium" %}
+          {% elsif title_lower contains 'canvas' %}
+            {% assign detected_material = "Canvas" %}
+          {% elsif title_lower contains 'primeknit' %}
+            {% assign detected_material = "Primeknit" %}
+          {% elsif title_lower contains 'flyknit' %}
+            {% assign detected_material = "Flyknit" %}
+          {% elsif title_lower contains 'boost' %}
+            {% assign detected_material = "Boost" %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %} 4. Default materials based on brand if nothing found {% endcomment %}
+        {% if detected_material == "" %}
+          {% if brand_detected contains 'UGG' %}
+            {% assign detected_material = "Owcza skóra i wełna" %}
+          {% elsif brand_detected contains 'Jordan' %}
+            {% assign detected_material = "Skóra naturalna premium" %}
+          {% elsif brand_detected contains 'Yeezy' %}
+            {% assign detected_material = "Primeknit/Boost" %}
+          {% elsif brand_detected contains 'New Balance' %}
+            {% assign detected_material = "Mesh i syntetyki" %}
+          {% elsif brand_detected contains 'Nike' %}
+            {% assign detected_material = "Materiały syntetyczne premium" %}
+          {% elsif brand_detected contains 'Adidas' %}
+            {% assign detected_material = "Materiały syntetyczne" %}
+          {% else %}
+            {% assign detected_material = "Wysokiej jakości materiały" %}
+          {% endif %}
+        {% endif %}
+        
+        {% if detected_material != "" %}
+        <li>
+          <span>Materiał:</span>
+          <strong>{{ detected_material }}</strong>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    {% comment %} Availability & Sizing Section {% endcomment %}
+    {% assign has_size_option = false %}
+    {% for option in product.options_with_values %}
+      {% if option.name == 'Rozmiar' or option.name == 'Size' or option.name == 'Rozmiar buta' %}
+        {% assign has_size_option = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if has_size_option %}
+    <div class="info-section">
+      <h4>
+        <span style="color: #059669;">●</span>
+        Dostępne rozmiary
+      </h4>
+      
+      {% assign available_count = 0 %}
+      {% assign total_count = 0 %}
+      {% assign min_price = product.price_max %}
+      {% assign max_price = product.price_min %}
+      
+      {% for variant in product.variants %}
+        {% assign total_count = total_count | plus: 1 %}
+        {% if variant.available %}
+          {% assign available_count = available_count | plus: 1 %}
+        {% endif %}
+        {% if variant.price < min_price %}{% assign min_price = variant.price %}{% endif %}
+        {% if variant.price > max_price %}{% assign max_price = variant.price %}{% endif %}
+      {% endfor %}
+      
+      <div class="quick-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ available_count }}</span>
+          <span class="stat-label">Dostępne</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ total_count }}</span>
+          <span class="stat-label">Wszystkie</span>
+        </div>
+        {% if min_price != max_price %}
+        <div class="stat-item">
+          <span class="stat-number">{{ min_price | money_without_currency }}-{{ max_price | money_without_currency }}</span>
+          <span class="stat-label">Cena (zł)</span>
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="size-grid">
+        {% for variant in product.variants %}
+          <div class="size-badge {% if variant.available %}available{% else %}unavailable{% endif %}">
+            {{ variant.title }}
+            {% if variant.available %}
+              <div class="size-price">{{ variant.price | money_without_currency }} zł</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% comment %} Brand-Specific Info Section (SEO-optimized for Saturaise.com) {% endcomment %}
+    <div class="info-section">
+      <h4>
+        <span style="color: #7c3aed;">●</span>
+        Informacje o marce
+      </h4>
+      
+      {% if brand_detected contains 'Jordan' %}
+        <p><strong>Air Jordan</strong> to ikoniczna linia sneakersów od Nike, zaprojektowana we współpracy z legendą NBA – Michaelem Jordanem. Od debiutu w 1984 roku stała się symbolem stylu ulicznego i koszykarskiej kultury.</p>
+        <ul>
+          <li><span>Dziedzictwo:</span><strong>Kultura koszykarska i streetwear</strong></li>
+          <li><span>Pierwszy model:</span><strong>Air Jordan 1 (1985)</strong></li>
+          <li><span>Technologia:</span><strong>Poduszka Air, wsparcie kostki</strong></li>
+          <li><span>Status:</span><strong>Ikona sneakerheadów na całym świecie</strong></li>
+        </ul>
+
+      {% elsif brand_detected contains 'Yeezy' %}
+        <p><strong>Yeezy</strong> to ekskluzywna kolekcja butów lifestyle stworzona przez Kanye Westa i Adidas. Sneakersy Yeezy są znane z futurystycznego designu i limitowanych dropów, które błyskawicznie znikają ze sklepowych półek.</p>
+        <ul>
+          <li><span>Twórca:</span><strong>Kanye West</strong></li>
+          <li><span>Partner:</span><strong>Adidas</strong></li>
+          <li><span>Technologia:</span><strong>Podeszwa Boost dla maksymalnej wygody</strong></li>
+          <li><span>Styl:</span><strong>Minimalizm, komfort, innowacyjność</strong></li>
+        </ul>
+
+      {% elsif brand_detected contains 'UGG' %}
+        <p><strong>UGG</strong> to australijska marka premium, znana z kultowych butów zimowych wykonanych z owczej skóry i naturalnej wełny. Modele UGG to must-have na chłodne miesiące i synonim przytulnego stylu.</p>
+        <ul>
+          <li><span>Pochodzenie:</span><strong>Australia</strong></li>
+          <li><span>Materiał:</span><strong>Naturalna owcza skóra i wełna</strong></li>
+          <li><span>Właściwości:</span><strong>Niezrównane ciepło i komfort</strong></li>
+          <li><span>Sezonowość:</span><strong>Jesień / Zima – idealne na mrozy</strong></li>
+        </ul>
+
+      {% elsif brand_detected contains 'New Balance' %}
+        <p><strong>New Balance</strong> to amerykańska marka z ponad stuletnią tradycją, specjalizująca się w produkcji wysokiej jakości butów sportowych i lifestyle. Ceni ją każdy, kto szuka połączenia stylu i wygody.</p>
+        <ul>
+          <li><span>Rok założenia:</span><strong>1906 (USA)</strong></li>
+          <li><span>Specjalizacja:</span><strong>Buty biegowe i lifestyle</strong></li>
+          <li><span>Produkcja:</span><strong>Made in USA / UK – precyzyjne wykonanie</strong></li>
+          <li><span>Technologia:</span><strong>Amortyzacja Fresh Foam</strong></li>
+        </ul>
+
+      {% elsif brand_detected contains 'Nike' %}
+        <p><strong>Nike</strong> to światowy gigant sportowego stylu, obecny na rynku od 1964 roku. Dzięki innowacjom i kultowym modelom, jak Air Max, Dunk czy React, Nike pozostaje numerem jeden wśród sneakerheadów.</p>
+        <ul>
+          <li><span>Rok założenia:</span><strong>1964</strong></li>
+          <li><span>Slogan:</span><strong>Just Do It</strong></li>
+          <li><span>Technologie:</span><strong>Air, Zoom, React – dla sportowców i fanów komfortu</strong></li>
+          <li><span>Obszary:</span><strong>Koszykówka, bieganie, lifestyle</strong></li>
+        </ul>
+
+      {% elsif brand_detected contains 'Adidas' %}
+        <p><strong>Adidas</strong> to niemiecka ikona sportowego designu, założona w 1949 roku. Dzięki rozpoznawalnym trzem paskom i takim innowacjom jak Boost czy Primeknit, buty Adidas wyznaczają trendy na całym świecie.</p>
+        <ul>
+          <li><span>Rok założenia:</span><strong>1949 (Niemcy)</strong></li>
+          <li><span>Symbol:</span><strong>Trzy paski – znak rozpoznawczy stylu</strong></li>
+          <li><span>Technologie:</span><strong>Boost, Primeknit – lekkość i dopasowanie</strong></li>
+          <li><span>Popularność:</span><strong>Piłka nożna, streetwear, sportowy lifestyle</strong></li>
+        </ul>
+      {% endif %}
+    </div>
+
+    {% comment %} Purchase Guarantee Section {% endcomment %}
+    <div class="info-section">
+      <h4>
+        <span style="color: #059669;">●</span>
+        Gwarancje Saturaise
+      </h4>
+      
+      <ul>
+        <li>
+          <span>Autentyczność:</span>
+          <strong style="color: #059669;">100% oryginalne</strong>
+        </li>
+        <li>
+          <span>Weryfikacja:</span>
+          <strong>Przed wysyłką</strong>
+        </li>
+        <li>
+          <span>Wysyłka:</span>
+          <strong>Darmowa w Polsce</strong>
+        </li>
+        <li>
+          <span>Czas dostawy:</span>
+          <strong>1-3 dni robocze</strong>
+        </li>
+        <li>
+          <span>Zwrot:</span>
+          <strong>14 dni, darmowy</strong>
+        </li>
+        <li>
+          <span>Płatność:</span>
+          <strong>BLIK, karta, PayPal</strong>
+        </li>
+        <li>
+          <span>Obsługa:</span>
+          <strong>Pon-Pt 9:00-16:00</strong>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  {% comment %} CTA Section {% endcomment %}
+  <div class="info-cta">
+    <h4 style="margin: 0 0 8px 0; color: #1e293b;">Potrzebujesz pomocy?</h4>
+    <p style="margin: 0 0 16px 0; color: #64748b; font-size: 14px;">
+      Nasi eksperci odpowiedzą na wszystkie pytania o {{ product.title }}
+    </p>
+    
+    <div class="cta-buttons">
+      <a href="/pages/contact" class="cta-button primary">
+        <span>✉</span>
+        Napisz do nas
+      </a>
+      <a href="tel:+48451108247" class="cta-button secondary">
+        <span>☎</span>
+        +48 451 108 247
+      </a>
+    </div>
+    
+    <p style="margin: 16px 0 0 0; font-size: 12px; color: #94a3b8;">
+      Darmowa konsultacja • Odpowiedź do 2h • Poniedziałek-Piątek 9:00-16:00
+    </p>
+  </div>
+
+</div>
+{% endif %}

@@ -294,7 +294,144 @@
                 <span class="product__sku-label">{{ 'customer.order.details.sku' | t }} &nbsp; | &nbsp;</span>
                 <span class="product__sku-value js-variant-sku">{{ current_variant.sku }}</span>
               </div>
+
+              
             {%- when 'product_form' -%}
+              {% comment %}
+  UPDATED SIZE NOTIFICATION - With correct sizing and brand synonyms
+  Professional style matching your About Us section
+{% endcomment %}
+
+{% comment %} Only show for products with sizes {% endcomment %}
+{% assign has_size_option = false %}
+{% for option in product.options_with_values %}
+  {% if option.name == 'Rozmiar' or option.name == 'Size' or option.name == 'Rozmiar buta' %}
+    {% assign has_size_option = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if has_size_option %}
+  {% comment %} Detect brand and sizing advice with synonyms {% endcomment %}
+  {% assign size_advice = "" %}
+  {% assign text_color = "#2563eb" %}
+  {% assign bg_color = "#eff6ff" %}
+  {% assign border_color = "#2563eb" %}
+  {% assign advice_prefix = "Rozmiar:" %}
+  {% assign title_lower = product.title | downcase %}
+  
+  {% comment %} YEEZY - Different sizing for different models {% endcomment %}
+  {% if product.title contains 'Yeezy' %}
+    {% if title_lower contains 'slide' %}
+      {% assign size_advice = "Yeezy Slide wypada mniejszy - weź o rozmiar większy" %}
+    {% else %}
+      {% assign size_advice = "Yeezy wypada mniejszy - weź pół rozmiaru większy" %}
+    {% endif %}
+    {% assign text_color = "#c2410c" %}
+    {% assign bg_color = "#fff7ed" %}
+    {% assign border_color = "#ea580c" %}
+    {% assign advice_prefix = "Uwaga:" %}
+  
+  {% comment %} AIR JORDAN - Half size up for AJ4 {% endcomment %}
+  {% elsif product.title contains 'Jordan' %}
+    {% if title_lower contains 'air jordan 4' or title_lower contains 'jordan 4' %}
+      {% assign size_advice = "Air Jordan 4 wypada mniejszy - weź pół rozmiaru większy" %}
+    {% else %}
+      {% assign size_advice = "Air Jordan wypada zgodnie z rozmiarem" %}
+    {% endif %}
+    {% assign text_color = "#1e40af" %}
+    {% assign bg_color = "#eff6ff" %}
+    {% assign border_color = "#2563eb" %}
+    {% assign advice_prefix = "Rozmiar:" %}
+  
+  {% comment %} UGG - Including all synonyms {% endcomment %}
+  {% elsif product.title contains 'UGG' or 
+           title_lower contains 'lowmel' or 
+           title_lower contains 'ultra mini boot' or 
+           title_lower contains 'ultra mini platform' or 
+           title_lower contains 'tasman slipper' or 
+           title_lower contains 'tazz slipper' %}
+    {% assign size_advice = "UGG wypada większy - rozważ mniejszy rozmiar" %}
+    {% assign text_color = "#6d28d9" %}
+    {% assign bg_color = "#faf5ff" %}
+    {% assign border_color = "#7c3aed" %}
+    {% assign advice_prefix = "Wskazówka:" %}
+  
+  {% comment %} NEW BALANCE - Including all model numbers {% endcomment %}
+  {% elsif product.title contains 'New Balance' or 
+           title_lower contains '2002r' or 
+           title_lower contains '530' or 
+           title_lower contains '550' or 
+           title_lower contains '9060' %}
+    {% assign size_advice = "New Balance wypada zgodnie z rozmiarem" %}
+    {% assign text_color = "#047857" %}
+    {% assign bg_color = "#ecfdf5" %}
+    {% assign border_color = "#059669" %}
+    {% assign advice_prefix = "Rozmiar:" %}
+  
+  {% comment %} NIKE - Including all synonyms {% endcomment %}
+  {% elsif product.vendor == 'Nike' or 
+           title_lower contains 'air force' or 
+           title_lower contains 'air max' or 
+           title_lower contains 'cortez' or 
+           title_lower contains 'dunk low' or 
+           title_lower contains 'dunk sb' or 
+           title_lower contains 'kobe' or 
+           title_lower contains 'travis scott' or 
+           title_lower contains 'off-white' or 
+           title_lower contains 'nocta' or 
+           title_lower contains 'shox' %}
+    {% assign size_advice = "Nike wypada zgodnie z rozmiarem" %}
+    {% assign text_color = "#1e40af" %}
+    {% assign bg_color = "#eff6ff" %}
+    {% assign border_color = "#2563eb" %}
+    {% assign advice_prefix = "Rozmiar:" %}
+  
+  {% comment %} ADIDAS - Including all synonyms {% endcomment %}
+  {% elsif product.vendor == 'Adidas' or 
+           title_lower contains 'spezial' or 
+           title_lower contains 'campus' or 
+           title_lower contains 'samba' or 
+           title_lower contains 'superstar' or 
+           title_lower contains 'gazelle' %}
+    {% assign size_advice = "Adidas wypada zgodnie z rozmiarem" %}
+    {% assign text_color = "#047857" %}
+    {% assign bg_color = "#ecfdf5" %}
+    {% assign border_color = "#059669" %}
+    {% assign advice_prefix = "Rozmiar:" %}
+  
+  {% comment %} DEFAULT {% endcomment %}
+  {% else %}
+    {% assign size_advice = "Sprawdź tabelę rozmiarów przed zakupem" %}
+    {% assign text_color = "#475569" %}
+    {% assign bg_color = "#f8fafc" %}
+    {% assign border_color = "#e2e8f0" %}
+    {% assign advice_prefix = "Rozmiar:" %}
+  {% endif %}
+  
+  {% comment %} Render the notification {% endcomment %}
+  {% if size_advice != "" %}
+    <div style="
+      background: {{ bg_color }};
+      border: 1px solid {{ border_color }};
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 8px 0 16px 0;
+      transition: all 0.3s ease;
+    ">
+      <p style="
+        font-size: 14px;
+        font-weight: 500;
+        color: {{ text_color }};
+        margin: 0;
+        line-height: 1.4;
+        letter-spacing: 0.025em;
+      ">
+        <span style="font-weight: 600;">{{ advice_prefix }}</span> {{ size_advice }}
+      </p>
+    </div>
+  {% endif %}
+{% endif %}
               <div
                 class="product-form__variants product__section--variants inline-block animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
@@ -364,6 +501,7 @@
                   </p>
                 {% endif %}
               </div>
+              
             {%- when 'product_pickup' -%}
               <pickup-availability
                 class="product-single__store-availability-container animate--text delay--{{ forloop.index }}"
@@ -447,6 +585,10 @@
         {% endfor %}
       </div>
     </article>
+  </div>
+
+    <div class="product-additional-content" >
+    {% render 'size-guide', product: product %}
   </div>
 
   <script>

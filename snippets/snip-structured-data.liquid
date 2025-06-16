@@ -1,13 +1,13 @@
 {% comment %}
   Enhanced structured data for Saturaise - Optimized for competitive SEO
-  Final version with search page schema and no conflicts
+  FIXED VERSION - Corrected comma issues and optimized structure
 {% endcomment %}
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
-    {% unless template == 'index' or template contains 'collection' or template contains 'page' %}
+    {% unless template == 'index' or template contains 'collection' %}
    {
       "@type": "Organization",
       "@id": "https://saturaise.com/#organization",
@@ -45,7 +45,7 @@
       "foundingDate": "2022",
       "areaServed": "PL",
       "sameAs": [
-        "https://saturaise.com"
+        "https://saturaise.com",
         {%- if settings.facebook_url != blank -%},{{ settings.facebook_url | json }}{%- endif -%}
         {%- if settings.twitter_url != blank -%},{{ settings.twitter_url | json }}{%- endif -%}
         {%- if settings.pinterest_url != blank -%},{{ settings.pinterest_url | json }}{%- endif -%}
@@ -347,19 +347,34 @@
       "url": "{{ shop.url }}{{ product.url }}",
       "name": {{ product.title | strip_html | json }},
       "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 150 | json }}{% else %}{{ product.title | json }}{% endif %},
+      
+      {% comment %} Brand Information {% endcomment %}
       {% if product.vendor != blank %}
       "brand": {
         "@type": "Brand",
         "name": {{ product.vendor | json }}
       },
       "manufacturer": {
-        "@type": "Organization",
+        "@type": "Organization", 
         "name": {{ product.vendor | json }}
       },
       {% endif %}
+      
+      {% comment %} Product Images {% endcomment %}
+      {% if product.images.size > 0 %}
+      "image": [
+        {% for image in product.images limit: 8 %}
+        "{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      {% endif %}
+      
+      {% comment %} Product Category and Type {% endcomment %}
       "category": {% if product.type != blank %}{{ product.type | json }}{% else %}"Sneakers"{% endif %},
-      "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
       "productID": {{ product.id | json }},
+      
+      {% comment %} SKU and GTIN handling {% endcomment %}
+      "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
       {% if product.selected_or_first_available_variant.barcode != blank %}
         {% assign barcode_length = product.selected_or_first_available_variant.barcode | size %}
         {% if barcode_length == 12 %}
@@ -372,48 +387,213 @@
       "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
         {% endif %}
       {% endif %}
-      {% if product.images.size > 0 %}
-      "image": [
-        {% for image in product.images limit: 8 %}
-        "{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ],
-      {% endif %}
-      {% if product.available %}
-      "offers": [
-        {% for variant in product.variants %}
+      
+      {% comment %} Item Condition {% endcomment %}
+      "itemCondition": "https://schema.org/NewCondition",
+      
+      {% comment %} Sneaker-Specific Additional Properties - POLISH LANGUAGE {% endcomment %}
+      "additionalProperty": [
+        {% comment %} Detect and add colorway information {% endcomment %}
+        {% assign detected_colorway = "" %}
+        {% assign title_lower = product.title | downcase %}
+        
+        {% if title_lower contains 'chicago' %}
+          {% assign detected_colorway = "Chicago" %}
+        {% elsif title_lower contains 'bred' %}
+          {% assign detected_colorway = "Bred" %}
+        {% elsif title_lower contains 'royal' %}
+          {% assign detected_colorway = "Królewski Niebieski" %}
+        {% elsif title_lower contains 'shadow' %}
+          {% assign detected_colorway = "Shadow" %}
+        {% elsif title_lower contains 'court purple' %}
+          {% assign detected_colorway = "Fioletowy Sądowy" %}
+        {% elsif title_lower contains 'pine green' %}
+          {% assign detected_colorway = "Sosnowa Zieleń" %}
+        {% elsif title_lower contains 'dark green' %}
+          {% assign detected_colorway = "Ciemnozielony" %}
+        {% elsif title_lower contains 'university blue' %}
+          {% assign detected_colorway = "Uniwersytecki Niebieski" %}
+        {% elsif title_lower contains 'hyper royal' %}
+          {% assign detected_colorway = "Hyper Royal" %}
+        {% elsif title_lower contains 'travis scott' %}
+          {% assign detected_colorway = "Travis Scott" %}
+        {% elsif title_lower contains 'off white' or title_lower contains 'off-white' %}
+          {% assign detected_colorway = "Off-White" %}
+        {% elsif title_lower contains 'fragment' %}
+          {% assign detected_colorway = "Fragment" %}
+        {% elsif title_lower contains 'sb navy' or title_lower contains 'navy' %}
+          {% assign detected_colorway = "SB Navy" %}
+        {% endif %}
+        
+        {% if detected_colorway != "" %}
         {
-          "@type": "Offer",
-          "name": "{{ product.title }}{% if variant.title != 'Default Title' %} - {{ variant.title }}{% endif %}",
-          "price": "{{ variant.price | money_without_currency | remove: ',' }}",
-          "priceCurrency": "{{ shop.currency }}",
-          "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
-          "sku": {{ variant.sku | default: variant.id | json }},
-          {% if variant.barcode != blank %}
-          "gtin": {{ variant.barcode | json }},
-          {% endif %}
-          "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
-          "seller": {
-            "@id": "https://saturaise.com/#organization"
-          },
-          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-          "itemCondition": "https://schema.org/NewCondition"
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
+          "@type": "PropertyValue",
+          "name": "Kolorystyka",
+          "value": {{ detected_colorway | json }}
+        },
+        {% endif %}
+        
+        {% comment %} Authentication Property {% endcomment %}
+        {
+          "@type": "PropertyValue", 
+          "name": "Status Autentyczności",
+          "value": "100% Oryginalne - Zweryfikowane przez Saturaise"
+        },
+        
+        {% comment %} Condition Grade {% endcomment %}
+        {
+          "@type": "PropertyValue",
+          "name": "Stan",
+          "value": "Zupełnie nowe w oryginalnym pudełku"
+        }
+        
+        {% comment %} Release Date Detection {% endcomment %}
+        {% if product.created_at %}
+        ,{
+          "@type": "PropertyValue",
+          "name": "Data Dodania", 
+          "value": "{{ product.created_at | date: '%Y-%m-%d' }}"
+        }
+        {% endif %}
       ],
+      
+      {% comment %} Authentication Certification - POLISH {% endcomment %}
+      "hasCertification": {
+        "@type": "Certification",
+        "name": "Gwarancja Autentyczności Saturaise",
+        "certificationIdentification": "SATURAISE-AUTH-{{ product.id }}",
+        "issuedBy": {
+          "@type": "Organization",
+          "name": "Saturaise",
+          "url": "https://saturaise.com"
+        }
+      },
+      
+      {% comment %} Enhanced Offers with Polish Market Compliance {% endcomment %}
+      {% if product.available %}
+      "offers": {% if product.variants.size > 1 %}{
+        "@type": "AggregateOffer",
+        "priceCurrency": "PLN",
+        "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
+        "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
+        "offerCount": {{ product.variants.size }},
+        "offers": [
+          {% for variant in product.variants %}
+          {
+            "@type": "Offer",
+            "name": "{{ product.title }}{% if variant.title != 'Default Title' %} - {{ variant.title }}{% endif %}",
+            "price": "{{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
+            "priceCurrency": "PLN",
+            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+            "sku": {{ variant.sku | default: variant.id | json }},
+            {% if variant.barcode != blank %}
+            "gtin": {{ variant.barcode | json }},
+            {% endif %}
+            "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+            "seller": {
+              "@id": "https://saturaise.com/#organization"
+            },
+            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+            "itemCondition": "https://schema.org/NewCondition",
+            
+            {% comment %} Size-specific property - POLISH {% endcomment %}
+            {% if variant.title != 'Default Title' %}
+            "additionalProperty": {
+              "@type": "PropertyValue",
+              "name": "Rozmiar",
+              "value": {{ variant.title | json }}
+            },
+            {% endif %}
+            
+            {% comment %} Polish Market Shipping Details {% endcomment %}
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": "0.00",
+                "currency": "PLN"
+              },
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": "P1D",
+                "transitTime": "P2D"
+              },
+              "shippingDestination": {
+                "@type": "DefinedRegion",
+                "addressCountry": "PL"
+              },
+              "shippingLabel": "Darmowa wysyłka w Polsce"
+            },
+            
+            {% comment %} Return Policy {% endcomment %}
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow", 
+              "merchantReturnDays": 14,
+              "returnMethod": "https://schema.org/ReturnByMail",
+              "returnFees": "https://schema.org/FreeReturn"
+            }
+          }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ]
+      }{% else %}{
+        "@type": "Offer",
+        "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
+        "priceCurrency": "PLN",
+        "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@id": "https://saturaise.com/#organization"
+        },
+        "url": "{{ shop.url }}{{ product.url }}",
+        "itemCondition": "https://schema.org/NewCondition",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0.00", 
+            "currency": "PLN"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": "P1D",
+            "transitTime": "P2D"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "PL"
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 14,
+          "returnMethod": "https://schema.org/ReturnByMail", 
+          "returnFees": "https://schema.org/FreeReturn"
+        }
+      }{% endif %}
       {% else %}
       "offers": {
         "@type": "Offer",
-        "price": "{{ product.price | money_without_currency | remove: ',' }}",
-        "priceCurrency": "{{ shop.currency }}",
+        "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
+        "priceCurrency": "PLN", 
         "availability": "https://schema.org/OutOfStock",
         "seller": {
           "@id": "https://saturaise.com/#organization"
         },
         "url": "{{ shop.url }}{{ product.url }}",
         "itemCondition": "https://schema.org/NewCondition"
-      },
+      }
       {% endif %}
+      
+      {% comment %} Warranty Promise for Authenticity {% endcomment %}
+      "warranty": {
+        "@type": "WarrantyPromise",
+        "durationOfWarranty": "P30D",
+        "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
+      },
+      
+      {% comment %} Reviews Integration (if available) {% endcomment %}
       {% if product.metafields.reviews.rating %}
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -423,9 +603,138 @@
         "worstRating": "1"
       },
       {% endif %}
+      
+      {% comment %} Audience for Sneakers - POLISH {% endcomment %}
+      "audience": {
+        "@type": "PeopleAudience",
+        "suggestedMinAge": 16,
+        "audienceType": "Miłośnicy sneakersów, kolekcjonerzy, osoby świadome mody"
+      },
+      
+      {% comment %} Enhanced Material Information - POLISH {% endcomment %}
+      {% assign detected_material = "" %}
+      {% assign title_lower = product.title | downcase %}
+      {% assign desc_lower = product.description | downcase | strip_html %}
+      
+      {% if desc_lower contains 'leather' or title_lower contains 'leather' or desc_lower contains 'skóra' %}
+        {% assign detected_material = "Skóra" %}
+      {% elsif desc_lower contains 'suede' or title_lower contains 'suede' or desc_lower contains 'zamsz' %}
+        {% assign detected_material = "Zamsz" %}
+      {% elsif desc_lower contains 'canvas' or title_lower contains 'canvas' or desc_lower contains 'płótno' %}
+        {% assign detected_material = "Płótno" %}
+      {% elsif desc_lower contains 'mesh' or title_lower contains 'mesh' or desc_lower contains 'siatka' %}
+        {% assign detected_material = "Siatka" %}
+      {% elsif desc_lower contains 'primeknit' or title_lower contains 'primeknit' %}
+        {% assign detected_material = "Primeknit" %}
+      {% elsif desc_lower contains 'flyknit' or title_lower contains 'flyknit' %}
+        {% assign detected_material = "Flyknit" %}
+      {% endif %}
+      
+      {% if detected_material != "" %}
+      "material": {{ detected_material | json }},
+      {% endif %}
+      
       "isPartOf": {
         "@id": "https://saturaise.com/#website"
       }
+    }
+    
+    {% comment %} Product Group for Variants (Google 2024 Feature) {% endcomment %}
+    {% if product.variants.size > 1 %}
+    ,{
+      "@type": "ProductGroup",
+      "@id": "{{ shop.url }}{{ product.url }}#productgroup",
+      "name": {{ product.title | json }},
+      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | json }}{% endif %},
+      "brand": {
+        "@type": "Brand",
+        "name": {% if product.vendor != blank %}{{ product.vendor | json }}{% else %}"Saturaise"{% endif %}
+      },
+      "productGroupID": {{ product.id | json }},
+      "variesBy": [
+        {% assign varies_by = "" %}
+        {% for option in product.options_with_values %}
+          {% if option.name contains 'Size' or option.name contains 'Rozmiar' %}
+            {% unless varies_by contains 'size' %}
+              {% assign varies_by = varies_by | append: '"rozmiar",' %}
+            {% endunless %}
+          {% endif %}
+          {% if option.name contains 'Color' or option.name contains 'Kolor' %}
+            {% unless varies_by contains 'color' %}
+              {% assign varies_by = varies_by | append: '"kolor",' %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+        {{ varies_by | remove_last: ',' }}
+      ],
+      "hasVariant": [
+        {% for variant in product.variants %}
+        {
+          "@type": "Product",
+          "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}#variant",
+          "name": "{{ product.title }}{% if variant.title != 'Default Title' %} - {{ variant.title }}{% endif %}",
+          "sku": {{ variant.sku | default: variant.id | json }},
+          "offers": {
+            "@type": "Offer",
+            "price": "{{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
+            "priceCurrency": "PLN",
+            "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}"
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+    {% endif %}
+    
+    {% comment %} FAQ Schema for Common Sneaker Questions {% endcomment %}
+    ,{
+      "@type": "FAQPage",
+      "@id": "{{ shop.url }}{{ product.url }}#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Czy ten produkt jest w 100% oryginalny?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tak, wszystkie produkty w Saturaise są weryfikowane pod kątem autentyczności przez naszych ekspertów. Każdy produkt posiada gwarancję autentyczności."
+          }
+        },
+        {
+          "@type": "Question", 
+          "name": "Jaki jest czas dostawy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oferujemy darmową wysyłkę w Polsce z dostawą w ciągu 1-3 dni roboczych. Produkty są starannie pakowane i wysyłane z numerem śledzenia."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy mogę zwrócić produkt?",
+          "acceptedAnswer": {
+            "@type": "Answer", 
+            "text": "Tak, masz 14 dni na zwrot produktu w nienaruszonym stanie. Zwrot jest darmowy i środki zwracamy w ciągu 14 dni roboczych."
+          }
+        },
+        {% if product.variants.size > 1 %}
+        {
+          "@type": "Question",
+          "name": "Jak dobrać odpowiedni rozmiar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Udostępniamy tabelę rozmiarów dla każdego produktu. W przypadku wątpliwości, skontaktuj się z naszym zespołem - pomożemy dobrać idealny rozmiar."
+          }
+        },
+        {% endif %}
+        {
+          "@type": "Question",
+          "name": "Dlaczego ceny różnią się między rozmiarami?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ceny zależą od dostępności na rynku i popytu na konkretne rozmiary. Rzadsze rozmiary mogą mieć wyższe ceny ze względu na ograniczoną dostępność."
+          }
+        }
+      ]
     }
     {% endif %}
     {% if template contains 'collection' %}
