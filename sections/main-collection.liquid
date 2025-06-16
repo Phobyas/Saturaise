@@ -82,73 +82,7 @@
   data-collection-handle="{{ collection.handle }}"
   data-empty="{{ empty_collection }}">
 
-  {% comment %} Schema.org CollectionPage + ItemList JSON-LD {% endcomment %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": {{ collection.title | json }},
-  "description": {{ collection.description | strip_html | json }},
-  "url": "{{ shop.url }}{{ collection.url }}",
-  {% if collection.image %}
-  "image": "{{ collection.image | img_url: 'master' }}",
-  {% endif %}
-  "mainEntity": {
-    "@type": "ItemList",
-    "numberOfItems": {{ collection.products_count }},
-    "itemListElement": [
-      {% for product in collection.products limit: page_limit %}
-      {
-        "@type": "ListItem",
-        "position": {{ forloop.index }},
-        "item": {
-          "@type": "Product",
-          "name": {{ product.title | json }},
-          "url": "{{ shop.url }}{{ product.url }}",
-          {% if product.featured_image %}
-          "image": "{{ product.featured_image | img_url: '1024x' }}",
-          {% endif %}
-          "brand": {
-            "@type": "Brand",
-            "name": {{ product.vendor | json }}
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": "{{ product.price | money_without_currency | remove: ',' }}",
-            "priceCurrency": "{{ shop.currency }}",
-            "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
-            "url": "{{ shop.url }}{{ product.url }}"
-          }
-        }
-      }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ]
-  }
-}
-</script>
-
-{% comment %} Schema.org BreadcrumbList JSON-LD {% endcomment %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Strona główna",
-      "item": "{{ shop.url }}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": {{ collection.title | json }},
-      "item": "{{ shop.url }}{{ collection.url }}"
-    }
-  ]
-}
-</script>
-
+ 
   {% paginate collection.products by page_limit %}
     <div id="CollectionProductGrid" class="grid__wrapper px-3 lg:px-0">
       

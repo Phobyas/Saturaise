@@ -1,14 +1,18 @@
 {% comment %}
-  Enhanced structured data for Saturaise - Optimized for competitive SEO
-  FIXED VERSION - Corrected comma issues and optimized structure
+  ENHANCED STRUCTURED DATA FOR SATURAISE - FIXED VERSION 2024
+  ✅ Naprawione błędy składni w sameAs
+  ✅ Poprawiona logika Organization Schema
+  ✅ Usunięta duplikacja z theme.liquid
+  ✅ Dodane brakujące Schema typy
+  ✅ Zoptymalizowane dla SEO
 {% endcomment %}
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
-    {% unless template == 'index' or template contains 'collection' %}
-   {
+    {% comment %} Organization Schema - ZAWSZE obecny {% endcomment %}
+    {
       "@type": "Organization",
       "@id": "https://saturaise.com/#organization",
       "name": "Saturaise",
@@ -52,7 +56,8 @@
         {%- if settings.instagram_url != blank -%},{{ settings.instagram_url | json }}{%- endif -%}
       ]
     },
-    {% endunless %}
+    
+    {% comment %} WebSite Schema - ZAWSZE obecny {% endcomment %}
     {
       "@type": "WebSite",
       "@id": "https://saturaise.com/#website",
@@ -69,6 +74,8 @@
         "query-input": "required name=search_term_string"
       }
     }
+    
+    {% comment %} SEARCH PAGE SCHEMA {% endcomment %}
     {% if template contains 'search' %}
     ,{
       "@type": "SearchResultsPage",
@@ -112,11 +119,11 @@
                     "@type": "{% if item.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
                     "priceCurrency": "{{ shop.currency }}",
                     {% if item.variants.size > 1 %}
-                    "lowPrice": "{{ item.price_min | money_without_currency | remove: ',' }}",
-                    "highPrice": "{{ item.price_max | money_without_currency | remove: ',' }}",
+                    "lowPrice": "{{ item.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
+                    "highPrice": "{{ item.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
                     "offerCount": {{ item.variants.size }},
                     {% else %}
-                    "price": "{{ item.price | money_without_currency | remove: ',' }}",
+                    "price": "{{ item.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
                     {% endif %}
                     "availability": "https://schema.org/InStock",
                     "seller": {
@@ -129,7 +136,7 @@
                   "offers": {
                     "@type": "Offer",
                     "priceCurrency": "{{ shop.currency }}",
-                    "price": "{{ item.price | money_without_currency | remove: ',' }}",
+                    "price": "{{ item.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
                     "availability": "https://schema.org/OutOfStock",
                     "seller": {
                       "@id": "https://saturaise.com/#organization"
@@ -173,6 +180,8 @@
       ]
     }
     {% endif %}
+    
+    {% comment %} BLOG SCHEMA {% endcomment %}
     {% if template contains 'blog' and blog %}
     ,{
       "@type": "Blog",
@@ -248,6 +257,8 @@
       ]
     }
     {% endif %}
+    
+    {% comment %} ARTICLE SCHEMA {% endcomment %}
     {% if template contains 'article' %}
     ,{
       "@type": "BlogPosting",
@@ -307,6 +318,8 @@
       ]
     }
     {% endif %}
+    
+    {% comment %} PRODUCT PAGE SCHEMA - tylko jeśli nie ma duplikacji {% endcomment %}
     {% if template contains 'product' %}
     ,{
       "@type": "BreadcrumbList",
@@ -346,7 +359,7 @@
       "@id": "{{ shop.url }}{{ product.url }}#product",
       "url": "{{ shop.url }}{{ product.url }}",
       "name": {{ product.title | strip_html | json }},
-      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 150 | json }}{% else %}{{ product.title | json }}{% endif %},
+      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | json }}{% endif %},
       
       {% comment %} Brand Information {% endcomment %}
       {% if product.vendor != blank %}
@@ -391,9 +404,9 @@
       {% comment %} Item Condition {% endcomment %}
       "itemCondition": "https://schema.org/NewCondition",
       
-      {% comment %} Sneaker-Specific Additional Properties - POLISH LANGUAGE {% endcomment %}
+      {% comment %} Sneaker-Specific Additional Properties {% endcomment %}
       "additionalProperty": [
-        {% comment %} Detect and add colorway information {% endcomment %}
+        {% comment %} Detect colorway information {% endcomment %}
         {% assign detected_colorway = "" %}
         {% assign title_lower = product.title | downcase %}
         
@@ -457,7 +470,7 @@
         {% endif %}
       ],
       
-      {% comment %} Authentication Certification - POLISH {% endcomment %}
+      {% comment %} Authentication Certification {% endcomment %}
       "hasCertification": {
         "@type": "Certification",
         "name": "Gwarancja Autentyczności Saturaise",
@@ -496,7 +509,7 @@
             "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
             "itemCondition": "https://schema.org/NewCondition",
             
-            {% comment %} Size-specific property - POLISH {% endcomment %}
+            {% comment %} Size-specific property {% endcomment %}
             {% if variant.title != 'Default Title' %}
             "additionalProperty": {
               "@type": "PropertyValue",
@@ -604,14 +617,14 @@
       },
       {% endif %}
       
-      {% comment %} Audience for Sneakers - POLISH {% endcomment %}
+      {% comment %} Audience for Sneakers {% endcomment %}
       "audience": {
         "@type": "PeopleAudience",
         "suggestedMinAge": 16,
         "audienceType": "Miłośnicy sneakersów, kolekcjonerzy, osoby świadome mody"
       },
       
-      {% comment %} Enhanced Material Information - POLISH {% endcomment %}
+      {% comment %} Enhanced Material Information {% endcomment %}
       {% assign detected_material = "" %}
       {% assign title_lower = product.title | downcase %}
       {% assign desc_lower = product.description | downcase | strip_html %}
@@ -639,7 +652,7 @@
       }
     }
     
-    {% comment %} Product Group for Variants (Google 2024 Feature) {% endcomment %}
+    {% comment %} Product Group for Variants {% endcomment %}
     {% if product.variants.size > 1 %}
     ,{
       "@type": "ProductGroup",
@@ -737,7 +750,9 @@
       ]
     }
     {% endif %}
-    {% if template contains 'collection' %}
+    
+    {% comment %} COLLECTION PAGE SCHEMA - tylko jeśli nie ma duplikacji z main-collection.liquid {% endcomment %}
+    {% if template contains 'collection' and template != 'collection' %}
     ,{
       "@type": "CollectionPage",
       "@id": "{{ shop.url }}{{ collection.url }}#collectionpage",
@@ -782,11 +797,11 @@
                   "@type": "{% if product.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
                   "priceCurrency": "{{ shop.currency }}",
                   {% if product.variants.size > 1 %}
-                  "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' }}",
-                  "highPrice": "{{ product.price_max | money_without_currency | remove: ',' }}",
+                  "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
+                  "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
                   "offerCount": {{ product.variants.size }},
                   {% else %}
-                  "price": "{{ product.price | money_without_currency | remove: ',' }}",
+                  "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
                   {% endif %}
                   "availability": "https://schema.org/InStock",
                   "seller": {
@@ -799,7 +814,7 @@
                 "offers": {
                   "@type": "Offer",
                   "priceCurrency": "{{ shop.currency }}",
-                  "price": "{{ product.price | money_without_currency | remove: ',' }}",
+                  "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
                   "availability": "https://schema.org/OutOfStock",
                   "seller": {
                     "@id": "https://saturaise.com/#organization"
@@ -832,6 +847,8 @@
       ]
     }
     {% endif %}
+    
+    {% comment %} PAGE SCHEMA {% endcomment %}
     {% if template contains 'page' %}
     ,{
       "@type": "WebPage",
@@ -843,6 +860,40 @@
         "@id": "https://saturaise.com/#website"
       }
     }
+    
+    {% comment %} CONTACT PAGE SCHEMA {% endcomment %}
+    {% if page.handle == 'contact' %}
+    ,{
+      "@type": "ContactPage",
+      "@id": "{{ shop.url }}{{ page.url }}#contactpage",
+      "name": "Kontakt - Saturaise",
+      "description": "Skontaktuj się z Saturaise. Email: saturaisekontakt@gmail.com, telefon: +48451108247. Godziny pracy: 9:00-16:00, pon-pt.",
+      "mainEntity": {
+        "@id": "https://saturaise.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      }
+    }
+    {% endif %}
+    
+    {% comment %} ABOUT PAGE SCHEMA {% endcomment %}
+    {% if page.handle == 'o-nas' %}
+    ,{
+      "@type": "AboutPage",
+      "@id": "{{ shop.url }}{{ page.url }}#aboutpage",
+      "name": "O nas - Saturaise",
+      "description": "Poznaj historię Saturaise - sklep z limitowanymi sneakersami działający od 3 lat. Gwarancja autentyczności, szybka dostawa, konkurencyjne ceny.",
+      "mainEntity": {
+        "@id": "https://saturaise.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      }
+    }
+    {% endif %}
+    
+    {% comment %} FAQ PAGE SCHEMA {% endcomment %}
     {% if page.handle == 'faq' %}
     ,{
       "@type": "FAQPage",
@@ -947,6 +998,8 @@
       ]
     }
     {% endif %}
+    
+    {% comment %} BREADCRUMB for all pages {% endcomment %}
     ,{
       "@type": "BreadcrumbList",
       "@id": "{{ shop.url }}{{ page.url }}#breadcrumblist",
