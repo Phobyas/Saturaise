@@ -48,21 +48,12 @@
       "foundingDate": "2022",
       "areaServed": "PL",
       {% comment %} FIXED: Proper sameAs logic without double commas {% endcomment %}
-      "sameAs": [
-        {% assign social_urls = "" %}
-        {% assign social_count = 0 %}
-        
-        {% comment %} Build array of social URLs {% endcomment %}
-        {% capture social_urls %}
-        "https://saturaise.com"
-        {% if settings.facebook_url != blank %},"{{ settings.facebook_url }}"{% endif %}
-        {% if settings.twitter_url != blank %},"{{ settings.twitter_url }}"{% endif %}
-        {% if settings.pinterest_url != blank %},"{{ settings.pinterest_url }}"{% endif %}
-        {% if settings.instagram_url != blank %},"{{ settings.instagram_url }}"{% endif %}
-        {% endcapture %}
-        
-        {{ social_urls }}
-      ]
+"sameAs": [
+  "https://saturaise.com",
+  "https://www.facebook.com/people/Saturaisecom/61576843476406/",
+  "https://www.instagram.com/saturaise_com/",
+  "https://www.tiktok.com/@saturaise.com"
+]
     },
     
     {% comment %} WebSite Schema - ZAWSZE obecny {% endcomment %}
@@ -641,7 +632,7 @@
       "@type": "ProductGroup",
       "@id": "{{ shop.url }}{{ product.url }}#productgroup",
       "name": {{ product.title | json }},
-      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json %}{% else %}{{ product.title | json }}{% endif %},
+      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | json }}{% endif %},
       "brand": {
         "@type": "Brand",
         "name": {% if product.vendor != blank %}{{ product.vendor | json }}{% else %}"Saturaise"{% endif %}
