@@ -5,6 +5,8 @@
   ✅ Usunięta duplikacja z theme.liquid
   ✅ Dodane brakujące Schema typy
   ✅ Zoptymalizowane dla SEO
+  ✅ NAPRAWIONE: Podwójny przecinek w sameAs
+  ✅ NAPRAWIONE: Brakujący przecinek przed warranty
 {% endcomment %}
 
 <script type="application/ld+json">
@@ -49,11 +51,11 @@
       "foundingDate": "2022",
       "areaServed": "PL",
       "sameAs": [
-        "https://saturaise.com",
-        {%- if settings.facebook_url != blank -%},{{ settings.facebook_url | json }}{%- endif -%}
-        {%- if settings.twitter_url != blank -%},{{ settings.twitter_url | json }}{%- endif -%}
-        {%- if settings.pinterest_url != blank -%},{{ settings.pinterest_url | json }}{%- endif -%}
-        {%- if settings.instagram_url != blank -%},{{ settings.instagram_url | json }}{%- endif -%}
+        "https://saturaise.com"
+        {%- if settings.facebook_url != blank -%},"{{ settings.facebook_url }}"{% endif -%}
+        {%- if settings.twitter_url != blank -%},"{{ settings.twitter_url }}"{% endif -%}
+        {%- if settings.pinterest_url != blank -%},"{{ settings.pinterest_url }}"{% endif -%}
+        {%- if settings.instagram_url != blank -%},"{{ settings.instagram_url }}"{% endif -%}
       ]
     },
     
@@ -597,7 +599,12 @@
         "url": "{{ shop.url }}{{ product.url }}",
         "itemCondition": "https://schema.org/NewCondition"
       }
-      {% endif %}
+      {% endif %},
+      
+      {% comment %} FIXED: Added comma before warranty section {% endcomment %}
+      "isPartOf": {
+        "@id": "https://saturaise.com/#website"
+      },
       
       {% comment %} Warranty Promise for Authenticity {% endcomment %}
       "warranty": {
@@ -644,12 +651,10 @@
       {% endif %}
       
       {% if detected_material != "" %}
-      "material": {{ detected_material | json }},
+      "material": {{ detected_material | json }}
+      {% else %}
+      "material": "Wysokiej jakości materiały syntetyczne i naturalne"
       {% endif %}
-      
-      "isPartOf": {
-        "@id": "https://saturaise.com/#website"
-      }
     }
     
     {% comment %} Product Group for Variants {% endcomment %}
@@ -658,7 +663,7 @@
       "@type": "ProductGroup",
       "@id": "{{ shop.url }}{{ product.url }}#productgroup",
       "name": {{ product.title | json }},
-      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | json }}{% endif %},
+      "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json %}{% else %}{{ product.title | json }}{% endif %},
       "brand": {
         "@type": "Brand",
         "name": {% if product.vendor != blank %}{{ product.vendor | json }}{% else %}"Saturaise"{% endif %}
