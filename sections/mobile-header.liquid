@@ -339,7 +339,8 @@
                autocomplete="off"
                autocorrect="off"
                autocapitalize="off"
-               spellcheck="false">
+               spellcheck="false"
+               style="font-size: 16px;">
         <div class="mobile-search-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/>
@@ -403,7 +404,7 @@
   <a href="/search?q=Akcesoria" class="mobile-search-suggestion">Akcesoria</a>
   <a href="/search?q=Dunk+Low" class="mobile-search-suggestion">Dunk Low</a>
   <a href="/search?q=Yeezy+350" class="mobile-search-suggestion">Yeezy 350</a>
-  <a href="/search?q=Nike+Cortez" class="mobile-search-suggestion">Nike Cortez</a>
+  <a href="/search?q=Nike+Cortez" class="mobile-search-suggestion">Nike Cortez</a>
   <a href="/search?q=SB+Dunk" class="mobile-search-suggestion">SB Dunk</a>
   <a href="/search?q=Travis+Scott" class="mobile-search-suggestion">Travis Scott</a>
       </div>
@@ -590,6 +591,22 @@ document.addEventListener('DOMContentLoaded', function() {
   cartTriggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
       document.body.classList.remove('mobile-nav-open');
+    });
+  });
+  
+  // CRITICAL: Apply zoom prevention to all search inputs
+  const searchInputs = document.querySelectorAll('.mobile-search-input, .section-header__mobile_search--input');
+  searchInputs.forEach(input => {
+    input.style.fontSize = '16px';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocorrect', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    
+    input.addEventListener('focus', function() {
+      this.style.fontSize = '16px';
+      this.style.transform = 'none';
+      this.style.zoom = '1';
     });
   });
   

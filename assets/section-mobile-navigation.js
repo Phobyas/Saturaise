@@ -15,6 +15,41 @@
   }
 })();
 
+// Mobile Search Zoom Prevention
+function preventMobileZoom() {
+  // Prevent zoom on iOS devices when focusing on input fields
+  const mobileSearchInputs = document.querySelectorAll(
+    '.mobile-search-input, .section-header__mobile_search--input, #mobile-search input'
+  );
+
+  mobileSearchInputs.forEach(input => {
+    // Ensure font-size is always 16px or larger
+    input.style.fontSize = '16px';
+    
+    // Set attributes to prevent zoom
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('autocorrect', 'off');
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('spellcheck', 'false');
+    
+    // Add event listeners to maintain font size
+    input.addEventListener('focus', function() {
+      this.style.fontSize = '16px';
+      // Prevent any transform or zoom
+      this.style.transform = 'none';
+      this.style.zoom = '1';
+    });
+
+    input.addEventListener('blur', function() {
+      this.style.fontSize = '16px';
+    });
+
+    input.addEventListener('input', function() {
+      this.style.fontSize = '16px';
+    });
+  });
+}
+
 function setupDrawer() {
   // Find key elements
   const mobileHeader = document.getElementById("shopify-section-mobile-header");
@@ -83,26 +118,30 @@ function setupDrawer() {
   });
 }
 
-function setupMobileSearch() {
-  const searchToggle = document.querySelector(".js-mobile-search-toggle");
+// Enhanced mobile search setup with zoom prevention
+function setupMobileSearchWithZoomPrevention() {
+  const searchToggle = document.querySelector(".js-mobile-search-toggle, .js-slideout-open[data-wau-slideout-target='mobile-search']");
   const mobileSearch = document.getElementById("mobile-search");
+  const mobileSearchDrawer = document.getElementById("mobile-search-drawer");
   const mobileHeader = document.querySelector(".mobile-nav__mobile-header");
   const backdrop = document.querySelector(".mobile-search-backdrop");
 
-  if (searchToggle && mobileSearch && mobileHeader) {
+  if (searchToggle && (mobileSearch || mobileSearchDrawer) && mobileHeader) {
     // Create a fixed position handler for the search
     const positionSearchAndBackdrop = () => {
       const headerHeight = 66; // Fixed height to prevent CLS
       const announcementHeight =
         document.querySelector(".announcement-bar.wrapper")?.offsetHeight || 40;
 
-      if (mobileHeader.classList.contains("announcement-hidden")) {
-        mobileSearch.style.top = `${headerHeight}px`;
-        if (backdrop) backdrop.style.top = `${headerHeight + 60}px`;
-      } else {
-        mobileSearch.style.top = `${headerHeight + announcementHeight}px`;
-        if (backdrop)
-          backdrop.style.top = `${headerHeight + announcementHeight + 60}px`;
+      if (mobileSearch) {
+        if (mobileHeader.classList.contains("announcement-hidden")) {
+          mobileSearch.style.top = `${headerHeight}px`;
+          if (backdrop) backdrop.style.top = `${headerHeight + 60}px`;
+        } else {
+          mobileSearch.style.top = `${headerHeight + announcementHeight}px`;
+          if (backdrop)
+            backdrop.style.top = `${headerHeight + announcementHeight + 60}px`;
+        }
       }
     };
 
@@ -110,34 +149,60 @@ function setupMobileSearch() {
       e.preventDefault();
       e.stopPropagation();
 
-      mobileSearch.classList.toggle("mobile-search--visible");
-      backdrop.classList.toggle("is-active");
+      // Handle old mobile search
+      if (mobileSearch) {
+        mobileSearch.classList.toggle("mobile-search--visible");
+        if (backdrop) backdrop.classList.toggle("is-active");
+        positionSearchAndBackdrop();
 
-      positionSearchAndBackdrop();
-
-      if (mobileSearch.classList.contains("mobile-search--visible")) {
-        mobileHeader.style.zIndex = "15";
-
-        // Focus search input
-        const searchInput = mobileSearch.querySelector(
-          ".section-header__mobile_search--input"
-        );
-        if (searchInput) {
-          setTimeout(() => searchInput.focus(), 50);
+        if (mobileSearch.classList.contains("mobile-search--visible")) {
+          mobileHeader.style.zIndex = "15";
         }
       }
+
+      // Handle new mobile search drawer
+      if (mobileSearchDrawer && typeof WAU !== "undefined" && WAU.Slideout) {
+        WAU.Slideout._openByName("mobile-search");
+      }
+
+      // Focus search input after a delay and prevent zoom
+      setTimeout(function () {
+        const searchContainer = mobileSearch || mobileSearchDrawer;
+        const searchInput = searchContainer.querySelector(
+          ".mobile-search-input, .section-header__mobile_search--input"
+        );
+        if (searchInput) {
+          // Ensure font size is 16px before focusing
+          searchInput.style.fontSize = '16px';
+          searchInput.focus();
+          
+          // Additional zoom prevention
+          searchInput.style.transform = 'none';
+          searchInput.style.zoom = '1';
+        }
+      }, 300);
     });
 
-    backdrop.addEventListener("click", function () {
-      mobileSearch.classList.remove("mobile-search--visible");
-      backdrop.classList.remove("is-active");
-    });
+    // Handle backdrop click for old mobile search
+    if (backdrop) {
+      backdrop.addEventListener("click", function () {
+        if (mobileSearch) {
+          mobileSearch.classList.remove("mobile-search--visible");
+          backdrop.classList.remove("is-active");
+        }
+      });
+    }
 
     // Update search position on scroll for smoother experience
-    window.addEventListener("scroll", positionSearchAndBackdrop, {
-      passive: true,
-    });
+    if (mobileSearch) {
+      window.addEventListener("scroll", positionSearchAndBackdrop, {
+        passive: true,
+      });
+    }
   }
+
+  // Initialize zoom prevention
+  preventMobileZoom();
 }
 
 function handleMobileHeaderScroll() {
@@ -190,9 +255,10 @@ document.addEventListener("DOMContentLoaded", function () {
     .forEach(function () {
       if (typeof WAU !== "undefined" && WAU.Slideout) {
         WAU.Slideout.init("mobile-navigation");
+        WAU.Slideout.init("mobile-search");
       }
       setupDrawer();
-      setupMobileSearch();
+      setupMobileSearchWithZoomPrevention(); // Use enhanced version
       handleMobileHeaderScroll();
 
       // Setup mini-cart trigger
@@ -205,6 +271,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
     });
+
+  // Add zoom prevention for all existing inputs
+  preventMobileZoom();
+  
+  // Re-run zoom prevention when new elements are added
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'childList') {
+        // Small delay to ensure elements are fully rendered
+        setTimeout(preventMobileZoom, 100);
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 });
 
 // Handle Shopify section events
@@ -273,8 +357,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Mobile Search Drawer - Using Existing Predictive Search System
-// Add this to your section-mobile-navigation.js
-
 (function () {
   function initMobileSearch() {
     const searchInput = document.querySelector(
@@ -297,8 +379,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let searchTimeout;
 
-    // Handle search input
+    // Apply zoom prevention to search input
+    searchInput.style.fontSize = '16px';
+    searchInput.setAttribute('autocomplete', 'off');
+    searchInput.setAttribute('autocorrect', 'off');
+    searchInput.setAttribute('autocapitalize', 'off');
+    searchInput.setAttribute('spellcheck', 'false');
+
+    // Handle search input with zoom prevention
     searchInput.addEventListener("input", function (e) {
+      // Maintain font size
+      this.style.fontSize = '16px';
+      
       const query = e.target.value.trim();
 
       clearTimeout(searchTimeout);
@@ -318,23 +410,34 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 300);
     });
 
+    // Handle focus with zoom prevention
+    searchInput.addEventListener('focus', function() {
+      this.style.fontSize = '16px';
+      this.style.transform = 'none';
+      this.style.zoom = '1';
+    });
+
     // Handle suggestion clicks
     document.addEventListener("click", function (e) {
       if (e.target.matches(".mobile-search-suggestion")) {
         e.preventDefault();
         const query = e.target.textContent.trim();
         searchInput.value = query;
+        searchInput.style.fontSize = '16px'; // Maintain font size
         hideAllStates();
         showLoading();
         setTimeout(() => performPredictiveSearch(query), 100);
       }
     });
 
-    // Focus search input when drawer opens
+    // Focus search input when drawer opens with zoom prevention
     if (typeof Events !== "undefined") {
       Events.on("slideout:open:mobile-search", function () {
         setTimeout(() => {
+          searchInput.style.fontSize = '16px';
           searchInput.focus();
+          searchInput.style.transform = 'none';
+          searchInput.style.zoom = '1';
           showSuggestions();
         }, 300);
       });
@@ -484,6 +587,26 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("shopify:section:load", function (event) {
     if (event.target.querySelector('[data-section-type="mobile-header"]')) {
       initMobileSearch();
+      // Re-apply zoom prevention
+      setTimeout(preventMobileZoom, 100);
     }
   });
 })();
+
+// Handle slideout events with zoom prevention
+if (typeof Events !== "undefined") {
+  Events.on("slideout:open:mobile-search", function () {
+    setTimeout(() => {
+      const searchInput = document.querySelector(
+        "#mobile-search-drawer .mobile-search-input, #mobile-search .section-header__mobile_search--input"
+      );
+      if (searchInput) {
+        searchInput.style.fontSize = '16px';
+        searchInput.focus();
+        searchInput.style.transform = 'none';
+        searchInput.style.zoom = '1';
+      }
+      preventMobileZoom();
+    }, 300);
+  });
+}

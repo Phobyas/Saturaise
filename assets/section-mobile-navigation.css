@@ -105,15 +105,38 @@
   margin: 0;
 }
 
+/* CRITICAL FIX: Mobile Search Input - Prevent iOS Zoom */
 .section-header__mobile_search--input {
   flex: 1;
   border: none;
   padding: 20px !important;
-  font-size: 16px !important;
+  font-size: 16px !important; /* Critical: Must be 16px or larger to prevent iOS zoom */
+  line-height: 1.4 !important;
   font-weight: 500 !important;
   background: transparent;
   color: var(--mobile-header-text);
   width: 100% !important;
+  -webkit-appearance: none; /* Remove iOS styling */
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-text-size-adjust: 100%; /* Prevent text size adjustment */
+  text-size-adjust: 100%;
+  zoom: 1; /* Prevent zoom */
+}
+
+.section-header__mobile_search--input:focus {
+  font-size: 16px !important; /* Ensure font size stays 16px on focus */
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+  transform: none !important;
+  zoom: 1 !important;
+}
+
+.section-header__mobile_search--input::placeholder {
+  font-size: 16px !important; /* Placeholder must also be 16px */
+  color: var(--mobile-header-text);
+  opacity: 0.7;
 }
 
 .section-header__mobile_search--submit {
@@ -212,6 +235,21 @@
   }
 }
 
+@media (max-width: 767px) {
+  /* Maintain 16px font size on mobile to prevent zoom */
+  .section-header__mobile_search--input {
+    font-size: 16px !important;
+    transform: none !important;
+    zoom: 1 !important;
+  }
+  
+  .section-header__mobile_search--input:focus {
+    font-size: 16px !important;
+    transform: none !important;
+    zoom: 1 !important;
+  }
+}
+
 @media (min-width: 768px) {
   .cart-count-bubble {
     width: 20px !important;
@@ -260,7 +298,7 @@
 
 /* Search Header - Clean and Modern */
 .mobile-search-header {
-  padding: calc(var(--announcement-bar-height, 0px) + 16px) 16px 16px;
+  padding: 16px 16px;
   background: var(--background);
   border-bottom: 1px solid #f0f0f0;
   position: sticky;
@@ -280,27 +318,42 @@
   position: relative;
 }
 
+/* CRITICAL FIX: Mobile Search Drawer Input - Prevent iOS Zoom */
 .mobile-search-input {
   width: 100%;
   height: 44px;
   border: 1px solid #e5e5e5;
   border-radius: 22px;
   padding: 12px 44px 12px 16px;
-  font-size: 16px;
+  font-size: 16px !important; /* Critical: Must be 16px or larger to prevent iOS zoom */
+  line-height: 1.4 !important;
   background: #f8f8f8;
   outline: none;
   color: var(--text-color);
   font-family: var(--main-family);
+  -webkit-appearance: none; /* Remove iOS styling */
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-text-size-adjust: 100%; /* Prevent text size adjustment */
+  text-size-adjust: 100%;
+  zoom: 1; /* Prevent zoom */
 }
 
 .mobile-search-input:focus {
   border-color: #007bff;
   background: #fff;
+  font-size: 16px !important; /* Ensure font size stays 16px on focus */
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+  transform: none !important;
+  zoom: 1 !important;
 }
 
 .mobile-search-input::placeholder {
   color: #999;
   font-weight: 400;
+  font-size: 16px !important; /* Placeholder must also be 16px */
 }
 
 .mobile-search-icon {
@@ -362,7 +415,6 @@
   font-weight: 600;
   color: #000000;
   margin-bottom: 16px;
-
   background: none;
   border: none;
 }
@@ -375,7 +427,6 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 0 16px;
-
   gap: 8px;
   scroll-behavior: smooth;
   scroll-snap-type: x proximity;
@@ -420,7 +471,118 @@
   .mobile-search-drawer .predictive-search__results-group-products,
   .mobile-search-drawer .predictive-search__results-list,
   .mobile-search-drawer .predictive-search__list,
-  .mobile-search-drawer .mobile-search-results-grid {
+  .mobile-search-drawer .mobile-search-results-grid,
+  .mobile-search-drawer .predictive-search__results-groups,
+  .mobile-search-drawer
+    .predictive-search__results-group-products
+    .predictive-search__results-list {
+    grid-template-columns: 1fr 1fr !important; /* Keep 2 columns */
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  .mobile-search-drawer .predictive-search__results-list-item-title,
+  .mobile-search-drawer .predictive-search__item-title,
+  .mobile-search-drawer .predictive-search__title {
+    font-size: 13px !important;
+    min-height: 36px !important;
+  }
+
+  /* Keep 16px price font on smaller screens with proper padding */
+  .mobile-search-drawer .predictive-search__results-list-item-price,
+  .mobile-search-drawer .predictive-search__item-price,
+  .mobile-search-drawer .predictive-search__price,
+  .mobile-search-drawer .product-loop__price,
+  .mobile-search-drawer .price__sale,
+  .mobile-search-drawer .price__regular,
+  .mobile-search-drawer .product-loop__price--sale,
+  .mobile-search-drawer .product-loop__price--compare {
+    font-size: 16px !important;
+  }
+}
+
+/* Keep 2 columns even on very small screens */
+@media (max-width: 360px) {
+  .mobile-search-drawer .predictive-search__results-list,
+  .mobile-search-drawer .predictive-search__list,
+  .mobile-search-drawer .mobile-search-results-grid,
+  .mobile-search-drawer .predictive-search__results-groups,
+  .mobile-search-drawer
+    .predictive-search__results-group-products
+    .predictive-search__results-list {
+    grid-template-columns: 1fr 1fr !important; /* Always 2 columns */
+    gap: 10px !important;
+  }
+
+  .mobile-search-drawer .predictive-search__results-list-item-title,
+  .mobile-search-drawer .predictive-search__item-title,
+  .mobile-search-drawer .predictive-search__title {
+    font-size: 12px !important;
+    min-height: 32px !important;
+  }
+
+  /* Maintain 16px price font even on very small screens to prevent zoom */
+  .mobile-search-input,
+  .section-header__mobile_search--input {
+    font-size: 16px !important; /* Always maintain 16px minimum */
+  }
+
+  .mobile-search-drawer .predictive-search__results-list-item-price,
+  .mobile-search-drawer .predictive-search__item-price,
+  .mobile-search-drawer .predictive-search__price,
+  .mobile-search-drawer .product-loop__price,
+  .mobile-search-drawer .price__sale,
+  .mobile-search-drawer .price__regular,
+  .mobile-search-drawer .product-loop__price--sale,
+  .mobile-search-drawer .product-loop__price--compare {
+    font-size: 16px !important;
+  }
+}
+
+/* Prevent zoom on any input within mobile search */
+.mobile-search-drawer input[type="text"],
+.mobile-search-drawer input[type="search"],
+#mobile-search input[type="text"],
+#mobile-search input[type="search"] {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.mobile-search-drawer input[type="text"]:focus,
+.mobile-search-drawer input[type="search"]:focus,
+#mobile-search input[type="text"]:focus,
+#mobile-search input[type="search"]:focus {
+  font-size: 16px !important;
+  transform: none !important;
+  zoom: 1 !important;
+}
+
+/* Hide on desktop */
+@media (min-width: 1024px) {
+  #mobile-search-drawer {
+    display: none;
+  }
+}
+
+/* Accessibility */
+.mobile-search-input:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+.mobile-search-close:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.mobile-search-drawer .predictive-search__results-list-item-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}-drawer .mobile-search-results-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 16px !important;
@@ -468,6 +630,21 @@
   .mobile-search-drawer .predictive-search__results-groups-wrapper {
     width: 100% !important;
     max-width: 100% !important;
+  }
+
+  /* Maintain 16px font size on mobile to prevent zoom */
+  .mobile-search-input,
+  .section-header__mobile_search--input {
+    font-size: 16px !important;
+    transform: none !important;
+    zoom: 1 !important;
+  }
+  
+  .mobile-search-input:focus,
+  .section-header__mobile_search--input:focus {
+    font-size: 16px !important;
+    transform: none !important;
+    zoom: 1 !important;
   }
 }
 
@@ -802,99 +979,15 @@
 /* Mobile responsive - Keep 2 columns on mobile */
 @media (max-width: 480px) {
   .mobile-search-header {
-    padding: calc(var(--announcement-bar-height, 0px) + 12px) 12px 12px;
+    padding: 12px 12px;
   }
 
-  .mobile-search-input {
+  /* Very small screens - still maintain 16px to prevent zoom */
+  .mobile-search-input,
+  .section-header__mobile_search--input {
     height: 40px;
     padding: 8px 40px 8px 12px;
-    font-size: 16px;
+    font-size: 16px !important; /* Critical: Never go below 16px */
   }
 
-  .mobile-search-drawer .predictive-search__results-list,
-  .mobile-search-drawer .predictive-search__list,
-  .mobile-search-drawer .mobile-search-results-grid,
-  .mobile-search-drawer .predictive-search__results-groups,
-  .mobile-search-drawer
-    .predictive-search__results-group-products
-    .predictive-search__results-list {
-    grid-template-columns: 1fr 1fr !important; /* Keep 2 columns */
-    gap: 12px !important;
-    padding: 12px !important;
-  }
-
-  .mobile-search-drawer .predictive-search__results-list-item-title,
-  .mobile-search-drawer .predictive-search__item-title,
-  .mobile-search-drawer .predictive-search__title {
-    font-size: 13px !important;
-    min-height: 36px !important;
-  }
-
-  /* Keep 16px price font on smaller screens with proper padding */
-  .mobile-search-drawer .predictive-search__results-list-item-price,
-  .mobile-search-drawer .predictive-search__item-price,
-  .mobile-search-drawer .predictive-search__price,
-  .mobile-search-drawer .product-loop__price,
-  .mobile-search-drawer .price__sale,
-  .mobile-search-drawer .price__regular,
-  .mobile-search-drawer .product-loop__price--sale,
-  .mobile-search-drawer .product-loop__price--compare {
-    font-size: 16px !important;
-  }
-}
-
-/* Keep 2 columns even on very small screens */
-@media (max-width: 360px) {
-  .mobile-search-drawer .predictive-search__results-list,
-  .mobile-search-drawer .predictive-search__list,
-  .mobile-search-drawer .mobile-search-results-grid,
-  .mobile-search-drawer .predictive-search__results-groups,
-  .mobile-search-drawer
-    .predictive-search__results-group-products
-    .predictive-search__results-list {
-    grid-template-columns: 1fr 1fr !important; /* Always 2 columns */
-    gap: 10px !important;
-  }
-
-  .mobile-search-drawer .predictive-search__results-list-item-title,
-  .mobile-search-drawer .predictive-search__item-title,
-  .mobile-search-drawer .predictive-search__title {
-    font-size: 12px !important;
-    min-height: 32px !important;
-  }
-
-  /* Maintain 16px price font even on very small screens with proper padding */
-  .mobile-search-drawer .predictive-search__results-list-item-price,
-  .mobile-search-drawer .predictive-search__item-price,
-  .mobile-search-drawer .predictive-search__price,
-  .mobile-search-drawer .product-loop__price,
-  .mobile-search-drawer .price__sale,
-  .mobile-search-drawer .price__regular,
-  .mobile-search-drawer .product-loop__price--sale,
-  .mobile-search-drawer .product-loop__price--compare {
-    font-size: 16px !important;
-  }
-}
-
-/* Hide on desktop */
-@media (min-width: 1024px) {
-  #mobile-search-drawer {
-    display: none;
-  }
-}
-
-/* Accessibility */
-.mobile-search-input:focus {
-  outline: 2px solid #007bff;
-  outline-offset: -2px;
-}
-
-.mobile-search-close:focus {
-  outline: 2px solid #007bff;
-  outline-offset: 2px;
-}
-
-.mobile-search-drawer .predictive-search__results-list-item-link:focus {
-  outline: 2px solid #007bff;
-  outline-offset: 2px;
 }
