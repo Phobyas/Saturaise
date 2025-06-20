@@ -1,6 +1,6 @@
 /**
- * Fixed Zoom Button - Enhanced Version
- * Add this as assets/fixed-zoom-button.js
+ * Optimized Fixed Zoom Button - Enhanced Version
+ * Replace your existing assets/fixed-zoom-button.js with this
  */
 
 (function () {
@@ -8,35 +8,40 @@
 
   let initialized = false;
   let currentModalImage = null;
+  let modalOpen = false;
 
   function initFixedZoom() {
     if (initialized) return;
 
-    // Wait for images to be loaded
-    setTimeout(() => {
-      const galleryContainer = document.getElementById(
-        "scrollGalleryContainer"
-      );
-      const images = document.querySelectorAll(
-        ".scroll--gallery_item img.product__image"
-      );
+    // Wait for images to be loaded with better timing
+    const checkGallery = () => {
+      const galleryContainer = document.getElementById("scrollGalleryContainer");
+      const images = document.querySelectorAll(".scroll--gallery_item img.product__image");
 
       if (!galleryContainer || images.length === 0) {
         console.log("Gallery not ready, retrying...");
-        setTimeout(initFixedZoom, 1000);
+        setTimeout(checkGallery, 500);
         return;
       }
 
       console.log("Found", images.length, "images in gallery");
       createFixedZoomButton(galleryContainer);
       initialized = true;
-    }, 1000);
+    };
+
+    checkGallery();
   }
 
   function createFixedZoomButton(container) {
     // Remove any existing fixed zoom button
     const existing = container.querySelector(".fixed-zoom-btn");
     if (existing) existing.remove();
+
+    // Only add zoom button on mobile/tablet
+    if (window.innerWidth >= 1024) {
+      console.log("Desktop detected, skipping zoom button");
+      return;
+    }
 
     // Create the button
     const button = document.createElement("button");
@@ -52,8 +57,12 @@
       </svg>
     `;
 
-    // Add click event
+    // Add click event with debouncing
+    let clicking = false;
     button.addEventListener("click", function (e) {
+      if (clicking) return;
+      clicking = true;
+      
       e.preventDefault();
       e.stopPropagation();
 
@@ -61,66 +70,54 @@
       if (currentImage) {
         openZoomModal(currentImage);
       }
+
+      setTimeout(() => { clicking = false; }, 300);
     });
 
     container.appendChild(button);
-    console.log("Fixed zoom button created");
+    console.log("Fixed zoom button created for mobile");
   }
 
   function getCurrentImage() {
-    // Mobile: get selected slide
+    // For mobile: get selected slide first
     if (window.innerWidth < 1024) {
-      const selected = document.querySelector(
-        ".scroll--gallery_item.is-selected img.product__image"
-      );
+      const selected = document.querySelector(".scroll--gallery_item.is-selected img.product__image");
       if (selected) return selected;
 
-      // Fallback: get first visible image in Flickity
-      const flickityContainer = document.getElementById(
-        "scrollGalleryContainer"
-      );
-      if (
-        flickityContainer &&
-        flickityContainer.classList.contains("flickity-enabled")
-      ) {
-        const flickityInstance =
-          window.Flickity && window.Flickity.data(flickityContainer);
-        if (flickityInstance) {
-          const selectedCell = flickityInstance.selectedElement;
-          if (selectedCell) {
-            const img = selectedCell.querySelector("img.product__image");
-            if (img) return img;
-          }
+      // Fallback: get current Flickity slide
+      const flickityContainer = document.getElementById("scrollGalleryContainer");
+      if (flickityContainer && typeof Flickity !== 'undefined') {
+        const flickityInstance = Flickity.data(flickityContainer);
+        if (flickityInstance && flickityInstance.selectedElement) {
+          const img = flickityInstance.selectedElement.querySelector("img.product__image");
+          if (img) return img;
         }
       }
     }
 
-    // Desktop: get first image or clicked image
-    const firstImage = document.querySelector(
-      ".scroll--gallery_item img.product__image"
-    );
+    // Final fallback: get first visible image
+    const firstImage = document.querySelector(".scroll--gallery_item img.product__image");
     return firstImage;
   }
 
   function openZoomModal(image) {
+    if (modalOpen) return;
+    modalOpen = true;
+
     // Remove existing modal
     const existing = document.getElementById("zoom-modal");
     if (existing) existing.remove();
 
     // Get high res image
     const highResSrc = getHighResSrc(image);
-
-    // Store current image for navigation
     currentModalImage = image;
 
-    // Create modal
+    // Create modal with improved structure
     const modal = document.createElement("div");
     modal.id = "zoom-modal";
     modal.className = "zoom-modal";
 
-    const images = Array.from(
-      document.querySelectorAll(".scroll--gallery_item img.product__image")
-    );
+    const images = Array.from(document.querySelectorAll(".scroll--gallery_item img.product__image"));
     const currentIndex = images.indexOf(image);
 
     modal.innerHTML = `
@@ -128,124 +125,65 @@
       <div class="zoom-modal__container">
         <button class="zoom-modal__close" aria-label="Close">×</button>
         <div class="zoom-modal__image-container">
-          <img src="${highResSrc}" alt="${
-      image.alt || "Product image"
-    }" class="zoom-modal__image">
+          <img src="${highResSrc}" alt="${image.alt || "Product image"}" class="zoom-modal__image">
         </div>
-        ${createNavigationButtons()}
+        ${images.length > 1 ? createNavigationButtons(images.length) : ''}
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    // Get modal image element
+    // Get modal elements
     const modalImage = modal.querySelector(".zoom-modal__image");
     const imageContainer = modal.querySelector(".zoom-modal__image-container");
 
-    // Initialize zoom functionality
+    // Initialize zoom with improved performance
     initializeImageZoom(modalImage, imageContainer);
 
-    // Add image load handler
+    // Handle image loading
     modalImage.onload = function () {
       modalImage.classList.add("loaded");
     };
 
     modalImage.onerror = function () {
       console.error("Failed to load zoom image:", highResSrc);
-      // Try fallback image
       const fallbackSrc = image.src || image.getAttribute("src");
       if (fallbackSrc && fallbackSrc !== highResSrc) {
         modalImage.src = fallbackSrc;
       }
     };
 
-    // Set initial counter
-    const counter = modal.querySelector(".zoom-modal__current");
-    if (counter && currentIndex !== -1) {
-      counter.textContent = currentIndex + 1;
-    }
-
-    // Add events
-    modal
-      .querySelector(".zoom-modal__close")
-      .addEventListener("click", closeModal);
-    modal
-      .querySelector(".zoom-modal__backdrop")
-      .addEventListener("click", closeModal);
-
-    // Close modal when clicking outside the image container
-    modal.addEventListener("click", (e) => {
-      // Check if click is outside the image container
-      const imageContainer = modal.querySelector(
-        ".zoom-modal__image-container"
-      );
-      const navigation = modal.querySelector(".zoom-modal__navigation");
-      const counter = modal.querySelector(".zoom-modal__counter");
-      const closeBtn = modal.querySelector(".zoom-modal__close");
-
-      // Don't close if clicking on the image container, navigation, counter, or close button
-      if (
-        !imageContainer.contains(e.target) &&
-        !navigation?.contains(e.target) &&
-        !counter?.contains(e.target) &&
-        !closeBtn?.contains(e.target)
-      ) {
-        closeModal();
+    // Set counter
+    if (images.length > 1) {
+      const counter = modal.querySelector(".zoom-modal__current");
+      if (counter && currentIndex !== -1) {
+        counter.textContent = currentIndex + 1;
       }
-    });
-
-    // Prevent modal from closing when clicking on the image container itself
-    modal
-      .querySelector(".zoom-modal__image-container")
-      .addEventListener("click", (e) => {
-        e.stopPropagation();
-      });
-
-    // Navigation events
-    const prevBtn = modal.querySelector(".zoom-modal__prev");
-    const nextBtn = modal.querySelector(".zoom-modal__next");
-
-    if (prevBtn) {
-      prevBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        navigateImage(-1);
-      });
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        navigateImage(1);
-      });
-    }
-
-    // Enhanced touch/swipe support with zoom awareness
-    initializeSwipeNavigation(imageContainer, modalImage);
-
-    // Keyboard events
-    document.addEventListener("keydown", handleKeydown);
-
-    // Show modal
-    setTimeout(() => {
-      modal.classList.add("zoom-modal--active");
-      document.body.style.overflow = "hidden";
-    }, 10);
-
-    function closeModal() {
+    // Add event listeners with proper cleanup
+    const closeBtn = modal.querySelector(".zoom-modal__close");
+    const backdrop = modal.querySelector(".zoom-modal__backdrop");
+    
+    const closeModal = () => {
+      if (!modalOpen) return;
+      modalOpen = false;
+      
       modal.classList.remove("zoom-modal--active");
       document.body.style.removeProperty("overflow");
       document.removeEventListener("keydown", handleKeydown);
       currentModalImage = null;
+      
       setTimeout(() => {
         if (modal.parentNode) {
           modal.remove();
         }
       }, 300);
-    }
+    };
 
-    function handleKeydown(e) {
+    const handleKeydown = (e) => {
+      if (!modalOpen) return;
+      
       switch (e.key) {
         case "Escape":
           e.preventDefault();
@@ -253,29 +191,54 @@
           break;
         case "ArrowLeft":
           e.preventDefault();
-          navigateImage(-1);
+          if (images.length > 1) navigateImage(-1);
           break;
         case "ArrowRight":
           e.preventDefault();
-          navigateImage(1);
-          break;
-        case " ": // Spacebar
-          e.preventDefault();
-          navigateImage(1);
+          if (images.length > 1) navigateImage(1);
           break;
       }
+    };
+
+    closeBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+
+    // Navigation events (only if multiple images)
+    if (images.length > 1) {
+      const prevBtn = modal.querySelector(".zoom-modal__prev");
+      const nextBtn = modal.querySelector(".zoom-modal__next");
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          navigateImage(-1);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          navigateImage(1);
+        });
+      }
+
+      // Touch swipe navigation (only when not zoomed)
+      initializeSwipeNavigation(imageContainer, modalImage);
     }
+
+    // Keyboard events
+    document.addEventListener("keydown", handleKeydown);
+
+    // Show modal with smooth animation
+    requestAnimationFrame(() => {
+      modal.classList.add("zoom-modal--active");
+      document.body.style.overflow = "hidden";
+    });
   }
 
-  function createNavigationButtons() {
-    const images = Array.from(
-      document.querySelectorAll(".scroll--gallery_item img.product__image")
-    );
-
-    if (images.length <= 1) {
-      return "";
-    }
-
+  function createNavigationButtons(totalImages) {
     return `
       <div class="zoom-modal__navigation">
         <button class="zoom-modal__nav zoom-modal__prev" aria-label="Previous image">
@@ -290,17 +253,15 @@
         </button>
       </div>
       <div class="zoom-modal__counter">
-        <span class="zoom-modal__current">1</span> / <span class="zoom-modal__total">${images.length}</span>
+        <span class="zoom-modal__current">1</span> / <span class="zoom-modal__total">${totalImages}</span>
       </div>
     `;
   }
 
   function navigateImage(direction) {
-    if (!currentModalImage) return;
+    if (!currentModalImage || !modalOpen) return;
 
-    const images = Array.from(
-      document.querySelectorAll(".scroll--gallery_item img.product__image")
-    );
+    const images = Array.from(document.querySelectorAll(".scroll--gallery_item img.product__image"));
     const currentIndex = images.indexOf(currentModalImage);
 
     if (currentIndex === -1) return;
@@ -316,59 +277,31 @@
 
     currentModalImage = newImage;
 
-    // Update modal image with smooth transition
+    // Update modal image smoothly
     const modal = document.getElementById("zoom-modal");
     if (modal) {
       const modalImage = modal.querySelector(".zoom-modal__image");
-      const imageContainer = modal.querySelector(
-        ".zoom-modal__image-container"
-      );
+      const imageContainer = modal.querySelector(".zoom-modal__image-container");
 
       if (modalImage && imageContainer) {
-        // Reset zoom before changing image
-        if (window.resetImageZoom) {
-          window.resetImageZoom();
-        }
+        // Reset zoom first
+        resetImageZoom();
 
+        // Update image with fade effect
+        modalImage.style.opacity = "0.7";
+        
         setTimeout(() => {
-          // Add loading state
-          modalImage.classList.remove("loaded");
-          modalImage.style.opacity = "0.5";
-
-          // Preload the new image
-          const tempImg = new Image();
-          tempImg.onload = function () {
-            modalImage.src = getHighResSrc(newImage);
-            modalImage.alt = newImage.alt || "Product image";
+          const highResSrc = getHighResSrc(newImage);
+          modalImage.src = highResSrc;
+          modalImage.alt = newImage.alt || "Product image";
+          
+          modalImage.onload = () => {
             modalImage.style.opacity = "1";
             modalImage.classList.add("loaded");
-
-            // Reset container position and opacity
-            imageContainer.style.transform = "translateX(0)";
-            imageContainer.style.opacity = "1";
-
             // Reinitialize zoom for new image
-            setTimeout(() => {
-              initializeImageZoom(modalImage, imageContainer);
-            }, 100);
+            setTimeout(() => initializeImageZoom(modalImage, imageContainer), 100);
           };
-          tempImg.onerror = function () {
-            // Fallback to original src
-            modalImage.src = newImage.src || newImage.getAttribute("src");
-            modalImage.alt = newImage.alt || "Product image";
-            modalImage.style.opacity = "1";
-
-            // Reset container position and opacity
-            imageContainer.style.transform = "translateX(0)";
-            imageContainer.style.opacity = "1";
-
-            // Reinitialize zoom for new image
-            setTimeout(() => {
-              initializeImageZoom(modalImage, imageContainer);
-            }, 100);
-          };
-          tempImg.src = getHighResSrc(newImage);
-        }, 150);
+        }, 100);
       }
 
       // Update counter
@@ -376,97 +309,87 @@
       if (counter) {
         counter.textContent = newIndex + 1;
       }
-
-      // Update navigation button states
-      updateNavigationButtons(modal, newIndex, images.length);
     }
 
-    // Update gallery selection if needed
+    // Update gallery selection
     if (window.switchToImage) {
-      const mediaId = newImage
-        .closest(".scroll--gallery_item")
-        ?.getAttribute("data-image-id");
+      const mediaId = newImage.closest(".scroll--gallery_item")?.getAttribute("data-image-id");
       if (mediaId) {
         window.switchToImage(mediaId);
       }
     }
   }
 
-  function updateNavigationButtons(modal, currentIndex, totalImages) {
-    const prevBtn = modal.querySelector(".zoom-modal__prev");
-    const nextBtn = modal.querySelector(".zoom-modal__next");
-
-    if (prevBtn && nextBtn) {
-      // Always enable both buttons for wrap-around navigation
-      prevBtn.disabled = false;
-      nextBtn.disabled = false;
-
-      // Add visual feedback
-      prevBtn.style.opacity = "1";
-      nextBtn.style.opacity = "1";
-    }
-  }
-
-  // Initialize pinch-to-zoom functionality
+  // Optimized zoom functionality
   function initializeImageZoom(image, container) {
     let scale = 1;
-    let lastScale = 1;
     let posX = 0;
     let posY = 0;
-    let lastPosX = 0;
-    let lastPosY = 0;
     let isPanning = false;
     let isZoomed = false;
-
-    // Touch events for pinch-to-zoom
     let initialDistance = 0;
     let initialScale = 1;
 
-    // Mouse wheel zoom for desktop
-    container.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      const delta = e.deltaY > 0 ? -0.1 : 0.1;
-      const newScale = Math.min(Math.max(scale + delta, 1), 4);
+    // Reset function
+    window.resetImageZoom = function () {
+      scale = 1;
+      posX = 0;
+      posY = 0;
+      isZoomed = false;
+      updateImageTransform();
+      image.style.cursor = "default";
+    };
 
-      if (newScale !== scale) {
-        scale = newScale;
-        updateImageTransform();
+    function updateImageTransform() {
+      image.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+      image.style.transformOrigin = "center center";
+    }
 
-        if (scale > 1) {
-          isZoomed = true;
-          image.style.cursor = "grab";
-        } else {
-          isZoomed = false;
-          posX = 0;
-          posY = 0;
-          image.style.cursor = "pointer";
-        }
+    function constrainPanning() {
+      if (scale <= 1) {
+        posX = 0;
+        posY = 0;
+        return;
       }
-    });
 
-    // Touch start
+      const containerRect = container.getBoundingClientRect();
+      const imageRect = image.getBoundingClientRect();
+      
+      const maxX = Math.max(0, (imageRect.width * scale - containerRect.width) / 2);
+      const maxY = Math.max(0, (imageRect.height * scale - containerRect.height) / 2);
+
+      posX = Math.min(Math.max(posX, -maxX), maxX);
+      posY = Math.min(Math.max(posY, -maxY), maxY);
+    }
+
+    function getDistance(touch1, touch2) {
+      const dx = touch1.clientX - touch2.clientX;
+      const dy = touch1.clientY - touch2.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Touch events
     container.addEventListener("touchstart", (e) => {
       if (e.touches.length === 2) {
-        // Two fingers - prepare for pinch zoom
         e.preventDefault();
         const touch1 = e.touches[0];
         const touch2 = e.touches[1];
         initialDistance = getDistance(touch1, touch2);
         initialScale = scale;
       } else if (e.touches.length === 1 && isZoomed) {
-        // One finger on zoomed image - prepare for pan
         e.preventDefault();
         isPanning = true;
-        lastPosX = e.touches[0].clientX - posX;
-        lastPosY = e.touches[0].clientY - posY;
-        image.style.cursor = "grabbing";
+        const touch = e.touches[0];
+        lastTouchX = touch.clientX - posX;
+        lastTouchY = touch.clientY - posY;
       }
     });
 
-    // Touch move
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+
     container.addEventListener("touchmove", (e) => {
       if (e.touches.length === 2 && initialDistance > 0) {
-        // Two fingers - pinch zoom
         e.preventDefault();
         const touch1 = e.touches[0];
         const touch2 = e.touches[1];
@@ -475,34 +398,27 @@
         scale = Math.min(Math.max(initialScale * scaleChange, 1), 4);
 
         updateImageTransform();
+        isZoomed = scale > 1;
 
-        if (scale > 1) {
-          isZoomed = true;
-        } else {
-          isZoomed = false;
+        if (!isZoomed) {
           posX = 0;
           posY = 0;
         }
       } else if (e.touches.length === 1 && isPanning && isZoomed) {
-        // One finger - pan
         e.preventDefault();
-        posX = e.touches[0].clientX - lastPosX;
-        posY = e.touches[0].clientY - lastPosY;
-
-        // Constrain panning to image bounds
+        const touch = e.touches[0];
+        posX = touch.clientX - lastTouchX;
+        posY = touch.clientY - lastTouchY;
         constrainPanning();
         updateImageTransform();
       }
     });
 
-    // Touch end
     container.addEventListener("touchend", (e) => {
       if (e.touches.length === 0) {
         isPanning = false;
         initialDistance = 0;
-        image.style.cursor = isZoomed ? "grab" : "pointer";
 
-        // Reset if zoomed out completely
         if (scale <= 1) {
           scale = 1;
           posX = 0;
@@ -513,103 +429,49 @@
       }
     });
 
-    // Mouse events for desktop panning
-    container.addEventListener("mousedown", (e) => {
-      if (isZoomed) {
-        e.preventDefault();
-        isPanning = true;
-        lastPosX = e.clientX - posX;
-        lastPosY = e.clientY - posY;
-        image.style.cursor = "grabbing";
-      }
-    });
-
-    container.addEventListener("mousemove", (e) => {
-      if (isPanning && isZoomed) {
-        e.preventDefault();
-        posX = e.clientX - lastPosX;
-        posY = e.clientY - lastPosY;
-        constrainPanning();
-        updateImageTransform();
-      }
-    });
-
-    container.addEventListener("mouseup", () => {
-      isPanning = false;
-      image.style.cursor = isZoomed ? "grab" : "pointer";
-    });
-
-    container.addEventListener("mouseleave", () => {
-      isPanning = false;
-      image.style.cursor = isZoomed ? "grab" : "pointer";
-    });
-
     // Double tap to zoom
     let lastTap = 0;
     container.addEventListener("touchend", (e) => {
-      const currentTime = new Date().getTime();
+      const currentTime = Date.now();
       const tapLength = currentTime - lastTap;
 
-      if (tapLength < 500 && tapLength > 0 && e.touches.length === 0) {
+      if (tapLength < 500 && tapLength > 0 && e.changedTouches.length === 1) {
         e.preventDefault();
 
         if (scale === 1) {
-          // Zoom in
           scale = 2;
           isZoomed = true;
-          image.style.cursor = "grab";
         } else {
-          // Zoom out
           scale = 1;
           posX = 0;
           posY = 0;
           isZoomed = false;
-          image.style.cursor = "pointer";
         }
         updateImageTransform();
       }
       lastTap = currentTime;
     });
 
-    function getDistance(touch1, touch2) {
-      const dx = touch1.clientX - touch2.clientX;
-      const dy = touch1.clientY - touch2.clientY;
-      return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    function constrainPanning() {
-      const containerRect = container.getBoundingClientRect();
-      const imageRect = image.getBoundingClientRect();
-
-      const maxX = Math.max(
-        0,
-        (imageRect.width * scale - containerRect.width) / 2
-      );
-      const maxY = Math.max(
-        0,
-        (imageRect.height * scale - containerRect.height) / 2
-      );
-
-      posX = Math.min(Math.max(posX, -maxX), maxX);
-      posY = Math.min(Math.max(posY, -maxY), maxY);
-    }
-
-    function updateImageTransform() {
-      image.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-    }
-
-    // Reset zoom when image changes
-    window.resetImageZoom = function () {
-      scale = 1;
-      posX = 0;
-      posY = 0;
-      isZoomed = false;
+    // Mouse wheel for desktop
+    container.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      scale = Math.min(Math.max(scale + delta, 1), 4);
+      
+      if (scale <= 1) {
+        scale = 1;
+        posX = 0;
+        posY = 0;
+        isZoomed = false;
+      } else {
+        isZoomed = true;
+      }
+      
       updateImageTransform();
-      image.style.cursor = "pointer";
-    };
+    });
   }
 
-  // Initialize swipe navigation with zoom awareness
+  // Optimized swipe navigation
   function initializeSwipeNavigation(container, image) {
     let startX = 0;
     let startY = 0;
@@ -627,31 +489,20 @@
       if (e.changedTouches.length === 1 && startX && startY) {
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
-        const endTime = Date.now();
+        const timeDiff = Date.now() - startTime;
 
         const diffX = startX - endX;
         const diffY = startY - endY;
-        const timeDiff = endTime - startTime;
 
-        // Only handle swipes on non-zoomed images or quick swipes
-        const isZoomed =
-          image.style.transform &&
-          image.style.transform.includes("scale") &&
-          !image.style.transform.includes("scale(1)");
+        // Only swipe when not zoomed and it's a horizontal swipe
+        const isZoomed = image.style.transform && image.style.transform.includes("scale") && !image.style.transform.includes("scale(1)");
 
-        if (
-          !isZoomed &&
-          Math.abs(diffX) > Math.abs(diffY) &&
-          Math.abs(diffX) > 50 &&
-          timeDiff < 300
-        ) {
+        if (!isZoomed && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && timeDiff < 300) {
           e.preventDefault();
           if (diffX > 0) {
-            // Swipe left - next image
-            navigateImage(1);
+            navigateImage(1); // Swipe left - next image
           } else {
-            // Swipe right - previous image
-            navigateImage(-1);
+            navigateImage(-1); // Swipe right - previous image
           }
         }
 
@@ -667,73 +518,45 @@
     const zoomSrc = image.getAttribute("data-zoom-src");
     if (zoomSrc) return zoomSrc;
 
-    // Get src and try to make it higher res
-    let src = image.src || image.getAttribute("src");
+    // Try srcset for highest resolution
+    const srcset = image.getAttribute("srcset");
+    if (srcset) {
+      const sources = srcset.split(",").map(s => {
+        const parts = s.trim().split(" ");
+        return {
+          url: parts[0],
+          width: parts[1] ? parseInt(parts[1]) : 0
+        };
+      });
 
-    if (src) {
-      // Try to get the highest resolution from srcset
-      const srcset = image.getAttribute("srcset");
-      if (srcset) {
-        const sources = srcset.split(",").map((s) => {
-          const parts = s.trim().split(" ");
-          return {
-            url: parts[0],
-            width: parts[1] ? parseInt(parts[1]) : 0,
-          };
-        });
+      const highest = sources.reduce((max, current) => 
+        current.width > max.width ? current : max, sources[0]
+      );
 
-        // Get the highest resolution
-        const highest = sources.reduce(
-          (max, current) => (current.width > max.width ? current : max),
-          sources[0]
-        );
-
-        if (highest && highest.url) {
-          return highest.url;
-        }
-      }
-
-      // Try to replace size with larger version
-      if (src.includes("_")) {
-        src = src.replace(/_\d+x\d*\./, "_1920x.");
+      if (highest && highest.url) {
+        return highest.url;
       }
     }
 
-    return src || image.src;
+    // Fallback to regular src
+    return image.src || image.getAttribute("src");
   }
 
-  // Initialize when DOM and images are ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initFixedZoom);
-  } else {
-    initFixedZoom();
-  }
-
-  // Also try on window load as backup
-  window.addEventListener("load", function () {
-    if (!initialized) {
-      initFixedZoom();
+  // Initialization with better timing
+  function init() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initFixedZoom);
+    } else {
+      setTimeout(initFixedZoom, 100);
     }
-  });
+  }
 
   // Shopify section reload
   document.addEventListener("shopify:section:load", function (event) {
     if (event.target.querySelector('[data-section-type="product"]')) {
       initialized = false;
-      setTimeout(initFixedZoom, 500);
+      setTimeout(initFixedZoom, 300);
     }
-  });
-
-  // Reinitialize when gallery changes
-  document.addEventListener("variant:change", function () {
-    setTimeout(() => {
-      if (initialized) {
-        const container = document.getElementById("scrollGalleryContainer");
-        if (container && !container.querySelector(".fixed-zoom-btn")) {
-          createFixedZoomButton(container);
-        }
-      }
-    }, 500);
   });
 
   // Handle window resize
@@ -741,12 +564,20 @@
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      if (initialized) {
-        const container = document.getElementById("scrollGalleryContainer");
-        if (container && !container.querySelector(".fixed-zoom-btn")) {
+      const container = document.getElementById("scrollGalleryContainer");
+      if (container) {
+        const existingBtn = container.querySelector(".fixed-zoom-btn");
+        if (window.innerWidth >= 1024 && existingBtn) {
+          // Remove button on desktop
+          existingBtn.remove();
+        } else if (window.innerWidth < 1024 && !existingBtn && initialized) {
+          // Add button on mobile
           createFixedZoomButton(container);
         }
       }
     }, 250);
   });
+
+  // Start initialization
+  init();
 })();

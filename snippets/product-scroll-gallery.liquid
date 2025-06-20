@@ -205,24 +205,24 @@ function setupMobileCarousel(container) {
   
   // Initialize Flickity
   try {
-    const flickityInstance = new Flickity(container, {
-      cellAlign: 'left',
-      contain: true,
-      wrapAround: slides.length > 2,
-      prevNextButtons: slides.length > 1,
-      pageDots: slides.length > 1,
-      draggable: true,
-      freeScroll: false,
-      percentPosition: false,
-      selectedAttraction: 0.025,
-      friction: 0.28,
-      groupCells: false,
-      adaptiveHeight: true,
-      cellSelector: '.scroll--gallery_item',
-      resize: true,
-      watchCSS: false,
-      imagesLoaded: true
-    });
+const flickityInstance = new Flickity(container, {
+  cellAlign: 'left',
+  contain: true,
+  wrapAround: slides.length > 2,
+  prevNextButtons: slides.length > 1,
+  pageDots: slides.length > 1,
+  draggable: true,
+  freeScroll: false,
+  percentPosition: false,
+  selectedAttraction: 0.025,
+  friction: 0.28,
+  groupCells: false,
+  adaptiveHeight: false,    // ← CHANGE THIS TO false
+  cellSelector: '.scroll--gallery_item',
+  resize: true,
+  watchCSS: false,
+  imagesLoaded: true
+});
     
     console.log('Flickity initialized successfully');
     

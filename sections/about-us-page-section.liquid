@@ -695,10 +695,10 @@ html {
                    width="600"
                    height="400">
             {% endif %}
-            <div class="about-image-overlay">
+            {% comment %} <div class="about-image-overlay">
               <h3>{{ section.settings.image_overlay_title | default: "3+ Lata Doświadczenia" }}</h3>
               <p>{{ section.settings.image_overlay_text | default: "Weryfikujemy autentyczność każdego produktu" }}</p>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
       </div>

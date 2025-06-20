@@ -131,6 +131,7 @@
 }
 
 .info-section li strong {
+  text-align: right !important;
   color: #1e293b !important;
   font-weight: 600 !important;
 }
@@ -847,10 +848,10 @@
         {% endif %}
         
         {% if detected_material != "" %}
-        <li>
+        {% comment %} <li style="display: none;">
           <span>Materiał:</span>
           <strong>{{ detected_material }}</strong>
-        </li>
+        </li> {% endcomment %}
         {% endif %}
       </ul>
     </div>

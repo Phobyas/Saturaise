@@ -330,6 +330,7 @@
   {% endstyle %}
 </div>
 
+
 <script>
 (function() {
   const sectionId = '{{ section.id }}';
@@ -341,7 +342,6 @@
     // Check if Flickity is available
     if (typeof Flickity === 'undefined') {
       console.warn('Flickity not available for featured collection');
-      // Set up fallback horizontal scroll for mobile
       setupMobileFallback(carousel);
       return;
     }
@@ -354,63 +354,40 @@
       flkty.destroy();
     }
     
-    // Get the appropriate config based on viewport size
+    // FASTER SMOOTH CONFIGURATION
     const isMobile = window.innerWidth < 768;
-    const config = isMobile 
-      ? JSON.parse(carousel.getAttribute('data-flickity-mobile'))
-      : JSON.parse(carousel.getAttribute('data-flickity-other'));
     
-    // IMPORTANT: Set these options to ensure proper mobile behavior
-    config.groupCells = 1;        // Force groupCells to 1
-    config.pageDots = false;      // Ensure page dots are disabled
-    config.cellAlign = 'left';    // Ensure proper alignment
-    config.contain = true;        // Contain cells to container
-    config.draggable = true;      // Ensure dragging is enabled
-    
-    // Mobile-specific settings
-    if (isMobile) {
-      config.prevNextButtons = false;
-      config.wrapAround = true;
-      config.dragThreshold = 10;
-    }
+    const smoothConfig = {
+      cellAlign: 'left',
+      contain: true,
+      wrapAround: true,
+      prevNextButtons: !isMobile,  // Hide on mobile
+      pageDots: false,
+      draggable: true,
+      freeScroll: false,
+      groupCells: 1,
+      // EVEN FASTER SETTINGS:
+      selectedAttraction: 0.5,    // Much faster attraction 
+      friction: 0.9,               // Higher friction for quicker stop
+      dragThreshold: 10,           // Easy to start drag
+      adaptiveHeight: false,       // Prevents jumping
+      percentPosition: false,      // Better for performance
+      resize: true,
+      watchCSS: false,
+      cellSelector: '.product-loop__item'
+    };
     
     try {
-      // Initialize Flickity with proper settings
-      flkty = new Flickity(carousel, config);
+      // Initialize Flickity with faster settings
+      flkty = new Flickity(carousel, smoothConfig);
       
       // Mark carousel as loaded
       carousel.classList.remove('carousel-loaded--false');
       carousel.classList.add('carousel-loaded--true');
       carousel.classList.remove('is-hidden');
       
-      // Add custom click handlers for desktop buttons
+      // Hide buttons on mobile or small containers
       if (!isMobile) {
-        const prevButton = carousel.querySelector('.flickity-button.previous');
-        const nextButton = carousel.querySelector('.flickity-button.next');
-        
-        if (prevButton) {
-          const newPrevButton = prevButton.cloneNode(true);
-          prevButton.parentNode.replaceChild(newPrevButton, prevButton);
-          
-          newPrevButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            flkty.previous(true);
-          });
-        }
-        
-        if (nextButton) {
-          const newNextButton = nextButton.cloneNode(true);
-          nextButton.parentNode.replaceChild(newNextButton, nextButton);
-          
-          newNextButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            flkty.next(true);
-          });
-        }
-        
-        // Handle button visibility based on container width
         updateButtonVisibility(carousel);
       }
       
@@ -462,7 +439,6 @@
   // Initialize based on document state
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-      // Add a small delay to ensure all assets are loaded
       setTimeout(initCarousel, 100);
     });
   } else {
