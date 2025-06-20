@@ -1,58 +1,97 @@
 # Ultimate SEO-optimized robots.txt for Saturaise.com
-# Shopify ecommerce platform - Sneakers & Streetwear Dominance
+# Shopify ecommerce platform - Sneakers & Streetwear
+# Version: Production-Ready Enterprise Grade
 
-{% for group in robots.default_groups %}
-  {{- group.user_agent -}}
-  {% for rule in group.rules %}
-    {{- rule -}}
-  {% endfor %}
-  {%- if group.sitemap != blank -%}
-    {{ group.sitemap }}
-  {%- endif -%}
-{% endfor %}
+# Sitemap declaration
+Sitemap: https://saturaise.com/sitemap.xml
 
+# MAIN CRAWLER RULES - Single User-agent: * section (Shopify best practice)
 User-agent: *
-Allow: /
 
+# ALLOW important pages
+Allow: /
 Allow: /search
 Allow: /collections/
 Allow: /products/
 Allow: /blogs/
+Allow: /pages/
 Allow: /*.json$
 Allow: /sitemap.xml
 
+# ALLOW valuable single-parameter filters (strategic long-tail SEO)
+# High commercial intent - users looking for specific variants
+Allow: /collections/*?filter.v.option.rozmiar+buta=*
+Allow: /collections/*?filter.v.option.rozmiar=*
+Allow: /collections/*?filter.p.m.custom.brand=*
+Allow: /collections/*?filter.v.availability=1
+Allow: /collections/*?filter.v.option.color=*
+Allow: /collections/*?filter.v.option.kolor=*
+Allow: /collections/*?color=*
+Allow: /collections/*?size=*
+Allow: /collections/*?brand=*
+
+# Note: For multi-parameter filters, use canonical tags in HTML instead of robots.txt
+# Example: <link rel="canonical" href="/collections/nike"> on /collections/nike?size=42&color=white
+
+# BLOCK Shopify system pages
 Disallow: /a/downloads/-/*
 Disallow: /admin
 Disallow: /cart
 Disallow: /orders
 Disallow: /checkouts/
 Disallow: /checkout
-Disallow: /{{ shop.id }}/checkouts
-Disallow: /{{ shop.id }}/orders
+Disallow: /*/checkouts
+Disallow: /*/orders
 Disallow: /carts
 Disallow: /account
 Disallow: /gift_card
 Disallow: /challenge
 Disallow: /command
+Disallow: /password
+Disallow: /thank_you
+
+# BLOCK directories and technical pages
 Disallow: /apps/
 Disallow: /tools/
 Disallow: /content/
 Disallow: /.well-known/
 Disallow: /cdn/
+Disallow: /policies/
+Disallow: /*/policies/
+Disallow: /wpm@*
+Disallow: /browsing_context_suggestions
+
+# BLOCK error pages
 Disallow: /400
 Disallow: /404
 Disallow: /500
 
-Disallow: /collections/*+*
+# BLOCK problematic filtered URLs (the ones causing your indexation issues)
+Disallow: /collections/*filter*&*filter*&*filter*
+Disallow: /collections/*gid://shopify/TaxonomyValue/*
+Disallow: /collections/*gid%3A//shopify/*
+Disallow: /collections/*?*rozmiar+buta=*&*color-pattern=*
+Disallow: /collections/*?*brand=*&*rozmiar=*&*
+Disallow: /collections/*?*availability=*&*option.*&*
+
+# BLOCK pagination and tags (prevent duplicate content)
+Disallow: /collections/*?page=*
+Disallow: /collections/*/page/*
+Disallow: /blogs/*/tagged/*
+Disallow: /blogs/*?*tag=*
+
+# BLOCK sort and URL-encoded characters (simplified)
+Disallow: /collections/*sort_by*
+Disallow: /*/collections/*sort_by*
 Disallow: /collections/*%2B*
-Disallow: /collections/*%2b*
-Disallow: /*/collections/*+*
-Disallow: /*/collections/*%2B*
-Disallow: /*/collections/*%2b*
 Disallow: /collections/*%20*
+Disallow: /*/collections/*%2B*
 
-Disallow: */collections/*filter*&*filter*&*filter*
+# BLOCK blog filter combinations (simplified)
+Disallow: /blogs/*%2B*
+Disallow: /*/blogs/*%2B*
 
+# BLOCK session and preview parameters
 Disallow: /*?*oseid=*
 Disallow: /*preview_theme_id*
 Disallow: /*preview_script_id*
@@ -61,21 +100,16 @@ Disallow: /*/*?*ls=*&ls=*
 Disallow: /*/*?*ls%3D*%3Fls%3D*
 Disallow: /*/*?*ls%3d*%3fls%3d*
 
-Disallow: /blogs/*+*
-Disallow: /blogs/*%2B*
-Disallow: /blogs/*%2b*
-Disallow: /*/blogs/*+*
-Disallow: /*/blogs/*%2B*
-Disallow: /*/blogs/*%2b*
-
-Disallow: /policies/
-Disallow: /*/policies/
+# BLOCK Shopify system files
 Disallow: /apple-app-site-association
 Disallow: /.well-known/shopify/monorail
 Disallow: /cdn/wpm/*.js
 Disallow: /recommendations/products
 Disallow: /*/recommendations/products
 
+# BOT-SPECIFIC RULES
+
+# Google Ads Bot
 User-agent: adsbot-google
 Allow: /collections/
 Allow: /products/
@@ -84,95 +118,58 @@ Disallow: /checkouts/
 Disallow: /checkout
 Disallow: /carts
 Disallow: /orders
-Disallow: /{{ shop.id }}/checkouts
-Disallow: /{{ shop.id }}/orders
+Disallow: /*/checkouts
+Disallow: /*/orders
 Disallow: /*?*oseid=*
 Disallow: /*preview_theme_id*
 Disallow: /*preview_script_id*
 Disallow: /cdn/wpm/*.js
 
+# Ahrefs Bot (controlled crawling)
 User-agent: AhrefsBot
 Crawl-delay: 10
 Allow: /collections/
 Allow: /products/
 Allow: /search
 Allow: /blogs/
-Disallow: /a/downloads/-/*
-Disallow: /admin
-Disallow: /cart
-Disallow: /orders
-Disallow: /checkouts/
-Disallow: /checkout
-Disallow: /{{ shop.id }}/checkouts
-Disallow: /{{ shop.id }}/orders
-Disallow: /carts
-Disallow: /account
-Disallow: /collections/*+*
-Disallow: /collections/*%2B*
-Disallow: /collections/*%2b*
-Disallow: */collections/*filter*&*filter*&*filter*
-Disallow: /*?*oseid=*
-Disallow: /*preview_theme_id*
-Disallow: /*preview_script_id*
-Disallow: /policies/
-Disallow: /apple-app-site-association
-Disallow: /.well-known/shopify/monorail
-Disallow: /cdn/wpm/*.js
+Allow: /collections/*?filter.v.option.rozmiar+buta=*
+Allow: /collections/*?filter.p.m.custom.brand=*
 
+# Ahrefs Site Audit
 User-agent: AhrefsSiteAudit
 Crawl-delay: 10
 Allow: /collections/
 Allow: /products/
 Allow: /search
 Allow: /blogs/
-Disallow: /a/downloads/-/*
-Disallow: /admin
-Disallow: /cart
-Disallow: /orders
-Disallow: /checkouts/
-Disallow: /checkout
-Disallow: /{{ shop.id }}/checkouts
-Disallow: /{{ shop.id }}/orders
-Disallow: /carts
-Disallow: /account
-Disallow: /collections/*+*
-Disallow: /collections/*%2B*
-Disallow: /collections/*%2b*
-Disallow: */collections/*filter*&*filter*&*filter*
-Disallow: /*?*oseid=*
-Disallow: /*preview_theme_id*
-Disallow: /*preview_script_id*
-Disallow: /policies/
-Disallow: /apple-app-site-association
-Disallow: /.well-known/shopify/monorail
-Disallow: /cdn/wpm/*.js
+Allow: /collections/*?filter.v.option.rozmiar+buta=*
+Allow: /collections/*?filter.p.m.custom.brand=*
 
+# Pinterest Bot
 User-agent: Pinterest
 Crawl-delay: 1
 Allow: /products/
 Allow: /collections/
 Allow: /blogs/
 
+# Facebook External Hit
 User-agent: facebookexternalhit
 Allow: /products/
 Allow: /collections/
 Allow: /blogs/
 
+# Block resource-heavy crawlers completely
 User-agent: MJ12bot
-Crawl-delay: 10
-Allow: /collections/
-Allow: /products/
+Disallow: /
 
 User-agent: SemrushBot
-Crawl-delay: 10
-Allow: /collections/
-Allow: /products/
-Allow: /search
+Disallow: /
 
 User-agent: MegaIndex
-Crawl-delay: 30
+Disallow: /
 
 User-agent: BLEXBot
-Crawl-delay: 30
+Disallow: /
 
-Sitemap: https://saturaise.com/sitemap.xml
+User-agent: Nutch
+Disallow: /
