@@ -242,7 +242,7 @@
     transform: none !important;
     zoom: 1 !important;
   }
-  
+
   .section-header__mobile_search--input:focus {
     font-size: 16px !important;
     transform: none !important;
@@ -582,77 +582,6 @@
 .mobile-search-drawer .predictive-search__results-list-item-link:focus {
   outline: 2px solid #007bff;
   outline-offset: 2px;
-}-drawer .mobile-search-results-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 16px !important;
-    padding: 16px !important;
-    background: #ffffff !important;
-    margin: 0 !important;
-    list-style: none !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Override any flex or block display */
-  .mobile-search-drawer .predictive-search__results-groups-wrapper,
-  .mobile-search-drawer .predictive-search__results-groups,
-  .mobile-search-drawer .predictive-search__results-group {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-  }
-
-  /* Force product items to be grid items */
-  .mobile-search-drawer .predictive-search__results-list-item,
-  .mobile-search-drawer .predictive-search__list-item,
-  .mobile-search-drawer .predictive-search__item,
-  .mobile-search-drawer .mobile-search-product-item {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: none !important;
-    background: #ffffff !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Reset any width constraints */
-  .mobile-search-drawer * {
-    max-width: none !important;
-  }
-
-  /* Force container widths */
-  .mobile-search-drawer .predictive-search,
-  .mobile-search-drawer .predictive-search__results,
-  .mobile-search-drawer .predictive-search__results-groups-wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Maintain 16px font size on mobile to prevent zoom */
-  .mobile-search-input,
-  .section-header__mobile_search--input {
-    font-size: 16px !important;
-    transform: none !important;
-    zoom: 1 !important;
-  }
-  
-  .mobile-search-input:focus,
-  .section-header__mobile_search--input:focus {
-    font-size: 16px !important;
-    transform: none !important;
-    zoom: 1 !important;
-  }
-}
-
-/* Desktop and tablet - keep original layout */
-@media (min-width: 768px) {
-  .mobile-search-drawer {
-    display: none !important;
-  }
 }
 
 /* Mobile Search Drawer - Predictive Search Results */
@@ -731,30 +660,6 @@
   color: inherit !important;
   height: 100% !important;
   width: 100% !important;
-}
-
-/* Product images - multiple selectors */
-.mobile-search-drawer .predictive-search__results-list-item-image,
-.mobile-search-drawer .predictive-search__item-image,
-.mobile-search-drawer .predictive-search__image {
-  width: 100% !important;
-  aspect-ratio: 1/1 !important;
-  background: #f5f5f5 !important;
-  border-radius: 0 !important;
-  margin-bottom: 12px !important;
-  overflow: hidden !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-}
-
-.mobile-search-drawer .predictive-search__results-list-item-image img,
-.mobile-search-drawer .predictive-search__item-image img,
-.mobile-search-drawer .predictive-search__image img {
-  width: 90% !important;
-  height: 90% !important;
-  object-fit: contain !important;
 }
 
 /* Product content area - multiple selectors */
@@ -989,5 +894,222 @@
     padding: 8px 40px 8px 12px;
     font-size: 16px !important; /* Critical: Never go below 16px */
   }
+}
 
+/* Mobile Search Drawer - Strict Image Sizing Override */
+/* These styles will override any template-specific styling */
+
+/* Force consistent image container sizing for ALL templates */
+.mobile-search-drawer .predictive-search__results-list-item-image,
+.mobile-search-drawer .predictive-search__item-image,
+.mobile-search-drawer .predictive-search__image,
+.mobile-search-drawer .product-loop__img-wrapper {
+  width: 100% !important;
+  aspect-ratio: 1/1 !important;
+  background: #eeeeee !important;
+  border-radius: 12px !important;
+  margin-bottom: 12px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  padding-bottom: 0 !important; /* Override any template padding */
+}
+
+/* Force consistent image sizing - Override ALL template styles */
+.mobile-search-drawer .predictive-search__results-list-item-image img,
+.mobile-search-drawer .predictive-search__item-image img,
+.mobile-search-drawer .predictive-search__image img,
+.mobile-search-drawer .product-loop__img-wrapper img,
+.mobile-search-drawer img[alt*="product"],
+.mobile-search-drawer .product-image img {
+  width: 90% !important;
+  height: 90% !important;
+  max-width: 90% !important;
+  max-height: 90% !important;
+  object-fit: contain !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  border-radius: 0 !important;
+}
+
+/* Override template-specific image styles */
+.mobile-search-drawer .template-product .product-loop__img-wrapper img,
+.mobile-search-drawer .template-index .product-loop__img-wrapper img,
+.mobile-search-drawer .template-collection .product-loop__img-wrapper img,
+.mobile-search-drawer .template-search .product-loop__img-wrapper img {
+  width: 90% !important;
+  height: 90% !important;
+  max-width: 90% !important;
+  max-height: 90% !important;
+  object-fit: contain !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Override any box-ratio styling that might interfere */
+.mobile-search-drawer .box-ratio {
+  padding-bottom: 0 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 1/1 !important;
+}
+
+/* Override any template-specific aspect ratios */
+.mobile-search-drawer .product-loop__item--square .box-ratio,
+.mobile-search-drawer .product-loop__item--vertical .box-ratio,
+.mobile-search-drawer .product-loop__item--horizontal .box-ratio,
+.mobile-search-drawer .product-loop__video-inner-wrapper {
+  padding-bottom: 0 !important;
+  aspect-ratio: 1/1 !important;
+}
+
+/* Force image wrapper consistency across all templates */
+.mobile-search-drawer .template-index .product-loop__img-wrapper,
+.mobile-search-drawer .template-product .product-loop__img-wrapper,
+.mobile-search-drawer .template-collection .product-loop__img-wrapper,
+.mobile-search-drawer .template-search .product-loop__img-wrapper,
+.mobile-search-drawer .product-loop__img-wrapper {
+  padding-bottom: 0 !important;
+  aspect-ratio: 1/1 !important;
+  width: 100% !important;
+  height: auto !important;
+  position: relative !important;
+  background: #eeeeee !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Override any specific template image sizing */
+.mobile-search-drawer .template-index .product-loop__img-wrapper img,
+.mobile-search-drawer .template-product .product-loop__img-wrapper img {
+  width: 90% !important;
+  height: 90% !important;
+  max-width: 90% !important;
+  max-height: 90% !important;
+  object-fit: contain !important;
+}
+
+/* Hide hover images in search */
+.mobile-search-drawer .hover-image,
+.mobile-search-drawer .product-loop__img-wrapper--hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Ensure main image is always visible */
+.mobile-search-drawer .main-image {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Force product items to use index page styling */
+.mobile-search-drawer .product-loop__item {
+  position: relative !important;
+}
+
+/* Override any grid-specific image styling */
+.mobile-search-drawer .grid .product-loop__img-wrapper,
+.mobile-search-drawer .grid__wrapper .product-loop__img-wrapper {
+  aspect-ratio: 1/1 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Ensure consistent image styling for any helper-image components */
+.mobile-search-drawer .helper-image,
+.mobile-search-drawer [class*="helper-image"] {
+  width: 90% !important;
+  height: 90% !important;
+  object-fit: contain !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Media queries to maintain consistency across all screen sizes */
+@media screen and (max-width: 768px) {
+  .mobile-search-drawer .template-index .product-loop__img-wrapper img,
+  .mobile-search-drawer .template-product .product-loop__img-wrapper img,
+  .mobile-search-drawer .template-collection .product-loop__img-wrapper img,
+  .mobile-search-drawer .predictive-search__results-list-item-image img,
+  .mobile-search-drawer .predictive-search__item-image img,
+  .mobile-search-drawer .predictive-search__image img {
+    width: 90% !important;
+    height: 90% !important;
+    max-width: 90% !important;
+    max-height: 90% !important;
+    object-fit: contain !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .mobile-search-drawer .template-index .product-loop__img-wrapper,
+  .mobile-search-drawer .template-product .product-loop__img-wrapper,
+  .mobile-search-drawer .template-collection .product-loop__img-wrapper {
+    padding-bottom: 0 !important;
+    aspect-ratio: 1/1 !important;
+    background: #eeeeee !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mobile-search-drawer .predictive-search__results-list-item-image,
+  .mobile-search-drawer .predictive-search__item-image,
+  .mobile-search-drawer .predictive-search__image,
+  .mobile-search-drawer .product-loop__img-wrapper {
+    aspect-ratio: 1/1 !important;
+    padding-bottom: 0 !important;
+    background: #eeeeee !important;
+    border-radius: 12px !important;
+  }
+
+  .mobile-search-drawer .predictive-search__results-list-item-image img,
+  .mobile-search-drawer .predictive-search__item-image img,
+  .mobile-search-drawer .predictive-search__image img,
+  .mobile-search-drawer .product-loop__img-wrapper img {
+    width: 90% !important;
+    height: 90% !important;
+    object-fit: contain !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
+/* Ensure placeholder SVGs also follow the same sizing */
+.mobile-search-drawer .placeholder-svg,
+.mobile-search-drawer .demo-1 {
+  width: 90% !important;
+  height: 90% !important;
+  object-fit: contain !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Force aspect ratio for any potential flex or grid containers */
+.mobile-search-drawer .predictive-search__results-list-item,
+.mobile-search-drawer .predictive-search__item,
+.mobile-search-drawer .mobile-search-product-item {
+  aspect-ratio: unset !important;
+}
+
+.mobile-search-drawer .predictive-search__results-list-item-image,
+.mobile-search-drawer .predictive-search__item-image,
+.mobile-search-drawer .predictive-search__image {
+  aspect-ratio: 1/1 !important;
+  flex-shrink: 0 !important;
 }

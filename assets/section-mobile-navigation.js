@@ -19,33 +19,33 @@
 function preventMobileZoom() {
   // Prevent zoom on iOS devices when focusing on input fields
   const mobileSearchInputs = document.querySelectorAll(
-    '.mobile-search-input, .section-header__mobile_search--input, #mobile-search input'
+    ".mobile-search-input, .section-header__mobile_search--input, #mobile-search input"
   );
 
-  mobileSearchInputs.forEach(input => {
+  mobileSearchInputs.forEach((input) => {
     // Ensure font-size is always 16px or larger
-    input.style.fontSize = '16px';
-    
+    input.style.fontSize = "16px";
+
     // Set attributes to prevent zoom
-    input.setAttribute('autocomplete', 'off');
-    input.setAttribute('autocorrect', 'off');
-    input.setAttribute('autocapitalize', 'off');
-    input.setAttribute('spellcheck', 'false');
-    
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", "false");
+
     // Add event listeners to maintain font size
-    input.addEventListener('focus', function() {
-      this.style.fontSize = '16px';
+    input.addEventListener("focus", function () {
+      this.style.fontSize = "16px";
       // Prevent any transform or zoom
-      this.style.transform = 'none';
-      this.style.zoom = '1';
+      this.style.transform = "none";
+      this.style.zoom = "1";
     });
 
-    input.addEventListener('blur', function() {
-      this.style.fontSize = '16px';
+    input.addEventListener("blur", function () {
+      this.style.fontSize = "16px";
     });
 
-    input.addEventListener('input', function() {
-      this.style.fontSize = '16px';
+    input.addEventListener("input", function () {
+      this.style.fontSize = "16px";
     });
   });
 }
@@ -120,7 +120,9 @@ function setupDrawer() {
 
 // Enhanced mobile search setup with zoom prevention
 function setupMobileSearchWithZoomPrevention() {
-  const searchToggle = document.querySelector(".js-mobile-search-toggle, .js-slideout-open[data-wau-slideout-target='mobile-search']");
+  const searchToggle = document.querySelector(
+    ".js-mobile-search-toggle, .js-slideout-open[data-wau-slideout-target='mobile-search']"
+  );
   const mobileSearch = document.getElementById("mobile-search");
   const mobileSearchDrawer = document.getElementById("mobile-search-drawer");
   const mobileHeader = document.querySelector(".mobile-nav__mobile-header");
@@ -173,12 +175,12 @@ function setupMobileSearchWithZoomPrevention() {
         );
         if (searchInput) {
           // Ensure font size is 16px before focusing
-          searchInput.style.fontSize = '16px';
+          searchInput.style.fontSize = "16px";
           searchInput.focus();
-          
+
           // Additional zoom prevention
-          searchInput.style.transform = 'none';
-          searchInput.style.zoom = '1';
+          searchInput.style.transform = "none";
+          searchInput.style.zoom = "1";
         }
       }, 300);
     });
@@ -274,11 +276,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add zoom prevention for all existing inputs
   preventMobileZoom();
-  
+
   // Re-run zoom prevention when new elements are added
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'childList') {
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.type === "childList") {
         // Small delay to ensure elements are fully rendered
         setTimeout(preventMobileZoom, 100);
       }
@@ -287,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
 });
 
@@ -380,17 +382,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let searchTimeout;
 
     // Apply zoom prevention to search input
-    searchInput.style.fontSize = '16px';
-    searchInput.setAttribute('autocomplete', 'off');
-    searchInput.setAttribute('autocorrect', 'off');
-    searchInput.setAttribute('autocapitalize', 'off');
-    searchInput.setAttribute('spellcheck', 'false');
+    searchInput.style.fontSize = "16px";
+    searchInput.setAttribute("autocomplete", "off");
+    searchInput.setAttribute("autocorrect", "off");
+    searchInput.setAttribute("autocapitalize", "off");
+    searchInput.setAttribute("spellcheck", "false");
 
     // Handle search input with zoom prevention
     searchInput.addEventListener("input", function (e) {
       // Maintain font size
-      this.style.fontSize = '16px';
-      
+      this.style.fontSize = "16px";
+
       const query = e.target.value.trim();
 
       clearTimeout(searchTimeout);
@@ -411,10 +413,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Handle focus with zoom prevention
-    searchInput.addEventListener('focus', function() {
-      this.style.fontSize = '16px';
-      this.style.transform = 'none';
-      this.style.zoom = '1';
+    searchInput.addEventListener("focus", function () {
+      this.style.fontSize = "16px";
+      this.style.transform = "none";
+      this.style.zoom = "1";
     });
 
     // Handle suggestion clicks
@@ -423,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         const query = e.target.textContent.trim();
         searchInput.value = query;
-        searchInput.style.fontSize = '16px'; // Maintain font size
+        searchInput.style.fontSize = "16px"; // Maintain font size
         hideAllStates();
         showLoading();
         setTimeout(() => performPredictiveSearch(query), 100);
@@ -434,10 +436,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (typeof Events !== "undefined") {
       Events.on("slideout:open:mobile-search", function () {
         setTimeout(() => {
-          searchInput.style.fontSize = '16px';
+          searchInput.style.fontSize = "16px";
           searchInput.focus();
-          searchInput.style.transform = 'none';
-          searchInput.style.zoom = '1';
+          searchInput.style.transform = "none";
+          searchInput.style.zoom = "1";
           showSuggestions();
         }, 300);
       });
@@ -448,7 +450,197 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Use existing predictive search system
+    // Enhanced function to ensure consistent styling after results are loaded
+    function enforceConsistentImageStyling() {
+      const searchDrawer = document.querySelector("#mobile-search-drawer");
+      if (!searchDrawer) return;
+
+      // Find all image containers in the search drawer
+      const imageContainers = searchDrawer.querySelectorAll(`
+        .predictive-search__results-list-item-image,
+        .predictive-search__item-image,
+        .predictive-search__image,
+        .product-loop__img-wrapper
+      `);
+
+      imageContainers.forEach((container) => {
+        // Force consistent container styling
+        container.style.cssText = `
+          aspect-ratio: 1/1 !important;
+          background-color: #eeeeee !important;
+          border-radius: 12px !important;
+          margin-bottom: 12px !important;
+          overflow: hidden !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          position: relative !important;
+          padding-bottom: 0 !important;
+          width: 100% !important;
+          height: auto !important;
+        `;
+
+        // Find and style all images within the container
+        const images = container.querySelectorAll("img");
+        images.forEach((img) => {
+          img.style.cssText = `
+            width: 90% !important;
+            height: 90% !important;
+            max-width: 90% !important;
+            max-height: 90% !important;
+            object-fit: contain !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            border-radius: 0 !important;
+          `;
+        });
+      });
+
+      // Hide any hover images or secondary images
+      const hoverImages = searchDrawer.querySelectorAll(
+        ".hover-image, .product-loop__img-wrapper--hidden"
+      );
+      hoverImages.forEach((hover) => {
+        hover.style.display = "none";
+      });
+    }
+
+    // Process predictive search results for mobile - ENHANCED VERSION
+    function processPredictiveResults(html, query) {
+      // Create a temporary container to manipulate the HTML
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+
+      // Find the predictive search results
+      const resultsContainer = tempDiv.querySelector(
+        ".predictive-search__results"
+      );
+
+      if (!resultsContainer) {
+        return html;
+      }
+
+      // Add mobile-specific classes and structure
+      const productsList = resultsContainer.querySelector(
+        ".predictive-search__results-list"
+      );
+      if (productsList) {
+        productsList.classList.add("mobile-search-results-grid");
+
+        // Process each product item to match mobile layout
+        const productItems = productsList.querySelectorAll(
+          ".predictive-search__results-list-item"
+        );
+        productItems.forEach((item) => {
+          item.classList.add("mobile-search-product-item");
+
+          // FORCE INDEX PAGE IMAGE STYLING - Remove any template-specific classes
+          item.classList.remove(
+            "template-product",
+            "template-collection",
+            "template-search"
+          );
+          item.classList.add("template-index"); // Force index template styling
+
+          // Find and standardize image containers
+          const imageContainer = item.querySelector(
+            ".predictive-search__results-list-item-image, .product-loop__img-wrapper, .predictive-search__image"
+          );
+
+          if (imageContainer) {
+            // Force consistent image container styling
+            imageContainer.style.cssText = `
+              aspect-ratio: 1/1 !important;
+              background-color: #eeeeee !important;
+              border-radius: 12px !important;
+              margin-bottom: 12px !important;
+              overflow: hidden !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              position: relative !important;
+              padding-bottom: 0 !important;
+              width: 100% !important;
+              height: auto !important;
+            `;
+
+            // Force consistent image styling
+            const images = imageContainer.querySelectorAll("img");
+            images.forEach((img) => {
+              img.style.cssText = `
+                width: 90% !important;
+                height: 90% !important;
+                max-width: 90% !important;
+                max-height: 90% !important;
+                object-fit: contain !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                border-radius: 0 !important;
+              `;
+
+              // Remove any template-specific classes from images
+              img.classList.remove(
+                "product-image--cover",
+                "product-image--contain"
+              );
+              img.classList.add("product-image--contain");
+            });
+
+            // Remove any box-ratio containers that might interfere
+            const boxRatios = imageContainer.querySelectorAll(".box-ratio");
+            boxRatios.forEach((box) => {
+              box.style.cssText = `
+                padding-bottom: 0 !important;
+                position: relative !important;
+                width: 100% !important;
+                height: 100% !important;
+                aspect-ratio: 1/1 !important;
+              `;
+            });
+
+            // Hide any hover images
+            const hoverImages = imageContainer.querySelectorAll(
+              ".hover-image, .product-loop__img-wrapper--hidden"
+            );
+            hoverImages.forEach((hover) => {
+              hover.style.display = "none";
+            });
+          }
+
+          // Ensure product wrapper follows index template styling
+          const productWrapper = item.querySelector(".product-loop__item");
+          if (productWrapper) {
+            // Remove template-specific classes and add index template class
+            productWrapper.classList.remove(
+              "product-loop__item--vertical",
+              "product-loop__item--horizontal"
+            );
+            productWrapper.classList.add("product-loop__item--square");
+          }
+        });
+      }
+
+      // Add "Zobacz wszystkie wyniki" button
+      const seeAllButton = `
+        <div class="search-see-all-wrapper">
+          <a href="/search?q=${encodeURIComponent(
+            query
+          )}" class="search-see-all-btn">
+            Zobacz wszystkie wyniki
+          </a>
+        </div>
+      `;
+
+      resultsContainer.insertAdjacentHTML("afterend", seeAllButton);
+
+      return tempDiv.innerHTML;
+    }
+
+    // Use existing predictive search system with enhanced image handling
     function performPredictiveSearch(query) {
       // Use the same endpoint as desktop predictive search
       const predictiveSearchURL = "/search/suggest";
@@ -479,6 +671,11 @@ document.addEventListener("DOMContentLoaded", function () {
             );
             predictiveSearchContainer.innerHTML = processedHTML;
             predictiveSearchContainer.style.display = "block";
+
+            // CRITICAL: Enforce consistent image styling after DOM insertion
+            setTimeout(() => {
+              enforceConsistentImageStyling();
+            }, 100);
           } else {
             showEmptyState();
           }
@@ -488,62 +685,6 @@ document.addEventListener("DOMContentLoaded", function () {
           hideLoading();
           showEmptyState();
         });
-    }
-
-    // Process predictive search results for mobile
-    function processPredictiveResults(html, query) {
-      // Create a temporary container to manipulate the HTML
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = html;
-
-      // Find the predictive search results
-      const resultsContainer = tempDiv.querySelector(
-        ".predictive-search__results"
-      );
-
-      if (!resultsContainer) {
-        return html;
-      }
-
-      // Add mobile-specific classes and structure
-      const productsList = resultsContainer.querySelector(
-        ".predictive-search__results-list"
-      );
-      if (productsList) {
-        productsList.classList.add("mobile-search-results-grid");
-
-        // Process each product item to match mobile layout
-        const productItems = productsList.querySelectorAll(
-          ".predictive-search__results-list-item"
-        );
-        productItems.forEach((item) => {
-          item.classList.add("mobile-search-product-item");
-
-          // Ensure proper image aspect ratio
-          const imageContainer = item.querySelector(
-            ".predictive-search__results-list-item-image"
-          );
-          if (imageContainer) {
-            imageContainer.style.aspectRatio = "1/1";
-            imageContainer.style.backgroundColor = "#eeeeee";
-          }
-        });
-      }
-
-      // Add "Zobacz wszystkie wyniki" button
-      const seeAllButton = `
-        <div class="search-see-all-wrapper">
-          <a href="/search?q=${encodeURIComponent(
-            query
-          )}" class="search-see-all-btn">
-            Zobacz wszystkie wyniki
-          </a>
-        </div>
-      `;
-
-      resultsContainer.insertAdjacentHTML("afterend", seeAllButton);
-
-      return tempDiv.innerHTML;
     }
 
     // State management functions
@@ -601,10 +742,10 @@ if (typeof Events !== "undefined") {
         "#mobile-search-drawer .mobile-search-input, #mobile-search .section-header__mobile_search--input"
       );
       if (searchInput) {
-        searchInput.style.fontSize = '16px';
+        searchInput.style.fontSize = "16px";
         searchInput.focus();
-        searchInput.style.transform = 'none';
-        searchInput.style.zoom = '1';
+        searchInput.style.transform = "none";
+        searchInput.style.zoom = "1";
       }
       preventMobileZoom();
     }, 300);
