@@ -1,175 +1,25 @@
-# Ultimate SEO-optimized robots.txt for Saturaise.com
-# Shopify ecommerce platform - Sneakers & Streetwear
-# Version: Production-Ready Enterprise Grade
+# Simple robots.txt for Saturaise.com
+# Let Google crawl everything they need for product indexing
 
-# Sitemap declaration
-Sitemap: https://saturaise.com/sitemap.xml
-
-# MAIN CRAWLER RULES - Single User-agent: * section (Shopify best practice)
 User-agent: *
-
-# ALLOW important pages
 Allow: /
-Allow: /search
-Allow: /collections/
-Allow: /products/
-Allow: /blogs/
-Allow: /pages/
-Allow: /*.json$
-Allow: /sitemap.xml
 
-# ALLOW valuable single-parameter filters (strategic long-tail SEO)
-# High commercial intent - users looking for specific variants
-Allow: /collections/*?filter.v.option.rozmiar+buta=*
-Allow: /collections/*?filter.v.option.rozmiar=*
-Allow: /collections/*?filter.p.m.custom.brand=*
-Allow: /collections/*?filter.v.availability=1
-Allow: /collections/*?filter.v.option.color=*
-Allow: /collections/*?filter.v.option.kolor=*
-Allow: /collections/*?color=*
-Allow: /collections/*?size=*
-Allow: /collections/*?brand=*
-
-# Note: For multi-parameter filters, use canonical tags in HTML instead of robots.txt
-# Example: <link rel="canonical" href="/collections/nike"> on /collections/nike?size=42&color=white
-
-# BLOCK Shopify system pages
-Disallow: /a/downloads/-/*
+# Only block essential private areas
 Disallow: /admin
 Disallow: /cart
-Disallow: /orders
-Disallow: /checkouts/
 Disallow: /checkout
-Disallow: /*/checkouts
-Disallow: /*/orders
-Disallow: /carts
 Disallow: /account
-Disallow: /gift_card
-Disallow: /challenge
-Disallow: /command
-Disallow: /password
-Disallow: /thank_you
-
-# BLOCK directories and technical pages
-Disallow: /apps/
-Disallow: /tools/
-Disallow: /content/
-Disallow: /.well-known/
-Disallow: /cdn/
-Disallow: /policies/
-Disallow: /*/policies/
-Disallow: /wpm@*
-Disallow: /browsing_context_suggestions
-
-# BLOCK error pages
-Disallow: /400
-Disallow: /404
-Disallow: /500
-
-# BLOCK problematic filtered URLs (the ones causing your indexation issues)
-Disallow: /collections/*filter*&*filter*&*filter*
-Disallow: /collections/*gid://shopify/TaxonomyValue/*
-Disallow: /collections/*gid%3A//shopify/*
-Disallow: /collections/*?*rozmiar+buta=*&*color-pattern=*
-Disallow: /collections/*?*brand=*&*rozmiar=*&*
-Disallow: /collections/*?*availability=*&*option.*&*
-
-# BLOCK pagination and tags (prevent duplicate content)
-Disallow: /collections/*?page=*
-Disallow: /collections/*/page/*
-Disallow: /blogs/*/tagged/*
-Disallow: /blogs/*?*tag=*
-
-# BLOCK sort and URL-encoded characters (simplified)
-Disallow: /collections/*sort_by*
-Disallow: /*/collections/*sort_by*
-Disallow: /collections/*%2B*
-Disallow: /collections/*%20*
-Disallow: /*/collections/*%2B*
-
-# BLOCK blog filter combinations (simplified)
-Disallow: /blogs/*%2B*
-Disallow: /*/blogs/*%2B*
-
-# BLOCK session and preview parameters
-Disallow: /*?*oseid=*
-Disallow: /*preview_theme_id*
-Disallow: /*preview_script_id*
-Disallow: /*variant=*
-Disallow: /*/*?*ls=*&ls=*
-Disallow: /*/*?*ls%3D*%3Fls%3D*
-Disallow: /*/*?*ls%3d*%3fls%3d*
-
-# BLOCK Shopify system files
-Disallow: /apple-app-site-association
-Disallow: /.well-known/shopify/monorail
-Disallow: /cdn/wpm/*.js
-Disallow: /recommendations/products
-Disallow: /*/recommendations/products
-
-# BOT-SPECIFIC RULES
-
-# Google Ads Bot
-User-agent: adsbot-google
-Allow: /collections/
-Allow: /products/
-Allow: /search
-Disallow: /checkouts/
-Disallow: /checkout
-Disallow: /carts
 Disallow: /orders
-Disallow: /*/checkouts
-Disallow: /*/orders
-Disallow: /*?*oseid=*
-Disallow: /*preview_theme_id*
-Disallow: /*preview_script_id*
-Disallow: /cdn/wpm/*.js
 
-# Ahrefs Bot (controlled crawling)
-User-agent: AhrefsBot
-Crawl-delay: 10
-Allow: /collections/
-Allow: /products/
-Allow: /search
-Allow: /blogs/
-Allow: /collections/*?filter.v.option.rozmiar+buta=*
-Allow: /collections/*?filter.p.m.custom.brand=*
-
-# Ahrefs Site Audit
-User-agent: AhrefsSiteAudit
-Crawl-delay: 10
-Allow: /collections/
-Allow: /products/
-Allow: /search
-Allow: /blogs/
-Allow: /collections/*?filter.v.option.rozmiar+buta=*
-Allow: /collections/*?filter.p.m.custom.brand=*
-
-# Pinterest Bot
-User-agent: Pinterest
-Crawl-delay: 1
-Allow: /products/
-Allow: /collections/
-Allow: /blogs/
-
-# Facebook External Hit
-User-agent: facebookexternalhit
-Allow: /products/
-Allow: /collections/
-Allow: /blogs/
-
-# Block resource-heavy crawlers completely
+# Block resource-heavy crawlers to save server resources
 User-agent: MJ12bot
 Disallow: /
 
 User-agent: SemrushBot
 Disallow: /
 
-User-agent: MegaIndex
-Disallow: /
+User-agent: AhrefsBot
+Crawl-delay: 30
 
-User-agent: BLEXBot
-Disallow: /
-
-User-agent: Nutch
-Disallow: /
+# Sitemap for Google
+Sitemap: https://saturaise.com/sitemap.xml
