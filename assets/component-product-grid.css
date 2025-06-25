@@ -375,7 +375,6 @@
 @media (max-width: 767px) {
   .product-loop__price--compare,
   .product-recommendations .product-loop__price--sale {
-    margin-left: var(--space-1);
     font-size: 16px !important;
   }
 

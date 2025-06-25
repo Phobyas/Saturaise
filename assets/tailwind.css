@@ -725,8 +725,8 @@ video {
   margin-top: 1rem;
 }
 
-.mt-7 {
-  margin-top: 1.75rem;
+.mb-\[10px\] {
+  margin-bottom: 10px;
 }
 
 .block {
@@ -1223,6 +1223,10 @@ video {
 @media (min-width: 768px) {
   .md\:mb-0 {
     margin-bottom: 0px;
+  }
+
+  .md\:mb-8 {
+    margin-bottom: 2rem;
   }
 
   .md\:px-0 {

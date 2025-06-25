@@ -1,6 +1,6 @@
 /**
- * Optimized Fixed Zoom Button - Enhanced Version
- * Replace your existing assets/fixed-zoom-button.js with this
+ * Truly Isolated Zoom Modal - Zero CSS/Gallery Interference
+ * Replace your assets/fixed-zoom-button.js with this
  */
 
 (function () {
@@ -13,18 +13,19 @@
   function initFixedZoom() {
     if (initialized) return;
 
-    // Wait for images to be loaded with better timing
     const checkGallery = () => {
-      const galleryContainer = document.getElementById("scrollGalleryContainer");
-      const images = document.querySelectorAll(".scroll--gallery_item img.product__image");
+      const galleryContainer = document.getElementById(
+        "scrollGalleryContainer"
+      );
+      const images = document.querySelectorAll(
+        ".scroll--gallery_item img.product__image"
+      );
 
       if (!galleryContainer || images.length === 0) {
-        console.log("Gallery not ready, retrying...");
         setTimeout(checkGallery, 500);
         return;
       }
 
-      console.log("Found", images.length, "images in gallery");
       createFixedZoomButton(galleryContainer);
       initialized = true;
     };
@@ -33,21 +34,36 @@
   }
 
   function createFixedZoomButton(container) {
-    // Remove any existing fixed zoom button
     const existing = container.querySelector(".fixed-zoom-btn");
     if (existing) existing.remove();
 
-    // Only add zoom button on mobile/tablet
-    if (window.innerWidth >= 1024) {
-      console.log("Desktop detected, skipping zoom button");
-      return;
-    }
+    if (window.innerWidth >= 1024) return;
 
-    // Create the button
     const button = document.createElement("button");
     button.className = "fixed-zoom-btn";
     button.type = "button";
     button.setAttribute("aria-label", "Zoom image");
+
+    // Original gallery button styling - exact match
+    button.style.cssText = `
+      position: absolute !important;
+      top: 10px !important;
+      right: 10px !important;
+      z-index: 100 !important;
+      background: rgba(68, 68, 68, 0.8) !important;
+      border: none !important;
+      border-radius: 50% !important;
+      width: 44px !important;
+      height: 44px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      color: white !important;
+      backdrop-filter: blur(5px) !important;
+    `;
+
     button.innerHTML = `
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
@@ -57,12 +73,21 @@
       </svg>
     `;
 
-    // Add click event with debouncing
+    button.addEventListener("mouseenter", function () {
+      this.style.background = "rgba(68, 68, 68, 1)";
+      this.style.transform = "scale(1.05)";
+    });
+
+    button.addEventListener("mouseleave", function () {
+      this.style.background = "rgba(68, 68, 68, 0.8)";
+      this.style.transform = "scale(1)";
+    });
+
     let clicking = false;
     button.addEventListener("click", function (e) {
       if (clicking) return;
       clicking = true;
-      
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -71,77 +96,194 @@
         openZoomModal(currentImage);
       }
 
-      setTimeout(() => { clicking = false; }, 300);
+      setTimeout(() => {
+        clicking = false;
+      }, 300);
     });
 
     container.appendChild(button);
-    console.log("Fixed zoom button created for mobile");
   }
 
   function getCurrentImage() {
-    // For mobile: get selected slide first
     if (window.innerWidth < 1024) {
-      const selected = document.querySelector(".scroll--gallery_item.is-selected img.product__image");
+      const selected = document.querySelector(
+        ".scroll--gallery_item.is-selected img.product__image"
+      );
       if (selected) return selected;
 
-      // Fallback: get current Flickity slide
-      const flickityContainer = document.getElementById("scrollGalleryContainer");
-      if (flickityContainer && typeof Flickity !== 'undefined') {
+      const flickityContainer = document.getElementById(
+        "scrollGalleryContainer"
+      );
+      if (flickityContainer && typeof Flickity !== "undefined") {
         const flickityInstance = Flickity.data(flickityContainer);
         if (flickityInstance && flickityInstance.selectedElement) {
-          const img = flickityInstance.selectedElement.querySelector("img.product__image");
+          const img =
+            flickityInstance.selectedElement.querySelector(
+              "img.product__image"
+            );
           if (img) return img;
         }
       }
     }
 
-    // Final fallback: get first visible image
-    const firstImage = document.querySelector(".scroll--gallery_item img.product__image");
-    return firstImage;
+    return document.querySelector(".scroll--gallery_item img.product__image");
   }
 
   function openZoomModal(image) {
     if (modalOpen) return;
     modalOpen = true;
 
-    // Remove existing modal
-    const existing = document.getElementById("zoom-modal");
+    // Remove any existing modal
+    const existing = document.getElementById("completely-isolated-zoom-modal");
     if (existing) existing.remove();
 
-    // Get high res image
     const highResSrc = getHighResSrc(image);
     currentModalImage = image;
 
-    // Create modal with improved structure
-    const modal = document.createElement("div");
-    modal.id = "zoom-modal";
-    modal.className = "zoom-modal";
-
-    const images = Array.from(document.querySelectorAll(".scroll--gallery_item img.product__image"));
+    const images = Array.from(
+      document.querySelectorAll(".scroll--gallery_item img.product__image")
+    );
     const currentIndex = images.indexOf(image);
 
+    // Create modal in separate container to avoid CSS inheritance
+    const modalContainer = document.createElement("div");
+    modalContainer.id = "zoom-modal-container";
+    modalContainer.style.cssText = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+      pointer-events: none !important;
+      contain: strict !important;
+    `;
+
+    const modal = document.createElement("div");
+    modal.id = "completely-isolated-zoom-modal";
+    modal.style.cssText = `
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.3s ease, visibility 0.3s ease !important;
+      overscroll-behavior: contain !important;
+      overflow: hidden !important;
+      pointer-events: auto !important;
+      isolation: isolate !important;
+      contain: strict !important;
+    `;
+
     modal.innerHTML = `
-      <div class="zoom-modal__backdrop"></div>
-      <div class="zoom-modal__container">
-        <button class="zoom-modal__close" aria-label="Close">×</button>
-        <div class="zoom-modal__image-container">
-          <img src="${highResSrc}" alt="${image.alt || "Product image"}" class="zoom-modal__image">
+      <div class="zoom-modal__backdrop" style="
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        cursor: pointer !important;
+      "></div>
+      <div class="zoom-modal__container" style="
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
+      ">
+        <button class="zoom-modal__close" aria-label="Close" style="
+          position: absolute !important;
+          top: 20px !important;
+          right: 20px !important;
+          z-index: 1000001 !important;
+          background: rgba(255, 255, 255, 0.9) !important;
+          border: none !important;
+          border-radius: 50% !important;
+          width: 44px !important;
+          height: 44px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          color: #333 !important;
+          font-size: 24px !important;
+          font-weight: bold !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        ">×</button>
+        <div class="zoom-modal__image-container" style="
+          height: 60vh !important;
+          position: relative !important;
+          max-width: 85vw !important;
+          max-height: 85vh !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          overflow: hidden !important;
+          background-color: #f6f6f6 !important;
+          border-radius: 8px !important;
+          transition: transform 0.3s ease, opacity 0.3s ease !important;
+          touch-action: pan-x pan-y pinch-zoom !important;
+        ">
+          <img src="${highResSrc}" alt="${
+      image.alt || "Product image"
+    }" class="zoom-modal__image" style="
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+            transition: transform 0.3s ease, opacity 0.3s ease !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            mix-blend-mode: multiply !important;
+            transform-origin: center center !important;
+            opacity: 0 !important;
+          ">
         </div>
-        ${images.length > 1 ? createNavigationButtons(images.length) : ''}
+        ${images.length > 1 ? createNavigationButtons(images.length) : ""}
       </div>
     `;
 
-    document.body.appendChild(modal);
+    modalContainer.appendChild(modal);
 
-    // Get modal elements
+    // Create separate modal root to avoid CSS inheritance
+    const modalRoot = document.createElement("div");
+    modalRoot.id = "modal-root";
+    modalRoot.style.cssText = `
+      all: initial !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+      contain: strict !important;
+      isolation: isolate !important;
+    `;
+    modalRoot.appendChild(modalContainer);
+
+    // Add to body without triggering CSS
+    document.body.appendChild(modalRoot);
+
     const modalImage = modal.querySelector(".zoom-modal__image");
     const imageContainer = modal.querySelector(".zoom-modal__image-container");
 
-    // Initialize zoom with improved performance
+    // Initialize full zoom functionality
     initializeImageZoom(modalImage, imageContainer);
 
-    // Handle image loading
     modalImage.onload = function () {
+      modalImage.style.opacity = "1";
       modalImage.classList.add("loaded");
     };
 
@@ -161,29 +303,29 @@
       }
     }
 
-    // Add event listeners with proper cleanup
     const closeBtn = modal.querySelector(".zoom-modal__close");
     const backdrop = modal.querySelector(".zoom-modal__backdrop");
-    
+
     const closeModal = () => {
       if (!modalOpen) return;
       modalOpen = false;
-      
-      modal.classList.remove("zoom-modal--active");
-      document.body.style.removeProperty("overflow");
+
+      modal.style.opacity = "0";
+      modal.style.visibility = "hidden";
       document.removeEventListener("keydown", handleKeydown);
       currentModalImage = null;
-      
+
+      // Clean removal without affecting gallery
       setTimeout(() => {
-        if (modal.parentNode) {
-          modal.remove();
+        if (modalRoot.parentNode) {
+          modalRoot.remove();
         }
       }, 300);
     };
 
     const handleKeydown = (e) => {
       if (!modalOpen) return;
-      
+
       switch (e.key) {
         case "Escape":
           e.preventDefault();
@@ -203,7 +345,18 @@
     closeBtn.addEventListener("click", closeModal);
     backdrop.addEventListener("click", closeModal);
 
-    // Navigation events (only if multiple images)
+    // Original modal button hover effects
+    closeBtn.addEventListener("mouseenter", function () {
+      this.style.background = "rgba(255, 255, 255, 1)";
+      this.style.transform = "scale(1.1)";
+    });
+
+    closeBtn.addEventListener("mouseleave", function () {
+      this.style.background = "rgba(255, 255, 255, 0.9)";
+      this.style.transform = "scale(1)";
+    });
+
+    // Navigation events
     if (images.length > 1) {
       const prevBtn = modal.querySelector(".zoom-modal__prev");
       const nextBtn = modal.querySelector(".zoom-modal__next");
@@ -214,6 +367,17 @@
           e.preventDefault();
           navigateImage(-1);
         });
+
+        // Original button hover effects
+        prevBtn.addEventListener("mouseenter", function () {
+          this.style.background = "rgba(255, 255, 255, 0.3)";
+          this.style.transform = "scale(1.1)";
+        });
+
+        prevBtn.addEventListener("mouseleave", function () {
+          this.style.background = "rgba(255, 255, 255, 0.2)";
+          this.style.transform = "scale(1)";
+        });
       }
 
       if (nextBtn) {
@@ -222,37 +386,83 @@
           e.preventDefault();
           navigateImage(1);
         });
+
+        // Original button hover effects
+        nextBtn.addEventListener("mouseenter", function () {
+          this.style.background = "rgba(255, 255, 255, 0.3)";
+          this.style.transform = "scale(1.1)";
+        });
+
+        nextBtn.addEventListener("mouseleave", function () {
+          this.style.background = "rgba(255, 255, 255, 0.2)";
+          this.style.transform = "scale(1)";
+        });
       }
 
-      // Touch swipe navigation (only when not zoomed)
       initializeSwipeNavigation(imageContainer, modalImage);
     }
 
-    // Keyboard events
     document.addEventListener("keydown", handleKeydown);
 
-    // Show modal with smooth animation
+    // Show modal
     requestAnimationFrame(() => {
-      modal.classList.add("zoom-modal--active");
-      document.body.style.overflow = "hidden";
+      modal.style.opacity = "1";
+      modal.style.visibility = "visible";
     });
   }
 
   function createNavigationButtons(totalImages) {
     return `
-      <div class="zoom-modal__navigation">
-        <button class="zoom-modal__nav zoom-modal__prev" aria-label="Previous image">
+      <div class="zoom-modal__navigation" style="
+        margin-top: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 20px !important;
+      ">
+        <button class="zoom-modal__nav zoom-modal__prev" aria-label="Previous image" style="
+          background: rgba(255, 255, 255, 0.2) !important;
+          border: none !important;
+          border-radius: 50% !important;
+          width: 44px !important;
+          height: 44px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          color: white !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        ">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
         </button>
-        <button class="zoom-modal__nav zoom-modal__next" aria-label="Next image">
+        <button class="zoom-modal__nav zoom-modal__next" aria-label="Next image" style="
+          background: rgba(255, 255, 255, 0.2) !important;
+          border: none !important;
+          border-radius: 50% !important;
+          width: 44px !important;
+          height: 44px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          transition: all 0.3s ease !important;
+          color: white !important;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        ">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="9,18 15,12 9,6"></polyline>
           </svg>
         </button>
       </div>
-      <div class="zoom-modal__counter">
+      <div class="zoom-modal__counter" style="
+        color: white !important;
+        font-size: 14px !important;
+        margin-top: 10px !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-weight: 500 !important;
+      ">
         <span class="zoom-modal__current">1</span> / <span class="zoom-modal__total">${totalImages}</span>
       </div>
     `;
@@ -261,14 +471,15 @@
   function navigateImage(direction) {
     if (!currentModalImage || !modalOpen) return;
 
-    const images = Array.from(document.querySelectorAll(".scroll--gallery_item img.product__image"));
+    const images = Array.from(
+      document.querySelectorAll(".scroll--gallery_item img.product__image")
+    );
     const currentIndex = images.indexOf(currentModalImage);
 
     if (currentIndex === -1) return;
 
     let newIndex = currentIndex + direction;
 
-    // Wrap around
     if (newIndex < 0) newIndex = images.length - 1;
     if (newIndex >= images.length) newIndex = 0;
 
@@ -277,50 +488,51 @@
 
     currentModalImage = newImage;
 
-    // Update modal image smoothly
-    const modal = document.getElementById("zoom-modal");
+    const modal = document.getElementById("completely-isolated-zoom-modal");
     if (modal) {
       const modalImage = modal.querySelector(".zoom-modal__image");
-      const imageContainer = modal.querySelector(".zoom-modal__image-container");
+      const imageContainer = modal.querySelector(
+        ".zoom-modal__image-container"
+      );
 
       if (modalImage && imageContainer) {
-        // Reset zoom first
         resetImageZoom();
 
-        // Update image with fade effect
         modalImage.style.opacity = "0.7";
-        
+
         setTimeout(() => {
           const highResSrc = getHighResSrc(newImage);
           modalImage.src = highResSrc;
           modalImage.alt = newImage.alt || "Product image";
-          
+
           modalImage.onload = () => {
             modalImage.style.opacity = "1";
             modalImage.classList.add("loaded");
-            // Reinitialize zoom for new image
-            setTimeout(() => initializeImageZoom(modalImage, imageContainer), 100);
+            setTimeout(
+              () => initializeImageZoom(modalImage, imageContainer),
+              100
+            );
           };
         }, 100);
       }
 
-      // Update counter
       const counter = modal.querySelector(".zoom-modal__current");
       if (counter) {
         counter.textContent = newIndex + 1;
       }
     }
 
-    // Update gallery selection
+    // Update gallery selection WITHOUT affecting gallery height
     if (window.switchToImage) {
-      const mediaId = newImage.closest(".scroll--gallery_item")?.getAttribute("data-image-id");
+      const mediaId = newImage
+        .closest(".scroll--gallery_item")
+        ?.getAttribute("data-image-id");
       if (mediaId) {
         window.switchToImage(mediaId);
       }
     }
   }
 
-  // Optimized zoom functionality
   function initializeImageZoom(image, container) {
     let scale = 1;
     let posX = 0;
@@ -330,7 +542,6 @@
     let initialDistance = 0;
     let initialScale = 1;
 
-    // Reset function
     window.resetImageZoom = function () {
       scale = 1;
       posX = 0;
@@ -354,9 +565,15 @@
 
       const containerRect = container.getBoundingClientRect();
       const imageRect = image.getBoundingClientRect();
-      
-      const maxX = Math.max(0, (imageRect.width * scale - containerRect.width) / 2);
-      const maxY = Math.max(0, (imageRect.height * scale - containerRect.height) / 2);
+
+      const maxX = Math.max(
+        0,
+        (imageRect.width * scale - containerRect.width) / 2
+      );
+      const maxY = Math.max(
+        0,
+        (imageRect.height * scale - containerRect.height) / 2
+      );
 
       posX = Math.min(Math.max(posX, -maxX), maxX);
       posY = Math.min(Math.max(posY, -maxY), maxY);
@@ -368,7 +585,9 @@
       return Math.sqrt(dx * dx + dy * dy);
     }
 
-    // Touch events
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+
     container.addEventListener("touchstart", (e) => {
       if (e.touches.length === 2) {
         e.preventDefault();
@@ -384,9 +603,6 @@
         lastTouchY = touch.clientY - posY;
       }
     });
-
-    let lastTouchX = 0;
-    let lastTouchY = 0;
 
     container.addEventListener("touchmove", (e) => {
       if (e.touches.length === 2 && initialDistance > 0) {
@@ -457,7 +673,7 @@
       e.preventDefault();
       const delta = e.deltaY > 0 ? -0.1 : 0.1;
       scale = Math.min(Math.max(scale + delta, 1), 4);
-      
+
       if (scale <= 1) {
         scale = 1;
         posX = 0;
@@ -466,12 +682,11 @@
       } else {
         isZoomed = true;
       }
-      
+
       updateImageTransform();
     });
   }
 
-  // Optimized swipe navigation
   function initializeSwipeNavigation(container, image) {
     let startX = 0;
     let startY = 0;
@@ -494,15 +709,22 @@
         const diffX = startX - endX;
         const diffY = startY - endY;
 
-        // Only swipe when not zoomed and it's a horizontal swipe
-        const isZoomed = image.style.transform && image.style.transform.includes("scale") && !image.style.transform.includes("scale(1)");
+        const isZoomed =
+          image.style.transform &&
+          image.style.transform.includes("scale") &&
+          !image.style.transform.includes("scale(1)");
 
-        if (!isZoomed && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && timeDiff < 300) {
+        if (
+          !isZoomed &&
+          Math.abs(diffX) > Math.abs(diffY) &&
+          Math.abs(diffX) > 50 &&
+          timeDiff < 300
+        ) {
           e.preventDefault();
           if (diffX > 0) {
-            navigateImage(1); // Swipe left - next image
+            navigateImage(1);
           } else {
-            navigateImage(-1); // Swipe right - previous image
+            navigateImage(-1);
           }
         }
 
@@ -514,23 +736,22 @@
   }
 
   function getHighResSrc(image) {
-    // Try data-zoom-src first
     const zoomSrc = image.getAttribute("data-zoom-src");
     if (zoomSrc) return zoomSrc;
 
-    // Try srcset for highest resolution
     const srcset = image.getAttribute("srcset");
     if (srcset) {
-      const sources = srcset.split(",").map(s => {
+      const sources = srcset.split(",").map((s) => {
         const parts = s.trim().split(" ");
         return {
           url: parts[0],
-          width: parts[1] ? parseInt(parts[1]) : 0
+          width: parts[1] ? parseInt(parts[1]) : 0,
         };
       });
 
-      const highest = sources.reduce((max, current) => 
-        current.width > max.width ? current : max, sources[0]
+      const highest = sources.reduce(
+        (max, current) => (current.width > max.width ? current : max),
+        sources[0]
       );
 
       if (highest && highest.url) {
@@ -538,11 +759,9 @@
       }
     }
 
-    // Fallback to regular src
     return image.src || image.getAttribute("src");
   }
 
-  // Initialization with better timing
   function init() {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", initFixedZoom);
@@ -551,7 +770,6 @@
     }
   }
 
-  // Shopify section reload
   document.addEventListener("shopify:section:load", function (event) {
     if (event.target.querySelector('[data-section-type="product"]')) {
       initialized = false;
@@ -559,25 +777,21 @@
     }
   });
 
-  // Handle window resize
   let resizeTimeout;
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       const container = document.getElementById("scrollGalleryContainer");
-      if (container) {
+      if (container && !modalOpen) {
         const existingBtn = container.querySelector(".fixed-zoom-btn");
         if (window.innerWidth >= 1024 && existingBtn) {
-          // Remove button on desktop
           existingBtn.remove();
         } else if (window.innerWidth < 1024 && !existingBtn && initialized) {
-          // Add button on mobile
           createFixedZoomButton(container);
         }
       }
     }, 250);
   });
 
-  // Start initialization
   init();
 })();

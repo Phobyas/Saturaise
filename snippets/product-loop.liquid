@@ -115,23 +115,17 @@
   color: #fff;
 }
 
-/* Fixed product title handling with min-height instead of fixed height */
-.p-title {
-  min-height: 70px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
+/* UNIFIED PRODUCT TITLE STYLING - Fix the height inconsistency */
+.p-title,
 .p-title-index {
-  min-height: 70px;
+  min-height: 70px !important;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+.p-title a,
 .p-title-index a {
   font-size: 16px !important;
 }
@@ -140,26 +134,32 @@
   font-size: 16px !important;
 }
 
+/* Mobile styling - CONSISTENT ACROSS ALL SECTIONS */
 @media screen and (max-width: 768px) {
   /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
-  .template-index .product-loop__img-wrapper {
+  .template-index .product-loop__img-wrapper,
+  .template-product .product-loop__img-wrapper {
     padding-bottom: 100%; /* Keep square aspect ratio */
   }
 
-  .template-index .product-loop__img-wrapper img {
+  .template-index .product-loop__img-wrapper img,
+  .template-product .product-loop__img-wrapper img {
     width: 90% !important; 
     height: 90% !important;
     object-fit: contain;
   }
   
   /* Maintain hover image consistency */
-  .template-index .hover-image img {
+  .template-index .hover-image img,
+  .template-product .hover-image img {
     width: 90% !important;
     height: 90% !important;
     object-fit: contain;
   }
 
-  .p-title {
+  /* UNIFIED MOBILE TITLE HEIGHT */
+  .p-title,
+  .p-title-index {
     min-height: 90px !important;
   }
 
@@ -175,38 +175,20 @@
   }
 }
 
-@media screen and (max-width: 768px) {
-  /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
-  .template-product .product-loop__img-wrapper {
-    padding-bottom: 100%; /* Keep square aspect ratio */
-  }
-
-  .template-product .product-loop__img-wrapper img {
-    width: 90% !important; 
-    height: 90% !important;
-    object-fit: contain;
-  }
-  
-  /* Maintain hover image consistency */
-  .template-product .hover-image img {
-    width: 90% !important;
-    height: 90% !important;
-    object-fit: contain;
-  }
-}
-
+/* Tablet styling - CONSISTENT ACROSS ALL SECTIONS */
 @media (min-width: 768px) and (max-width: 1024px) {
+  .p-title,
   .p-title-index {
     min-height: 90px !important;
   }
-  .p-title{
-    min-height: 90px !important;
-  }
+  
+  .p-title a,
   .p-title-index a {
     font-size: 16px !important;
   }
 }
 
+/* Disable hover on touch devices */
 @media screen and (max-width: 1024px) {
   .product-loop__img-wrapper:hover .hover-image {
     opacity: 0;
@@ -411,9 +393,11 @@
       {% if settings.product_grid_vendor %}
         <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
       {% endif %}
-      <p class="product-loop__title p-title {% if template.name == 'index' or template.name == 'product' or section.class contains 'product-recommendations__wrapper' %}p-title-index{% endif %}">
-  <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
-</p>
+      
+      {% comment %} FIXED: Simplified title class logic - always use consistent classes {% endcomment %}
+      <p class="product-loop__title p-title p-title-index">
+        <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+      </p>
     </div>
 
     {%- if product.template_suffix == 'set' -%}
@@ -421,17 +405,14 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
-  {% if section.name == "Product recommendations" %}style="font-size: 18px;"{% endif %}>
+    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} price-index">
 
     {% if product.price < product.compare_at_price %}
       Od
-      <span class="product-loop__price--sale onsale inline-block text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
-        {% if section.name == "Product recommendations" %}style="font-size: 16px;"{% endif %}>
+      <span class="product-loop__price--sale onsale inline-block text-base font-bold price-index">
         {{ product.price | money }}
       </span>
-      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% if template.name == 'index' or template.name == 'product' %}price-index{% endif %}" 
-        {% if section.name == "Product recommendations" %}style="font-size: 16px;"{% endif %}>
+      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold price-index">
         {{ product.compare_at_price | money }}
       </span>
           {% assign savings = product.compare_at_price | minus: product.price %}

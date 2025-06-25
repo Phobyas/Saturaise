@@ -12,7 +12,7 @@
 
 {% comment %} Product Recommendations Template {% endcomment %}
 <div
-  class="global__section product-recommendations__wrapper product-recommendations__wrapper--{{ section.id }} relative {{ section_padding }}">
+  class="global__section product-recommendations__wrapper product-recommendations__wrapper--{{ section.id }} relative">
 
   {%- if recommendations.performed -%}
     {%- if recommendations.products_count > 0 -%}
@@ -41,7 +41,6 @@
         when 1
           assign grid_width = 'span-12 sm-span-12'
         endcase
-
 
         assign prod_limit = section.settings.items_shown
         assign items_per_row = section.settings.items_per_row
@@ -77,218 +76,513 @@
         if section.settings.title == blank and section.settings.subheading == blank and section.settings.link_url == blank and section.settings.link_text == blank
           assign wrapper_grid_width = 'span-12'
         else
-          assign wrapper_grid_width = 'span-9'
+          assign wrapper_grid_width = 'span-12'
         endif
       -%}
-      <div class="product-recommendations js-product-rec-inner mt-7" data-section-loaded="false">
-        <div class="product-recommendations__text-wrapper mb-4">
+
+      {% capture carousel_config %}{
+        "wrapAround": {{ enough_to_wrap }},
+        "cellAlign": "left", 
+        "dragThreshold": "3",
+        "draggable": {{ enough_to_wrap }},
+        "selectedAttraction": 0.08,
+        "friction": 0.5,
+        "groupCells": 1,
+        "pageDots": false,
+        "accessibility": true,
+        "contain": true,
+        "percentPosition": true,
+        "cellSelector": ".product-loop__item",
+        "adaptiveHeight": false,
+        "arrowShape": "M71.9,95L25.1,52.2c-0.6-0.6-0.9-1.3-0.9-2.2s0.3-1.6,0.9-2.2L71.9,5l3.9,4.3L31.4,50l44.4,40.7L71.9,95z"
+       }{% endcapture %}
+       
+       {% capture mobile_carousel_config %}{
+        "wrapAround": true,
+        "cellAlign": "left",
+        "dragThreshold": 10,
+        "percentPosition": true,
+        "draggable": true,
+        "selectedAttraction": 0.2,
+        "friction": 0.6,
+        "cellSelector": ".product-loop__item",
+        "prevNextButtons": false,
+        "pageDots": false,
+        "accessibility": true,
+        "groupCells": 1,
+        "snapToAlignment": true
+      }{% endcapture %}
+
+      <div class="section-product-recommendations__outer-wrapper">
+        <div class="product-recommendations js-product-rec-inner" data-section-loaded="false">
+          
           {%- if section.settings.title != blank -%}
-            <h2 class=" section-product-recommendations__section-heading px-3 lg:px-0">{{ section.settings.title }}</h2>
+            <div class="product-recommendations__text-wrapper mb-2 flex items-end md:px-0 md:mb-0 justify-between span-3 auto v-center">
+              <h2 class="section-product-recommendations__section-heading heading-title">{{ section.settings.title }}</h2>
+              {%- if section.settings.subheading != blank -%}
+                <div class="rte mb2">{{ section.settings.subheading }}</div>
+              {%- endif -%}
+              {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
+                <a class="inline-block mt4 mb0 sm-mb2" href="{{ section.settings.link_url }}">
+                  <span class="text-sm font-medium underline">{{ section.settings.link_text }}</span>
+                </a>
+              {%- endif -%}
+            </div>
           {%- endif -%}
-          {%- if section.settings.subheading != blank -%}
-            <div class="rte mb2">{{ section.settings.subheading }}</div>
-          {%- endif -%}
-          {%- if section.settings.link_url != blank and section.settings.link_text != blank -%}
-            <a class="btn-border-link inline-block mt4 mb0 sm-mb2 relative" href="{{ section.settings.link_url }}">
-              <span>{{ section.settings.link_text }}</span>
-            </a>
-          {%- endif -%}
-        </div>
-      
-        <div class=" grid__wrapper relative section-product-recommendations__wrapper--{%- if carousel -%}carousel{%- else -%}grid{%- endif -%}">
 
-        
-        {% capture carousel_config %}{
-          "wrapAround": {{ enough_to_wrap }},
-          "cellAlign": "left", 
-          "dragThreshold": "3",
-          "draggable": {{ enough_to_wrap }},
-          "selectedAttraction": 0.08,
-          "friction": 0.5,
-          "groupCells": 1,
-          "pageDots": {{ enough_to_wrap }},
-          "accessibility": true,
-          "contain": true,
-          "percentPosition": true,
-          "cellSelector": ".product-loop__item",
-          "adaptiveHeight": false,
-          "arrowShape": "M71.9,95L25.1,52.2c-0.6-0.6-0.9-1.3-0.9-2.2s0.3-1.6,0.9-2.2L71.9,5l3.9,4.3L31.4,50l44.4,40.7L71.9,95z"
-         }{% endcapture %}
-         
-         {% capture mobile_carousel_config %}{
-          "wrapAround": true,
-          "cellAlign": "left",
-          "dragThreshold": 10,
-          "percentPosition": true,
-          "draggable": true,
-          "selectedAttraction": 0.2,
-          "friction": 0.6,
-          "cellSelector": ".product-loop__item",
-          "prevNextButtons": false,
-          "pageDots": true,
-          "accessibility": true,
-          "groupCells": 1,
-          "snapToAlignment": true
-        }{% endcapture %}
-
-          <div class="pl-3 md:pl-0 product-recommendations__wrapper--loop span-12 auto{% if carousel %} js-carousel is-hidden{% endif %}" 
-          {%- if carousel -%}
-            data-flickity-other='{{ carousel_config }}' 
-            data-flickity-mobile='{{ mobile_carousel_config }}'
-          {%- endif -%}>
-            {%- unless carousel -%}<div class="grid__wrapper edge cg6 rg6 {{ wrapper_class }}">{%- endunless -%}
+          <div class="grid__wrapper relative section-product-recommendations__wrapper--carousel">
+            <div class="product-recommendations__wrapper--loop {{ wrapper_grid_width }} auto js-carousel carousel-loaded--false" 
+                 data-flickity-other='{{ carousel_config }}' 
+                 data-flickity-mobile='{{ mobile_carousel_config }}'>
+              
               {%- for product in recommendations.products limit: section.settings.items_shown -%}
-                {% render 'product-loop',
-                  carousel: carousel,
-                  collection: collection,
-                  product: product,
-                  product_info_align: 'a-center',
-                  grid_items: section.settings.items_per_row,
-                  items_per_row: grid_width,
-                  featured_collection: true %}
+                <article class="product-loop__item relative">
+                  <div class="product-image relative">
+                    <div class="product-loop__img-wrapper relative">
+                      <a href="{{ product.url }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">
+                        {%- if product.media.size < 1 -%}
+                           <div class="demo-1 box-ratio" style="padding-bottom: 100%;">
+                             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                           </div>
+                        {%- else -%}
+                          <img src="{{ product.featured_media | image_url: width: 400 }}" 
+                               alt="{{ product.title | escape }}" 
+                               loading="lazy"
+                               style="width: 100%; height: 100%; object-fit: contain;">
+                        {%- endif -%}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="grid__wrapper edge pt2 cg0 sm-cg0 rg0 name-wrapper">
+                    <div class="product-loop__info-wrapper span-12 auto">
+                      <p class="product-loop__title p-title p-title-index">
+                        <a class="text-base" href="{{ product.url }}">{{ product.title }}</a>
+                      </p>
+                    </div>
+
+                    {%- if product.template_suffix == 'set' -%}
+                      <div class="product-loop__price span-4 auto">
+                        {{ 'products.product.price_varies' | t }}
+                      </div>
+                    {%- else -%}
+                      <div class="product-loop__price text-sm lg:text-base font-medium price-index">
+                        {% if product.price < product.compare_at_price %}
+                          Od
+                          <span class="product-loop__price--sale onsale inline-block text-base font-bold price-index">
+                            {{ product.price | money }}
+                          </span>
+                          <span class="product-loop__price--compare was inline-block ml1 text-base font-bold price-index">
+                            {{ product.compare_at_price | money }}
+                          </span>
+                          {% assign savings = product.compare_at_price | minus: product.price %}
+                          <span class="product-loop__price--savings savings hide">
+                            ({{ 'collections.general.save' | t }} {{ savings | money }})
+                          </span>
+                        {% else %}
+                          {% if product.price_varies %}
+                            Od {{ product.price_min | money }}
+                          {% else %}
+                            {{ product.price | money }}
+                          {% endif %}
+                        {% endif %}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </article>
               {% endfor %}
-            {%- unless carousel -%}</div>{%- endunless -%}
+              
+            </div>
           </div>
-
         </div>
-        {% style %}
-          /* Basic Layout and Structure */
-          .product-recommendations__wrapper {
-            max-width: 1600px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-          
-          .product-recommendations__text-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            align-content: end;
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto 20px auto;
-            
-          }
-
-          @media (min-width: 1920px) {
-              .product-recommendations__text-wrapper {
-                max-width: 1600px;
-            }
-          }
-          
-          .section-product-recommendations__section-heading {
-            font-size: 32px;
-            padding-bottom: 0;
-            font-weight: 700;
-          }
-          
-          /* Product Title Styles */
-          .p-title-index {
-            height: 70px !important;
-          }
-          
-          .p-title-index a {
-            font-size: 16px !important;
-          }
-          
-          /* Flickity Button Styles */
-          .section-product-recommendations__wrapper--carousel .flickity-button.previous {
-            position: absolute;
-            top: calc(50% - 44px);
-            left: -80px;
-          }
-          
-          .section-product-recommendations__wrapper--carousel .flickity-button.next {
-            position: absolute;
-            top: calc(50% - 44px);
-            right: -80px;
-            left: unset;
-          }
-          
-          .section-product-recommendations__wrapper--carousel .flickity-viewport,
-          .section-product-recommendations__wrapper--carousel .flickity-enabled.is-draggable {
-            outline: none !important;
-            outline-offset: none !important;
-          }
-          
-          /* Desktop Styles */
-          @media (min-width: 768px) { 
-
-          
-            .product-recommendations__wrapper--loop {
-              padding-bottom: 30px;
-            }
-            
-            .product-recommendations .flickity-viewport {
-              padding-bottom: 10px;
-            }
-            
-            .section-product-recommendations__wrapper--carousel .product-loop__item {
-              margin-bottom: 20px;
-            }
-          
-            {% if carousel %}
-              .product-recommendations__wrapper--{{ section.id }} .section--reloaded [data-section-loaded="false"] .product-loop__item,
-              .product-recommendations__wrapper--{{ section.id }} [data-section-loaded="false"] .product-loop__item,
-              .no-js .section-product-recommendations__wrapper--carousel .product-loop__item {
-                width: {{ noJSGrid }}% !important;
-                margin-right: 2%;
-                display: inline-block !important;
-              }
-              
-              .section--reloaded [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
-              [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
-              .no-js .section-product-recommendations__wrapper--carousel .product-loop__item:nth-child({{ section.settings.items_per_row }}) {
-                margin-right: 0;
-              }
-              
-              .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
-                width: {{ prod_grid }}% !important;
-                padding-right: 2%;
-                margin-right: 0;
-                display: block !important;
-              }
-            {% endif %}
-          }
-          
-          /* Mobile Styles */
-          @media (max-width: 767px) {
-          
-            .section-product-recommendations__section-heading {
-              font-size: 24px !important;
-              padding-bottom: 0;
-            }
-            
-            .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
-              padding-right: 10px;
-              width: 80% !important;
-              
-            }
-
-            .p-title {
-            height: 70px !important;
-          }
-          }
-          
-          /* Carousel States */
-          .product-recommendations__wrapper--loop.is-hidden {
-            display: none;
-          }
-          
-          .product-recommendations__wrapper--loop.js-carousel {
-            opacity: 0;
-            -webkit-transition: opacity 0.4s;
-            transition: opacity 0.4s;
-          }
-          
-          .product-recommendations__wrapper--loop.js-carousel.flickity-enabled {
-            opacity: 1;
-          }
-          {% endstyle %}
       </div>
+        
+      {% style %}
+        /* APPLY ONLY FEATURED COLLECTION PADDING & GAP STYLING */
+        
+        /* DYNAMIC HEIGHT CALCULATION - BETTER BALANCED SPACING */
+        .product-recommendations__wrapper--{{ section.id }} {
+          min-height: 450px; /* Reduced desktop minimum height */
+          contain: layout;
+        }
+        
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__item {
+          min-height: 400px; /* Reduced for better desktop spacing */
+          contain: layout;
+        }
+        
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel {
+          position: relative;
+          contain: layout;
+          min-height: 450px; /* Reduced carousel height */
+        }
+        
+        /* Mobile height adjustments - INCREASED MORE FOR BETTER SPACING */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} {
+            min-height: 480px; /* Further increased mobile minimum height */
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-loop__item {
+            min-height: 420px; /* Further increased mobile product card height */
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel {
+            min-height: 480px; /* Further increased mobile carousel height */
+          }
+        }
+        
+        /* Tablet height adjustments */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .product-recommendations__wrapper--{{ section.id }} {
+            min-height: 380px;
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-loop__item {
+            min-height: 320px;
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel {
+            min-height: 380px;
+          }
+        }
+        
+        /* Large screen height adjustments - REDUCED FOR BETTER SPACING */
+        @media (min-width: 1920px) {
+          .product-recommendations__wrapper--{{ section.id }} {
+            min-height: 500px; /* Reduced from 550px */
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-loop__item {
+            min-height: 450px; /* Reduced from 500px */
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel {
+            min-height: 500px; /* Reduced from 550px */
+          }
+        }
+        
+        /* Outer wrapper - match featured collection spacing exactly */
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__outer-wrapper {
+          max-width: 1280px;
+          width: 100%;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 32px; /* Same gap as featured collection */
+        }
+
+        /* Add new media query for screens 1920px and wider */
+        @media (min-width: 1920px) {
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__outer-wrapper {
+            max-width: 1600px;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__outer-wrapper {
+            padding-left: 12px; /* Same as featured collection */
+            gap: 10px; /* Same mobile gap as featured collection */
+          }
+
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__section-heading {
+            font-size: 24px !important;
+            padding-bottom: 0;
+          }
+        }
+
+        /* Text wrapper styling - match featured collection */
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__text-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          align-content: end;
+          width: 100%;
+          margin-bottom: 10px !important; /* mb-[10px] */
+        }
+
+        @media (min-width: 768px) {
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__text-wrapper {
+            margin-bottom: 32px !important; /* md:mb-8 (8 * 4px = 32px) */
+          }
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel {
+          width: 100%;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__section-heading {
+          font-size: 32px;
+          padding-bottom: 0;
+          font-weight: 700;
+        }
+
+        /* Apply featured collection product name and price spacing */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__text-wrapper {
+            padding-right: 3%; /* Same as featured collection */
+          }
+        }
+
+        /* Ensure product title height matches featured collection */
+        .product-recommendations__wrapper--{{ section.id }} .p-title,
+        .product-recommendations__wrapper--{{ section.id }} .p-title-index {
+          min-height: 70px !important;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .p-title a,
+        .product-recommendations__wrapper--{{ section.id }} .p-title-index a {
+          font-size: 16px !important;
+          color: var(--text-color) !important;
+          text-decoration: none;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .price-index {
+          font-size: 16px !important;
+          color: var(--text-color) !important;
+        }
+
+        /* Tablet styling - match featured collection */
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .product-recommendations__wrapper--{{ section.id }} .p-title,
+          .product-recommendations__wrapper--{{ section.id }} .p-title-index {
+            min-height: 90px !important;
+          }
+        }
+
+        /* Mobile title height - match featured collection */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .p-title,
+          .product-recommendations__wrapper--{{ section.id }} .p-title-index {
+            min-height: 90px !important;
+          }
+        }
+
+        /* Apply same product name wrapper spacing as featured collection */
+        .product-recommendations__wrapper--{{ section.id }} .name-wrapper {
+          padding-top: 0.5rem; /* Same pt2 as featured collection */
+        }
+
+        /* SALE PRICE STYLING - MATCH FEATURED COLLECTION WITH CSS VARIABLES */
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__price--sale.onsale {
+          color: var(--sale-color) !important; /* Use theme sale color variable */
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__price--compare.was {
+          text-decoration: line-through;
+          color: var(--text-color-light) !important; /* Use theme light text color for crossed out price */
+        }
+
+        /* Ensure sale badge styling if present */
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__badge-icon.icon-type--sale-item {
+          background-color: var(--sale-color);
+          color: var(--white);
+          border-radius: 4px;
+          padding: 4px 8px;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        /* Button positioning - same as featured collection */
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-button.previous {
+          position: absolute;
+          top: calc(50% - 44px);
+          left: -80px;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-button.next {
+          position: absolute;
+          top: calc(50% - 44px);
+          right: -80px;
+          left: unset;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-viewport,
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-enabled.is-draggable {
+          outline: none !important;
+          outline-offset: none !important;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .product-loop__item {
+          margin-bottom: 20px; /* Same as featured collection */
+        }
+
+        /* Mobile-specific improvements - PRESERVE ORIGINAL PRODUCT STYLING */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .product-loop__item {
+            padding-right: 10px;
+            width: 80% !important;
+            max-width: 280px !important;
+            display: inline-block !important;
+            vertical-align: top;
+            margin-right: 10px;
+          }
+          
+          /* Ensure horizontal display on mobile but preserve product content styling */
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.js-carousel {
+            display: block !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+            scroll-snap-type: x mandatory;
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.js-carousel .product-loop__item {
+            scroll-snap-align: start;
+            white-space: normal; /* Allow text to wrap normally inside product items */
+          }
+          
+          /* Before carousel loads - ensure horizontal layout */
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.carousel-loaded--false {
+            display: block !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.carousel-loaded--false .product-loop__item {
+            display: inline-block !important;
+            vertical-align: top;
+            white-space: normal; /* Allow text to wrap normally inside product items */
+            width: 80% !important;
+            max-width: 280px !important;
+            margin-right: 10px;
+          }
+        }
+
+        /* Image wrapper styling to match featured collection exactly */
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__img-wrapper {
+          position: relative;
+          width: 100%;
+          padding-bottom: 100%;
+          overflow: hidden;
+          background: #eeeeee;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__img-wrapper img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          max-width: 100%;
+          max-height: 100%;
+          width: auto !important;
+          height: auto !important;
+          object-fit: contain;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .image-wrapper-link {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-image {
+          border-radius: 12px;
+          position: relative;
+          background: #eeeeee;
+        }
+
+        /* Carousel wrapper styling - match featured collection */
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop {
+          padding-bottom: var(--space-5);
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop .flickity-page-dots {
+          bottom: 10px !important;
+          display: none !important;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.is-hidden {
+          display: none;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.js-carousel {
+          opacity: 0;
+          -webkit-transition: opacity 0.4s;
+          transition: opacity 0.4s;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.js-carousel.flickity-enabled {
+          opacity: 1;
+        }
+
+        /* Improved carousel loading states */
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.carousel-loaded--false {
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop.carousel-loaded--true {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        /* Fix for flickity slider display issues on mobile */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop .flickity-slider {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: stretch;
+            min-height: auto;
+          }
+          
+          .product-recommendations__wrapper--{{ section.id }} .product-recommendations__wrapper--loop .flickity-slider .product-loop__item {
+            flex: 0 0 auto !important;
+            display: block !important;
+          }
+        }
+
+        /* Ensure consistent product item display */
+        .product-recommendations__wrapper--{{ section.id }} .product-loop__item {
+          box-sizing: border-box;
+        }
+
+        /* Desktop Grid Styles - same as featured collection */
+        @media (min-width: 768px) {
+          .product-recommendations__wrapper--{{ section.id }} .section--reloaded [data-section-loaded="false"] .product-loop__item,
+          .product-recommendations__wrapper--{{ section.id }} [data-section-loaded="false"] .product-loop__item,
+          .no-js .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .product-loop__item {
+            width: {{ noJSGrid }}% !important;
+            margin-right: 2%;
+            display: inline-block !important;
+          }
+          .product-recommendations__wrapper--{{ section.id }} .section--reloaded [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
+          .product-recommendations__wrapper--{{ section.id }} [data-section-loaded="false"] .product-loop__item:nth-child({{ section.settings.items_per_row }}),
+          .no-js .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .product-loop__item:nth-child({{ section.settings.items_per_row }}) {
+            margin-right: 0;
+          }
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-slider .product-loop__item {
+            width: {{ prod_grid }}% !important;
+            padding-right: 2%;
+            margin-right: 0;
+            display: block !important;
+          }
+        }
+
+        /* Hide navigation buttons on mobile */
+        @media (max-width: 767px) {
+          .product-recommendations__wrapper--{{ section.id }} .section-product-recommendations__wrapper--carousel .flickity-button {
+            display: none !important;
+          }
+        }
+      {% endstyle %}
+
     {%- endif -%}
   {%- else  -%}
     <div class="page-width js-product-rec-wrapper"
@@ -301,8 +595,6 @@
       data-asset-url="{{ 'section-product-recommendations.js' | asset_url }}"></div>
   {%- endif -%}
 </div>
-
-
 
 {% schema %}
 {

@@ -1,110 +1,180 @@
-// Set fixed height early to prevent CLS
+// Optimized announcement-bar.js - Reduced execution time and main thread blocking
 (function () {
-  // Set announcement bar height immediately to prevent layout shift
-  document.documentElement.style.setProperty(
-    "--announcement-bar-height",
-    "40px"
-  );
+  // Set fixed height early to prevent CLS - using requestIdleCallback if available
+  const setInitialStyles = () => {
+    document.documentElement.style.setProperty(
+      "--announcement-bar-height",
+      "40px"
+    );
 
-  // Fix header spacing without affecting colors or animation behavior
-  const headerSpacer = document.querySelector(".header-spacer");
-  if (headerSpacer) {
-    headerSpacer.style.height = "106px"; // 40px announcement + 66px header
+    const headerSpacer = document.querySelector(".header-spacer");
+    if (headerSpacer) {
+      headerSpacer.style.height = "106px";
+    }
+  };
+
+  // Use requestIdleCallback if available, otherwise fallback to immediate execution
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(setInitialStyles);
+  } else {
+    setInitialStyles();
   }
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
+// Use passive event listeners and optimize for performance
+const initAnnouncementBar = () => {
   const containerElem = document.getElementById("announcement-bar");
   const trackElem = document.getElementById("marquee-track");
 
-  // Animation parameters
-  const speed = 0.3; // Speed in pixels per frame
-
+  // Early return if elements don't exist
   if (!trackElem || !containerElem || trackElem.children.length === 0) return;
 
-  // Fix container height without changing visibility or opacity
-  containerElem.style.height = "40px";
-  containerElem.style.minHeight = "40px";
-  containerElem.style.overflow = "hidden";
-  containerElem.style.position = "fixed";
-  containerElem.style.top = "0";
-  containerElem.style.width = "100%";
+  // Use CSS for fixed styling instead of JavaScript
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = `
+    #announcement-bar {
+      height: 40px !important;
+      min-height: 40px !important;
+      overflow: hidden !important;
+      position: fixed !important;
+      top: 0 !important;
+      width: 100% !important;
+    }
+    #marquee-track {
+      opacity: 1 !important;
+      min-height: 40px !important;
+      position: relative !important;
+      white-space: nowrap !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+  `;
+  document.head.appendChild(styleSheet);
 
-  // Make track visible immediately but don't affect colors
-  trackElem.style.opacity = "1";
-  trackElem.style.minHeight = "40px";
-  trackElem.style.position = "relative";
-  trackElem.style.whiteSpace = "nowrap";
-  trackElem.style.display = "flex";
-  trackElem.style.alignItems = "center";
+  // Animation parameters - reduced for better performance
+  const speed = 0.25; // Slightly reduced speed for smoother animation
+  let position = 0;
+  let animationId;
+  let isAnimating = false;
 
-  // Calculate total width of all elements
-  let totalWidth = 0;
+  // Calculate total width once
   const itemElements = [...trackElem.children];
-
-  // Calculate width before cloning elements
-  itemElements.forEach((item) => {
-    totalWidth +=
+  let totalWidth = itemElements.reduce((width, item) => {
+    return (
+      width +
       item.offsetWidth +
-      parseInt(window.getComputedStyle(item).marginRight || 0);
-  });
+      parseInt(window.getComputedStyle(item).marginRight || 0)
+    );
+  }, 0);
 
-  // Store original width for later reference
-  const originalWidth = totalWidth;
-
-  // Clone elements to ensure continuity (once is enough)
+  // Clone elements only once
   itemElements.forEach((item) => {
     const clone = item.cloneNode(true);
     trackElem.appendChild(clone);
   });
 
-  // Set initial position
-  let position = 0;
+  // Optimized animation function using requestAnimationFrame
+  const animate = () => {
+    if (!isAnimating) return;
 
-  // Animation function using requestAnimationFrame
-  function animate() {
     position -= speed;
 
-    // Reset position when we've scrolled the full width of original elements
-    if (Math.abs(position) >= originalWidth) {
+    if (Math.abs(position) >= totalWidth) {
       position = 0;
     }
 
-    trackElem.style.transform = `translateX(${position}px)`;
-    requestAnimationFrame(animate);
-  }
+    // Use transform3d for hardware acceleration
+    trackElem.style.transform = `translate3d(${position}px, 0, 0)`;
+    animationId = requestAnimationFrame(animate);
+  };
 
   // Start animation
-  requestAnimationFrame(animate);
+  const startAnimation = () => {
+    if (isAnimating) return;
+    isAnimating = true;
+    animationId = requestAnimationFrame(animate);
+  };
 
-  // Handle resize for width recalculation
-  window.addEventListener(
-    "resize",
-    () => {
-      // Pause animation briefly during recalculation
-      const currentPosition = position;
+  // Stop animation
+  const stopAnimation = () => {
+    isAnimating = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+  };
 
-      // Recalculate width
-      let newWidth = 0;
+  // Use Intersection Observer to only animate when visible
+  let observer;
+  if ("IntersectionObserver" in window) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startAnimation();
+          } else {
+            stopAnimation();
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(containerElem);
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    startAnimation();
+  }
+
+  // Optimized resize handler with debouncing
+  let resizeTimeout;
+  const handleResize = () => {
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+
+    resizeTimeout = setTimeout(() => {
+      // Recalculate width only if needed
       const firstSetItems = [...trackElem.children].slice(
         0,
         itemElements.length
       );
-
-      firstSetItems.forEach((item) => {
-        newWidth +=
+      const newWidth = firstSetItems.reduce((width, item) => {
+        return (
+          width +
           item.offsetWidth +
-          parseInt(window.getComputedStyle(item).marginRight || 0);
-      });
+          parseInt(window.getComputedStyle(item).marginRight || 0)
+        );
+      }, 0);
 
-      // Update the reference width
-      totalWidth = newWidth;
-
-      // Adjust position proportionally if we're in the middle of animation
-      if (Math.abs(currentPosition) > newWidth) {
-        position = 0;
+      if (Math.abs(newWidth - totalWidth) > 5) {
+        // Only update if significant change
+        totalWidth = newWidth;
+        if (Math.abs(position) > totalWidth) {
+          position = 0;
+        }
       }
-    },
-    { passive: true }
-  );
-});
+    }, 150); // Debounce resize events
+  };
+
+  window.addEventListener("resize", handleResize, { passive: true });
+
+  // Cleanup function
+  return () => {
+    stopAnimation();
+    if (observer) observer.disconnect();
+    window.removeEventListener("resize", handleResize);
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+  };
+};
+
+// Initialize when DOM is ready or immediately if already loaded
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAnnouncementBar, {
+    once: true,
+  });
+} else {
+  // Use requestIdleCallback for non-critical initialization
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(initAnnouncementBar);
+  } else {
+    setTimeout(initAnnouncementBar, 0);
+  }
+}

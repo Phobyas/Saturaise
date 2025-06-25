@@ -86,15 +86,15 @@
     vertical-align: top;
     margin-right: 10px;
   }
-  
+
   .featured-collection__text-wrapper {
     padding-right: 3%;
   }
-  
+
   .section-featured-collection__outer-wrapper {
     gap: 10px;
   }
-  
+
   /* Ensure horizontal display on mobile but preserve product content styling */
   .featured-collection__wrapper--loop.js-carousel {
     display: block !important;
@@ -104,12 +104,12 @@
     white-space: nowrap;
     scroll-snap-type: x mandatory;
   }
-  
+
   .featured-collection__wrapper--loop.js-carousel .product-loop__item {
     scroll-snap-align: start;
     white-space: normal; /* Allow text to wrap normally inside product items */
   }
-  
+
   /* Before carousel loads - ensure horizontal layout */
   .featured-collection__wrapper--loop.carousel-loaded--false {
     display: block !important;
@@ -118,8 +118,9 @@
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
   }
-  
-  .featured-collection__wrapper--loop.carousel-loaded--false .product-loop__item {
+
+  .featured-collection__wrapper--loop.carousel-loaded--false
+    .product-loop__item {
     display: inline-block !important;
     vertical-align: top;
     white-space: normal; /* Allow text to wrap normally inside product items */
@@ -127,11 +128,17 @@
     max-width: 280px !important;
     margin-right: 10px;
   }
-  
+
   /* IMPORTANT: Preserve original product info and price styling */
-  .section-featured-collection__wrapper--carousel .product-loop__item .product-loop__info,
-  .section-featured-collection__wrapper--carousel .product-loop__item .product-loop__price,
-  .section-featured-collection__wrapper--carousel .product-loop__item .product-loop__title {
+  .section-featured-collection__wrapper--carousel
+    .product-loop__item
+    .product-loop__info,
+  .section-featured-collection__wrapper--carousel
+    .product-loop__item
+    .product-loop__price,
+  .section-featured-collection__wrapper--carousel
+    .product-loop__item
+    .product-loop__title {
     /* DO NOT change text-align - let it inherit from original styles */
     white-space: normal !important;
   }
@@ -207,7 +214,7 @@
     align-items: stretch;
     min-height: auto;
   }
-  
+
   .featured-collection__wrapper--loop .flickity-slider .product-loop__item {
     flex: 0 0 auto !important;
     display: block !important;
@@ -229,35 +236,34 @@
     display: inline-block !important;
     vertical-align: top !important;
   }
-  
+
   /* Prevent any grid-like behavior on mobile */
   .js-carousel .grid__wrapper,
   .carousel-loaded--false .grid__wrapper {
     display: block !important;
     white-space: nowrap !important;
   }
-  
+
   /* CRITICAL: Ensure product content maintains original styling */
   .js-carousel .product-loop__item *,
   .carousel-loaded--false .product-loop__item * {
     white-space: normal !important;
   }
-  
+
   /* Specifically preserve price alignment - inherit from parent styles */
   .section-featured-collection .product-loop__price {
     text-align: inherit !important;
     justify-content: inherit !important;
     align-items: inherit !important;
   }
-  
+
   .section-featured-collection .product-loop__title {
     text-align: inherit !important;
   }
-  
+
   .section-featured-collection .product-loop__info {
     text-align: inherit !important;
     align-items: inherit !important;
     justify-content: inherit !important;
   }
 }
-
