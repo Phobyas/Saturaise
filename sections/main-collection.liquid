@@ -381,25 +381,199 @@
                     </svg>
                   </button>
                   <div class="filter-section-content" id="filterSection{{ filter.label | handle | capitalize }}">
+{% comment %} REPLACE the filter options section with this smart size sorting {% endcomment %}
                     <div class="filter-options">
-                      {% assign sorted_values = filter.values | sort: 'count' | reverse %}
-                      {% for value in sorted_values %}
-                        <label class="filter-option-item {% if value.active %}active{% endif %}" 
-                               {% if value.count == 0 and value.active == false %}data-disabled="true"{% endif %}>
-                          <input type="checkbox"
-                                 name="{{ value.param_name }}"
-                                 value="{{ value.value }}"
-                                 data-param="{{ value.param_name }}"
-                                 data-value="{{ value.value }}"
-                                 data-label="{{ value.label | escape }}"
-                                 {% if value.active %}checked{% endif %}
-                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                                 onchange="FilterDrawer.handleFilterChange(this)">
-                          <span class="filter-option-checkbox"></span>
-                          <span class="filter-option-label">{{ value.label | escape }}</span>
-                          <span class="filter-option-count">({{ value.count }})</span>
-                        </label>
-                      {% endfor %}
+                      {% comment %} Smart Size Sorting System {% endcomment %}
+                      {% liquid
+                        assign filter_handle = filter.label | handle
+                        assign is_size_filter = false
+                        
+                     
+                        assign size_keywords = 'size,sizes,rozmiar,rozmiary,taille,tailles,größe,größen,talla,tallas,tamanho,tamanhos'
+                        assign size_keywords_array = size_keywords | split: ','
+                        
+                        for size_keyword in size_keywords_array
+                          if filter_handle contains size_keyword
+                            assign is_size_filter = true
+                            break
+                          endif
+                        endfor
+                      %}
+
+                      {% if is_size_filter %}
+                        {% comment %} SMART SIZE SORTING INCLUDING HALF SIZES {% endcomment %}
+                        {% liquid
+                       
+                          assign clothing_sizes = 'XXXS,XXS,XS,S,M,L,XL,XXL,XXXL,4XL,5XL'
+                          assign clothing_sizes_array = clothing_sizes | split: ','
+                          
+                     
+                          assign clothing_size_items = ''
+                          assign numeric_size_items = ''
+                          assign other_size_items = ''
+                          
+    
+                          for value in filter.values
+                            assign size_upper = value.value | upcase | strip
+                            assign is_clothing = false
+                            assign is_numeric = false
+                            
+                
+                            for clothing_size in clothing_sizes_array
+                              if size_upper == clothing_size
+                                assign is_clothing = true
+                                assign clothing_size_items = clothing_size_items | append: size_upper | append: '|' | append: value.value | append: '|' | append: value.label | append: '|' | append: value.count | append: '|' | append: value.active | append: '|' | append: value.param_name | append: '||'
+                                break
+                              endif
+                            endfor
+                            
+                            unless is_clothing
+                  
+                              assign has_decimal = false
+                              if size_upper contains '.'
+                                assign has_decimal = true
+                              endif
+                              if size_upper contains ','
+                                assign has_decimal = true
+                                assign size_upper = size_upper | replace: ',', '.'
+                              endif
+                              
+                              assign size_as_number = size_upper | times: 1.0
+                              if size_as_number > 0
+                                assign is_numeric = true
+                                if has_decimal
+                                  assign sort_key = size_as_number | times: 10 | round
+                                else
+                                  assign sort_key = size_as_number | times: 10
+                                endif
+                                assign numeric_size_items = numeric_size_items | append: sort_key | append: '|' | append: value.value | append: '|' | append: value.label | append: '|' | append: value.count | append: '|' | append: value.active | append: '|' | append: value.param_name | append: '||'
+                              endif
+                            endunless
+                            
+                            unless is_clothing or is_numeric
+                              assign other_size_items = other_size_items | append: value.label | append: '|' | append: value.value | append: '|' | append: value.label | append: '|' | append: value.count | append: '|' | append: value.active | append: '|' | append: value.param_name | append: '||'
+                            endunless
+                          endfor
+                        %}
+
+                        {% comment %} Render clothing sizes in predefined order {% endcomment %}
+                        {% for clothing_size in clothing_sizes_array %}
+                          {% assign clothing_array = clothing_size_items | split: '||' %}
+                          {% for clothing_data in clothing_array %}
+                            {% unless clothing_data == blank %}
+                              {% assign parts = clothing_data | split: '|' %}
+                              {% if parts[0] == clothing_size %}
+                                <label class="filter-option-item {% if parts[4] == 'true' %}active{% endif %}" 
+                                       {% if parts[3] == '0' and parts[4] != 'true' %}data-disabled="true"{% endif %}>
+                                  <input type="checkbox"
+                                         name="{{ parts[5] }}"
+                                         value="{{ parts[1] }}"
+                                         data-param="{{ parts[5] }}"
+                                         data-value="{{ parts[1] }}"
+                                         data-label="{{ parts[2] | escape }}"
+                                         {% if parts[4] == 'true' %}checked{% endif %}
+                                         {% if parts[3] == '0' and parts[4] != 'true' %}disabled{% endif %}
+                                         onchange="FilterDrawer.handleFilterChange(this)">
+                                  <span class="filter-option-checkbox"></span>
+                                  <span class="filter-option-label">{{ parts[2] | escape }}</span>
+                                  <span class="filter-option-count">({{ parts[3] }})</span>
+                                </label>
+                                {% break %}
+                              {% endif %}
+                            {% endunless %}
+                          {% endfor %}
+                        {% endfor %}
+
+                        {% comment %} Render numeric sizes (including half sizes) in order {% endcomment %}
+                        {% liquid
+                          assign numeric_array = numeric_size_items | split: '||'
+                          assign numeric_for_sort = ''
+                          
+                          for numeric_data in numeric_array
+                            unless numeric_data == blank
+                              assign parts = numeric_data | split: '|'
+                              assign numeric_for_sort = numeric_for_sort | append: parts[0] | append: ','
+                            endunless
+                          endfor
+                          
+                          assign sorted_numerics = numeric_for_sort | split: ',' | compact | uniq | sort
+                        %}
+
+                        {% for sorted_num in sorted_numerics %}
+                          {% unless sorted_num == blank %}
+                            {% assign numeric_array = numeric_size_items | split: '||' %}
+                            {% for numeric_data in numeric_array %}
+                              {% unless numeric_data == blank %}
+                                {% assign parts = numeric_data | split: '|' %}
+                                {% if parts[0] == sorted_num %}
+                                  <label class="filter-option-item {% if parts[4] == 'true' %}active{% endif %}" 
+                                         {% if parts[3] == '0' and parts[4] != 'true' %}data-disabled="true"{% endif %}>
+                                    <input type="checkbox"
+                                           name="{{ parts[5] }}"
+                                           value="{{ parts[1] }}"
+                                           data-param="{{ parts[5] }}"
+                                           data-value="{{ parts[1] }}"
+                                           data-label="{{ parts[2] | escape }}"
+                                           {% if parts[4] == 'true' %}checked{% endif %}
+                                           {% if parts[3] == '0' and parts[4] != 'true' %}disabled{% endif %}
+                                           onchange="FilterDrawer.handleFilterChange(this)">
+                                    <span class="filter-option-checkbox"></span>
+                                    <span class="filter-option-label">{{ parts[2] | escape }}</span>
+                                    <span class="filter-option-count">({{ parts[3] }})</span>
+                                  </label>
+                                  {% break %}
+                                {% endif %}
+                              {% endunless %}
+                            {% endfor %}
+                          {% endunless %}
+                        {% endfor %}
+
+                        {% comment %} Render other sizes alphabetically {% endcomment %}
+                        {% assign other_array = other_size_items | split: '||' %}
+                        {% assign sorted_other = other_array | sort %}
+                        {% for other_data in sorted_other %}
+                          {% unless other_data == blank %}
+                            {% assign parts = other_data | split: '|' %}
+                            <label class="filter-option-item {% if parts[4] == 'true' %}active{% endif %}" 
+                                   {% if parts[3] == '0' and parts[4] != 'true' %}data-disabled="true"{% endif %}>
+                              <input type="checkbox"
+                                     name="{{ parts[5] }}"
+                                     value="{{ parts[1] }}"
+                                     data-param="{{ parts[5] }}"
+                                     data-value="{{ parts[1] }}"
+                                     data-label="{{ parts[2] | escape }}"
+                                     {% if parts[4] == 'true' %}checked{% endif %}
+                                     {% if parts[3] == '0' and parts[4] != 'true' %}disabled{% endif %}
+                                     onchange="FilterDrawer.handleFilterChange(this)">
+                              <span class="filter-option-checkbox"></span>
+                              <span class="filter-option-label">{{ parts[2] | escape }}</span>
+                              <span class="filter-option-count">({{ parts[3] }})</span>
+                            </label>
+                          {% endunless %}
+                        {% endfor %}
+
+                      {% else %}
+                        {% comment %} NON-SIZE FILTERS - Keep original sorting by count (most popular first) {% endcomment %}
+                        {% assign sorted_values = filter.values | sort: 'count' | reverse %}
+                        
+                        {% for value in sorted_values %}
+                          <label class="filter-option-item {% if value.active %}active{% endif %}" 
+                                 {% if value.count == 0 and value.active == false %}data-disabled="true"{% endif %}>
+                            <input type="checkbox"
+                                   name="{{ value.param_name }}"
+                                   value="{{ value.value }}"
+                                   data-param="{{ value.param_name }}"
+                                   data-value="{{ value.value }}"
+                                   data-label="{{ value.label | escape }}"
+                                   {% if value.active %}checked{% endif %}
+                                   {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                   onchange="FilterDrawer.handleFilterChange(this)">
+                            <span class="filter-option-checkbox"></span>
+                            <span class="filter-option-label">{{ value.label | escape }}</span>
+                            <span class="filter-option-count">({{ value.count }})</span>
+                          </label>
+                        {% endfor %}
+                      {% endif %}
                     </div>
                   </div>
                 </div>
