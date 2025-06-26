@@ -38,7 +38,7 @@
         "address_line2": "47-330 Żyrowa",
         "show_hours": true,
         "hours_title": "Godziny pracy",
-        "hours_weekdays": "Poniedziałek - Piątek: 9:00 - 17:00",
+        "hours_weekdays": "Poniedziałek - Piątek: 9:00 - 16:00",
         "hours_weekend": "",
         "form_title": "Napisz do nas",
         "subject_label": "Temat",
