@@ -55,10 +55,10 @@ section/predictive-search.liquid
         <!-- Products -->
         {%- if has_products -%}
           <li class="span-12 auto">
-            <h3 id="predictive-search-products" class="predictive-search__heading h4 a-left">
+            {% comment %} <h3 id="predictive-search-products" class="predictive-search__heading h4 a-left">
               {{ 'general.search.products' | t }}
             </h3>
-            
+             {% endcomment %}
             <!-- See All Products Link (before product loop) -->
             <div class="predictive-search__view-all a-right pt-2 pb-5">
               <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="text-[16px] font-medium underline">
