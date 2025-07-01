@@ -90,6 +90,7 @@
   line-height: 1.57;
   letter-spacing: 1px;
   text-align: left;
+  align-items: baseline;
 }
 .product-loop__price span {
   /* font-size: var(--font-size-sm); */

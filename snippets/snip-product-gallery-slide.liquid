@@ -33,7 +33,7 @@ data-media-id="product-template-{{ media.id }}">
          height="{{ media.height }}"
          data-zoom-src="{%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }}{%- elsif media.width >= 1520 -%}{{ media | image_url: width: 1520 }}{%- else -%}{{ media | image_url: width: 1220 }}{%- endif -%}"
          loading="lazy">
-
+ 
         {% if click_to_enlarge %}
           <a class="js-zoom-btn product-gallery__zoom-btn no-js-hidden" title="click to zoom-in" data-index="{{ forloop.index0 }}" href="{{ media | image_url: width: 2400 }}" tabindex="-1">
             {% render 'snip-icons',

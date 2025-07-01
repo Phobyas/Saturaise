@@ -706,7 +706,7 @@
         {% endif %}
         
         {% comment %} Display colors with enhanced styling {% endcomment %}
-        {% if all_detected_colors != "" %}
+        {% comment %} {% if all_detected_colors != "" %}
         <li>
           <span>Kolory:</span>
           <div class="color-list">
@@ -720,7 +720,7 @@
             {% endfor %}
           </div>
         </li>
-        {% endif %}
+        {% endif %} {% endcomment %}
         
         <li>
           <span>Stan:</span>

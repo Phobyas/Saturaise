@@ -1,6 +1,6 @@
 /**
  * Truly Isolated Zoom Modal - Zero CSS/Gallery Interference
- * Replace your assets/fixed-zoom-button.js with this
+ * Updated: No desktop hover effects + preload all images for faster navigation
  */
 
 (function () {
@@ -9,6 +9,7 @@
   let initialized = false;
   let currentModalImage = null;
   let modalOpen = false;
+  let preloadedImages = new Set(); // Track preloaded images
 
   function initFixedZoom() {
     if (initialized) return;
@@ -27,34 +28,54 @@
       }
 
       createFixedZoomButton(galleryContainer);
+      preloadAllImages(); // Preload all gallery images immediately
       initialized = true;
     };
 
     checkGallery();
   }
 
+  function preloadAllImages() {
+    const images = document.querySelectorAll(
+      ".scroll--gallery_item img.product__image"
+    );
+
+    images.forEach((img, index) => {
+      // Get the high-res source for preloading
+      const highResSrc = getHighResSrc(img);
+
+      if (!preloadedImages.has(highResSrc)) {
+        const preloadImg = new Image();
+        preloadImg.onload = () => {
+          preloadedImages.add(highResSrc);
+        };
+        preloadImg.src = highResSrc;
+      }
+    });
+  }
+
   function createFixedZoomButton(container) {
     const existing = container.querySelector(".fixed-zoom-btn");
     if (existing) existing.remove();
-
-    if (window.innerWidth >= 1024) return;
 
     const button = document.createElement("button");
     button.className = "fixed-zoom-btn";
     button.type = "button";
     button.setAttribute("aria-label", "Zoom image");
 
-    // Original gallery button styling - exact match
+    // Responsive positioning - different for mobile vs desktop
+    const isMobile = window.innerWidth < 1024;
+
     button.style.cssText = `
       position: absolute !important;
-      top: 10px !important;
-      right: 10px !important;
+      top: ${isMobile ? "10px" : "15px"} !important;
+      right: ${isMobile ? "10px" : "15px"} !important;
       z-index: 100 !important;
-      background: rgba(68, 68, 68, 0.8) !important;
+      background: #323232 !important;
       border: none !important;
       border-radius: 50% !important;
-      width: 44px !important;
-      height: 44px !important;
+      width: ${isMobile ? "44px" : "48px"} !important;
+      height: ${isMobile ? "44px" : "48px"} !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -65,7 +86,9 @@
     `;
 
     button.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="${isMobile ? "20" : "24"}" height="${
+      isMobile ? "20" : "24"
+    }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <path d="m21 21-4.35-4.35"></path>
         <line x1="8" y1="11" x2="14" y2="11"></line>
@@ -73,15 +96,18 @@
       </svg>
     `;
 
-    button.addEventListener("mouseenter", function () {
-      this.style.background = "rgba(68, 68, 68, 1)";
-      this.style.transform = "scale(1.05)";
-    });
+    // REMOVED: Desktop hover effects - only apply to mobile
+    if (isMobile) {
+      button.addEventListener("mouseenter", function () {
+        this.style.background = "#404040";
+        this.style.transform = "scale(1.05)";
+      });
 
-    button.addEventListener("mouseleave", function () {
-      this.style.background = "rgba(68, 68, 68, 0.8)";
-      this.style.transform = "scale(1)";
-    });
+      button.addEventListener("mouseleave", function () {
+        this.style.background = "#323232";
+        this.style.transform = "scale(1)";
+      });
+    }
 
     let clicking = false;
     button.addEventListener("click", function (e) {
@@ -105,6 +131,22 @@
   }
 
   function getCurrentImage() {
+    // For desktop, get the first visible image or selected image
+    if (window.innerWidth >= 1024) {
+      // Try to get selected image first
+      const selected = document.querySelector(
+        ".scroll--gallery_item.is-selected img.product__image"
+      );
+      if (selected) return selected;
+
+      // Fallback to first visible image
+      const firstImage = document.querySelector(
+        ".scroll--gallery_item img.product__image"
+      );
+      if (firstImage) return firstImage;
+    }
+
+    // Mobile logic (unchanged)
     if (window.innerWidth < 1024) {
       const selected = document.querySelector(
         ".scroll--gallery_item.is-selected img.product__image"
@@ -282,13 +324,18 @@
     // Initialize full zoom functionality
     initializeImageZoom(modalImage, imageContainer);
 
-    modalImage.onload = function () {
+    // Faster image loading - check if already preloaded
+    if (preloadedImages.has(highResSrc)) {
       modalImage.style.opacity = "1";
       modalImage.classList.add("loaded");
-    };
+    } else {
+      modalImage.onload = function () {
+        modalImage.style.opacity = "1";
+        modalImage.classList.add("loaded");
+      };
+    }
 
     modalImage.onerror = function () {
-      console.error("Failed to load zoom image:", highResSrc);
       const fallbackSrc = image.src || image.getAttribute("src");
       if (fallbackSrc && fallbackSrc !== highResSrc) {
         modalImage.src = fallbackSrc;
@@ -345,17 +392,6 @@
     closeBtn.addEventListener("click", closeModal);
     backdrop.addEventListener("click", closeModal);
 
-    // Original modal button hover effects
-    closeBtn.addEventListener("mouseenter", function () {
-      this.style.background = "rgba(255, 255, 255, 1)";
-      this.style.transform = "scale(1.1)";
-    });
-
-    closeBtn.addEventListener("mouseleave", function () {
-      this.style.background = "rgba(255, 255, 255, 0.9)";
-      this.style.transform = "scale(1)";
-    });
-
     // Navigation events
     if (images.length > 1) {
       const prevBtn = modal.querySelector(".zoom-modal__prev");
@@ -368,7 +404,7 @@
           navigateImage(-1);
         });
 
-        // Original button hover effects
+        // Navigation button hover effects (kept for modal)
         prevBtn.addEventListener("mouseenter", function () {
           this.style.background = "rgba(255, 255, 255, 0.3)";
           this.style.transform = "scale(1.1)";
@@ -387,7 +423,7 @@
           navigateImage(1);
         });
 
-        // Original button hover effects
+        // Navigation button hover effects (kept for modal)
         nextBtn.addEventListener("mouseenter", function () {
           this.style.background = "rgba(255, 255, 255, 0.3)";
           this.style.transform = "scale(1.1)";
@@ -498,22 +534,32 @@
       if (modalImage && imageContainer) {
         resetImageZoom();
 
-        modalImage.style.opacity = "0.7";
+        const highResSrc = getHighResSrc(newImage);
 
-        setTimeout(() => {
-          const highResSrc = getHighResSrc(newImage);
+        // IMPROVED: Faster navigation with preloaded images
+        if (preloadedImages.has(highResSrc)) {
           modalImage.src = highResSrc;
           modalImage.alt = newImage.alt || "Product image";
+          modalImage.style.opacity = "1";
+          modalImage.classList.add("loaded");
+          setTimeout(() => initializeImageZoom(modalImage, imageContainer), 50);
+        } else {
+          // Fallback for non-preloaded images
+          modalImage.style.opacity = "0.7";
+          setTimeout(() => {
+            modalImage.src = highResSrc;
+            modalImage.alt = newImage.alt || "Product image";
 
-          modalImage.onload = () => {
-            modalImage.style.opacity = "1";
-            modalImage.classList.add("loaded");
-            setTimeout(
-              () => initializeImageZoom(modalImage, imageContainer),
-              100
-            );
-          };
-        }, 100);
+            modalImage.onload = () => {
+              modalImage.style.opacity = "1";
+              modalImage.classList.add("loaded");
+              setTimeout(
+                () => initializeImageZoom(modalImage, imageContainer),
+                100
+              );
+            };
+          }, 100);
+        }
       }
 
       const counter = modal.querySelector(".zoom-modal__current");
@@ -773,6 +819,7 @@
   document.addEventListener("shopify:section:load", function (event) {
     if (event.target.querySelector('[data-section-type="product"]')) {
       initialized = false;
+      preloadedImages.clear(); // Clear preloaded cache on section reload
       setTimeout(initFixedZoom, 300);
     }
   });
@@ -782,13 +829,9 @@
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       const container = document.getElementById("scrollGalleryContainer");
-      if (container && !modalOpen) {
-        const existingBtn = container.querySelector(".fixed-zoom-btn");
-        if (window.innerWidth >= 1024 && existingBtn) {
-          existingBtn.remove();
-        } else if (window.innerWidth < 1024 && !existingBtn && initialized) {
-          createFixedZoomButton(container);
-        }
+      if (container && !modalOpen && initialized) {
+        // Always recreate button on resize, for both mobile and desktop
+        createFixedZoomButton(container);
       }
     }, 250);
   });
