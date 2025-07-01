@@ -43,13 +43,13 @@
       "settings": {
         "title": "Zobacz też",
         "subheading": "",
-        "link_text": "SHOP THE COLLECTION",
+        "link_text": "Zobacz więcej",
         "link_url": "shopify://collections/hot",
         "text_position": "left",
-        "collection": "",
+        "collection": "hot",
         "display_type": "carousel",
-        "items_per_row": 3,
-        "items_per_page": 7,
+        "items_per_row": 4,
+        "items_per_page": 14,
         "section_padding": "both"
       }
     }
