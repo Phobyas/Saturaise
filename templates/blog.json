@@ -52,11 +52,17 @@
         "items_per_page": 14,
         "section_padding": "both"
       }
+    },
+    "collection_extended_description_z6xRtH": {
+      "type": "collection-extended-description",
+      "name": "Extended Description",
+      "settings": {}
     }
   },
   "order": [
     "banner",
     "main",
-    "16433844957d3795ed"
+    "16433844957d3795ed",
+    "collection_extended_description_z6xRtH"
   ]
 }
