@@ -41,10 +41,10 @@
     "16433844957d3795ed": {
       "type": "featured-collection",
       "settings": {
-        "title": "Featured collection",
-        "subheading": "<p>Use this text to share information about your brand with your customers. Describe a collection, share announcements, or welcome customers to your store.</p>",
+        "title": "Zobacz też",
+        "subheading": "",
         "link_text": "SHOP THE COLLECTION",
-        "link_url": "",
+        "link_url": "shopify://collections/hot",
         "text_position": "left",
         "collection": "",
         "display_type": "carousel",
