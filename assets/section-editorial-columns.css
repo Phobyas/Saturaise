@@ -27,7 +27,7 @@
 
   .section-txt-cols__block-subheading {
     position: relative;
-  }
+  } 
 
   .section-txt-cols__item.collapsed .section-txt-cols__block-subheading {
     max-height: 120px;

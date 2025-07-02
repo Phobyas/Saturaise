@@ -26,7 +26,7 @@
     }
   }
 
-  /* Badge arrow buttons - copied from collection-badges styling */
+  /* Enhanced badge arrow buttons - copied exactly from collection-badges styling */
   .collection-badge-arrows {
     display: none;
     gap: 12px;
@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.3s ease; /* Enhanced transition */
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -69,6 +69,7 @@
 
   .collection-badge-arrow-btn:active {
     transform: scale(1.05);
+    transition: all 0.1s ease;
   }
 
   .collection-badge-arrow-btn:disabled {
