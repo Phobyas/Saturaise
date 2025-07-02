@@ -206,11 +206,16 @@
     transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* Focus state for accessibility */
+  /* ACCESSIBILITY: Enhanced focus state for keyboard navigation */
   .badge-item:focus {
     outline: 2px solid #2563eb;
     outline-offset: 2px;
     transition: outline 0.2s ease;
+  }
+
+  .badge-item:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
   }
 
   /* Enhanced arrow button styles */
@@ -347,12 +352,12 @@
     <div class="flex justify-between items-center">
       <div></div>
       <div class="badge-arrows flex gap-3">
-        <button id="badgePrev" class="badge-arrow-btn" aria-label="Previous categories" disabled>
+        <button id="badgePrev" class="badge-arrow-btn" aria-label="Poprzednie kategorie" disabled>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
           </svg>
         </button>
-        <button id="badgeNext" class="badge-arrow-btn" aria-label="Next categories">
+        <button id="badgeNext" class="badge-arrow-btn" aria-label="Następne kategorie">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
           </svg>
@@ -366,18 +371,23 @@
         <div class="flex flex-shrink">
           {% for block in section.blocks %}
             {% if block.settings.title != blank and block.settings.link != blank %}
+              {% comment %} ACCESSIBILITY FIX: Add proper aria-label for link description {% endcomment %}
               <a href="{{ block.settings.link }}" 
                  class="badge-item"
+                 aria-label="Zobacz kolekcję {{ block.settings.title }}"
+                 title="Przejdź do kolekcji {{ block.settings.title }}"
                  {{ block.shopify_attributes }}>
                 {% if block.settings.image %}
                   <div class="badge-image-container">
+                    {% comment %} ACCESSIBILITY FIX: Empty alt and role=presentation to make images decorative {% endcomment %}
                     {{ block.settings.image | image_url: width: 96 | image_tag: 
                       class: 'w-full h-full object-contain',
                       loading: 'eager',
                       fetchpriority: 'high',
                       width: 48,
                       height: 48,
-                      alt: block.settings.title,
+                      alt: '',
+                      role: 'presentation',
                       style: "aspect-ratio: 1/1; width: 48px; height: 48px;"
                     }}
                   </div>
