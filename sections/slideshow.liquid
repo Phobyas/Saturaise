@@ -92,33 +92,17 @@
     position: relative; /* Position first slide normally */
   }
   
-  /* ACCESSIBILITY FIX: Manage focusable elements in hidden slides */
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] a,
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] button,
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] input,
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] select,
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] textarea,
-  #slideshow--{{ section.id }} .slideshow__slide[aria-hidden="true"] [tabindex]:not([tabindex="-1"]) {
-    tabindex: -1;
-    pointer-events: none;
-  }
-  
-  /* Restore focusability for visible slides */
-  #slideshow--{{ section.id }} .slideshow__slide:not([aria-hidden="true"]) a,
-  #slideshow--{{ section.id }} .slideshow__slide.is-selected a {
-    tabindex: 0;
-    pointer-events: auto;
-  }
-  
   /* Ensure slide images don't cause layout shifts */
   .slideshow__slide-image {
     {% if fixed_height %}
       height: var(--mobile-section-height);
       overflow: hidden;
       position: relative;
+      /* background-color: #f6f6f6; Placeholder color while loading */
     {% else %}
       position: relative;
       overflow: hidden;
+      /* background-color: #f6f6f6; Placeholder color while loading */
     {% endif %}
   }
   
@@ -128,7 +112,7 @@
         height: var(--desktop-section-height);
       {% endif %}
     }
-  } 
+  }
   
   /* Force all images to cover their containers */
   .slideshow__slide-image img {
@@ -365,12 +349,7 @@ data-section-type="carousel">
             {{ block.shopify_attributes }}
           >
 
-            {% comment %} ACCESSIBILITY FIX: Add proper aria-label and make image links more descriptive {% endcomment %}
-            {% if has_image_link %}
-              <a href="{{ block.settings.link }}" 
-                 aria-label="Przejdź do {{ block.settings.heading | default: 'kolekcji' | escape }}"
-                 title="{{ block.settings.heading | default: 'Zobacz kolekcję' | escape }}">
-            {% endif %}
+            {% if has_image_link %}<a href="{{ block.settings.link }}">{% endif %}
               <div class="slideshow__slide-image">
                 {% if has_image %}
                   {% if mobile_image != blank %}
@@ -447,21 +426,14 @@ data-section-type="carousel">
                 {% if has_button or has_button_2 %}
                   <div class="slide__buttons">
                     {% if has_button %}
-                      {% comment %} ACCESSIBILITY FIX: Add proper aria-label for button links {% endcomment %}
-                      <a class="section-slideshow__button btn-border-link relative inline-block slide-animate delay--3" 
-                         href="{{ block.settings.link }}"
-                         aria-label="{{ block.settings.button_text | escape }} - {{ block.settings.heading | default: 'Zobacz więcej' | escape }}"
-                         title="{{ block.settings.button_text | escape }}">
+                      <a class="section-slideshow__button btn-border-link relative inline-block slide-animate delay--3" href="{{ block.settings.link }}">
                         <span>{{ block.settings.button_text | escape }}</span>
                       </a>
                     {% endif %}
                     {% if has_button_2 %}
-                      <a class="section-slideshow__button btn-border-link relative inline-block slide-animate delay--3" 
-                         href="{{ block.settings.second_link }}"
-                         aria-label="{{ block.settings.second_button_text | escape }} - {{ block.settings.heading | default: 'Zobacz więcej' | escape }}"
-                         title="{{ block.settings.second_button_text | escape }}">
-                        <span>{{ block.settings.second_button_text | escape }}</span>
-                      </a>
+                    <a class="section-slideshow__button btn-border-link relative inline-block slide-animate delay--3" href="{{ block.settings.second_link }}">
+                      <span>{{ block.settings.second_button_text | escape }}</span>
+                    </a>
                     {% endif %}
                   </div>
                 {% endif %}
@@ -479,34 +451,12 @@ data-section-type="carousel">
   </div>
 </div>
 
-<!-- ACCESSIBILITY FIX: Enhanced slideshow with proper focus management -->
+<!-- FADE FIX: Disable fade and implement custom fade via CSS -->
 <script>
 (function() {
   var slideshow = document.getElementById('slideshow--{{ section.id }}');
   
   if (!slideshow) return;
-  
-  // ACCESSIBILITY: Function to manage focusable elements
-  function manageFocusableElements(flkty) {
-    var slides = slideshow.querySelectorAll('.slideshow__slide');
-    
-    slides.forEach(function(slide, index) {
-      var focusableElements = slide.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-      var isSelected = index === flkty.selectedIndex;
-      
-      focusableElements.forEach(function(element) {
-        if (isSelected) {
-          // Visible slide: make elements focusable
-          element.setAttribute('tabindex', '0');
-          element.style.pointerEvents = 'auto';
-        } else {
-          // Hidden slide: make elements non-focusable
-          element.setAttribute('tabindex', '-1');
-          element.style.pointerEvents = 'none';
-        }
-      });
-    });
-  }
   
   function initSlideshow() {
     if (typeof Flickity === 'undefined') {
@@ -539,28 +489,11 @@ data-section-type="carousel">
         slide.style.height = '100%';
       });
       
-      // ACCESSIBILITY: Initial focus management
-      manageFocusableElements(flkty);
-      
       // Handle slide changes
       flkty.on('select', function(index) {
         slides.forEach(function(slide, i) {
           slide.style.opacity = i === index ? '1' : '0';
         });
-        
-        // ACCESSIBILITY: Update focus management when slide changes
-        manageFocusableElements(flkty);
-      });
-      
-      // ACCESSIBILITY: Handle keyboard navigation
-      slideshow.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') {
-          flkty.previous();
-          e.preventDefault();
-        } else if (e.key === 'ArrowRight') {
-          flkty.next();
-          e.preventDefault();
-        }
       });
       
     } catch (e) {
