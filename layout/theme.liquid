@@ -555,6 +555,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   </script>
   
-  
+  <!-- Add this to your theme.liquid before </body> -->
+<script>
+// Remove Trustmate's incorrect Product schema
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait a bit for Trustmate to load
+  setTimeout(function() {
+    // Find all JSON-LD scripts
+    const jsonScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    
+    jsonScripts.forEach(script => {
+      try {
+        const data = JSON.parse(script.textContent);
+        
+        // Check if this is the problematic Trustmate schema
+        if (data['@type'] === 'Product' && 
+            data.name === 'Saturaise' && 
+            data.sameAs === 'https://saturaise.com' &&
+            Object.keys(data).length === 5) { // Only has @context, @type, image, name, sameAs
+          
+          console.log('Removing incorrect Trustmate Product schema');
+          script.remove();
+        }
+      } catch (e) {
+        // Not valid JSON, skip
+      }
+    });
+  }, 2000); // Wait 2 seconds for Trustmate to load
+});
+
+// Also use MutationObserver to catch it if added later
+const observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    mutation.addedNodes.forEach(function(node) {
+      if (node.nodeName === 'SCRIPT' && node.type === 'application/ld+json') {
+        try {
+          const data = JSON.parse(node.textContent);
+          if (data['@type'] === 'Product' && 
+              data.name === 'Saturaise' && 
+              data.sameAs === 'https://saturaise.com') {
+            console.log('Removing dynamically added Trustmate Product schema');
+            node.remove();
+          }
+        } catch (e) {}
+      }
+    });
+  });
+});
+
+// Start observing
+observer.observe(document.documentElement, { 
+  childList: true, 
+  subtree: true 
+});
+</script>
 </body>
 </html>
