@@ -351,8 +351,6 @@
   "url": "{{ shop.url }}{{ product.url }}",
   "name": {{ product.title | strip_html | json }},
   "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | json }}{% endif %},
-  
-  {% comment %} Product Images {% endcomment %}
   {% if product.images.size > 0 %}
   "image": [
     {% for image in product.images limit: 8 %}
@@ -360,8 +358,6 @@
     {% endfor %}
   ],
   {% endif %}
-  
-  {% comment %} Brand from metafield or fallback {% endcomment %}
   {% assign product_brand = product.metafields.custom.brand.value | default: product.vendor %}
   {% if product_brand != blank %}
   "brand": {
@@ -373,13 +369,9 @@
     "name": {{ product_brand | json }}
   },
   {% endif %}
-  
-  {% comment %} Basic Product Info {% endcomment %}
   "category": {% if product.type != blank %}{{ product.type | json }}{% else %}"Sneakersy"{% endif %},
   "productID": {{ product.id | json }},
   "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
-  
-  {% comment %} GTIN from built-in barcode field {% endcomment %}
   {% if product.selected_or_first_available_variant.barcode != blank %}
     {% assign barcode_length = product.selected_or_first_available_variant.barcode | size %}
     {% if barcode_length == 12 %}
@@ -392,25 +384,17 @@
   "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
     {% endif %}
   {% endif %}
-  
-  {% comment %} MPN from Google Shopping metafield {% endcomment %}
   {% if product.metafields.mm-google-shopping.mpn %}
   "mpn": {{ product.metafields.mm-google-shopping.mpn.value | json }},
   {% endif %}
-  
-  {% comment %} FIXED: Color - Extract clean label only {% endcomment %}
   {% if product.metafields.custom.color %}
   "color": {% if product.metafields.custom.color.value.label %}{{ product.metafields.custom.color.value.label | json }}{% else %}{{ product.metafields.custom.color.value | json }}{% endif %},
   {% elsif product.metafields.shopify.color-pattern %}
   "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
   {% endif %}
-  
-  {% comment %} 🔧 FIXED: Material - Extract labels and join as string {% endcomment %}
   {% if product.metafields.shopify.footwear-material %}
-  "material": {% if product.metafields.shopify.footwear-material.value[0].label %}{% assign materials = "" %}{% for material in product.metafields.shopify.footwear-material.value %}{% assign materials = materials | append: material.label %}{% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}{% endfor %}{{ materials | json }}{% else %}{{ product.metafields.shopify.footwear-material.value | json }}{% endif %},
+  "material": {% if product.metafields.shopify.footwear-material.value.first.label %}{% assign materials = "" %}{% for material in product.metafields.shopify.footwear-material.value %}{% if material.label %}{% assign materials = materials | append: material.label %}{% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ materials | json }}{% else %}{{ product.metafields.shopify.footwear-material.value | json }}{% endif %},
   {% endif %}
-  
-  {% comment %} Size from metafields {% endcomment %}
   {% if product.metafields.custom.size_system %}
   "size": {{ product.metafields.custom.size_system.value | json }},
   {% elsif product.metafields.mm-google-shopping.size_system %}
@@ -420,18 +404,12 @@
   {% elsif product.metafields.shopify.size %}
   "size": {% if product.metafields.shopify.size.value.label %}{{ product.metafields.shopify.size.value.label | json }}{% else %}{{ product.metafields.shopify.size.value | json }}{% endif %},
   {% endif %}
-  
-  {% comment %} Release Date {% endcomment %}
   {% if product.metafields.custom.release_date %}
   "releaseDate": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}",
   {% endif %}
-  
-  {% comment %} Size Type {% endcomment %}
   {% if product.metafields.mm-google-shopping.size_type %}
   "sizeSystem": {{ product.metafields.mm-google-shopping.size_type.value | json }},
   {% endif %}
-  
-  {% comment %} Item Condition from metafield {% endcomment %}
   {% if product.metafields.mm-google-shopping.condition %}
     {% assign condition = product.metafields.mm-google-shopping.condition.value %}
     {% if condition == "new" %}
@@ -446,8 +424,6 @@
   {% else %}
   "itemCondition": "https://schema.org/NewCondition",
   {% endif %}
-  
-  {% comment %} Audience from metafields {% endcomment %}
   "audience": {
     "@type": "PeopleAudience",
     {% if product.metafields.mm-google-shopping.gender %}
@@ -459,35 +435,30 @@
     {% assign age_group = product.metafields.mm-google-shopping.age_group.value %}
     {% if age_group == "kids" %}
     "suggestedMinAge": 3,
-    "suggestedMaxAge": 12,
+    "suggestedMaxAge": 12
     {% elsif age_group == "toddler" %}
     "suggestedMinAge": 1,
-    "suggestedMaxAge": 4,
+    "suggestedMaxAge": 4
     {% elsif age_group == "infant" %}
     "suggestedMinAge": 0,
-    "suggestedMaxAge": 2,
+    "suggestedMaxAge": 2
     {% else %}
-    "suggestedMinAge": 16,
+    "suggestedMinAge": 16
     {% endif %}
     {% elsif product.metafields.shopify.age-group %}
     {% assign age_group = product.metafields.shopify.age-group.value %}
     {% if age_group contains "kids" or age_group contains "dzieci" %}
     "suggestedMinAge": 3,
-    "suggestedMaxAge": 12,
+    "suggestedMaxAge": 12
     {% else %}
-    "suggestedMinAge": 16,
+    "suggestedMinAge": 16
     {% endif %}
     {% else %}
-    "suggestedMinAge": 16,
+    "suggestedMinAge": 16
     {% endif %}
-    "audienceType": "Klienci zainteresowani wysokiej jakości produktami"
   },
-  
-  {% comment %} 🔧 FIXED: Additional Properties - Extract clean string values {% endcomment %}
   "additionalProperty": [
     {% assign properties_added = false %}
-    
-    {% comment %} Release Date {% endcomment %}
     {% if product.metafields.custom.release_date %}
     {
       "@type": "PropertyValue",
@@ -495,48 +466,38 @@
       "value": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}"
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Activity - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.activity %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Aktywność",
-      "value": {% if product.metafields.shopify.activity.value[0].label %}{% assign activities = "" %}{% for activity in product.metafields.shopify.activity.value %}{% assign activities = activities | append: activity.label %}{% unless forloop.last %}{% assign activities = activities | append: ", " %}{% endunless %}{% endfor %}{{ activities | json }}{% else %}{{ product.metafields.shopify.activity.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.activity.value.first.label %}{% assign activities = "" %}{% for activity in product.metafields.shopify.activity.value %}{% if activity.label %}{% assign activities = activities | append: activity.label %}{% unless forloop.last %}{% assign activities = activities | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ activities | json }}{% else %}{{ product.metafields.shopify.activity.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Shoe Features - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.shoe-features %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Cechy obuwia",
-      "value": {% if product.metafields.shopify.shoe-features.value[0].label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Sneaker Style - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.sneaker-style %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Styl sneakersów",
-      "value": {% if product.metafields.shopify.sneaker-style.value[0].label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endfor %}{{ styles | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Closure Type - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.closure-type %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Typ zapięcia",
-      "value": {% if product.metafields.shopify.closure-type.value[0].label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endfor %}{{ closures | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Shoe Fit - Extract label as string {% endcomment %}
     {% if product.metafields.shopify.shoe-fit %}
     {% if properties_added %},{% endif %}
     {
@@ -545,18 +506,14 @@
       "value": {% if product.metafields.shopify.shoe-fit.value.label %}{{ product.metafields.shopify.shoe-fit.value.label | json }}{% else %}{{ product.metafields.shopify.shoe-fit.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Occasion Style - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.occasion-style %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Styl okazji",
-      "value": {% if product.metafields.shopify.occasion-style.value[0].label %}{% assign occasions = "" %}{% for occasion in product.metafields.shopify.occasion-style.value %}{% assign occasions = occasions | append: occasion.label %}{% unless forloop.last %}{% assign occasions = occasions | append: ", " %}{% endunless %}{% endfor %}{{ occasions | json }}{% else %}{{ product.metafields.shopify.occasion-style.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.occasion-style.value.first.label %}{% assign occasions = "" %}{% for occasion in product.metafields.shopify.occasion-style.value %}{% if occasion.label %}{% assign occasions = occasions | append: occasion.label %}{% unless forloop.last %}{% assign occasions = occasions | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ occasions | json }}{% else %}{{ product.metafields.shopify.occasion-style.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Heel Height Type - Extract label as string {% endcomment %}
     {% if product.metafields.shopify.heel-height-type %}
     {% if properties_added %},{% endif %}
     {
@@ -565,18 +522,14 @@
       "value": {% if product.metafields.shopify.heel-height-type.value.label %}{{ product.metafields.shopify.heel-height-type.value.label | json }}{% else %}{{ product.metafields.shopify.heel-height-type.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Toe Style - Extract labels as string {% endcomment %}
     {% if product.metafields.shopify.toe-style %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue",
       "name": "Styl czubka",
-      "value": {% if product.metafields.shopify.toe-style.value[0].label %}{% assign toes = "" %}{% for toe in product.metafields.shopify.toe-style.value %}{% assign toes = toes | append: toe.label %}{% unless forloop.last %}{% assign toes = toes | append: ", " %}{% endunless %}{% endfor %}{{ toes | json }}{% else %}{{ product.metafields.shopify.toe-style.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.toe-style.value.first.label %}{% assign toes = "" %}{% for toe in product.metafields.shopify.toe-style.value %}{% if toe.label %}{% assign toes = toes | append: toe.label %}{% unless forloop.last %}{% assign toes = toes | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ toes | json }}{% else %}{{ product.metafields.shopify.toe-style.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} 🔧 FIXED: Top Length Type - Extract label as string {% endcomment %}
     {% if product.metafields.shopify.top-length-type %}
     {% if properties_added %},{% endif %}
     {
@@ -585,8 +538,6 @@
       "value": {% if product.metafields.shopify.top-length-type.value.label %}{{ product.metafields.shopify.top-length-type.value.label | json }}{% else %}{{ product.metafields.shopify.top-length-type.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} Size Type {% endcomment %}
     {% if product.metafields.mm-google-shopping.size_type %}
     {% if properties_added %},{% endif %}
     {
@@ -595,8 +546,6 @@
       "value": {{ product.metafields.mm-google-shopping.size_type.value | json }}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} Custom Label {% endcomment %}
     {% if product.metafields.mm-google-shopping.custom_label_0 %}
     {% if properties_added %},{% endif %}
     {
@@ -605,36 +554,26 @@
       "value": {{ product.metafields.mm-google-shopping.custom_label_0.value | json }}
     }{% assign properties_added = true %}
     {% endif %}
-    
-    {% comment %} Authentication Property {% endcomment %}
     {% if properties_added %},{% endif %}
     {
       "@type": "PropertyValue", 
       "name": "Status Autentyczności",
       "value": "100% Oryginalne - Zweryfikowane"
     },
-    
-    {% comment %} Condition Grade {% endcomment %}
     {
       "@type": "PropertyValue",
       "name": "Stan",
       "value": "Zupełnie nowe w oryginalnym opakowaniu"
     },
-    
-    {% comment %} Product Added Date {% endcomment %}
     {
       "@type": "PropertyValue",
       "name": "Data dodania",
       "value": "{{ product.created_at | date: '%Y-%m-%d' }}"
     }
   ],
-  
-  {% comment %} Product Group for Variants {% endcomment %}
   {% if product.variants.size > 1 %}
   "inProductGroupWithID": {{ product.id | json }},
   {% endif %}
-  
-  {% comment %} Authentication Certification {% endcomment %}
   "hasCertification": {
     "@type": "Certification",
     "name": "Gwarancja Autentyczności",
@@ -645,8 +584,6 @@
       "url": "https://saturaise.com"
     }
   },
-  
-  {% comment %} Enhanced Offers with 2025 Requirements {% endcomment %}
   {% if product.available %}
   "offers": {% if product.variants.size > 1 %}{
     "@type": "AggregateOffer",
@@ -760,19 +697,15 @@
     "itemCondition": "https://schema.org/NewCondition"
   }
   {% endif %},
-  
   "isPartOf": {
     "@type": "WebPage",
     "@id": "{{ shop.url }}{{ product.url }}"
   },
-  
   "warranty": {
     "@type": "WarrantyPromise",
     "durationOfWarranty": "P30D",
     "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
   }{% if product.metafields.reviews.rating %},
-  
-  {% comment %} Reviews Integration (if available) {% endcomment %}
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "{{ product.metafields.reviews.rating.value }}",
@@ -781,8 +714,6 @@
     "worstRating": "1"
   }{% endif %}
 }
-
-{% comment %} FAQ Schema {% endcomment %}
 ,{
   "@type": "FAQPage",
   "@id": "{{ shop.url }}{{ product.url }}#faq",
