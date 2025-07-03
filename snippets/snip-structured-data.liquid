@@ -304,7 +304,7 @@
     }
     {% endif %}
     
-   {% if template contains 'product' %}
+    {% if template contains 'product' %}
     ,{
       "@type": "BreadcrumbList",
       "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist",
@@ -386,8 +386,18 @@
       "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
       {% endif %}
       {% if product.metafields.shopify.footwear-material %}
-      "material": {% if product.metafields.shopify.footwear-material.value.first.label %}{% assign materials = "" %}{% for material in product.metafields.shopify.footwear-material.value %}{% if material.label %}{% assign materials = materials | append: material.label %}{% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ materials | json }}{% elsif product.metafields.shopify.footwear-material.value %}{% assign materials = "" %}{% for material in product.metafields.shopify.footwear-material.value %}{% if material.label %}{% assign materials = materials | append: material.label %}{% else %}{% assign materials = materials | append: material %}{% endif %}{% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}{% endfor %}{{ materials | json }}{% endif %},
+        {% if product.metafields.shopify.footwear-material.value.first.label %}
+          {% assign materials = "" %}
+          {% for material in product.metafields.shopify.footwear-material.value %}
+            {% if material.label %}
+              {% assign materials = materials | append: material.label %}
+              {% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}
+            {% endif %}
+          {% endfor %}
+      "material": {{ materials | json }},
+        {% endif %}
       {% endif %}
+      {% comment %} FIXED: Size extraction - convert objects to clean string {% endcomment %}
       {% if product.metafields.custom.size_system %}
       "size": {{ product.metafields.custom.size_system.value | json }},
       {% elsif product.metafields.mm-google-shopping.size_system %}
@@ -404,8 +414,6 @@
       "size": {{ sizes | json }},
         {% elsif product.metafields.shopify.shoe-size.value.label %}
       "size": {{ product.metafields.shopify.shoe-size.value.label | json }},
-        {% else %}
-      "size": {{ product.metafields.shopify.shoe-size.value | json }},
         {% endif %}
       {% elsif product.metafields.shopify.size %}
         {% if product.metafields.shopify.size.value.first.label %}
@@ -419,8 +427,6 @@
       "size": {{ sizes | json }},
         {% elsif product.metafields.shopify.size.value.label %}
       "size": {{ product.metafields.shopify.size.value.label | json }},
-        {% else %}
-      "size": {{ product.metafields.shopify.size.value | json }},
         {% endif %}
       {% endif %}
       {% if product.metafields.custom.release_date %}
@@ -485,6 +491,7 @@
           "value": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}"
         }{% assign properties_added = true %}
         {% endif %}
+        {% comment %} FIXED: Activity - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.activity %}
         {% if properties_added %},{% endif %}
         {
@@ -493,6 +500,7 @@
           "value": {% if product.metafields.shopify.activity.value.first.label %}{% assign activities = "" %}{% for activity in product.metafields.shopify.activity.value %}{% if activity.label %}{% assign activities = activities | append: activity.label %}{% unless forloop.last %}{% assign activities = activities | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ activities | json }}{% else %}{{ product.metafields.shopify.activity.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
+        {% comment %} FIXED: Shoe Features - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.shoe-features %}
         {% if properties_added %},{% endif %}
         {
@@ -501,6 +509,7 @@
           "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
+        {% comment %} FIXED: Sneaker Style - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.sneaker-style %}
         {% if properties_added %},{% endif %}
         {
@@ -509,6 +518,7 @@
           "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
+        {% comment %} FIXED: Closure Type - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.closure-type %}
         {% if properties_added %},{% endif %}
         {
@@ -592,33 +602,6 @@
       ],
       {% if product.variants.size > 1 %}
       "inProductGroupWithID": {{ product.id | json }},
-      "hasVariant": [
-        {% for variant in product.variants limit: 100 %}
-        {
-          "@type": "ProductModel",
-          "sku": {{ variant.sku | default: variant.id | json }},
-          "name": "{{ product.title }} - {{ variant.title }}",
-          {% if variant.image %}
-          "image": "{{ variant.image | image_url: width: 1200 }}",
-          {% endif %}
-          {% if variant.barcode != blank %}
-          "gtin": {{ variant.barcode | json }},
-          {% endif %}
-          "offers": {
-            "@type": "Offer",
-            "price": "{{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
-            "priceCurrency": "PLN",
-            "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
-            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-            "seller": {
-              "@type": "Organization",
-              "name": "Saturaise",
-              "url": "{{ shop.url }}"
-            }
-          }
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ],
       {% endif %}
       "hasCertification": {
         "@type": "Certification",
