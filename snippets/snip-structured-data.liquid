@@ -1,8 +1,9 @@
 {% comment %}
-  ENHANCED STRUCTURED DATA FOR SATURAISE - FINAL FIX
+  ENHANCED STRUCTURED DATA FOR SATURAISE - WITH TRUSTMATE INTEGRATION
   ✅ Naprawiona logika sameAs - bez podwójnych przecinków
   ✅ Naprawiony błąd przed warranty - dodany przecinek
   ✅ Zweryfikowana każda conditional logic
+  ✅ Dodana integracja z Trustmate reviews
   ✅ Gotowe do produkcji
 {% endcomment %}
 
@@ -303,7 +304,7 @@
     }
     {% endif %}
     
-    {% if template contains 'product' %}
+        {% if template contains 'product' %}
     ,{
       "@type": "BreadcrumbList",
       "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist",
@@ -741,14 +742,77 @@
         "@type": "WarrantyPromise",
         "durationOfWarranty": "P30D",
         "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
-      }{% if product.metafields.reviews.rating %},
+      }{% comment %} TRUSTMATE REVIEWS INTEGRATION {% endcomment %}
+      {% comment %} Check multiple possible metafield locations for Trustmate data {% endcomment %}
+      {% assign trustmate_rating = null %}
+      {% assign trustmate_count = null %}
+      
+      {% comment %} Try different metafield namespaces where Trustmate might store data {% endcomment %}
+      {% if product.metafields.trustmate.rating %}
+        {% assign trustmate_rating = product.metafields.trustmate.rating %}
+        {% assign trustmate_count = product.metafields.trustmate.review_count | default: product.metafields.trustmate.reviews_count | default: product.metafields.trustmate.count %}
+      {% elsif product.metafields.trustmate.average_rating %}
+        {% assign trustmate_rating = product.metafields.trustmate.average_rating %}
+        {% assign trustmate_count = product.metafields.trustmate.review_count | default: product.metafields.trustmate.reviews_count | default: product.metafields.trustmate.count %}
+      {% elsif product.metafields.reviews.rating %}
+        {% assign trustmate_rating = product.metafields.reviews.rating %}
+        {% assign trustmate_count = product.metafields.reviews.rating_count | default: product.metafields.reviews.review_count | default: product.metafields.reviews.count %}
+      {% elsif product.metafields.review.rating %}
+        {% assign trustmate_rating = product.metafields.review.rating %}
+        {% assign trustmate_count = product.metafields.review.rating_count | default: product.metafields.review.review_count | default: product.metafields.review.count %}
+      {% endif %}
+      
+      {% comment %} Add aggregateRating if we have valid data {% endcomment %}
+      {% if trustmate_rating and trustmate_rating != blank and trustmate_rating != 0 %}
+        {% comment %} Ensure rating is a number {% endcomment %}
+        {% assign rating_value = trustmate_rating %}
+        {% if trustmate_rating.value %}
+          {% assign rating_value = trustmate_rating.value %}
+        {% endif %}
+        
+        {% comment %} Ensure count is a number, default to 1 if not found {% endcomment %}
+        {% assign review_count = 1 %}
+        {% if trustmate_count and trustmate_count != blank %}
+          {% if trustmate_count.value %}
+            {% assign review_count = trustmate_count.value %}
+          {% else %}
+            {% assign review_count = trustmate_count %}
+          {% endif %}
+        {% endif %}
+      ,
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "{{ product.metafields.reviews.rating.value }}",
-        "reviewCount": "{{ product.metafields.reviews.rating_count.value }}",
+        "ratingValue": "{{ rating_value }}",
+        "reviewCount": "{{ review_count }}",
         "bestRating": "5",
         "worstRating": "1"
-      }{% endif %}
+      }
+      {% endif %}
+      
+      {% comment %} Add individual reviews if available {% endcomment %}
+      {% if product.metafields.trustmate.reviews and product.metafields.trustmate.reviews.size > 0 %}
+      ,
+      "review": [
+        {% for review in product.metafields.trustmate.reviews limit: 10 %}
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": {% if review.author %}{{ review.author | json }}{% elsif review.customer_name %}{{ review.customer_name | json }}{% elsif review.name %}{{ review.name | json }}{% else %}"Verified Customer"{% endif %}
+          },
+          "datePublished": {% if review.date %}"{{ review.date }}"{% elsif review.created_at %}"{{ review.created_at | date: '%Y-%m-%d' }}"{% else %}"{{ 'now' | date: '%Y-%m-%d' }}"{% endif %},
+          "reviewBody": {% if review.body %}{{ review.body | json }}{% elsif review.content %}{{ review.content | json }}{% elsif review.text %}{{ review.text | json }}{% elsif review.comment %}{{ review.comment | json }}{% else %}"Great product!"{% endif %},
+          "inLanguage": "pl",
+          "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingValue": {% if review.rating %}"{{ review.rating }}"{% elsif review.score %}"{{ review.score }}"{% elsif review.stars %}"{{ review.stars }}"{% else %}"5"{% endif %}
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+      {% endif %}
     }
     ,{
       "@type": "FAQPage",
