@@ -78,7 +78,7 @@
         "@id": "{{ shop.url }}{{ product.url }}#primaryimage"
       },
       "datePublished": "{{ product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-      "dateModified": "{{ product.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
+      "dateModified": "{{ product.updated_at | default: product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
     }
     ,{
       "@type": "BreadcrumbList",
@@ -329,7 +329,7 @@
         {
           "@type": "PropertyValue",
           "name": "Styl sneakersów",
-          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
+          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% elsif product.metafields.shopify.sneaker-style.value.label %}{{ product.metafields.shopify.sneaker-style.value.label | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
         {% if product.metafields.shopify.closure-type %}
@@ -555,34 +555,14 @@
         "@type": "WarrantyPromise",
         "durationOfWarranty": "P30D",
         "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
-      }{% if product.metafields.trustmate.rating %},
+      }{% if product.metafields.trustmate.average_rating and product.metafields.trustmate.review_count %},
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "{{ product.metafields.trustmate.rating.value }}",
-        "reviewCount": "{{ product.metafields.trustmate.rating_count.value }}",
+        "ratingValue": "{{ product.metafields.trustmate.average_rating }}",
+        "reviewCount": "{{ product.metafields.trustmate.review_count }}",
         "bestRating": "5",
         "worstRating": "1"
-      }{% endif %}{% if product.metafields.trustmate.reviews %},
-      "review": [
-        {% for review in product.metafields.trustmate.reviews limit: 10 %}
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": {{ review.author | json }}
-          },
-          "datePublished": "{{ review.date }}",
-          "reviewBody": {{ review.body | json }},
-          "inLanguage": "pl",
-          "reviewRating": {
-            "@type": "Rating",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingValue": "{{ review.rating }}"
-          }
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]{% endif %}
+      }{% endif %}
     }
     ,{
       "@type": "FAQPage",
