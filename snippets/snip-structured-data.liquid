@@ -1,16 +1,7 @@
-{% comment %}
-  ENHANCED STRUCTURED DATA FOR SATURAISE - FINAL FIX
-  ✅ Naprawiona logika sameAs - bez podwójnych przecinków
-  ✅ Naprawiony błąd przed warranty - dodany przecinek
-  ✅ Zweryfikowana każda conditional logic
-  ✅ Gotowe do produkcji
-{% endcomment %}
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
-    {% comment %} Organization Schema - ZAWSZE obecny {% endcomment %}
     {
       "@type": "Organization",
       "@id": "https://saturaise.com/#organization",
@@ -47,15 +38,13 @@
       },
       "foundingDate": "2022",
       "areaServed": "PL",
-      {% comment %} FIXED: Proper sameAs logic without double commas {% endcomment %}
-"sameAs": [
-  "https://www.facebook.com/people/Saturaisecom/61576843476406/",
-  "https://www.instagram.com/saturaise_com/",
-  "https://www.tiktok.com/@saturaise.com"
-]
+      "sameAs": [
+        "https://www.facebook.com/people/Saturaisecom/61576843476406/",
+        "https://www.instagram.com/saturaise_com/",
+        "https://www.tiktok.com/@saturaise.com"
+      ]
     },
     
-    {% comment %} WebSite Schema - ZAWSZE obecny {% endcomment %}
     {
       "@type": "WebSite",
       "@id": "https://saturaise.com/#website",
@@ -73,237 +62,24 @@
       }
     }
     
-    {% comment %} SEARCH PAGE SCHEMA {% endcomment %}
-    {% if template contains 'search' %}
+    {% if template contains 'product' %}
     ,{
-      "@type": "SearchResultsPage",
-      "@id": "{{ shop.url }}/search?q={{ search.terms | url_encode }}#searchresultspage",
-      "url": "{{ shop.url }}/search?q={{ search.terms | url_encode }}",
-      "name": "Wyniki wyszukiwania: {{ search.terms }} | Saturaise",
-      "description": "Znaleziono {{ search.results_count }} {% if search.results_count == 1 %}wynik{% elsif search.results_count < 5 %}wyniki{% else %}wyników{% endif %} dla \"{{ search.terms }}\" w sklepie Saturaise",
-      "isPartOf": {
-        "@id": "https://saturaise.com/#website"
-      }{% if search.results_count > 0 %},
-      "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": {{ search.results_count }},
-        "itemListElement": [
-          {% assign result_count = 0 %}
-          {% for item in search.results limit: 20 %}
-            {% if item.object_type == 'product' %}
-              {% assign result_count = result_count | plus: 1 %}
-              {
-                "@type": "ListItem",
-                "position": {{ result_count }},
-                "item": {
-                  "@type": "Product",
-                  "@id": "{{ shop.url }}{{ item.url }}#product",
-                  "name": {{ item.title | json }},
-                  "url": "{{ shop.url }}{{ item.url }}",
-                  {% if item.featured_image %}
-                  "image": "{{ item.featured_image | image_url: width: 800 }}",
-                  {% endif %}
-                  "description": {% if item.description != blank %}{{ item.description | strip_html | truncatewords: 50 | json }}{% else %}{{ item.title | json }}{% endif %},
-                  {% if item.vendor != blank %}
-                  "brand": {
-                    "@type": "Brand",
-                    "name": {{ item.vendor | json }}
-                  },
-                  {% endif %}
-                  "sku": {{ item.selected_or_first_available_variant.sku | default: item.selected_or_first_available_variant.id | json }},
-                  {% if item.available %}
-                  "offers": {
-                    "@type": "{% if item.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
-                    "priceCurrency": "{{ shop.currency }}",
-                    {% if item.variants.size > 1 %}
-                    "lowPrice": "{{ item.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                    "highPrice": "{{ item.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                    "offerCount": {{ item.variants.size }},
-                    {% else %}
-                    "price": "{{ item.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                    {% endif %}
-                    "availability": "https://schema.org/InStock",
-                    "seller": {
-                      "@id": "https://saturaise.com/#organization"
-                    },
-                    "url": "{{ shop.url }}{{ item.url }}",
-                    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
-                  }
-                  {% else %}
-                  "offers": {
-                    "@type": "Offer",
-                    "priceCurrency": "{{ shop.currency }}",
-                    "price": "{{ item.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                    "availability": "https://schema.org/OutOfStock",
-                    "seller": {
-                      "@id": "https://saturaise.com/#organization"
-                    },
-                    "url": "{{ shop.url }}{{ item.url }}"
-                  }
-                  {% endif %}
-                }
-              }{% unless forloop.last %},{% endunless %}
-            {% endif %}
-          {% endfor %}
-        ]
-      }{% endif %},
-      "query": {{ search.terms | json }}
-    }
-    ,{
-      "@type": "BreadcrumbList",
-      "@id": "{{ shop.url }}/search?q={{ search.terms | url_encode }}#breadcrumblist",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://saturaise.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Wyszukiwanie: {{ search.terms }}",
-          "item": "{{ shop.url }}/search?q={{ search.terms | url_encode }}"
-        }
-      ]
-    }
-    {% endif %}
-    
-    {% comment %} BLOG SCHEMA {% endcomment %}
-    {% if template contains 'blog' and blog %}
-    ,{
-      "@type": "Blog",
-      "@id": "{{ shop.url }}{{ blog.url }}#blog",
-      "url": "{{ shop.url }}{{ blog.url }}",
-      "name": {{ blog.title | json }},
-      "description": {% if blog.summary != blank %}{{ blog.summary | strip_html | json }}{% else %}"{{ blog.title }} - aktualności ze świata sneakersów"{% endif %},
-      "inLanguage": "pl-PL",
+      "@type": "WebPage",
+      "@id": "{{ shop.url }}{{ product.url }}#webpage",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "name": "{{ product.title }} | Saturaise",
       "isPartOf": {
         "@id": "https://saturaise.com/#website"
       },
-      "publisher": {
-        "@id": "https://saturaise.com/#organization"
-      }{% if blog.tags.size > 0 %},
-      "keywords": {{ blog.tags | join: ', ' | json }}{% endif %}{% if blog.articles.size > 0 %},
-      "blogPost": [
-        {% for article in blog.articles limit: 10 %}
-        {
-          "@type": "BlogPosting",
-          "@id": "{{ shop.url }}{{ article.url }}#blogposting",
-          "headline": {{ article.title | strip_html | json }},
-          "description": {% if article.summary != blank %}{{ article.summary | strip_html | json }}{% else %}{{ article.excerpt_or_content | strip_html | truncatewords: 30 | json }}{% endif %},
-          "url": "{{ shop.url }}{{ article.url }}",
-          "datePublished": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-          "dateModified": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-          {% if article.image %}
-          "image": {
-            "@type": "ImageObject",
-            "url": "{{ article.image | image_url: width: 1200 }}",
-            "width": 1200,
-            "height": 630
-          },
-          {% endif %}
-          "author": {
-            "@type": "Person",
-            "name": {% if article.author != blank %}{{ article.author | json }}{% else %}"Saturaise"{% endif %}
-          },
-          "publisher": {
-            "@id": "https://saturaise.com/#organization"
-          }{% if article.tags.size > 0 %},
-          "keywords": {{ article.tags | join: ', ' | json }}{% endif %},
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "{{ shop.url }}{{ article.url }}"
-          },
-          "isPartOf": {
-            "@id": "{{ shop.url }}{{ blog.url }}#blog"
-          }
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]{% endif %}
-    }
-    ,{
-      "@type": "BreadcrumbList",
-      "@id": "{{ shop.url }}{{ blog.url }}#breadcrumblist",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://saturaise.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": {{ blog.title | json }},
-          "item": "{{ shop.url }}{{ blog.url }}"
-        }
-      ]
-    }
-    {% endif %}
-    
-    {% comment %} ARTICLE SCHEMA {% endcomment %}
-    {% if template contains 'article' %}
-    ,{
-      "@type": "BlogPosting",
-      "@id": "{{ shop.url }}{{ article.url }}#blogposting",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "{{ shop.url }}{{ article.url }}"
+      "breadcrumb": {
+        "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist"
       },
-      "headline": {{ article.title | strip_html | json }},
-      "description": {% if article.summary != blank %}{{ article.summary | strip_html | json }}{% else %}{{ article.excerpt_or_content | strip_html | truncatewords: 30 | json }}{% endif %},
-      "datePublished": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-      "dateModified": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-      "author": {
-        "@type": "Person",
-        "name": {% if article.author != blank %}{{ article.author | json }}{% else %}"Saturaise"{% endif %}
+      "primaryImageOfPage": {
+        "@id": "{{ shop.url }}{{ product.url }}#primaryimage"
       },
-      {% if article.image %}
-      "image": {
-        "@type": "ImageObject",
-        "url": "{{ article.image | image_url: width: 1200 }}",
-        "width": 1200,
-        "height": 630
-      },
-      {% endif %}
-      {% if article.tags.size > 0 %}
-      "keywords": {{ article.tags | join: ', ' | json }},
-      {% endif %}
-      "publisher": {
-        "@id": "https://saturaise.com/#organization"
-      },
-      "isPartOf": {
-        "@id": "{{ shop.url }}{{ blog.url }}#blog"
-      }
+      "datePublished": "{{ product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+      "dateModified": "{{ product.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
     }
-    ,{
-      "@type": "BreadcrumbList",
-      "@id": "{{ shop.url }}{{ article.url }}#breadcrumblist",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://saturaise.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": {{ blog.title | json }},
-          "item": "{{ shop.url }}{{ blog.url }}"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": {{ article.title | json }},
-          "item": "{{ shop.url }}{{ article.url }}"
-        }
-      ]
-    }
-    {% endif %}
-    
-        {% if template contains 'product' %}
     ,{
       "@type": "BreadcrumbList",
       "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist",
@@ -337,6 +113,16 @@
         {% endif %}
       ]
     }
+    {% if product.images.first %}
+    ,{
+      "@type": "ImageObject",
+      "@id": "{{ shop.url }}{{ product.url }}#primaryimage",
+      "url": "https:{{ product.images.first | image_url: width: 1200 }}",
+      "contentUrl": "https:{{ product.images.first | image_url: width: 1200 }}",
+      "width": 1200,
+      "height": 1200
+    }
+    {% endif %}
     ,{
       "@type": "Product",
       "@id": "{{ shop.url }}{{ product.url }}#product",
@@ -346,7 +132,7 @@
       {% if product.images.size > 0 %}
       "image": [
         {% for image in product.images limit: 10 %}
-        "{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
+        "https:{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ],
       {% endif %}
@@ -396,7 +182,6 @@
       "material": {{ materials | json }},
         {% endif %}
       {% endif %}
-      {% comment %} FIXED: Size extraction - convert objects to clean string {% endcomment %}
       {% if product.metafields.custom.size_system %}
       "size": {{ product.metafields.custom.size_system.value | json }},
       {% elsif product.metafields.mm-google-shopping.size_system %}
@@ -481,6 +266,39 @@
         "suggestedMinAge": 16
         {% endif %}
       },
+      {% if product.variants.size > 1 %}
+      "hasVariant": [
+        {% for variant in product.variants %}
+        {
+          "@type": "Product",
+          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+          "name": "{{ product.title }} - {{ variant.option1 }}",
+          "sku": {{ variant.sku | default: variant.id | json }},
+          {% if variant.barcode %}
+            {% assign var_barcode_length = variant.barcode | size %}
+            {% if var_barcode_length == 12 %}
+          "gtin12": {{ variant.barcode | json }},
+            {% elsif var_barcode_length == 13 %}
+          "gtin13": {{ variant.barcode | json }},
+            {% elsif var_barcode_length == 8 %}
+          "gtin8": {{ variant.barcode | json }},
+            {% endif %}
+          {% endif %}
+          "offers": {
+            "@type": "Offer",
+            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+            "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+            "priceCurrency": "PLN",
+            "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+            "seller": {
+              "@id": "https://saturaise.com/#organization"
+            }
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      {% endif %}
       "additionalProperty": [
         {% assign properties_added = false %}
         {% if product.metafields.custom.release_date %}
@@ -490,7 +308,6 @@
           "value": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}"
         }{% assign properties_added = true %}
         {% endif %}
-        {% comment %} FIXED: Activity - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.activity %}
         {% if properties_added %},{% endif %}
         {
@@ -499,7 +316,6 @@
           "value": {% if product.metafields.shopify.activity.value.first.label %}{% assign activities = "" %}{% for activity in product.metafields.shopify.activity.value %}{% if activity.label %}{% assign activities = activities | append: activity.label %}{% unless forloop.last %}{% assign activities = activities | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ activities | json }}{% else %}{{ product.metafields.shopify.activity.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
-        {% comment %} FIXED: Shoe Features - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.shoe-features %}
         {% if properties_added %},{% endif %}
         {
@@ -508,7 +324,6 @@
           "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
-        {% comment %} FIXED: Sneaker Style - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.sneaker-style %}
         {% if properties_added %},{% endif %}
         {
@@ -517,7 +332,6 @@
           "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
-        {% comment %} FIXED: Closure Type - Extract clean string values {% endcomment %}
         {% if product.metafields.shopify.closure-type %}
         {% if properties_added %},{% endif %}
         {
@@ -741,14 +555,14 @@
         "@type": "WarrantyPromise",
         "durationOfWarranty": "P30D",
         "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
-      }{% if product.metafields.reviews.rating %},
+      }{% if product.metafields.trustmate.rating %},
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "{{ product.metafields.reviews.rating.value }}",
-        "reviewCount": "{{ product.metafields.reviews.rating_count.value }}",
+        "ratingValue": "{{ product.metafields.trustmate.rating.value }}",
+        "reviewCount": "{{ product.metafields.trustmate.rating_count.value }}",
         "bestRating": "5",
         "worstRating": "1"
-      }{% endif %}{% if product.metafields.trustmate %}{% if product.metafields.trustmate.reviews %},
+      }{% endif %}{% if product.metafields.trustmate.reviews %},
       "review": [
         {% for review in product.metafields.trustmate.reviews limit: 10 %}
         {
@@ -768,7 +582,7 @@
           }
         }{% unless forloop.last %},{% endunless %}
         {% endfor %}
-      ]{% endif %}{% endif %}
+      ]{% endif %}
     }
     ,{
       "@type": "FAQPage",
@@ -825,7 +639,7 @@
       ]
     }
     {% endif %}
-    {% comment %} COLLECTION PAGE SCHEMA {% endcomment %}
+
     {% if template contains 'collection' and template.name != 'list-collections' %}
     ,{
       "@type": "CollectionPage",
@@ -922,7 +736,6 @@
     }
     {% endif %}
     
-    {% comment %} PAGE SCHEMA {% endcomment %}
     {% if template contains 'page' %}
     ,{
       "@type": "WebPage",
@@ -935,7 +748,6 @@
       }
     }
     
-    {% comment %} CONTACT PAGE SCHEMA {% endcomment %}
     {% if page.handle == 'contact' %}
     ,{
       "@type": "ContactPage",
@@ -951,7 +763,6 @@
     }
     {% endif %}
     
-    {% comment %} ABOUT PAGE SCHEMA {% endcomment %}
     {% if page.handle == 'o-nas' %}
     ,{
       "@type": "AboutPage",
@@ -967,7 +778,6 @@
     }
     {% endif %}
     
-    {% comment %} FAQ PAGE SCHEMA {% endcomment %}
     {% if page.handle == 'faq' %}
     ,{
       "@type": "FAQPage",
@@ -1073,7 +883,6 @@
     }
     {% endif %}
     
-    {% comment %} BREADCRUMB for all pages {% endcomment %}
     ,{
       "@type": "BreadcrumbList",
       "@id": "{{ shop.url }}{{ page.url }}#breadcrumblist",
