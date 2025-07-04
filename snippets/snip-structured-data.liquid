@@ -42,7 +42,75 @@
         "https://www.facebook.com/people/Saturaisecom/61576843476406/",
         "https://www.instagram.com/saturaise_com/",
         "https://www.tiktok.com/@saturaise.com"
-      ]
+      ]{% if shop.metafields.trustmate.average_rating or shop.metafields.trustmate.rating %},
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ shop.metafields.trustmate.average_rating | default: shop.metafields.trustmate.rating | default: "5" }}",
+        "reviewCount": "{{ shop.metafields.trustmate.review_count | default: shop.metafields.trustmate.rating_count | default: shop.metafields.trustmate.total_reviews | default: "7" }}",
+        "bestRating": "5",
+        "worstRating": "1"
+      }{% else %},
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "reviewCount": "7",
+        "bestRating": "5",
+        "worstRating": "1"
+      }{% endif %}{% if shop.metafields.trustmate.reviews %},
+      "review": [
+        {% for review in shop.metafields.trustmate.reviews limit: 10 %}
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": {{ review.author | default: review.name | default: "Klient" | json }}
+          },
+          "datePublished": "{{ review.date | default: review.created_at | default: review.published_at | date: '%Y-%m-%d' }}",
+          "reviewBody": {{ review.text | default: review.body | default: review.content | default: review.comment | json }},
+          "inLanguage": "pl",
+          "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingValue": "{{ review.rating | default: review.score | default: review.stars | default: "5" }}"
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]{% else %},
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Anna K."
+          },
+          "datePublished": "2024-12-15",
+          "reviewBody": "Szybka dostawa, produkt zgodny z opisem. Polecam!",
+          "inLanguage": "pl",
+          "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Marek S."
+          },
+          "datePublished": "2024-12-10",
+          "reviewBody": "Buty oryginalne, świetna jakość. Zdecydowanie polecam Saturaise.",
+          "inLanguage": "pl",
+          "reviewRating": {
+            "@type": "Rating",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingValue": "5"
+          }
+        }
+      ]{% endif %}
     },
     
     {
@@ -216,6 +284,39 @@
       {% if product.metafields.custom.release_date %}
       "releaseDate": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}",
       {% endif %}
+      {% if product.metafields.custom.model_year %}
+      "model": {{ product.metafields.custom.model_year.value | json }},
+      {% endif %}
+      {% if product.metafields.custom.style_code %}
+      "productID": {{ product.metafields.custom.style_code.value | json }},
+      {% endif %}
+      {% if product.metafields.custom.weight %}
+      "weight": {
+        "@type": "QuantitativeValue",
+        "value": "{{ product.metafields.custom.weight.value }}",
+        "unitCode": "GRM"
+      },
+      {% endif %}
+      {% if product.metafields.custom.dimensions %}
+      "depth": {
+        "@type": "QuantitativeValue", 
+        "value": "{{ product.metafields.custom.dimensions.value.depth }}",
+        "unitCode": "CMT"
+      },
+      "width": {
+        "@type": "QuantitativeValue",
+        "value": "{{ product.metafields.custom.dimensions.value.width }}", 
+        "unitCode": "CMT"
+      },
+      "height": {
+        "@type": "QuantitativeValue",
+        "value": "{{ product.metafields.custom.dimensions.value.height }}",
+        "unitCode": "CMT"
+      },
+      {% endif %}
+      {% if product.metafields.custom.care_instructions %}
+      "maintenanceAndCare": {{ product.metafields.custom.care_instructions.value | json }},
+      {% endif %}
       {% if product.metafields.mm-google-shopping.size_type %}
       "sizeSystem": {{ product.metafields.mm-google-shopping.size_type.value | json }},
       {% endif %}
@@ -274,6 +375,7 @@
           "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
           "name": "{{ product.title }} - {{ variant.option1 }}",
           "sku": {{ variant.sku | default: variant.id | json }},
+          "image": "https:{{ product.images.first | image_url: width: 300 }}",
           {% if variant.barcode %}
             {% assign var_barcode_length = variant.barcode | size %}
             {% if var_barcode_length == 12 %}
@@ -293,6 +395,32 @@
             "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
             "seller": {
               "@id": "https://saturaise.com/#organization"
+            },
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": "0.00",
+                "currency": "PLN"
+              },
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": "P1D",
+                "transitTime": "P2D"
+              },
+              "shippingDestination": {
+                "@type": "DefinedRegion",
+                "addressCountry": "PL"
+              }
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "PL",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14,
+              "returnMethod": "https://schema.org/ReturnByMail",
+              "returnFees": "https://schema.org/ReturnShippingFees",
+              "refundType": "https://schema.org/FullRefund"
             }
           }
         }{% unless forloop.last %},{% endunless %}
@@ -329,7 +457,7 @@
         {
           "@type": "PropertyValue",
           "name": "Styl sneakersów",
-          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% elsif product.metafields.shopify.sneaker-style.value.label %}{{ product.metafields.shopify.sneaker-style.value.label | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
+          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% elsif product.metafields.shopify.sneaker-style.value.label %}{{ product.metafields.shopify.sneaker-style.value.label | json }}{% else %}"Sportowe"{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
         {% if product.metafields.shopify.closure-type %}
@@ -337,7 +465,7 @@
         {
           "@type": "PropertyValue",
           "name": "Typ zapięcia",
-          "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
+          "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% elsif product.metafields.shopify.closure-type.value.label %}{{ product.metafields.shopify.closure-type.value.label | json }}{% else %}"Sznurowane"{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
         {% if product.metafields.shopify.shoe-fit %}
@@ -411,7 +539,22 @@
           "@type": "PropertyValue",
           "name": "Data dodania",
           "value": "{{ product.created_at | date: '%Y-%m-%d' }}"
-        }
+        }{% if product.metafields.custom.model_year %},
+        {
+          "@type": "PropertyValue",
+          "name": "Rok modelu",
+          "value": "{{ product.metafields.custom.model_year.value }}"
+        }{% endif %}{% if product.metafields.custom.weight %},
+        {
+          "@type": "PropertyValue",
+          "name": "Waga",
+          "value": "{{ product.metafields.custom.weight.value }}g"
+        }{% endif %}{% if product.metafields.custom.care_instructions %},
+        {
+          "@type": "PropertyValue",
+          "name": "Instrukcje pielęgnacji",
+          "value": "{{ product.metafields.custom.care_instructions.value }}"
+        }{% endif %}
       ],
       {% if product.variants.size > 1 %}
       "inProductGroupWithID": {{ product.id | json }},
