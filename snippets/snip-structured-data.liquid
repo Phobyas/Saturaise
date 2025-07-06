@@ -1,4 +1,3 @@
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -43,34 +42,57 @@
         "https://www.facebook.com/people/Saturaisecom/61576843476406/",
         "https://www.instagram.com/saturaise_com/",
         "https://www.tiktok.com/@saturaise.com"
-      ]{% if shop.metafields.trustmate.average_rating or shop.metafields.trustmate.rating %},
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ shop.metafields.trustmate.average_rating | default: shop.metafields.trustmate.rating | default: "5" }}",
-        "reviewCount": "{{ shop.metafields.trustmate.review_count | default: shop.metafields.trustmate.rating_count | default: shop.metafields.trustmate.total_reviews | default: "7" }}",
-        "bestRating": "5",
-        "worstRating": "1"
-      }{% endif %}{% if shop.metafields.trustmate.reviews and shop.metafields.trustmate.reviews.size > 0 %},
-      "review": [
-        {% for review in shop.metafields.trustmate.reviews limit: 10 %}
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": {{ review.author | default: review.name | default: "Klient" | json }}
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Katalog Saturaise - Limitowane Sneakersy",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Nike",
+            "url": "https://saturaise.com/collections/nike"
           },
-          "datePublished": "{{ review.date | default: review.created_at | default: review.published_at | date: '%Y-%m-%d' }}",
-          "reviewBody": {{ review.text | default: review.body | default: review.content | default: review.comment | json }},
-          "inLanguage": "pl",
-          "reviewRating": {
-            "@type": "Rating",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingValue": "{{ review.rating | default: review.score | default: review.stars | default: "5" }}"
+          {
+            "@type": "OfferCatalog", 
+            "name": "Adidas",
+            "url": "https://saturaise.com/collections/adidas"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Yeezy",
+            "url": "https://saturaise.com/collections/yeezy"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Jordan",
+            "url": "https://saturaise.com/collections/air-jordan"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "New Balance",
+            "url": "https://saturaise.com/collections/new-balance"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "UGG",
+            "url": "https://saturaise.com/collections/ugg"
           }
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]{% endif %}
+        ]
+      },
+      "award": "Zaufany Sprzedawca Sneakersów 2024",
+      "knowsAbout": ["Sneakersy", "Limitowane edycje", "Streetwear", "Weryfikacja autentyczności", "Nike", "Adidas", "Yeezy", "Jordan", "Travis Scott", "Off-White"],
+      "slogan": "Limitowane sneakersy z gwarancją autentyczności",
+      "priceRange": "500 PLN - 15000 PLN",
+      "paymentAccepted": ["Karta kredytowa", "BLIK", "PayPal", "Apple Pay", "Przelew", "PayPo", "Płatność przy odbiorze"],
+      "currenciesAccepted": "PLN",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "16:00",
+        "validFrom": "2022-01-01",
+        "validThrough": "2025-12-31"
+      }
     },
     
     {
@@ -83,12 +105,26 @@
         "@id": "https://saturaise.com/#organization"
       },
       "inLanguage": "pl-PL",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://saturaise.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://saturaise.com/search?q={search_term_string}",
+            "actionPlatform": [
+              "https://schema.org/DesktopWebPlatform",
+              "https://schema.org/MobileWebPlatform"
+            ]
+          },
+          "query-input": {
+            "@type": "PropertyValueSpecification",
+            "valueRequired": "https://schema.org/True",
+            "valueName": "search_term_string"
+          }
+        }
+      ]
     }
+    
     {% if template contains 'product' %}
     ,{
       "@type": "WebPage",
@@ -105,7 +141,11 @@
         "@id": "{{ shop.url }}{{ product.url }}#primaryimage"
       },
       "datePublished": "{{ product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-      "dateModified": "{{ product.updated_at | default: product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
+      "dateModified": "{{ product.updated_at | default: product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".product__title", ".product__price", ".product__description"]
+      }
     }
     ,{
       "@type": "BreadcrumbList",
@@ -114,7 +154,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
+          "name": "Saturaise",
           "item": "{{ shop.url }}"
         }
         {% if collection.url %}
@@ -156,6 +196,9 @@
       "url": "{{ shop.url }}{{ product.url }}",
       "name": {{ product.title | strip_html | json }},
       "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 155 | json }}{% else %}{{ product.title | json }}{% endif %},
+      {% if product.type == "Sneakersy" or product.type == "Buty" %}
+      "additionalType": "https://schema.org/FootWear",
+      {% endif %}
       {% if product.images.size > 0 %}
       "image": [
         {% for image in product.images limit: 10 %}
@@ -189,6 +232,28 @@
       "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
         {% endif %}
       {% endif %}
+      {% if product.selected_or_first_available_variant.sku or product.selected_or_first_available_variant.barcode or product.metafields.custom.style_code %}
+      "identifier": [
+        {% if product.selected_or_first_available_variant.sku %}
+        {
+          "@type": "PropertyValue",
+          "propertyID": "SKU",
+          "value": {{ product.selected_or_first_available_variant.sku | json }}
+        }{% endif %}
+        {% if product.selected_or_first_available_variant.barcode %}{% if product.selected_or_first_available_variant.sku %},{% endif %}
+        {
+          "@type": "PropertyValue", 
+          "propertyID": "GTIN",
+          "value": {{ product.selected_or_first_available_variant.barcode | json }}
+        }{% endif %}
+        {% if product.metafields.custom.style_code %}{% if product.selected_or_first_available_variant.sku or product.selected_or_first_available_variant.barcode %},{% endif %}
+        {
+          "@type": "PropertyValue",
+          "propertyID": "StyleCode",
+          "value": {{ product.metafields.custom.style_code.value | json }}
+        }{% endif %}
+      ],
+      {% endif %}
       {% if product.metafields.mm-google-shopping.mpn %}
       "mpn": {{ product.metafields.mm-google-shopping.mpn.value | json }},
       {% endif %}
@@ -198,83 +263,53 @@
       "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
       {% endif %}
       {% if product.metafields.shopify.footwear-material %}
-        {% if product.metafields.shopify.footwear-material.value.first.label %}
-          {% assign materials = "" %}
-          {% for material in product.metafields.shopify.footwear-material.value %}
-            {% if material.label %}
-              {% assign materials = materials | append: material.label %}
-              {% unless forloop.last %}{% assign materials = materials | append: ", " %}{% endunless %}
-            {% endif %}
-          {% endfor %}
-      "material": {{ materials | json }},
-        {% endif %}
+      "material": [
+        {% for material in product.metafields.shopify.footwear-material.value %}
+          {% if material.label %}
+          {
+            "@type": "Material",
+            "name": {{ material.label | json }},
+            {% case material.label %}
+            {% when "Leather" %}
+            "description": "Premium skóra naturalna",
+            "materialComposition": "100% skóra bydlęca"
+            {% when "Suede" %}
+            "description": "Wysokiej jakości zamsz",
+            "materialComposition": "100% zamsz naturalny"
+            {% when "Canvas" %}
+            "description": "Wytrzymałe płótno",
+            "materialComposition": "100% bawełna"
+            {% when "Synthetic" %}
+            "description": "Materiały syntetyczne",
+            "materialComposition": "Wysokiej jakości syntetyk"
+            {% when "Mesh" %}
+            "description": "Oddychająca siateczka",
+            "materialComposition": "Materiał tekstylny"
+            {% when "Rubber" %}
+            "description": "Guma wysokiej jakości",
+            "materialComposition": "100% guma"
+            {% else %}
+            "description": {{ material.label | json }}
+            {% endcase %}
+          }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+        {% endfor %}
+      ],
       {% endif %}
-      {% if product.metafields.custom.size_system %}
-      "size": {{ product.metafields.custom.size_system.value | json }},
-      {% elsif product.metafields.mm-google-shopping.size_system %}
-      "size": {{ product.metafields.mm-google-shopping.size_system.value | json }},
-      {% elsif product.metafields.shopify.shoe-size %}
-        {% if product.metafields.shopify.shoe-size.value.first.label %}
-          {% assign sizes = "" %}
-          {% for size in product.metafields.shopify.shoe-size.value %}
-            {% if size.label %}
-              {% assign sizes = sizes | append: size.label %}
-              {% unless forloop.last %}{% assign sizes = sizes | append: ", " %}{% endunless %}
-            {% endif %}
-          {% endfor %}
-      "size": {{ sizes | json }},
-        {% elsif product.metafields.shopify.shoe-size.value.label %}
-      "size": {{ product.metafields.shopify.shoe-size.value.label | json }},
+      {% if product.metafields.custom.size_system or product.metafields.shopify.shoe-size %}
+      "hasMeasurement": {
+        "@type": "QuantitativeValue",
+        "name": "System rozmiarów",
+        {% if product.metafields.custom.size_system %}
+        "value": {{ product.metafields.custom.size_system.value | json }},
+        {% else %}
+        "value": "EU",
         {% endif %}
-      {% elsif product.metafields.shopify.size %}
-        {% if product.metafields.shopify.size.value.first.label %}
-          {% assign sizes = "" %}
-          {% for size in product.metafields.shopify.size.value %}
-            {% if size.label %}
-              {% assign sizes = sizes | append: size.label %}
-              {% unless forloop.last %}{% assign sizes = sizes | append: ", " %}{% endunless %}
-            {% endif %}
-          {% endfor %}
-      "size": {{ sizes | json }},
-        {% elsif product.metafields.shopify.size.value.label %}
-      "size": {{ product.metafields.shopify.size.value.label | json }},
-        {% endif %}
+        "unitText": "European Shoe Size"
+      },
       {% endif %}
       {% if product.metafields.custom.release_date %}
       "releaseDate": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}",
-      {% endif %}
-      {% if product.metafields.custom.model_year %}
-      "model": {{ product.metafields.custom.model_year.value | json }},
-      {% endif %}
-      {% if product.metafields.custom.style_code %}
-      "productID": {{ product.metafields.custom.style_code.value | json }},
-      {% endif %}
-      {% if product.metafields.custom.weight %}
-      "weight": {
-        "@type": "QuantitativeValue",
-        "value": "{{ product.metafields.custom.weight.value }}",
-        "unitCode": "GRM"
-      },
-      {% endif %}
-      {% if product.metafields.custom.dimensions %}
-      "depth": {
-        "@type": "QuantitativeValue", 
-        "value": "{{ product.metafields.custom.dimensions.value.depth }}",
-        "unitCode": "CMT"
-      },
-      "width": {
-        "@type": "QuantitativeValue",
-        "value": "{{ product.metafields.custom.dimensions.value.width }}", 
-        "unitCode": "CMT"
-      },
-      "height": {
-        "@type": "QuantitativeValue",
-        "value": "{{ product.metafields.custom.dimensions.value.height }}",
-        "unitCode": "CMT"
-      },
-      {% endif %}
-      {% if product.metafields.custom.care_instructions %}
-      "maintenanceAndCare": {{ product.metafields.custom.care_instructions.value | json }},
       {% endif %}
       {% if product.metafields.mm-google-shopping.size_type %}
       "sizeSystem": {{ product.metafields.mm-google-shopping.size_type.value | json }},
@@ -327,14 +362,43 @@
         {% endif %}
       },
       {% if product.variants.size > 1 %}
+      "model": {
+        "@type": "ProductModel",
+        "name": {{ product.title | split: ' - ' | first | json }},
+        {% if product.metafields.custom.style_code %}
+        "productModelCode": {{ product.metafields.custom.style_code.value | json }},
+        {% endif %}
+        "isVariantOf": {
+          "@type": "ProductGroup",
+          "name": {{ product.title | split: ' - ' | first | json }},
+          "productGroupID": "group-{{ product.id }}",
+          "hasVariant": [
+            {% for variant in product.variants %}
+            {
+              "@type": "Product",
+              "sku": {{ variant.sku | default: variant.id | json }},
+              "name": "{{ product.title }} - {{ variant.title }}",
+              {% if variant.option1 %}
+              "size": {{ variant.option1 | json }},
+              {% endif %}
+              {% if variant.available %}
+              "availability": "https://schema.org/InStock"
+              {% else %}
+              "availability": "https://schema.org/OutOfStock"
+              {% endif %}
+            }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        }
+      },
       "hasVariant": [
         {% for variant in product.variants %}
         {
           "@type": "Product",
+          "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
           "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-          "name": "{{ product.title }} - {{ variant.option1 }}",
+          "name": "{{ product.title }} - Rozmiar {{ variant.option1 }}",
           "sku": {{ variant.sku | default: variant.id | json }},
-          "image": "https:{{ product.images.first | image_url: width: 300 }}",
           {% if variant.barcode %}
             {% assign var_barcode_length = variant.barcode | size %}
             {% if var_barcode_length == 12 %}
@@ -343,43 +407,51 @@
           "gtin13": {{ variant.barcode | json }},
             {% elsif var_barcode_length == 8 %}
           "gtin8": {{ variant.barcode | json }},
+            {% else %}
+          "gtin": {{ variant.barcode | json }},
             {% endif %}
           {% endif %}
+          "size": {{ variant.option1 | json }},
+          {% if variant.option2 %}
+          "color": {{ variant.option2 | json }},
+          {% endif %}
+          {% if variant.image %}
+          "image": "https:{{ variant.image | image_url: width: 1200 }}",
+          {% endif %}
+          "weight": {
+            "@type": "QuantitativeValue",
+            "value": {{ variant.weight | default: 1000 }},
+            "unitCode": "GRM"
+          },
           "offers": {
             "@type": "Offer",
+            "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}#offer",
             "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
             "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
             "priceCurrency": "PLN",
-            "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
-            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+            {% if variant.compare_at_price > variant.price %}
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+              "priceCurrency": "PLN",
+              "valueAddedTaxIncluded": true
+            },
+            {% endif %}
+            "availability": {% if variant.available %}"https://schema.org/InStock"{% elsif variant.inventory_policy == 'continue' %}"https://schema.org/BackOrder"{% else %}"https://schema.org/OutOfStock"{% endif %},
+            "inventoryLevel": {
+              "@type": "QuantitativeValue",
+              "value": {% if variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}0{% endif %},
+              "unitCode": "C62",
+              "unitText": "sztuk"
+            },
+            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
             "seller": {
               "@id": "https://saturaise.com/#organization"
             },
-            "shippingDetails": {
-              "@type": "OfferShippingDetails",
-              "shippingRate": {
-                "@type": "MonetaryAmount",
-                "value": "0.00",
-                "currency": "PLN"
-              },
-              "deliveryTime": {
-                "@type": "ShippingDeliveryTime",
-                "handlingTime": "P1D",
-                "transitTime": "P2D"
-              },
-              "shippingDestination": {
-                "@type": "DefinedRegion",
-                "addressCountry": "PL"
-              }
-            },
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "applicableCountry": "PL",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays": 14,
-              "returnMethod": "https://schema.org/ReturnByMail",
-              "returnFees": "https://schema.org/ReturnShippingFees",
-              "refundType": "https://schema.org/FullRefund"
+            "eligibleRegion": {
+              "@type": "Country",
+              "name": "Polska",
+              "identifier": "PL"
             }
           }
         }{% unless forloop.last %},{% endunless %}
@@ -416,7 +488,7 @@
         {
           "@type": "PropertyValue",
           "name": "Styl sneakersów",
-          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% elsif product.metafields.shopify.sneaker-style.value.label %}{{ product.metafields.shopify.sneaker-style.value.label | json }}{% else %}"Sportowe"{% endif %}
+          "value": {% if product.metafields.shopify.sneaker-style.value.first.label %}{% assign styles = "" %}{% for style in product.metafields.shopify.sneaker-style.value %}{% if style.label %}{% assign styles = styles | append: style.label %}{% unless forloop.last %}{% assign styles = styles | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ styles | json }}{% elsif product.metafields.shopify.sneaker-style.value.label %}{{ product.metafields.shopify.sneaker-style.value.label | json }}{% else %}{{ product.metafields.shopify.sneaker-style.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
         {% if product.metafields.shopify.closure-type %}
@@ -424,7 +496,7 @@
         {
           "@type": "PropertyValue",
           "name": "Typ zapięcia",
-          "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% elsif product.metafields.shopify.closure-type.value.label %}{{ product.metafields.shopify.closure-type.value.label | json }}{% else %}"Sznurowane"{% endif %}
+          "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
         {% if product.metafields.shopify.shoe-fit %}
@@ -435,59 +507,19 @@
           "value": {% if product.metafields.shopify.shoe-fit.value.label %}{{ product.metafields.shopify.shoe-fit.value.label | json }}{% else %}{{ product.metafields.shopify.shoe-fit.value | json }}{% endif %}
         }{% assign properties_added = true %}
         {% endif %}
-        {% if product.metafields.shopify.occasion-style %}
+        {% if product.metafields.custom.size_suggestion %}
         {% if properties_added %},{% endif %}
         {
           "@type": "PropertyValue",
-          "name": "Styl okazji",
-          "value": {% if product.metafields.shopify.occasion-style.value.first.label %}{% assign occasions = "" %}{% for occasion in product.metafields.shopify.occasion-style.value %}{% if occasion.label %}{% assign occasions = occasions | append: occasion.label %}{% unless forloop.last %}{% assign occasions = occasions | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ occasions | json }}{% else %}{{ product.metafields.shopify.occasion-style.value | json }}{% endif %}
-        }{% assign properties_added = true %}
-        {% endif %}
-        {% if product.metafields.shopify.heel-height-type %}
-        {% if properties_added %},{% endif %}
-        {
-          "@type": "PropertyValue",
-          "name": "Typ wysokości obcasa",
-          "value": {% if product.metafields.shopify.heel-height-type.value.label %}{{ product.metafields.shopify.heel-height-type.value.label | json }}{% else %}{{ product.metafields.shopify.heel-height-type.value | json }}{% endif %}
-        }{% assign properties_added = true %}
-        {% endif %}
-        {% if product.metafields.shopify.toe-style %}
-        {% if properties_added %},{% endif %}
-        {
-          "@type": "PropertyValue",
-          "name": "Styl czubka",
-          "value": {% if product.metafields.shopify.toe-style.value.first.label %}{% assign toes = "" %}{% for toe in product.metafields.shopify.toe-style.value %}{% if toe.label %}{% assign toes = toes | append: toe.label %}{% unless forloop.last %}{% assign toes = toes | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ toes | json }}{% else %}{{ product.metafields.shopify.toe-style.value | json }}{% endif %}
-        }{% assign properties_added = true %}
-        {% endif %}
-        {% if product.metafields.shopify.top-length-type %}
-        {% if properties_added %},{% endif %}
-        {
-          "@type": "PropertyValue",
-          "name": "Długość góry",
-          "value": {% if product.metafields.shopify.top-length-type.value.label %}{{ product.metafields.shopify.top-length-type.value.label | json }}{% else %}{{ product.metafields.shopify.top-length-type.value | json }}{% endif %}
-        }{% assign properties_added = true %}
-        {% endif %}
-        {% if product.metafields.mm-google-shopping.size_type %}
-        {% if properties_added %},{% endif %}
-        {
-          "@type": "PropertyValue",
-          "name": "Typ rozmiaru",
-          "value": {{ product.metafields.mm-google-shopping.size_type.value | json }}
-        }{% assign properties_added = true %}
-        {% endif %}
-        {% if product.metafields.mm-google-shopping.custom_label_0 %}
-        {% if properties_added %},{% endif %}
-        {
-          "@type": "PropertyValue",
-          "name": "Kategoria specjalna",
-          "value": {{ product.metafields.mm-google-shopping.custom_label_0.value | json }}
+          "name": "Sugestia rozmiaru",
+          "value": {{ product.metafields.custom.size_suggestion.value | json }}
         }{% assign properties_added = true %}
         {% endif %}
         {% if properties_added %},{% endif %}
         {
           "@type": "PropertyValue", 
           "name": "Status Autentyczności",
-          "value": "100% Oryginalne - Zweryfikowane"
+          "value": "100% Oryginalne - Zweryfikowane przez Saturaise"
         },
         {
           "@type": "PropertyValue",
@@ -496,45 +528,97 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "Czas dostawy",
+          "value": "1-3 dni robocze"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Dostawa",
+          "value": "Darmowa w całej Polsce"
+        },
+        {
+          "@type": "PropertyValue",
           "name": "Data dodania",
           "value": "{{ product.created_at | date: '%Y-%m-%d' }}"
-        }{% if product.metafields.custom.model_year %},
-        {
-          "@type": "PropertyValue",
-          "name": "Rok modelu",
-          "value": "{{ product.metafields.custom.model_year.value }}"
-        }{% endif %}{% if product.metafields.custom.weight %},
-        {
-          "@type": "PropertyValue",
-          "name": "Waga",
-          "value": "{{ product.metafields.custom.weight.value }}g"
-        }{% endif %}{% if product.metafields.custom.care_instructions %},
-        {
-          "@type": "PropertyValue",
-          "name": "Instrukcje pielęgnacji",
-          "value": "{{ product.metafields.custom.care_instructions.value }}"
-        }{% endif %}
+        }
       ],
       {% if product.variants.size > 1 %}
       "inProductGroupWithID": {{ product.id | json }},
       {% endif %}
-      "hasCertification": {
-        "@type": "Certification",
-        "name": "Gwarancja Autentyczności",
-        "certificationIdentification": "AUTH-{{ product.id }}",
-        "issuedBy": {
-          "@type": "Organization",
-          "name": "Saturaise",
-          "url": "{{ shop.url }}"
+      "hasCertification": [
+        {
+          "@type": "Certification",
+          "name": "Certyfikat Autentyczności Saturaise",
+          "certificationIdentification": "SAT-{{ product.id }}-{{ 'now' | date: '%Y%m' }}",
+          "certificationRating": {
+            "@type": "Rating",
+            "ratingValue": "100",
+            "bestRating": "100",
+            "worstRating": "0",
+            "ratingExplanation": "100% gwarancja autentyczności - każdy produkt przechodzi szczegółową weryfikację"
+          },
+          "issuedBy": {
+            "@type": "Organization",
+            "name": "Saturaise Authentication Team",
+            "url": "{{ shop.url }}",
+            "description": "Profesjonalny zespół weryfikacji autentyczności"
+          },
+          "validFrom": "{{ product.created_at | date: '%Y-%m-%d' }}",
+          "validThrough": "{{ 'now' | date: '%s' | plus: 94608000 | date: '%Y-%m-%d' }}"
         }
+      ],
+      "positiveNotes": {
+        "@type": "ItemList",
+        "name": "Zalety produktu",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "100% Oryginalny produkt z certyfikatem autentyczności"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Darmowa dostawa w całej Polsce"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "14 dni na zwrot bez podania przyczyny"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Wysyłka w 24h dla produktów dostępnych"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "name": "Możliwość płatności w ratach PayPo"
+          }
+        ]
       },
+      {% if product.metafields.shopify--discovery--product_recommendation.related_products %}
+      "isSimilarTo": [
+        {% for related_product_id in product.metafields.shopify--discovery--product_recommendation.related_products.value limit: 5 %}
+        {% assign related_product = all_products[related_product_id] %}
+        {% if related_product %}
+        {
+          "@type": "Product",
+          "name": {{ related_product.title | json }},
+          "url": "{{ shop.url }}{{ related_product.url }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endif %}
+        {% endfor %}
+      ],
+      {% endif %}
       {% if product.available %}
       "offers": {% if product.variants.size > 1 %}{
         "@type": "AggregateOffer",
         "priceCurrency": "PLN",
         "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
         "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
-        "offerCount": {{ product.variants.size }},
+        "offerCount": {{ product.variants | where: 'available', true | size }},
         "availability": "https://schema.org/InStock",
         "seller": {
           "@type": "Organization",
@@ -545,36 +629,74 @@
         "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
         "acceptedPaymentMethod": [
           "https://schema.org/CreditCard",
-          "https://schema.org/PaymentCard"
+          "https://schema.org/PaymentCard",
+          "https://schema.org/COD"
         ],
         "shippingDetails": {
           "@type": "OfferShippingDetails",
+          "shippingLabel": "Darmowa wysyłka w Polsce",
           "shippingRate": {
             "@type": "MonetaryAmount",
             "value": "0.00",
             "currency": "PLN"
           },
+          "shippingDestination": [
+            {
+              "@type": "DefinedRegion",
+              "addressCountry": "PL",
+              "name": "Polska"
+            }
+          ],
           "deliveryTime": {
             "@type": "ShippingDeliveryTime",
-            "handlingTime": "P1D",
-            "transitTime": "P2D"
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY",
+              "name": "Czas przygotowania do wysyłki"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY",
+              "name": "Czas dostawy"
+            },
+            "businessDays": true
           },
-          "shippingDestination": {
-            "@type": "DefinedRegion",
-            "addressCountry": "PL"
-          },
-          "shippingLabel": "Darmowa wysyłka"
+          "shippingService": [
+            {
+              "@type": "ShippingRateService",
+              "name": "DPD Polska",
+              "serviceType": "Kurier"
+            },
+            {
+              "@type": "ShippingRateService",
+              "name": "InPost Paczkomaty",
+              "serviceType": "Paczkomat 24/7"
+            }
+          ]
         },
         "hasMerchantReturnPolicy": {
           "@type": "MerchantReturnPolicy",
+          "name": "14-dniowa polityka zwrotów Saturaise",
+          "description": "Możesz zwrócić produkt w ciągu 14 dni od otrzymania. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu.",
           "applicableCountry": "PL",
           "returnPolicyCountry": "PL",
           "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
           "merchantReturnDays": 14,
           "returnMethod": "https://schema.org/ReturnByMail",
-          "returnFees": "https://schema.org/ReturnShippingFees",
+          "returnFees": "https://schema.org/FreeReturn",
           "refundType": "https://schema.org/FullRefund",
           "returnPolicySeasonalOverride": false,
+          "returnShippingFeesAmount": {
+            "@type": "MonetaryAmount",
+            "value": "0.00",
+            "currency": "PLN"
+          },
+          "customerRemorseReturnLabelSource": "https://schema.org/ReturnLabelDownloadAndPrint",
+          "itemCondition": "https://schema.org/NewCondition",
           "restockingFee": {
             "@type": "MonetaryAmount",
             "value": "0.00",
@@ -597,35 +719,74 @@
         "itemCondition": "https://schema.org/NewCondition",
         "acceptedPaymentMethod": [
           "https://schema.org/CreditCard",
-          "https://schema.org/PaymentCard"
+          "https://schema.org/PaymentCard",
+          "https://schema.org/COD"
         ],
         "shippingDetails": {
           "@type": "OfferShippingDetails",
+          "shippingLabel": "Darmowa wysyłka w Polsce",
           "shippingRate": {
             "@type": "MonetaryAmount",
             "value": "0.00",
             "currency": "PLN"
           },
+          "shippingDestination": [
+            {
+              "@type": "DefinedRegion",
+              "addressCountry": "PL",
+              "name": "Polska"
+            }
+          ],
           "deliveryTime": {
             "@type": "ShippingDeliveryTime",
-            "handlingTime": "P1D",
-            "transitTime": "P2D"
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY",
+              "name": "Czas przygotowania do wysyłki"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY",
+              "name": "Czas dostawy"
+            },
+            "businessDays": true
           },
-          "shippingDestination": {
-            "@type": "DefinedRegion",
-            "addressCountry": "PL"
-          }
+          "shippingService": [
+            {
+              "@type": "ShippingRateService",
+              "name": "DPD Polska",
+              "serviceType": "Kurier"
+            },
+            {
+              "@type": "ShippingRateService",
+              "name": "InPost Paczkomaty",
+              "serviceType": "Paczkomat 24/7"
+            }
+          ]
         },
         "hasMerchantReturnPolicy": {
           "@type": "MerchantReturnPolicy",
+          "name": "14-dniowa polityka zwrotów Saturaise",
+          "description": "Możesz zwrócić produkt w ciągu 14 dni od otrzymania. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu.",
           "applicableCountry": "PL",
           "returnPolicyCountry": "PL",
           "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
           "merchantReturnDays": 14,
           "returnMethod": "https://schema.org/ReturnByMail",
-          "returnFees": "https://schema.org/ReturnShippingFees",
+          "returnFees": "https://schema.org/FreeReturn",
           "refundType": "https://schema.org/FullRefund",
           "returnPolicySeasonalOverride": false,
+          "returnShippingFeesAmount": {
+            "@type": "MonetaryAmount",
+            "value": "0.00",
+            "currency": "PLN"
+          },
+          "customerRemorseReturnLabelSource": "https://schema.org/ReturnLabelDownloadAndPrint",
+          "itemCondition": "https://schema.org/NewCondition",
           "restockingFee": {
             "@type": "MonetaryAmount",
             "value": "0.00",
@@ -655,8 +816,20 @@
       },
       "warranty": {
         "@type": "WarrantyPromise",
-        "durationOfWarranty": "P30D",
-        "warrantyScope": "Gwarancja autentyczności i ochrona kupującego"
+        "name": "Gwarancja Autentyczności Saturaise",
+        "description": "Pełna gwarancja autentyczności oraz ochrona kupującego. Każdy produkt weryfikowany przez ekspertów.",
+        "durationOfWarranty": {
+          "@type": "QuantitativeValue",
+          "value": 30,
+          "unitCode": "DAY"
+        },
+        "warrantyScope": {
+          "@type": "WarrantyScope",
+          "warrantyPromise": "Gwarancja obejmuje autentyczność produktu oraz zgodność z opisem. W przypadku wątpliwości co do autentyczności, oferujemy pełny zwrot środków."
+        },
+        "seller": {
+          "@id": "https://saturaise.com/#organization"
+        }
       }{% if product.metafields.trustmate.average_rating and product.metafields.trustmate.review_count %},
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -665,6 +838,19 @@
         "bestRating": "5",
         "worstRating": "1"
       }{% endif %}
+      {% if product.metafields.custom.release_date %}
+      {% assign release_date = product.metafields.custom.release_date.value | date: '%s' %}
+      {% assign now = 'now' | date: '%s' %}
+      {% if release_date > now %},
+      "potentialAction": {
+        "@type": "BuyAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ shop.url }}{{ product.url }}",
+          "actionPlatform": ["https://schema.org/DesktopWebPlatform", "https://schema.org/MobileWebPlatform"]
+        },
+        "availabilityStarts": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%dT%H:%M:%S%z' }}"
+      }{% endif %}{% endif %}
     }
     ,{
       "@type": "FAQPage",
@@ -672,34 +858,34 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Czy ten produkt jest w 100% oryginalny?",
+          "name": "Czy {{ product.title }} jest w 100% oryginalny?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Tak, wszystkie produkty są weryfikowane pod kątem autentyczności przez naszych ekspertów. Każdy produkt posiada gwarancję autentyczności."
+            "text": "Tak, wszystkie produkty w Saturaise są w 100% oryginalne. {{ product.title }} przechodzi szczegółową weryfikację autentyczności przez naszych ekspertów. Każdy produkt posiada certyfikat autentyczności Saturaise."
           }
         },
         {
           "@type": "Question", 
-          "name": "Jaki jest czas dostawy?",
+          "name": "Jaki jest czas dostawy {{ product.title }}?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Oferujemy darmową wysyłkę z dostawą w ciągu 1-3 dni roboczych. Produkty są starannie pakowane i wysyłane z numerem śledzenia."
+            "text": "Oferujemy darmową wysyłkę z dostawą w ciągu 1-3 dni roboczych. Produkty wysyłamy tego samego dnia dla zamówień złożonych do godziny 14:00. Dostawa realizowana jest przez DPD lub InPost."
           }
         },
         {
           "@type": "Question",
-          "name": "Czy mogę zwrócić produkt?",
+          "name": "Czy mogę zwrócić {{ product.title }}?",
           "acceptedAnswer": {
             "@type": "Answer", 
-            "text": "Tak, masz 14 dni na zwrot produktu w nienaruszonym stanie. Zwrot płatności następuje w ciągu 14 dni od otrzymania produktu."
+            "text": "Tak, masz 14 dni na zwrot produktu w nienaruszonym stanie. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu. Zwrot jest darmowy, a pieniądze zwracamy w ciągu 14 dni od otrzymania produktu."
           }
         }{% if product.variants.size > 1 %},
         {
           "@type": "Question",
-          "name": "Jak dobrać odpowiedni rozmiar?",
+          "name": "Jak dobrać odpowiedni rozmiar {{ product.title }}?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Udostępniamy informacje o rozmiarach dla każdego produktu. W przypadku wątpliwości, skontaktuj się z naszym zespołem - pomożemy dobrać idealny rozmiar."
+            "text": "{% if product.metafields.custom.size_suggestion %}{{ product.metafields.custom.size_suggestion.value }}{% else %}Udostępniamy informacje o rozmiarach dla każdego produktu. {% case product.vendor %}{% when 'Nike', 'Jordan' %}Nike i Jordan zazwyczaj mają standardowe rozmiary (TTS).{% when 'Adidas', 'Yeezy' %}Adidas Yeezy często kroją małe rozmiary - zalecamy wybór o 0.5-1 rozmiar większy.{% when 'New Balance' %}New Balance ma komfortowe dopasowanie, zazwyczaj TTS.{% endcase %} W przypadku wątpliwości, skontaktuj się z naszym zespołem.{% endif %}"
           }
         }{% endif %},
         {
@@ -707,116 +893,990 @@
           "name": "Dlaczego ceny różnią się między rozmiarami?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ceny zależą od dostępności na rynku i popytu na konkretne rozmiary. Rzadsze rozmiary mogą mieć wyższe ceny ze względu na ograniczoną dostępność."
+            "text": "Ceny zależą od dostępności na rynku i popytu na konkretne rozmiary. Rzadsze rozmiary mogą mieć wyższe ceny ze względu na ograniczoną dostępność. Wszystkie rozmiary są w 100% oryginalne."
           }
         },
         {
           "@type": "Question",
-          "name": "Jak mogę się skontaktować w sprawie produktu?",
+          "name": "Jak mogę się skontaktować w sprawie {{ product.title }}?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Możesz skontaktować się z nami poprzez formularz kontaktowy lub bezpośrednio emailem. Odpowiadamy na wszystkie zapytania w ciągu 24 godzin."
+            "text": "Możesz skontaktować się z nami przez email: saturaisekontakt@gmail.com lub telefon: +48 451 108 247 (pon-pt 9:00-16:00). Odpowiadamy na wszystkie zapytania w ciągu 24 godzin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jakie metody płatności są dostępne?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Akceptujemy: BLIK, karty płatnicze, PayPal, Apple Pay, przelew tradycyjny, płatność przy odbiorze oraz raty PayPo. Wszystkie płatności są bezpieczne i szyfrowane."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy oferujecie gwarancję autentyczności?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tak, każdy produkt objęty jest 100% gwarancją autentyczności Saturaise. W przypadku jakichkolwiek wątpliwości co do oryginalności produktu, oferujemy pełny zwrot środków. Nasza reputacja opiera się na sprzedaży wyłącznie oryginalnych produktów."
           }
         }
       ]
     }
     {% endif %}
 
-    {% if template contains 'collection' and template.name != 'list-collections' %}
-    ,{
-      "@type": "CollectionPage",
-      "@id": "{{ shop.url }}{{ collection.url }}#collectionpage",
-      "url": "{{ shop.url }}{{ collection.url }}",
-      "name": {{ collection.title | strip_html | json }},
-      "description": {% if collection.description != blank %}{{ collection.description | strip_html | truncatewords: 150 | json }}{% else %}"Kolekcja {{ collection.title }} w sklepie Saturaise - limitowane sneakersy i oryginalne produkty"{% endif %},
-      {% if collection.image %}
-      "image": "{{ collection.image | image_url: width: 1200 }}",
-      {% endif %}
-      "isPartOf": {
-        "@id": "https://saturaise.com/#website"
-      }{% if collection.products_count > 0 %},
-      "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": {{ collection.products_count }},
-        "itemListElement": [
-          {% assign product_count = 0 %}
-          {% for product in collection.products limit: 20 %}
-            {% assign product_count = product_count | plus: 1 %}
-            {
-              "@type": "ListItem",
-              "position": {{ product_count }},
-              "item": {
-                "@type": "Product",
-                "@id": "{{ shop.url }}{{ product.url }}#product",
-                "name": {{ product.title | json }},
-                "url": "{{ shop.url }}{{ product.url }}",
-                {% if product.featured_image %}
-                "image": "{{ product.featured_image | image_url: width: 800 }}",
-                {% endif %}
-                "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 50 | json }}{% else %}{{ product.title | json }}{% endif %},
-                {% if product.vendor != blank %}
-                "brand": {
-                  "@type": "Brand",
-                  "name": {{ product.vendor | json }}
-                },
-                {% endif %}
-                "category": {{ collection.title | json }},
-                "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
-                {% if product.available %}
-                "offers": {
-                  "@type": "{% if product.variants.size > 1 %}AggregateOffer{% else %}Offer{% endif %}",
-                  "priceCurrency": "{{ shop.currency }}",
-                  {% if product.variants.size > 1 %}
-                  "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                  "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                  "offerCount": {{ product.variants.size }},
+{% if template contains 'collection' and template.name != 'list-collections' %}
+
+{% comment %} Calculate accurate price range for aggregate offer {% endcomment %}
+{% assign min_price = 999999999 %}
+{% assign max_price = 0 %}
+{% assign available_count = 0 %}
+{% for product in collection.products %}
+  {% if product.available %}
+    {% assign available_count = available_count | plus: 1 %}
+    {% if product.price_min < min_price %}
+      {% assign min_price = product.price_min %}
+    {% endif %}
+    {% if product.price_max > max_price %}
+      {% assign max_price = product.price_max %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Pagination support {% endcomment %}
+{% assign current_page = 1 %}
+{% if current_page_param %}
+  {% assign current_page = current_page_param | times: 1 %}
+{% endif %}
+{% assign items_per_page = 30 %}
+{% for block in section.blocks %}
+  {% if block.settings.items_per_page %}
+    {% assign items_per_page = block.settings.items_per_page %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Generate SEO descriptions based on collection {% endcomment %}
+{% unless collection.description != blank %}
+  {% case collection.handle %}
+  {% when 'yeezy' %}
+    {% assign seo_description = 'Oficjalna kolekcja Yeezy w Polsce. Boost 350, 500, 700, Slide, Foam Runner - wszystkie modele z gwarancją autentyczności. Szybka dostawa, konkurencyjne ceny. Sprawdź limitowane edycje Kanye West.' %}
+  {% when 'yeezy-350' %}
+    {% assign seo_description = 'Yeezy Boost 350 V2 - najpopularniejszy model Kanye West. Oryginalne sneakersy w wszystkich kolorystykach: Zebra, Bred, Beluga. Szeroki wybór rozmiarów, darmowa dostawa.' %}
+  {% when 'yeezy-700' %}
+    {% assign seo_description = 'Yeezy Boost 700 - kultowe dad shoes. V1 Wave Runner, V2, V3 Azael, MNVN. Oryginalne modele z technologią Boost. Dostawa 1-3 dni.' %}
+  {% when 'yeezy-slide' %}
+    {% assign seo_description = 'Yeezy Slide - kultowe klapki Kanye West. Bone, Onyx, Pure, Ochre. Wygodne, minimalistyczne wzornictwo. Oryginalne z gwarancją.' %}
+  {% when 'nike' %}
+    {% assign seo_description = 'Limitowane sneakersy Nike: Air Force 1, Dunk Low, Air Max, Cortez, Travis Scott, Off-White. Oryginalne buty prosto z oficjalnych releasów. Darmowa dostawa, 100% autentyczne.' %}
+  {% when 'air-force-1', 'air-force' %}
+    {% assign seo_description = 'Nike Air Force 1 - klasyczne białe, czarne i limitowane edycje. Low, Mid, High. Najpopularniejsze sneakersy na świecie w Saturaise.' %}
+  {% when 'dunk-low' %}
+    {% assign seo_description = 'Nike Dunk Low - Panda, University Blue, Syracuse i więcej. SB Dunk i klasyczne retro. Szeroki wybór kolorystyk i rozmiarów.' %}
+  {% when 'travis-scott' %}
+    {% assign seo_description = 'Travis Scott x Nike/Jordan - limitowane kolaboracje Cactus Jack. Air Jordan 1, Air Force 1, Dunk Low. Najtrudniej dostępne modele.' %}
+  {% when 'off-white' %}
+    {% assign seo_description = 'Off-White x Nike by Virgil Abloh. The Ten, Dunk Low, Air Force 1. Limitowane edycje z charakterystycznymi zip-tie i napisami.' %}
+  {% when 'air-jordan' %}
+    {% assign seo_description = 'Kultowe Air Jordan 1, 3, 4, 5, 6, 11 - pełna kolekcja retro. Oficjalny sklep z butami Michael Jordan w Polsce. Limitowane edycje, szeroki wybór rozmiarów.' %}
+  {% when 'air-jordan-1' %}
+    {% assign seo_description = 'Air Jordan 1 High, Mid, Low - najważniejszy model w historii sneakersów. Chicago, Bred, Royal Blue. OG i Retro w jednym miejscu.' %}
+  {% when 'air-jordan-4' %}
+    {% assign seo_description = 'Air Jordan 4 Retro - Black Cat, White Cement, Bred. Kultowy model z 1989 roku. Oryginalne sneakersy z gwarancją autentyczności.' %}
+  {% when 'adidas' %}
+    {% assign seo_description = 'Adidas Originals: Campus, Samba, Gazelle, Spezial, Superstar. Klasyczne modele i limitowane współprace. Gwarancja oryginalności, szybka wysyłka.' %}
+  {% when 'campus' %}
+    {% assign seo_description = 'Adidas Campus 00s - Bad Bunny, South Park i klasyczne kolory. Zamszowe sneakersy w stylu retro. Darmowa dostawa.' %}
+  {% when 'samba' %}
+    {% assign seo_description = 'Adidas Samba OG - klasyk z 1950 roku. Białe, czarne, Vegan, Wales Bonner. Kultowe buty piłkarskie jako lifestyle.' %}
+  {% when 'gazelle' %}
+    {% assign seo_description = 'Adidas Gazelle - ponadczasowy model z lat 60. Zamszowe sneakersy w wielu kolorach. Idealne na co dzień.' %}
+  {% when 'new-balance' %}
+    {% assign seo_description = 'New Balance 530, 2002R, 550, 9060 - premium lifestyle sneakersy. Najlepsze modele retro running w Polsce. Comfort meets style.' %}
+  {% when 'new-balance-530' %}
+    {% assign seo_description = 'New Balance 530 - kultowy model z lat 90. White Silver, Steel Grey. Retro running w nowoczesnym wydaniu. Wygoda i styl.' %}
+  {% when 'new-balance-2002r' %}
+    {% assign seo_description = 'New Balance 2002R Protection Pack - premium cushioning ABZORB. Rain Cloud, Phantom. Luksusowe materiały, wyjątkowy komfort.' %}
+  {% when 'new-balance-9060' %}
+    {% assign seo_description = 'New Balance 9060 - futurystyczny design spotyka komfort. Sea Salt, Rain Cloud. Największy hit 2023/2024 roku.' %}
+  {% when 'ugg' %}
+    {% assign seo_description = 'UGG Australia: Ultra Mini, Tasman, Tazz, Lowmel. Oryginalne buty UGG na zimę. Ciepłe, wygodne, stylowe. Dostawa w 24h.' %}
+  {% when 'ultra-mini-boot' %}
+    {% assign seo_description = 'UGG Ultra Mini Boot - najpopularniejszy model. Chestnut, Black, Sand. Idealne na zimę, kultowy design.' %}
+  {% when 'tasman-slipper' %}
+    {% assign seo_description = 'UGG Tasman Slipper - wygodne kapcie z futerkiem. Do domu i na miasto. Chestnut, Black. Oryginalne z Australii.' %}
+  {% else %}
+    {% assign seo_description = collection.title | append: ' - Limitowana kolekcja w Saturaise. 100% oryginalne produkty z gwarancją autentyczności. Darmowa dostawa.' %}
+  {% endcase %}
+{% endunless %}
+
+,{
+  "@type": "CollectionPage",
+  "@id": "{{ shop.url }}{{ collection.url }}#collection",
+  "url": "{{ shop.url }}{{ collection.url }}",
+  "name": {{ collection.title | append: ' - Oryginalne produkty | Saturaise' | json }},
+  "alternateName": {{ collection.title | append: ' Polska' | json }},
+  {% comment %} Add filter context to name if filters are active {% endcomment %}
+  {% assign active_filters = '' %}
+  {% for filter in collection.filters %}
+    {% if filter.active_values.size > 0 %}
+      {% for value in filter.active_values %}
+        {% assign active_filters = active_filters | append: value.label | append: ', ' %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% if active_filters != '' %}
+    "disambiguatingDescription": "Filtrowane według: {{ active_filters | remove_last: ', ' }}",
+  {% endif %}
+  "description": {% if collection.description %}{{ collection.description | strip_html | truncatewords: 160 | json }}{% else %}{{ seo_description | json }}{% endif %},
+  {% if collection.image %}
+  "image": {
+    "@type": "ImageObject",
+    "@id": "{{ shop.url }}{{ collection.url }}#primaryimage",
+    "url": "https:{{ collection.image | image_url: width: 1200 }}",
+    "contentUrl": "https:{{ collection.image | image_url: width: 1200 }}",
+    "width": 1200,
+    "height": 630,
+    "caption": "{{ collection.title }} - Kolekcja Saturaise"
+  },
+  {% endif %}
+  "inLanguage": "pl-PL",
+  "isPartOf": {
+    "@id": "https://saturaise.com/#website"
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".collection-description", ".product-grid-item__title", ".price"]
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "specialty": [
+      {% case collection.handle %}
+      {% when 'new-balance-9060' %}
+      "Najpopularniejszy model 2024",
+      "Futurystyczny design",
+      "Technologia ABZORB i SBS",
+      "Limitowane kolaboracje Bodega"
+      {% when 'yeezy-350' %}
+      "Bestseller Yeezy w Polsce",
+      "Technologia Boost",
+      "Primeknit upper",
+      "Wszystkie kolorystyki"
+      {% when 'dunk-low' %}
+      "Klasyczne kolorystyki Panda",
+      "SB i retro wersje",
+      "Najczęściej wybierane Nike",
+      "Szeroki wybór rozmiarów"
+      {% when 'travis-scott' %}
+      "Ekskluzywne kolaboracje Cactus Jack",
+      "Reverse Swoosh",
+      "Limitowane edycje",
+      "Collector's items"
+      {% when 'air-jordan-1' %}
+      "Kultowy model z 1985",
+      "High, Mid i Low",
+      "OG kolorystyki",
+      "Chicago, Bred, Royal"
+      {% else %}
+      "100% Oryginalne produkty",
+      "Darmowa dostawa",
+      "14 dni na zwrot",
+      "Gwarancja autentyczności"
+      {% endcase %}
+    ],
+    {% case collection.handle %}
+    {% when 'yeezy-350' %}"award": "Bestseller 2024 - Yeezy",
+    {% when 'dunk-low' %}"award": "Najczęściej wybierane Nike 2024",
+    {% when 'new-balance-9060' %}"award": "Hit sezonu 2024",
+    {% when 'travis-scott' %}"award": "Najbardziej pożądane kolaboracje",
+    {% endcase %}
+    "url": "{{ shop.url }}{{ collection.url }}"
+  },
+  "mainEntity": {
+    "@type": "OfferCatalog",
+    "name": "{{ collection.title }} - Katalog produktów",
+    "itemListElement": {
+      "@type": "ItemList",
+      "numberOfItems": {{ collection.products_count }},
+      "itemListOrder": "https://schema.org/ItemListOrderDescending",
+      "itemListElement": [
+        {% comment %} Performance optimization: detailed data for first 10, simple for rest {% endcomment %}
+        {% assign detailed_product_limit = 10 %}
+        {% for product in collection.products limit: 50 %}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "url": "{{ shop.url }}{{ product.url }}",
+          "item": {
+            "@type": "Product",
+            "@id": "{{ shop.url }}{{ product.url }}#product",
+            "name": {{ product.title | json }},
+            "url": "{{ shop.url }}{{ product.url }}",
+            {% if product.type == "Sneakersy" or product.type == "Buty" %}
+            "additionalType": "https://schema.org/FootWear",
+            {% endif %}
+            {% if product.featured_image %}
+            "image": [
+              {% for image in product.images limit: 5 %}
+              {
+                "@type": "ImageObject",
+                "url": "https:{{ image | image_url: width: 1200 }}",
+                "width": 1200,
+                "height": 1200
+              }{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            ],
+            {% endif %}
+            "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | append: ' - Oryginalny produkt dostępny w Saturaise. Gwarancja autentyczności, szybka dostawa.' | json }}{% endif %},
+            {% assign product_brand = product.metafields.custom.brand.value | default: product.vendor %}
+            {% if product_brand != blank %}
+            "brand": {
+              "@type": "Brand",
+              "name": {{ product_brand | json }}
+            },
+            "manufacturer": {
+              "@type": "Organization",
+              "name": {{ product_brand | json }}
+            },
+            {% endif %}
+            "category": {{ collection.title | json }},
+            "productID": {{ product.id | json }},
+            "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
+            
+            {% comment %} Enhanced GTIN handling for all variants {% endcomment %}
+            {% if product.variants.first.barcode != blank %}
+              {% assign barcode_length = product.variants.first.barcode | size %}
+              {% if barcode_length == 12 %}
+            "gtin12": {{ product.variants.first.barcode | json }},
+              {% elsif barcode_length == 13 %}
+            "gtin13": {{ product.variants.first.barcode | json }},
+              {% elsif barcode_length == 14 %}
+            "gtin14": {{ product.variants.first.barcode | json }},
+              {% elsif barcode_length == 8 %}
+            "gtin8": {{ product.variants.first.barcode | json }},
+              {% else %}
+            "gtin": {{ product.variants.first.barcode | json }},
+              {% endif %}
+            {% endif %}
+            
+            {% comment %} Enhanced identifier array {% endcomment %}
+            {% if product.selected_or_first_available_variant.sku or product.variants.first.barcode or product.metafields.custom.style_code %}
+            "identifier": [
+              {% if product.selected_or_first_available_variant.sku %}
+              {
+                "@type": "PropertyValue",
+                "propertyID": "SKU",
+                "value": {{ product.selected_or_first_available_variant.sku | json }}
+              }{% endif %}
+              {% if product.variants.first.barcode %}{% if product.selected_or_first_available_variant.sku %},{% endif %}
+              {
+                "@type": "PropertyValue",
+                "propertyID": "GTIN",
+                "value": {{ product.variants.first.barcode | json }}
+              }{% endif %}
+              {% if product.metafields.custom.style_code %}{% if product.selected_or_first_available_variant.sku or product.variants.first.barcode %},{% endif %}
+              {
+                "@type": "PropertyValue",
+                "propertyID": "StyleCode",
+                "value": {{ product.metafields.custom.style_code.value | json }}
+              }{% endif %}
+            ],
+            {% endif %}
+            
+            {% if product.metafields.mm-google-shopping.mpn %}
+            "mpn": {{ product.metafields.mm-google-shopping.mpn.value | json }},
+            {% endif %}
+            
+            {% comment %} Enhanced color handling {% endcomment %}
+            {% if product.metafields.custom.color %}
+            "color": {% if product.metafields.custom.color.value.label %}{{ product.metafields.custom.color.value.label | json }}{% else %}{{ product.metafields.custom.color.value | json }}{% endif %},
+            {% elsif product.metafields.shopify.color-pattern %}
+            "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
+            {% endif %}
+            
+            {% comment %} Enhanced material handling with specific data {% endcomment %}
+            {% if product.metafields.shopify.footwear-material.value %}
+            "material": [
+              {% for material in product.metafields.shopify.footwear-material.value %}
+                {% if material.label %}
+                {
+                  "@type": "Material",
+                  "name": {{ material.label | json }},
+                  {% case material.label %}
+                  {% when "Leather" %}
+                  "description": "Premium skóra naturalna",
+                  "materialComposition": "100% skóra bydlęca"
+                  {% when "Suede" %}
+                  "description": "Wysokiej jakości zamsz",
+                  "materialComposition": "100% zamsz naturalny"
+                  {% when "Canvas" %}
+                  "description": "Wytrzymałe płótno",
+                  "materialComposition": "100% bawełna"
+                  {% when "Synthetic" %}
+                  "description": "Materiały syntetyczne",
+                  "materialComposition": "Wysokiej jakości syntetyk"
+                  {% when "Mesh" %}
+                  "description": "Oddychająca siateczka",
+                  "materialComposition": "Materiał tekstylny"
+                  {% when "Rubber" %}
+                  "description": "Guma wysokiej jakości",
+                  "materialComposition": "100% guma"
                   {% else %}
-                  "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                  {% endif %}
-                  "availability": "https://schema.org/InStock",
-                  "seller": {
-                    "@id": "https://saturaise.com/#organization"
-                  },
-                  "url": "{{ shop.url }}{{ product.url }}",
-                  "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
-                }
-                {% else %}
-                "offers": {
-                  "@type": "Offer",
-                  "priceCurrency": "{{ shop.currency }}",
-                  "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
-                  "availability": "https://schema.org/OutOfStock",
-                  "seller": {
-                    "@id": "https://saturaise.com/#organization"
-                  },
-                  "url": "{{ shop.url }}{{ product.url }}"
-                }
+                  "description": {{ material.label | json }}
+                  {% endcase %}
+                }{% unless forloop.last %},{% endunless %}
                 {% endif %}
+              {% endfor %}
+            ],
+            {% elsif product.metafields.custom.material %}
+            "material": {{ product.metafields.custom.material.value | json }},
+            {% else %}
+            "material": {% case product.vendor %}{% when "Nike", "Jordan" %}"Skóra, materiały syntetyczne, guma"{% when "Adidas", "Yeezy" %}"Primeknit, Boost, guma"{% when "New Balance" %}"Zamsz, siateczka, ABZORB"{% when "UGG" %}"Owcza wełna, zamsz, EVA"{% else %}"Premium materiały"{% endcase %},
+            {% endif %}
+            
+            {% if product.metafields.custom.release_date %}
+            "releaseDate": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}",
+            {% endif %}
+            
+            "itemCondition": "https://schema.org/NewCondition",
+            
+            {% comment %} Enhanced additional properties with size availability {% endcomment %}
+            "additionalProperty": [
+              {
+                "@type": "PropertyValue",
+                "name": "Autentyczność",
+                "value": "100% Oryginał - Certyfikat Saturaise"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Stan",
+                "value": "Fabrycznie nowy"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Dostępność w Polsce",
+                "value": "Na stanie - wysyłka 24h"
+              },
+              {
+                "@type": "PropertyValue",
+                "name": "Dostępne rozmiary",
+                "value": {% capture available_sizes %}{% for variant in product.variants %}{% if variant.available %}{{ variant.option1 }},{% endif %}{% endfor %}{% endcapture %}{{ available_sizes | split: "," | uniq | join: ", " | remove_last: ", " | json }}
               }
+              {% if product.metafields.custom.size_suggestion %},
+              {
+                "@type": "PropertyValue",
+                "name": "Sugestia rozmiaru",
+                "value": {{ product.metafields.custom.size_suggestion.value | json }}
+              }{% endif %}
+              {% if product.metafields.shopify.shoe-features %},
+              {
+                "@type": "PropertyValue",
+                "name": "Cechy",
+                "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
+              }{% endif %}
+              {% if product.tags contains 'limited-edition' or product.tags contains 'exclusive' or product.tags contains 'limitowana' %},
+              {
+                "@type": "PropertyValue",
+                "name": "Edycja",
+                "value": "Limitowana - Dostępność ograniczona"
+              }{% endif %}
+            ],
+            
+            {% if product.tags contains 'limited-edition' or product.tags contains 'exclusive' or product.tags contains 'limitowana' %}
+            "award": "Limitowana Edycja",
+            {% endif %}
+            
+            "audience": {
+              "@type": "PeopleAudience",
+              {% if product.metafields.shopify.target-gender %}
+              "suggestedGender": {% assign gender = product.metafields.shopify.target-gender.value %}{% if gender contains "male" or gender contains "męski" %}"https://schema.org/Male"{% elsif gender contains "female" or gender contains "damski" %}"https://schema.org/Female"{% else %}"https://schema.org/Unisex"{% endif %},
+              {% elsif product.metafields.mm-google-shopping.gender %}
+              "suggestedGender": {% assign gender = product.metafields.mm-google-shopping.gender.value %}{% if gender == "male" %}"https://schema.org/Male"{% elsif gender == "female" %}"https://schema.org/Female"{% else %}"https://schema.org/Unisex"{% endif %},
+              {% endif %}
+              {% if product.metafields.shopify.age-group %}
+              {% assign age_group = product.metafields.shopify.age-group.value %}
+              {% if age_group contains "kids" or age_group contains "dzieci" %}
+              "suggestedMinAge": 3,
+              "suggestedMaxAge": 12,
+              {% else %}
+              "suggestedMinAge": 16,
+              {% endif %}
+              {% endif %}
+              "geographicArea": {
+                "@type": "Country",
+                "name": "Polska"
+              }
+            },
+            
+            {% comment %} Enhanced variant offers with detailed variant info for first 10 products {% endcomment %}
+            {% if product.available %}
+            "offers": {
+              "@type": "AggregateOffer",
+              "offerCount": {{ product.variants | where: 'available', true | size }},
+              "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
+              "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
+              "priceCurrency": "PLN",
+              "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "Saturaise",
+                "url": "{{ shop.url }}"
+              },
+              {% if forloop.index <= detailed_product_limit %}
+              "offers": [
+                {% for variant in product.variants limit: 10 %}
+                {
+                  "@type": "Offer",
+                  "sku": {{ variant.sku | default: variant.id | json }},
+                  "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' }},
+                  "size": {{ variant.option1 | json }},
+                  {% if variant.barcode %}"gtin": {{ variant.barcode | json }},{% endif %}
+                  "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+                  "inventoryLevel": {
+                    "@type": "QuantitativeValue",
+                    "value": {{ variant.inventory_quantity | default: 0 }}
+                  }
+                }{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              ],
+              {% endif %}
+              "acceptedPaymentMethod": [
+                { "@type": "PaymentMethod", "name": "BLIK", "url": "https://blik.com" },
+                { "@type": "PaymentMethod", "name": "PayU" },
+                { "@type": "PaymentMethod", "name": "Przelewy24" },
+                { "@type": "PaymentMethod", "name": "PayPo - Kup teraz, zapłać za 30 dni" },
+                { "@type": "PaymentMethod", "name": "Klarna - Raty 0%" },
+                { "@type": "PaymentMethod", "name": "Santander Consumer Bank - Raty" },
+                { "@type": "PaymentMethod", "name": "PayPal" },
+                { "@type": "PaymentMethod", "name": "Apple Pay" },
+                { "@type": "PaymentMethod", "name": "Google Pay" },
+                { "@type": "PaymentMethod", "name": "Visa" },
+                { "@type": "PaymentMethod", "name": "Mastercard" },
+                { "@type": "PaymentMethod", "name": "Płatność przy odbiorze" }
+              ],
+              "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0.00",
+                  "currency": "PLN"
+                },
+                "shippingLabel": "Darmowa dostawa",
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 1,
+                    "maxValue": 3,
+                    "unitCode": "DAY"
+                  },
+                  "businessDays": true
+                },
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "PL"
+                },
+                "shippingService": [
+                  {
+                    "@type": "ShippingRateService",
+                    "name": "DPD Polska",
+                    "serviceType": "Kurier"
+                  },
+                  {
+                    "@type": "ShippingRateService",
+                    "name": "InPost Paczkomaty",
+                    "serviceType": "Paczkomat 24/7"
+                  }
+                ]
+              },
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "PL",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": 14,
+                "returnMethod": "https://schema.org/ReturnByMail",
+                "returnFees": "https://schema.org/FreeReturn",
+                "refundType": "https://schema.org/FullRefund"
+              }
+            }
+            {% else %}
+            "offers": {
+              "@type": "Offer",
+              "price": "{{ product.price | money_without_currency | remove: ',' | replace: ',', '.' }}",
+              "priceCurrency": "PLN",
+              "availability": "https://schema.org/OutOfStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "Saturaise"
+              }
+            }
+            {% endif %}
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  },
+  
+  {% comment %} Fixed aggregate offer with correct pricing {% endcomment %}
+  {% if available_count > 0 %}
+  "aggregateOffer": {
+    "@type": "AggregateOffer",
+    "offerCount": {{ available_count }},
+    "lowPrice": {{ min_price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+    "highPrice": {{ max_price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+    "priceCurrency": "PLN",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@id": "https://saturaise.com/#organization"
+    }
+  },
+  {% else %}
+  {% comment %} Handle empty collection or filtered results {% endcomment %}
+  "aggregateOffer": {
+    "@type": "AggregateOffer",
+    "offerCount": 0,
+    "priceCurrency": "PLN",
+    "availability": "https://schema.org/OutOfStock",
+    "seller": {
+      "@id": "https://saturaise.com/#organization"
+    }
+  },
+  {% endif %}
+  
+  {% comment %} Promotional offers if available {% endcomment %}
+  {% if collection.metafields.custom.promotion_active %}
+  "makesOffer": {
+    "@type": "Offer",
+    "name": {% if collection.metafields.custom.promotion_title %}{{ collection.metafields.custom.promotion_title.value | json }}{% else %}"Promocja {{ collection.title }}"{% endif %},
+    "description": {% if collection.metafields.custom.promotion_description %}{{ collection.metafields.custom.promotion_description.value | json }}{% else %}"Specjalna oferta na wybrane produkty"{% endif %},
+    {% if collection.metafields.custom.promotion_discount %}
+    "discount": {
+      "@type": "MonetaryAmount",
+      "value": {{ collection.metafields.custom.promotion_discount.value | json }},
+      "currency": "PLN"
+    },
+    {% endif %}
+    {% if collection.metafields.custom.promotion_start_date %}
+    "validFrom": "{{ collection.metafields.custom.promotion_start_date.value | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+    {% endif %}
+    {% if collection.metafields.custom.promotion_end_date %}
+    "validThrough": "{{ collection.metafields.custom.promotion_end_date.value | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+    {% endif %}
+    "eligibleRegion": {
+      "@type": "Country",
+      "name": "Polska"
+    }
+  },
+  {% endif %}
+  
+  {% comment %} WebPage schema for better SERP features {% endcomment %}
+  "isPartOf": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ collection.url }}#webpage",
+    "name": "{{ collection.title }} - Kolekcja | {{ shop.name }}",
+    "url": "{{ shop.url }}{{ collection.url }}",
+    "primaryImageOfPage": {% if collection.image %}"{{ collection.image | img_url: 'master' }}"{% else %}{% if collection.products.first %}"{{ collection.products.first.featured_image | img_url: '1200x' }}"{% else %}null{% endif %}{% endif %},
+    "dateModified": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+    "inLanguage": "pl-PL"
+  },
+  
+  "significantLink": [
+    {% for product in collection.products limit: 10 %}
+    "{{ shop.url }}{{ product.url }}"{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  
+  {% comment %} Enhanced breadcrumb with parent collections {% endcomment %}
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "SATURAISE",
+        "item": "https://saturaise.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Kolekcje",
+        "item": "https://saturaise.com/collections"
+      }
+      {% comment %} Dynamic parent collections based on actual navigation {% endcomment %}
+      {% assign parent_collection = nil %}
+      {% case collection.handle %}
+      {% when 'yeezy-350', 'yeezy-500', 'yeezy-700', 'yeezy-slide', 'yeezy-foam-runner' %}
+        {% assign parent_collection = 'yeezy' %}
+        {% assign parent_title = 'Yeezy' %}
+      {% when 'campus', 'samba', 'spezial', 'gazelle', 'superstar' %}
+        {% assign parent_collection = 'adidas' %}
+        {% assign parent_title = 'Adidas' %}
+      {% when 'air-force-1', 'air-force', 'air-max', 'cortez', 'dunk-low', 'dunk-sb', 'kobe', 'travis-scott', 'off-white', 'nocta', 'shox' %}
+        {% assign parent_collection = 'nike' %}
+        {% assign parent_title = 'Nike' %}
+      {% when 'air-jordan-1', 'air-jordan-3', 'air-jordan-4', 'air-jordan-5', 'air-jordan-6', 'air-jordan-11' %}
+        {% assign parent_collection = 'air-jordan' %}
+        {% assign parent_title = 'Air Jordan' %}
+      {% when 'new-balance-2002r', 'new-balance-530', 'new-balance-550', 'new-balance-9060' %}
+        {% assign parent_collection = 'new-balance' %}
+        {% assign parent_title = 'New Balance' %}
+      {% when 'lowmel', 'ultra-mini-boot', 'ultra-mini-platform', 'tasman-slipper', 'tazz-slipper' %}
+        {% assign parent_collection = 'ugg' %}
+        {% assign parent_title = 'UGG' %}
+      {% endcase %}
+      {% if parent_collection %}
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ parent_title }}",
+        "item": "{{ shop.url }}/collections/{{ parent_collection }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": {{ collection.title | json }},
+        "item": "{{ shop.url }}{{ collection.url }}"
+      }
+      {% else %}
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ collection.title | json }},
+        "item": "{{ shop.url }}{{ collection.url }}"
+      }
+      {% endif %}
+    ]
+  },
+  
+  {% comment %} Related Collections for internal linking {% endcomment %}
+  {% case collection.handle %}
+  {% when 'yeezy' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/yeezy-350",
+    "{{ shop.url }}/collections/yeezy-500",
+    "{{ shop.url }}/collections/yeezy-700",
+    "{{ shop.url }}/collections/yeezy-slide",
+    "{{ shop.url }}/collections/yeezy-foam-runner"
+  ],
+  {% when 'nike' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/air-force-1",
+    "{{ shop.url }}/collections/air-max",
+    "{{ shop.url }}/collections/dunk-low",
+    "{{ shop.url }}/collections/travis-scott",
+    "{{ shop.url }}/collections/off-white"
+  ],
+  {% when 'adidas' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/campus",
+    "{{ shop.url }}/collections/samba",
+    "{{ shop.url }}/collections/gazelle",
+    "{{ shop.url }}/collections/spezial",
+    "{{ shop.url }}/collections/superstar"
+  ],
+  {% when 'air-jordan' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/air-jordan-1",
+    "{{ shop.url }}/collections/air-jordan-4",
+    "{{ shop.url }}/collections/air-jordan-3",
+    "{{ shop.url }}/collections/air-jordan-5",
+    "{{ shop.url }}/collections/air-jordan-11"
+  ],
+  {% when 'new-balance' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/new-balance-530",
+    "{{ shop.url }}/collections/new-balance-2002r",
+    "{{ shop.url }}/collections/new-balance-550",
+    "{{ shop.url }}/collections/new-balance-9060"
+  ],
+  {% when 'ugg' %}
+  "relatedLink": [
+    "{{ shop.url }}/collections/ultra-mini-boot",
+    "{{ shop.url }}/collections/tasman-slipper",
+    "{{ shop.url }}/collections/tazz-slipper",
+    "{{ shop.url }}/collections/lowmel",
+    "{{ shop.url }}/collections/ultra-mini-platform"
+  ],
+  {% endcase %}
+  
+  "potentialAction": [
+    {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}{{ collection.url }}?q={search_term_string}",
+        "actionPlatform": [
+          "https://schema.org/DesktopWebPlatform",
+          "https://schema.org/MobileWebPlatform"
+        ]
+      },
+      "query-input": {
+        "@type": "PropertyValueSpecification",
+        "valueRequired": "https://schema.org/True",
+        "valueName": "search_term_string"
+      }
+    },
+    {
+      "@type": "FilterAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}{{ collection.url }}?filter.v.option.size={size}&filter.p.vendor={brand}&filter.v.price.gte={min_price}&filter.v.price.lte={max_price}&sort_by={sort}"
+      },
+      "object": {
+        "@type": "DataFeed",
+        "name": "Filtry produktów {{ collection.title }}",
+        "dataFeedElement": [
+          {% for filter in collection.filters %}
+            {
+              "@type": "PropertyValue",
+              "name": "{{ filter.label | escape }}",
+              "value": [
+                {% for value in filter.values limit: 10 %}
+                  "{{ value.label | escape }}"{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              ]
             }{% unless forloop.last %},{% endunless %}
           {% endfor %}
         ]
-      }{% endif %}
+      }
     }
-    ,{
-      "@type": "BreadcrumbList",
-      "@id": "{{ shop.url }}{{ collection.url }}#breadcrumblist",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://saturaise.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": {{ collection.title | json }},
-          "item": "{{ shop.url }}{{ collection.url }}"
-        }
-      ]
+  ],
+  
+  {% comment %} Enhanced keywords for better SEO {% endcomment %}
+  "keywords": {% capture keywords %}{{ collection.title | downcase }}, {{ collection.title | downcase }} polska, {{ collection.title | downcase }} sklep, {{ collection.title | downcase }} oryginalne, {% case collection.handle %}{% when 'yeezy' %}yeezy boost, kanye west, adidas yeezy, yeezy 350, yeezy 700, yeezy slide, yeezy foam runner{% when 'yeezy-350' %}yeezy boost 350, yeezy 350 v2, adidas yeezy 350, kanye west 350{% when 'yeezy-500' %}yeezy 500, yeezy 500 high, yeezy 500 utility black, kanye west 500{% when 'yeezy-700' %}yeezy boost 700, yeezy 700 v1, yeezy 700 v2, yeezy 700 v3, yeezy 700 mnvn{% when 'yeezy-slide' %}yeezy slide, yeezy slides, klapki yeezy, yeezy slide bone, yeezy slide onyx{% when 'yeezy-foam-runner' %}yeezy foam runner, yeezy foam rnnr, klapki piankowe yeezy{% when 'nike' %}nike sneakers, buty nike, nike air force, nike dunk, nike air max, travis scott, off-white{% when 'air-force-1', 'air-force' %}nike air force 1, air force 1 low, air force 1 '07, af1, białe air force{% when 'air-max' %}nike air max, air max 1, air max 90, air max 97, air max plus{% when 'cortez' %}nike cortez, cortez basic, cortez leather, forrest gump{% when 'dunk-low' %}nike dunk low, dunk panda, nike sb dunk, dunk low retro{% when 'dunk-sb' %}nike sb dunk, dunk low pro, skateboarding dunk{% when 'kobe' %}nike kobe, kobe bryant, mamba mentality, kobe protro{% when 'travis-scott' %}travis scott nike, cactus jack, travis scott jordan, la flame{% when 'off-white' %}off-white nike, virgil abloh, the ten, off white jordan{% when 'nocta' %}nocta nike, drake nocta, nocta glide, nocta hot step{% when 'shox' %}nike shox, shox tl, shox r4, nike springs{% when 'air-jordan' %}air jordan 1, jordan retro, buty jordan, michael jordan, jordan 1 high, jordan 4{% when 'air-jordan-1' %}jordan 1 high, jordan 1 low, jordan 1 mid, aj1, jordan 1 retro{% when 'air-jordan-3' %}jordan 3, air jordan 3 retro, jordan 3 white cement, aj3{% when 'air-jordan-4' %}jordan 4, air jordan 4 retro, jordan 4 black cat, jordan 4 bred{% when 'air-jordan-5' %}jordan 5, air jordan 5 retro, jordan 5 fire red, aj5{% when 'air-jordan-6' %}jordan 6, air jordan 6 retro, jordan 6 infrared, aj6{% when 'air-jordan-11' %}jordan 11, air jordan 11 retro, jordan 11 bred, jordan 11 concord{% when 'adidas' %}adidas originals, buty adidas, adidas campus, adidas samba, adidas gazelle{% when 'campus' %}adidas campus, campus 00s, campus bad bunny, campus 80s{% when 'samba' %}adidas samba, samba og, samba vegan, samba wales bonner{% when 'spezial' %}adidas spezial, handball spezial, spzl{% when 'gazelle' %}adidas gazelle, gazelle 85, gazelle indoor{% when 'superstar' %}adidas superstar, superstar 82, shell toe{% when 'new-balance' %}new balance 530, new balance 2002r, nb lifestyle, new balance 550, new balance 9060{% when 'new-balance-530' %}nb 530, new balance 530 white, new balance 530 silver, mr530{% when 'new-balance-2002r' %}nb 2002r, new balance 2002r protection pack, m2002r{% when 'new-balance-550' %}nb 550, new balance 550 white green, ald 550{% when 'new-balance-9060' %}nb 9060, new balance 9060 sea salt, u9060{% when 'ugg' %}ugg australia, buty ugg, ugg ultra mini, ugg tasman, ugg tazz{% when 'ultra-mini-boot' %}ugg ultra mini, ugg ultra mini platform, ugg mini boot{% when 'ultra-mini-platform' %}ugg ultra mini platform, platformy ugg{% when 'lowmel' %}ugg lowmel, ugg chunky, grube ugg{% when 'tasman-slipper' %}ugg tasman, kapcie ugg, ugg slipper{% when 'tazz-slipper' %}ugg tazz, ugg tazz platform, kapcie platformy{% endcase %}{% endcapture %}{{ keywords | strip | json }},
+  
+  "specialty": {% case collection.handle %}
+    {% when 'yeezy' %}"Limitowane sneakersy Yeezy - oficjalny dystrybutor"
+    {% when 'yeezy-350' %}"Yeezy Boost 350 V2 - wszystkie kolorystyki"
+    {% when 'yeezy-700' %}"Yeezy Boost 700 - V1, V2, V3 MNVN"
+    {% when 'nike' %}"Nike sneakersy - szeroki wybór modeli"
+    {% when 'air-force-1', 'air-force' %}"Nike Air Force 1 - Low, Mid, High"
+    {% when 'dunk-low' %}"Nike Dunk Low - klasyczne i SB"
+    {% when 'travis-scott' %}"Travis Scott x Nike - limitowane kolaboracje"
+    {% when 'off-white' %}"Off-White x Nike - The Ten i nowsze"
+    {% when 'air-jordan' %}"Air Jordan - kultowe modele koszykarskie"
+    {% when 'air-jordan-1' %}"Air Jordan 1 - High, Mid, Low OG"
+    {% when 'adidas' %}"Adidas Originals - klasyczne i limitowane edycje"
+    {% when 'campus' %}"Adidas Campus - 00s, Bad Bunny, South Park"
+    {% when 'samba' %}"Adidas Samba - OG, Vegan, Wales Bonner"
+    {% when 'new-balance' %}"New Balance - premium lifestyle sneakersy"
+    {% when 'new-balance-530' %}"New Balance 530 - klasyczny retro running"
+    {% when 'new-balance-2002r' %}"New Balance 2002R - Protection Pack"
+    {% when 'new-balance-9060' %}"New Balance 9060 - futurystyczny design"
+    {% when 'ugg' %}"UGG - oryginalne buty zimowe"
+    {% when 'ultra-mini-boot' %}"UGG Ultra Mini - najpopularniejszy model"
+    {% else %}"{{ collection.title }} - limitowane edycje"
+  {% endcase %},
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Saturaise",
+    "logo": {
+      "@type": "ImageObject",
+      "url": {% if settings.logo %}"https:{{ settings.logo | image_url: width: 600 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %}
     }
-    {% endif %}
+  },
+  "datePublished": "{{ collection.published_at | default: shop.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "numberOfItems": {{ collection.products_count }},
+  "collectionSize": {{ collection.products_count }}
+}
+
+{% comment %} Enhanced collection breadcrumb {% endcomment %}
+,{
+  "@type": "BreadcrumbList",
+  "@id": "{{ shop.url }}{{ collection.url }}#collectionbreadcrumb",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "SATURAISE",
+      "item": "https://saturaise.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Kolekcje",
+      "item": "https://saturaise.com/collections"
+    }{% if parent_collection %},
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ parent_title }}",
+      "item": "https://saturaise.com/collections/{{ parent_collection }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "{{ collection.title }}",
+      "item": "{{ shop.url }}{{ collection.url }}"
+    }{% else %},
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ collection.title }}",
+      "item": "{{ shop.url }}{{ collection.url }}"
+    }{% endif %}
+  ]
+}
+
+{% comment %} Enhanced FAQs for Collections {% endcomment %}
+,{
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Czy {{ collection.title }} w Saturaise są oryginalne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, wszystkie produkty {{ collection.title }} w naszym sklepie są w 100% oryginalne. Każdy produkt przechodzi szczegółową weryfikację autentyczności przez naszych ekspertów. Współpracujemy wyłącznie z oficjalnymi dystrybutorami i zaufanymi dostawcami."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jakie rozmiary {{ collection.title }} są dostępne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oferujemy szeroki zakres rozmiarów {{ collection.title }}. {% case collection.handle %}{% when 'yeezy', 'yeezy-350', 'yeezy-700' %}Yeezy zwykle kroją małe rozmiary, zalecamy wybór o pół rozmiaru większy.{% when 'nike', 'air-jordan', 'air-force-1', 'air-force' %}Nike i Jordan mają standardowe rozmiary TTS (true to size).{% when 'new-balance' %}New Balance ma komfortowe dopasowanie, zazwyczaj TTS.{% when 'ugg' %}UGG może kroić większe rozmiary, sprawdź tabelę rozmiarów.{% endcase %} Dostępność konkretnych rozmiarów można sprawdzić na stronie produktu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak długo trwa dostawa {{ collection.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standardowa dostawa {{ collection.title }} trwa 1-3 dni robocze. Zamówienia złożone do godziny 14:00 wysyłamy tego samego dnia. Oferujemy darmową dostawę na terenie całej Polski kurierem DPD lub InPost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy mogę zwrócić {{ collection.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, masz 14 dni na zwrot zakupionych {{ collection.title }}. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu. Zwrot jest darmowy, a pieniądze zwracamy w ciągu 14 dni."
+      }
+    },
+    {% case collection.handle %}
+    {% when 'yeezy', 'yeezy-350', 'yeezy-700', 'yeezy-slide' %}
+    {
+      "@type": "Question",
+      "name": "Jak dopasować rozmiar Yeezy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yeezy Boost 350 V2 kroją małe rozmiary - zalecamy wybór o 0.5-1 rozmiar większy. Yeezy 700 są bardziej true to size. Yeezy Slide i Foam Runner także kroją małe rozmiary. W razie wątpliwości skontaktuj się z nami."
+      }
+    },
+    {% when 'travis-scott' %}
+    {
+      "@type": "Question",
+      "name": "Czy macie wszystkie modele Travis Scott?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oferujemy szeroki wybór współprac Travis Scott x Nike i Jordan, włączając Air Jordan 1, Air Force 1, Dunk Low i inne. Dostępność zależy od aktualnego stanu magazynowego. Możemy też sprowadzić konkretny model na zamówienie."
+      }
+    },
+    {% when 'dunk-low' %}
+    {
+      "@type": "Question",
+      "name": "Jakie kolorystyki Nike Dunk Low macie?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oferujemy popularne kolorystyki Dunk Low: Panda, University Blue, Coast, Michigan, Syracuse i wiele innych. Regularnie dodajemy nowe modele, w tym limitowane współprace i SB Dunk."
+      }
+    },
+    {% when 'new-balance-530', 'new-balance-2002r', 'new-balance-9060' %}
+    {
+      "@type": "Question",
+      "name": "Czym różnią się modele New Balance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "New Balance 530 to klasyczny model retro running z lat 90. Model 2002R to premium lifestyle sneaker z technologią ABZORB. 550 to koszykarski klasyk, a 9060 to najnowszy futurystyczny design."
+      }
+    },
+    {% when 'ugg', 'ultra-mini-boot', 'tasman-slipper' %}
+    {
+      "@type": "Question", 
+      "name": "Jak dbać o buty UGG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "UGG wymagają specjalnej pielęgnacji. Używaj sprayu ochronnego przed pierwszym użyciem. Czyść specjalną szczotką do zamszu. Unikaj mocnego zamoczenia. Oferujemy także środki do pielęgnacji UGG."
+      }
+    },
+    {% endcase %}
+    {
+      "@type": "Question",
+      "name": "Skąd pochodzą {{ collection.title }} w Saturaise?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wszystkie {{ collection.title }} pochodzą od oficjalnych dystrybutorów, autoryzowanych sklepów oraz z oficjalnych wyprzedaży. Mamy rozbudowaną sieć partnerów w całej Europie, dzięki czemu możemy oferować nawet najtrudniej dostępne modele."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy oferujecie raty na {{ collection.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, oferujemy płatność w ratach przez PayPo oraz systemy ratalne dostępne w Przelewy24. Możesz rozłożyć płatność nawet do 30 rat 0% w zależności od kwoty zamówienia."
+      }
+    }
+  ]
+}
+
+{% comment %} Collection Hierarchy Schema for parent-child relationships {% endcomment %}
+{% if collection.handle == 'yeezy' or collection.handle == 'nike' or collection.handle == 'adidas' or collection.handle == 'air-jordan' or collection.handle == 'new-balance' or collection.handle == 'ugg' %}
+,{
+  "@type": "ItemList",
+  "@id": "{{ shop.url }}{{ collection.url }}#subcollections",
+  "name": "{{ collection.title }} - Podkategorie",
+  "itemListElement": [
+    {% case collection.handle %}
+    {% when 'yeezy' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/yeezy-350", "name": "Yeezy 350" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/yeezy-500", "name": "Yeezy 500" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/yeezy-700", "name": "Yeezy 700" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/yeezy-slide", "name": "Yeezy Slide" },
+      { "@type": "ListItem", "position": 5, "url": "{{ shop.url }}/collections/yeezy-foam-runner", "name": "Yeezy Foam Runner" }
+    {% when 'nike' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/air-force-1", "name": "Air Force 1" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/air-max", "name": "Air Max" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/dunk-low", "name": "Dunk Low" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/travis-scott", "name": "Travis Scott" },
+      { "@type": "ListItem", "position": 5, "url": "{{ shop.url }}/collections/off-white", "name": "Off-White" }
+    {% when 'adidas' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/campus", "name": "Campus" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/samba", "name": "Samba" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/gazelle", "name": "Gazelle" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/spezial", "name": "Spezial" },
+      { "@type": "ListItem", "position": 5, "url": "{{ shop.url }}/collections/superstar", "name": "Superstar" }
+    {% when 'air-jordan' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/air-jordan-1", "name": "Air Jordan 1" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/air-jordan-4", "name": "Air Jordan 4" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/air-jordan-3", "name": "Air Jordan 3" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/air-jordan-5", "name": "Air Jordan 5" },
+      { "@type": "ListItem", "position": 5, "url": "{{ shop.url }}/collections/air-jordan-11", "name": "Air Jordan 11" }
+    {% when 'new-balance' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/new-balance-530", "name": "New Balance 530" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/new-balance-2002r", "name": "New Balance 2002R" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/new-balance-550", "name": "New Balance 550" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/new-balance-9060", "name": "New Balance 9060" }
+    {% when 'ugg' %}
+      { "@type": "ListItem", "position": 1, "url": "{{ shop.url }}/collections/ultra-mini-boot", "name": "Ultra Mini Boot" },
+      { "@type": "ListItem", "position": 2, "url": "{{ shop.url }}/collections/tasman-slipper", "name": "Tasman Slipper" },
+      { "@type": "ListItem", "position": 3, "url": "{{ shop.url }}/collections/tazz-slipper", "name": "Tazz Slipper" },
+      { "@type": "ListItem", "position": 4, "url": "{{ shop.url }}/collections/lowmel", "name": "Lowmel" },
+      { "@type": "ListItem", "position": 5, "url": "{{ shop.url }}/collections/ultra-mini-platform", "name": "Ultra Mini Platform" }
+    {% endcase %}
+  ]
+}
+{% endif %}
+
+{% endif %}
     
     {% if template contains 'page' %}
     ,{
@@ -972,7 +2032,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
+          "name": "Saturaise",
           "item": "https://saturaise.com"
         },
         {
