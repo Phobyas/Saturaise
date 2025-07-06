@@ -942,18 +942,6 @@
   {% endif %}
 {% endfor %}
 
-{% comment %} Pagination support {% endcomment %}
-{% assign current_page = 1 %}
-{% if current_page_param %}
-  {% assign current_page = current_page_param | times: 1 %}
-{% endif %}
-{% assign items_per_page = 30 %}
-{% for block in section.blocks %}
-  {% if block.settings.items_per_page %}
-    {% assign items_per_page = block.settings.items_per_page %}
-  {% endif %}
-{% endfor %}
-
 {% comment %} Generate SEO descriptions based on collection {% endcomment %}
 {% unless collection.description != blank %}
   {% case collection.handle %}
@@ -1008,13 +996,35 @@
   {% endcase %}
 {% endunless %}
 
+{% comment %} Dynamic parent collections based on actual navigation {% endcomment %}
+{% assign parent_collection = nil %}
+{% case collection.handle %}
+{% when 'yeezy-350', 'yeezy-500', 'yeezy-700', 'yeezy-slide', 'yeezy-foam-runner' %}
+  {% assign parent_collection = 'yeezy' %}
+  {% assign parent_title = 'Yeezy' %}
+{% when 'campus', 'samba', 'spezial', 'gazelle', 'superstar' %}
+  {% assign parent_collection = 'adidas' %}
+  {% assign parent_title = 'Adidas' %}
+{% when 'air-force-1', 'air-force', 'air-max', 'cortez', 'dunk-low', 'dunk-sb', 'kobe', 'travis-scott', 'off-white', 'nocta', 'shox' %}
+  {% assign parent_collection = 'nike' %}
+  {% assign parent_title = 'Nike' %}
+{% when 'air-jordan-1', 'air-jordan-3', 'air-jordan-4', 'air-jordan-5', 'air-jordan-6', 'air-jordan-11' %}
+  {% assign parent_collection = 'air-jordan' %}
+  {% assign parent_title = 'Air Jordan' %}
+{% when 'new-balance-2002r', 'new-balance-530', 'new-balance-550', 'new-balance-9060' %}
+  {% assign parent_collection = 'new-balance' %}
+  {% assign parent_title = 'New Balance' %}
+{% when 'lowmel', 'ultra-mini-boot', 'ultra-mini-platform', 'tasman-slipper', 'tazz-slipper' %}
+  {% assign parent_collection = 'ugg' %}
+  {% assign parent_title = 'UGG' %}
+{% endcase %}
+
 ,{
   "@type": "CollectionPage",
-  "@id": "{{ shop.url }}{{ collection.url }}#collection",
+  "@id": "{{ shop.url }}{{ collection.url }}",
   "url": "{{ shop.url }}{{ collection.url }}",
   "name": {{ collection.title | append: ' - Oryginalne produkty | Saturaise' | json }},
   "alternateName": {{ collection.title | append: ' Polska' | json }},
-  {% comment %} Add filter context to name if filters are active {% endcomment %}
   {% assign active_filters = '' %}
   {% for filter in collection.filters %}
     {% if filter.active_values.size > 0 %}
@@ -1030,7 +1040,6 @@
   {% if collection.image %}
   "image": {
     "@type": "ImageObject",
-    "@id": "{{ shop.url }}{{ collection.url }}#primaryimage",
     "url": "https:{{ collection.image | image_url: width: 1200 }}",
     "contentUrl": "https:{{ collection.image | image_url: width: 1200 }}",
     "width": 1200,
@@ -1048,46 +1057,6 @@
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "specialty": [
-      {% case collection.handle %}
-      {% when 'new-balance-9060' %}
-      "Najpopularniejszy model 2024",
-      "Futurystyczny design",
-      "Technologia ABZORB i SBS",
-      "Limitowane kolaboracje Bodega"
-      {% when 'yeezy-350' %}
-      "Bestseller Yeezy w Polsce",
-      "Technologia Boost",
-      "Primeknit upper",
-      "Wszystkie kolorystyki"
-      {% when 'dunk-low' %}
-      "Klasyczne kolorystyki Panda",
-      "SB i retro wersje",
-      "Najczęściej wybierane Nike",
-      "Szeroki wybór rozmiarów"
-      {% when 'travis-scott' %}
-      "Ekskluzywne kolaboracje Cactus Jack",
-      "Reverse Swoosh",
-      "Limitowane edycje",
-      "Collector's items"
-      {% when 'air-jordan-1' %}
-      "Kultowy model z 1985",
-      "High, Mid i Low",
-      "OG kolorystyki",
-      "Chicago, Bred, Royal"
-      {% else %}
-      "100% Oryginalne produkty",
-      "Darmowa dostawa",
-      "14 dni na zwrot",
-      "Gwarancja autentyczności"
-      {% endcase %}
-    ],
-    {% case collection.handle %}
-    {% when 'yeezy-350' %}"award": "Bestseller 2024 - Yeezy",
-    {% when 'dunk-low' %}"award": "Najczęściej wybierane Nike 2024",
-    {% when 'new-balance-9060' %}"award": "Hit sezonu 2024",
-    {% when 'travis-scott' %}"award": "Najbardziej pożądane kolaboracje",
-    {% endcase %}
     "url": "{{ shop.url }}{{ collection.url }}"
   },
   "mainEntity": {
@@ -1098,7 +1067,6 @@
       "numberOfItems": {{ collection.products_count }},
       "itemListOrder": "https://schema.org/ItemListOrderDescending",
       "itemListElement": [
-        {% comment %} Performance optimization: detailed data for first 10, simple for rest {% endcomment %}
         {% assign detailed_product_limit = 10 %}
         {% for product in collection.products limit: 50 %}
         {
@@ -1107,7 +1075,7 @@
           "url": "{{ shop.url }}{{ product.url }}",
           "item": {
             "@type": "Product",
-            "@id": "{{ shop.url }}{{ product.url }}#product",
+            "@id": "{{ shop.url }}{{ product.url }}",
             "name": {{ product.title | json }},
             "url": "{{ shop.url }}{{ product.url }}",
             {% if product.type == "Sneakersy" or product.type == "Buty" %}
@@ -1141,7 +1109,6 @@
             "productID": {{ product.id | json }},
             "sku": {{ product.selected_or_first_available_variant.sku | default: product.selected_or_first_available_variant.id | json }},
             
-            {% comment %} Enhanced GTIN handling for all variants {% endcomment %}
             {% if product.variants.first.barcode != blank %}
               {% assign barcode_length = product.variants.first.barcode | size %}
               {% if barcode_length == 12 %}
@@ -1157,7 +1124,6 @@
               {% endif %}
             {% endif %}
             
-            {% comment %} Enhanced identifier array {% endcomment %}
             {% if product.selected_or_first_available_variant.sku or product.variants.first.barcode or product.metafields.custom.style_code %}
             "identifier": [
               {% if product.selected_or_first_available_variant.sku %}
@@ -1185,14 +1151,12 @@
             "mpn": {{ product.metafields.mm-google-shopping.mpn.value | json }},
             {% endif %}
             
-            {% comment %} Enhanced color handling {% endcomment %}
             {% if product.metafields.custom.color %}
             "color": {% if product.metafields.custom.color.value.label %}{{ product.metafields.custom.color.value.label | json }}{% else %}{{ product.metafields.custom.color.value | json }}{% endif %},
             {% elsif product.metafields.shopify.color-pattern %}
             "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
             {% endif %}
             
-            {% comment %} Enhanced material handling with specific data {% endcomment %}
             {% if product.metafields.shopify.footwear-material.value %}
             "material": [
               {% for material in product.metafields.shopify.footwear-material.value %}
@@ -1238,7 +1202,6 @@
             
             "itemCondition": "https://schema.org/NewCondition",
             
-            {% comment %} Enhanced additional properties with size availability {% endcomment %}
             "additionalProperty": [
               {
                 "@type": "PropertyValue",
@@ -1306,7 +1269,6 @@
               }
             },
             
-            {% comment %} Enhanced variant offers with detailed variant info for first 10 products {% endcomment %}
             {% if product.available %}
             "offers": {
               "@type": "AggregateOffer",
@@ -1423,7 +1385,6 @@
     }
   },
   
-  {% comment %} Fixed aggregate offer with correct pricing {% endcomment %}
   {% if available_count > 0 %}
   "aggregateOffer": {
     "@type": "AggregateOffer",
@@ -1437,7 +1398,6 @@
     }
   },
   {% else %}
-  {% comment %} Handle empty collection or filtered results {% endcomment %}
   "aggregateOffer": {
     "@type": "AggregateOffer",
     "offerCount": 0,
@@ -1449,7 +1409,6 @@
   },
   {% endif %}
   
-  {% comment %} Promotional offers if available {% endcomment %}
   {% if collection.metafields.custom.promotion_active %}
   "makesOffer": {
     "@type": "Offer",
@@ -1475,26 +1434,15 @@
   },
   {% endif %}
   
-  {% comment %} WebPage schema for better SERP features {% endcomment %}
-  "isPartOf": {
-    "@type": "WebPage",
-    "@id": "{{ shop.url }}{{ collection.url }}#webpage",
-    "name": "{{ collection.title }} - Kolekcja | {{ shop.name }}",
-    "url": "{{ shop.url }}{{ collection.url }}",
-    "primaryImageOfPage": {% if collection.image %}"{{ collection.image | img_url: 'master' }}"{% else %}{% if collection.products.first %}"{{ collection.products.first.featured_image | img_url: '1200x' }}"{% else %}null{% endif %}{% endif %},
-    "dateModified": "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-    "inLanguage": "pl-PL"
-  },
-  
   "significantLink": [
     {% for product in collection.products limit: 10 %}
     "{{ shop.url }}{{ product.url }}"{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ],
   
-  {% comment %} Enhanced breadcrumb with parent collections {% endcomment %}
   "breadcrumb": {
     "@type": "BreadcrumbList",
+    "@id": "{{ shop.url }}{{ collection.url }}#breadcrumb",
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -1508,28 +1456,6 @@
         "name": "Kolekcje",
         "item": "https://saturaise.com/collections"
       }
-      {% comment %} Dynamic parent collections based on actual navigation {% endcomment %}
-      {% assign parent_collection = nil %}
-      {% case collection.handle %}
-      {% when 'yeezy-350', 'yeezy-500', 'yeezy-700', 'yeezy-slide', 'yeezy-foam-runner' %}
-        {% assign parent_collection = 'yeezy' %}
-        {% assign parent_title = 'Yeezy' %}
-      {% when 'campus', 'samba', 'spezial', 'gazelle', 'superstar' %}
-        {% assign parent_collection = 'adidas' %}
-        {% assign parent_title = 'Adidas' %}
-      {% when 'air-force-1', 'air-force', 'air-max', 'cortez', 'dunk-low', 'dunk-sb', 'kobe', 'travis-scott', 'off-white', 'nocta', 'shox' %}
-        {% assign parent_collection = 'nike' %}
-        {% assign parent_title = 'Nike' %}
-      {% when 'air-jordan-1', 'air-jordan-3', 'air-jordan-4', 'air-jordan-5', 'air-jordan-6', 'air-jordan-11' %}
-        {% assign parent_collection = 'air-jordan' %}
-        {% assign parent_title = 'Air Jordan' %}
-      {% when 'new-balance-2002r', 'new-balance-530', 'new-balance-550', 'new-balance-9060' %}
-        {% assign parent_collection = 'new-balance' %}
-        {% assign parent_title = 'New Balance' %}
-      {% when 'lowmel', 'ultra-mini-boot', 'ultra-mini-platform', 'tasman-slipper', 'tazz-slipper' %}
-        {% assign parent_collection = 'ugg' %}
-        {% assign parent_title = 'UGG' %}
-      {% endcase %}
       {% if parent_collection %}
       ,{
         "@type": "ListItem",
@@ -1554,7 +1480,6 @@
     ]
   },
   
-  {% comment %} Related Collections for internal linking {% endcomment %}
   {% case collection.handle %}
   {% when 'yeezy' %}
   "relatedLink": [
@@ -1648,7 +1573,6 @@
     }
   ],
   
-  {% comment %} Enhanced keywords for better SEO {% endcomment %}
   "keywords": {% capture keywords %}{{ collection.title | downcase }}, {{ collection.title | downcase }} polska, {{ collection.title | downcase }} sklep, {{ collection.title | downcase }} oryginalne, {% case collection.handle %}{% when 'yeezy' %}yeezy boost, kanye west, adidas yeezy, yeezy 350, yeezy 700, yeezy slide, yeezy foam runner{% when 'yeezy-350' %}yeezy boost 350, yeezy 350 v2, adidas yeezy 350, kanye west 350{% when 'yeezy-500' %}yeezy 500, yeezy 500 high, yeezy 500 utility black, kanye west 500{% when 'yeezy-700' %}yeezy boost 700, yeezy 700 v1, yeezy 700 v2, yeezy 700 v3, yeezy 700 mnvn{% when 'yeezy-slide' %}yeezy slide, yeezy slides, klapki yeezy, yeezy slide bone, yeezy slide onyx{% when 'yeezy-foam-runner' %}yeezy foam runner, yeezy foam rnnr, klapki piankowe yeezy{% when 'nike' %}nike sneakers, buty nike, nike air force, nike dunk, nike air max, travis scott, off-white{% when 'air-force-1', 'air-force' %}nike air force 1, air force 1 low, air force 1 '07, af1, białe air force{% when 'air-max' %}nike air max, air max 1, air max 90, air max 97, air max plus{% when 'cortez' %}nike cortez, cortez basic, cortez leather, forrest gump{% when 'dunk-low' %}nike dunk low, dunk panda, nike sb dunk, dunk low retro{% when 'dunk-sb' %}nike sb dunk, dunk low pro, skateboarding dunk{% when 'kobe' %}nike kobe, kobe bryant, mamba mentality, kobe protro{% when 'travis-scott' %}travis scott nike, cactus jack, travis scott jordan, la flame{% when 'off-white' %}off-white nike, virgil abloh, the ten, off white jordan{% when 'nocta' %}nocta nike, drake nocta, nocta glide, nocta hot step{% when 'shox' %}nike shox, shox tl, shox r4, nike springs{% when 'air-jordan' %}air jordan 1, jordan retro, buty jordan, michael jordan, jordan 1 high, jordan 4{% when 'air-jordan-1' %}jordan 1 high, jordan 1 low, jordan 1 mid, aj1, jordan 1 retro{% when 'air-jordan-3' %}jordan 3, air jordan 3 retro, jordan 3 white cement, aj3{% when 'air-jordan-4' %}jordan 4, air jordan 4 retro, jordan 4 black cat, jordan 4 bred{% when 'air-jordan-5' %}jordan 5, air jordan 5 retro, jordan 5 fire red, aj5{% when 'air-jordan-6' %}jordan 6, air jordan 6 retro, jordan 6 infrared, aj6{% when 'air-jordan-11' %}jordan 11, air jordan 11 retro, jordan 11 bred, jordan 11 concord{% when 'adidas' %}adidas originals, buty adidas, adidas campus, adidas samba, adidas gazelle{% when 'campus' %}adidas campus, campus 00s, campus bad bunny, campus 80s{% when 'samba' %}adidas samba, samba og, samba vegan, samba wales bonner{% when 'spezial' %}adidas spezial, handball spezial, spzl{% when 'gazelle' %}adidas gazelle, gazelle 85, gazelle indoor{% when 'superstar' %}adidas superstar, superstar 82, shell toe{% when 'new-balance' %}new balance 530, new balance 2002r, nb lifestyle, new balance 550, new balance 9060{% when 'new-balance-530' %}nb 530, new balance 530 white, new balance 530 silver, mr530{% when 'new-balance-2002r' %}nb 2002r, new balance 2002r protection pack, m2002r{% when 'new-balance-550' %}nb 550, new balance 550 white green, ald 550{% when 'new-balance-9060' %}nb 9060, new balance 9060 sea salt, u9060{% when 'ugg' %}ugg australia, buty ugg, ugg ultra mini, ugg tasman, ugg tazz{% when 'ultra-mini-boot' %}ugg ultra mini, ugg ultra mini platform, ugg mini boot{% when 'ultra-mini-platform' %}ugg ultra mini platform, platformy ugg{% when 'lowmel' %}ugg lowmel, ugg chunky, grube ugg{% when 'tasman-slipper' %}ugg tasman, kapcie ugg, ugg slipper{% when 'tazz-slipper' %}ugg tazz, ugg tazz platform, kapcie platformy{% endcase %}{% endcapture %}{{ keywords | strip | json }},
   
   "specialty": {% case collection.handle %}
@@ -1688,47 +1612,10 @@
   "collectionSize": {{ collection.products_count }}
 }
 
-{% comment %} Enhanced collection breadcrumb {% endcomment %}
-,{
-  "@type": "BreadcrumbList",
-  "@id": "{{ shop.url }}{{ collection.url }}#collectionbreadcrumb",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "SATURAISE",
-      "item": "https://saturaise.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Kolekcje",
-      "item": "https://saturaise.com/collections"
-    }{% if parent_collection %},
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "{{ parent_title }}",
-      "item": "https://saturaise.com/collections/{{ parent_collection }}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "name": "{{ collection.title }}",
-      "item": "{{ shop.url }}{{ collection.url }}"
-    }{% else %},
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "{{ collection.title }}",
-      "item": "{{ shop.url }}{{ collection.url }}"
-    }{% endif %}
-  ]
-}
-
 {% comment %} Enhanced FAQs for Collections {% endcomment %}
 ,{
   "@type": "FAQPage",
+  "@id": "{{ shop.url }}{{ collection.url }}#faq",
   "mainEntity": [
     {
       "@type": "Question",
