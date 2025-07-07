@@ -124,7 +124,631 @@
         }
       ]
     }
-    
+
+{% if template == 'index' %}
+,{
+  "@type": "WebPage",
+  "@id": "https://saturaise.com/#homepage",
+  "url": "https://saturaise.com/",
+  "name": "Saturaise - Limitowane Sneakersy | Oficjalny Sklep w Polsce",
+  "description": "Oficjalny sklep z limitowanymi sneakersami w Polsce. Nike, Yeezy, Jordan, New Balance. 100% oryginalne, certyfikat autentyczności, wysyłka z Polski.",
+  "inLanguage": "pl-PL",
+  "isPartOf": {
+    "@id": "https://saturaise.com/#website"
+  },
+  "about": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://saturaise.com/cdn/shop/files/seo_media_banner_blend_kopia_2-Picsart-AiImageEnhancer.jpg?v=1751897958&width=1200",
+    "width": 2400,
+    "height": 1256,
+    "caption": "Saturaise - Limitowane Sneakersy w Polsce"
+  },
+  "breadcrumb": {
+    "@id": "https://saturaise.com/#breadcrumb"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://saturaise.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": ["h1", ".hero__heading", ".collection__title"]
+  }
+}
+
+,{
+  "@type": ["Organization", "Store", "LocalBusiness"],
+  "@id": "https://saturaise.com/#organization-homepage",
+  "name": "Saturaise",
+  "legalName": "Saturaise",
+  "url": "https://saturaise.com",
+  "logo": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png?v=1733057916&width=800",
+  "description": "Sklep specjalizujący się w sprzedaży weryfikowanych, limitowanych sneakersów z gwarancją autentyczności.",
+  "foundingDate": "2022",
+  "founders": [
+    {
+      "@type": "Person",
+      "name": "Zespół Saturaise"
+    }
+  ],
+  "priceRange": "500-15000 PLN",
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "minValue": 1,
+    "maxValue": 5
+  },
+  {% if shop.metafields.trustmate.average_rating and shop.metafields.trustmate.review_count %}
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ shop.metafields.trustmate.average_rating }}",
+    "reviewCount": "{{ shop.metafields.trustmate.review_count }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  {% endif %}
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ogrodowa 9a",
+    "addressLocality": "Żyrowa",
+    "addressRegion": "Śląskie",
+    "postalCode": "47-330",
+    "addressCountry": "PL"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "50.4938",
+    "longitude": "18.1597"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+48451108247",
+    "email": "saturaisekontakt@gmail.com",
+    "contactType": "customer service",
+    "availableLanguage": "Polish",
+    "areaServed": {
+      "@type": "Country",
+      "name": "Poland"
+    }
+  },
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Weryfikacja Autentyczności",
+        "description": "Każdy produkt przechodzi profesjonalną weryfikację"
+      }
+    },
+    {
+      "@type": "Offer", 
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Darmowa Dostawa",
+        "description": "Darmowa wysyłka na terenie Polski"
+      }
+    }
+  ]
+}
+
+,{
+  "@type": "BreadcrumbList",
+  "@id": "https://saturaise.com/#breadcrumb",
+  "name": "Nawigacja",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Strona główna",
+    "item": {
+      "@type": "Thing",
+      "@id": "https://saturaise.com"
+    }
+  }]
+}
+
+{% if collections['hot'] and collections['hot'].products.size > 0 %}
+{% assign featured_products = collections['hot'].products | limit: 12 %}
+,{
+  "@type": "ItemList",
+  "@id": "https://saturaise.com/#featured-sneakers",
+  "name": "Najnowsze Sneakersy - Hot Deals",
+  "description": "Najgorętsze oferty na limitowane sneakersy",
+  "numberOfItems": {{ featured_products.size }},
+  "itemListOrder": "https://schema.org/ItemListOrderDescending",
+  "itemListElement": [
+    {% for product in featured_products %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "url": "https://saturaise.com{{ product.url }}",
+      "name": {{ product.title | json }},
+      "item": {
+        "@type": "Product",
+        "@id": "https://saturaise.com{{ product.url }}",
+        "name": {{ product.title | json }},
+        "url": "https://saturaise.com{{ product.url }}",
+        {% if product.featured_image %}
+        "image": "https:{{ product.featured_image | image_url: width: 600 }}",
+        {% endif %}
+        "brand": {
+          "@type": "Brand",
+          "name": {{ product.vendor | default: 'Saturaise' | json }}
+        },
+        {% if product.metafields.trustmate.average_rating and product.metafields.trustmate.review_count %}
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "{{ product.metafields.trustmate.average_rating }}",
+          "reviewCount": "{{ product.metafields.trustmate.review_count }}",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        {% endif %}
+        "offers": {
+          "@type": "Offer",
+          "url": "https://saturaise.com{{ product.url }}",
+          "price": {{ product.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+          "priceCurrency": "PLN",
+          "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+          "itemCondition": "https://schema.org/NewCondition",
+          "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+          "seller": {
+            "@id": "https://saturaise.com/#organization"
+          },
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0",
+              "currency": "PLN"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "PL"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 1,
+                "maxValue": 7,
+                "unitCode": "DAY"
+              }
+            }
+          }
+        }
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+{% endif %}
+
+,{
+  "@type": "ItemList",
+  "@id": "https://saturaise.com/#departments",
+  "name": "Kategorie Produktów Saturaise",
+  "description": "Wszystkie kategorie sneakersów i ubrań dostępne w Saturaise",
+  "numberOfItems": 9,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/buty",
+        "name": "Buty",
+        "url": "https://saturaise.com/collections/buty",
+        "description": "Limitowane sneakersy i ekskluzywne buty"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/nike",
+        "name": "Nike",
+        "url": "https://saturaise.com/collections/nike",
+        "description": "Kolekcja butów Nike - Air Force 1, Dunk Low, Air Max"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/yeezy",
+        "name": "Yeezy",
+        "url": "https://saturaise.com/collections/yeezy",
+        "description": "Kolekcja Yeezy by Kanye West - 350, 500, 700, Slide"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/air-jordan",
+        "name": "Air Jordan",
+        "url": "https://saturaise.com/collections/air-jordan",
+        "description": "Kultowe buty Air Jordan - 1, 3, 4, 5, 11"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/adidas",
+        "name": "Adidas",
+        "url": "https://saturaise.com/collections/adidas",
+        "description": "Kolekcja Adidas Originals - Campus, Samba, Gazelle"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/new-balance",
+        "name": "New Balance",
+        "url": "https://saturaise.com/collections/new-balance",
+        "description": "Premium sneakersy New Balance - 530, 2002R, 9060"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/ugg",
+        "name": "UGG",
+        "url": "https://saturaise.com/collections/ugg",
+        "description": "Oryginalne buty UGG - Ultra Mini, Tasman, Tazz"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/ubrania",
+        "name": "Ubrania",
+        "url": "https://saturaise.com/collections/ubrania",
+        "description": "Streetwear i limitowana odzież"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "item": {
+        "@type": "CollectionPage",
+        "@id": "https://saturaise.com/collections/akcesoria",
+        "name": "Akcesoria",
+        "url": "https://saturaise.com/collections/akcesoria",
+        "description": "Kolekcjonerskie figurki i akcesoria"
+      }
+    }
+  ]
+}
+
+{% comment %} Fixed SpecialAnnouncement - removed problematic announcementLocation {% endcomment %}
+,{
+  "@type": "SpecialAnnouncement",
+  "@id": "https://saturaise.com/#special-offers",
+  "name": "Hot Deals & Okazje",
+  "text": "Sprawdź najgorętsze oferty na limitowane sneakersy i ubrania. Specjalne ceny na wybrane modele!",
+  "url": "https://saturaise.com/collections/hot",
+  "datePosted": "{{ 'now' | date: '%Y-%m-%d' }}",
+  "expires": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+  "category": "https://schema.org/OfferForPurchase",
+  "spatialCoverage": {
+    "@type": "Country",
+    "name": "Polska"
+  }
+}
+
+,{
+  "@type": "SiteNavigationElement",
+  "@id": "https://saturaise.com/#main-navigation",
+  "name": "Menu główne",
+  "url": "https://saturaise.com",
+  "hasPart": [
+    {
+      "@type": "SiteNavigationElement",
+      "position": 1,
+      "name": "HOT 🔥",
+      "url": "https://saturaise.com/collections/hot"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 2,
+      "name": "Buty",
+      "url": "https://saturaise.com/collections/buty"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 3,
+      "name": "Nike",
+      "url": "https://saturaise.com/collections/nike"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 4,
+      "name": "Yeezy",
+      "url": "https://saturaise.com/collections/yeezy"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 5,
+      "name": "Jordan",
+      "url": "https://saturaise.com/collections/air-jordan"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 6,
+      "name": "New Balance",
+      "url": "https://saturaise.com/collections/new-balance"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 7,
+      "name": "Adidas",
+      "url": "https://saturaise.com/collections/adidas"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 8,
+      "name": "UGG",
+      "url": "https://saturaise.com/collections/ugg"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 9,
+      "name": "Ubrania",
+      "url": "https://saturaise.com/collections/ubrania"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 10,
+      "name": "Akcesoria",
+      "url": "https://saturaise.com/collections/akcesoria"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 11,
+      "name": "Okazje",
+      "url": "https://saturaise.com/collections/okazje-1"
+    }
+  ]
+}
+
+{% comment %} Keep existing FAQ structure but with minor optimization {% endcomment %}
+,{
+  "@type": "FAQPage",
+  "@id": "https://saturaise.com/#faq-homepage",
+  "name": "Najczęściej zadawane pytania - Saturaise",
+  "description": "Odpowiedzi na najważniejsze pytania dotyczące zakupów w Saturaise",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Czy wszystkie sneakersy są oryginalne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, gwarantujemy 100% autentyczność wszystkich produktów. Każdy sneakers jest weryfikowany i otrzymuje certyfikat Saturaise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak długo trwa dostawa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Większość produktów wysyłamy od ręki. Czas dostawy to 1-7 dni roboczych kurierem DPD lub InPost. Dostawa jest darmowa na terenie Polski."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy mogę zwrócić produkt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, masz 14 dni na zwrot. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jakie są dostępne metody płatności?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Akceptujemy: BLIK, karty płatnicze, PayPal, Apple Pay, przelew tradycyjny, płatność przy odbiorze oraz PayPo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy macie figurki Labubu i Sonny Angel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, oferujemy szeroką kolekcję figurek Labubu, Sonny Angel oraz Bearbrick. To jedne z najpopularniejszych kolekcjonerskich figurek dostępnych w Polsce."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak często dodajecie nowe produkty?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nowe produkty dodajemy codziennie. Śledź naszą sekcję HOT oraz social media, aby być na bieżąco z najnowszymi dropami i limitowanymi edycjami."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak rozpoznać oryginalne buty Yeezy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oryginalne Yeezy charakteryzują się doskonałą jakością wykonania, bez widocznych nitek czy skaz na materiale. Warto zwrócić uwagę na podeszwę (precyzyjnie wyprofilowaną), wkład z wypukłym logo Yeezy oraz opakowanie (solidne pudełko z subtelnie naniesionym logo i kodem modelu). W Saturaise wszystkie buty Yeezy przechodzą rygorystyczny proces weryfikacji autentyczności."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy limitowane edycje butów to dobra inwestycja?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, obuwie kolekcjonerskie i ekskluzywne sneakersy są uznawane za świetną inwestycję. Wartość rzadkich modeli często rośnie z czasem, szczególnie w przypadku limitowanych edycji i kolaboracji z popularnymi markami czy artystami. Niektóre modele mogą zwiększyć swoją wartość nawet o kilkaset procent w ciągu kilku lat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak dbać o sneakersy, by zachowały wartość?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aby zachować wartość sneakersów, warto: używać specjalistycznych produktów do czyszczenia butów, czyścić je ręcznie (nie w pralce), unikać narażania na nadmierne źródła ciepła lub światło słoneczne, oraz stosować odpowiednie produkty ochronne. W Saturaise oferujemy profesjonalne środki do pielęgnacji obuwia."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy Saturaise dostarcza do mojego miasta?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, Saturaise oferuje dostawę na terenie całej Polski. Niezależnie od tego, czy mieszkasz w Warszawie, Krakowie, Gdańsku, Wrocławiu czy mniejszej miejscowości, dostarczymy Twoje zamówienie bezpiecznie i na czas."
+      }
+    }
+  ]
+}
+
+{% comment %} Enhanced Service Schema {% endcomment %}
+,{
+  "@type": "Service",
+  "@id": "https://saturaise.com/#authentication-service",
+  "name": "Weryfikacja Autentyczności Saturaise",
+  "description": "Profesjonalna weryfikacja autentyczności każdego produktu przez ekspertów",
+  "provider": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "serviceType": "Weryfikacja autentyczności",
+  "areaServed": {
+    "@type": "Country",
+    "name": "Polska"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Usługi weryfikacji",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Certyfikat Autentyczności",
+          "description": "Każdy produkt otrzymuje certyfikat potwierdzający oryginalność"
+        }
+      }
+    ]
+  }
+}
+
+{% comment %} Collection List for all brands - enhanced {% endcomment %}
+,{
+  "@type": "ItemList",
+  "@id": "https://saturaise.com/#all-brand-collections",
+  "name": "Wszystkie Marki i Kolekcje",
+  "description": "Pełna lista marek dostępnych w Saturaise",
+  "numberOfItems": 6,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Supreme",
+      "url": "https://saturaise.com/collections/supreme"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Balenciaga",
+      "url": "https://saturaise.com/collections/balenciaga"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Essentials",
+      "url": "https://saturaise.com/collections/essentials"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Corteiz",
+      "url": "https://saturaise.com/collections/corteiz"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "Denim Tears",
+      "url": "https://saturaise.com/collections/denim-tears"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "Uniqlo",
+      "url": "https://saturaise.com/collections/uniqlo"
+    }
+  ]
+}
+
+{% comment %} Enhanced Article Schema {% endcomment %}
+,{
+  "@type": "Article",
+  "@id": "https://saturaise.com/#homepage-content",
+  "headline": "Odkryj Ekskluzywne Limitowane Sneakersy w Saturaise",
+  "description": "Ekskluzywna kolekcja limitowanych sneakersów Nike, Adidas, Yeezy, Jordan. 100% autentyczne produkty z gwarancją jakości.",
+  "author": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "publisher": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "datePublished": "{{ shop.created_at | date: '%Y-%m-%d' }}",
+  "dateModified": "{{ 'now' | date: '%Y-%m-%d' }}",
+  "mainEntityOfPage": {
+    "@id": "https://saturaise.com/#homepage"
+  },
+  "articleSection": ["Sneakersy", "Moda", "Streetwear"],
+  "keywords": "limitowane sneakersy, ekskluzywne buty, Nike, Adidas, Yeezy, Jordan, Travis Scott, Off-White, New Balance, UGG, Labubu, Sonny Angel, Bearbrick",
+  "wordCount": 500,
+  "inLanguage": "pl-PL"
+}
+
+{% comment %} Enhanced Action Schema {% endcomment %}
+,{
+  "@type": "Action",
+  "@id": "https://saturaise.com/#shop-action",
+  "name": "Kup Limitowane Sneakersy",
+  "target": {
+    "@type": "EntryPoint",
+    "urlTemplate": "https://saturaise.com/collections/all",
+    "actionPlatform": [
+      "https://schema.org/DesktopWebPlatform",
+      "https://schema.org/MobileWebPlatform",
+      "https://schema.org/IOSPlatform",
+      "https://schema.org/AndroidPlatform"
+    ]
+  },
+  "actionStatus": "https://schema.org/PotentialActionStatus",
+  "object": {
+    "@type": "ProductCollection",
+    "name": "Limitowane Sneakersy",
+    "url": "https://saturaise.com/collections/all"
+  }
+}
+
+{% endif %}
     {% if template contains 'product' %}
     ,{
       "@type": "WebPage",
@@ -372,6 +996,15 @@
           "@type": "ProductGroup",
           "name": {{ product.title | split: ' - ' | first | json }},
           "productGroupID": "group-{{ product.id }}",
+          {% comment %} Add offers to ProductGroup to fix the error {% endcomment %}
+          "offers": {
+            "@type": "AggregateOffer",
+            "priceCurrency": "PLN",
+            "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
+            "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
+            "offerCount": {{ product.variants | where: 'available', true | size }},
+            "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
+          },
           "hasVariant": [
             {% for variant in product.variants %}
             {
@@ -399,6 +1032,14 @@
           "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
           "name": "{{ product.title }} - Rozmiar {{ variant.option1 }}",
           "sku": {{ variant.sku | default: variant.id | json }},
+          {% comment %} Add description to each variant {% endcomment %}
+          "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | append: " - Rozmiar " | append: variant.option1 | json }}{% endif %},
+          {% comment %} Add image to each variant - fixes the missing image error {% endcomment %}
+          {% if variant.image %}
+          "image": "https:{{ variant.image | image_url: width: 1200 }}",
+          {% elsif product.featured_image %}
+          "image": "https:{{ product.featured_image | image_url: width: 1200 }}",
+          {% endif %}
           {% if variant.barcode %}
             {% assign var_barcode_length = variant.barcode | size %}
             {% if var_barcode_length == 12 %}
@@ -414,9 +1055,6 @@
           "size": {{ variant.option1 | json }},
           {% if variant.option2 %}
           "color": {{ variant.option2 | json }},
-          {% endif %}
-          {% if variant.image %}
-          "image": "https:{{ variant.image | image_url: width: 1200 }}",
           {% endif %}
           "weight": {
             "@type": "QuantitativeValue",
@@ -452,6 +1090,51 @@
               "@type": "Country",
               "name": "Polska",
               "identifier": "PL"
+            },
+            {% comment %} Add shipping and return policy to each variant offer {% endcomment %}
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingLabel": "Darmowa wysyłka w Polsce",
+              "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": "0.00",
+                "currency": "PLN"
+              },
+              "shippingDestination": [
+                {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "PL",
+                  "name": "Polska"
+                }
+              ],
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 0,
+                  "maxValue": 1,
+                  "unitCode": "DAY",
+                  "name": "Czas przygotowania do wysyłki"
+                },
+                "transitTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 1,
+                  "maxValue": 3,
+                  "unitCode": "DAY",
+                  "name": "Czas dostawy"
+                },
+                "businessDays": true
+              }
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "name": "14-dniowa polityka zwrotów",
+              "applicableCountry": "PL",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14,
+              "returnMethod": "https://schema.org/ReturnByMail",
+              "returnFees": "https://schema.org/FreeReturn",
+              "refundType": "https://schema.org/FullRefund"
             }
           }
         }{% unless forloop.last %},{% endunless %}
