@@ -557,7 +557,7 @@
         "page": "",
         "alignment": "a-left",
         "content_width": 100,
-        "enable_expand": true,
+        "enable_expand": false,
         "collapsed_height": 100,
         "expand_text": "ROZWIŃ",
         "collapse_text": "ZWIŃ",
