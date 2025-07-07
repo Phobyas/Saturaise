@@ -556,7 +556,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </script>
   
   <!-- Add this to your theme.liquid before </body> -->
-<script>
+{% comment %} <script>
 // Remove Trustmate's incorrect Product schema
 document.addEventListener('DOMContentLoaded', function() {
   // Wait a bit for Trustmate to load
@@ -608,6 +608,6 @@ observer.observe(document.documentElement, {
   childList: true, 
   subtree: true 
 });
-</script>
+</script> {% endcomment %}
 </body>
 </html>

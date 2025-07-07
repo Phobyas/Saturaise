@@ -128,8 +128,8 @@
     {% if template == 'index' %}
 ,{
   "@type": "WebPage",
-  "@id": "{{ shop.url }}/#homepage",
-  "url": "{{ shop.url }}/",
+  "@id": "https://saturaise.com/#homepage",
+  "url": "https://saturaise.com/",
   "name": "Saturaise - Limitowane Sneakersy | Oficjalny Sklep w Polsce",
   "description": "Oficjalny sklep z limitowanymi sneakersami w Polsce. Nike, Yeezy, Jordan, New Balance. 100% oryginalne, certyfikat autentyczności, wysyłka z Polski.",
   "inLanguage": "pl-PL",
@@ -141,12 +141,17 @@
   },
   "primaryImageOfPage": {
     "@type": "ImageObject",
-    "url": "https://saturaise.com/cdn/shop/files/seo-og-image.jpg"
+    "url": "https://saturaise.com/cdn/shop/files/seo_media_banner_blend_kopia_2-Picsart-AiImageEnhancer.jpg?v=1751897958&width=1200",
+    "width": 2400,
+    "height": 1256
+  },
+  "breadcrumb": {
+    "@id": "https://saturaise.com/#breadcrumb"
   }
 }
 
 ,{
-  "@type": ["Organization", "Store"],
+  "@type": ["Organization", "Store", "LocalBusiness"],
   "@id": "https://saturaise.com/#organization-homepage",
   "name": "Saturaise",
   "legalName": "Saturaise",
@@ -154,6 +159,7 @@
   "logo": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png?v=1733057916&width=800",
   "description": "Sklep specjalizujący się w sprzedaży weryfikowanych, limitowanych sneakersów z gwarancją autentyczności.",
   "foundingDate": "2022",
+  "priceRange": "500-15000 PLN",
   "numberOfEmployees": {
     "@type": "QuantitativeValue",
     "minValue": 1,
@@ -175,6 +181,11 @@
     "postalCode": "47-330",
     "addressCountry": "PL"
   },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "50.4938",
+    "longitude": "18.1597"
+  },
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+48451108247",
@@ -184,11 +195,22 @@
   }
 }
 
-{% if collections['nowosci'] and collections['nowosci'].products.size > 0 %}
-{% assign featured_products = collections['nowosci'].products | limit: 8 %}
+,{
+  "@type": "BreadcrumbList",
+  "@id": "https://saturaise.com/#breadcrumb",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Strona główna",
+    "item": "https://saturaise.com"
+  }]
+}
+
+{% if collections['hot'] and collections['hot'].products.size > 0 %}
+{% assign featured_products = collections['hot'].products | limit: 8 %}
 ,{
   "@type": "ItemList",
-  "@id": "{{ shop.url }}/#featured-sneakers",
+  "@id": "https://saturaise.com/#featured-sneakers",
   "name": "Najnowsze Sneakersy",
   "numberOfItems": {{ featured_products.size }},
   "itemListElement": [
@@ -198,9 +220,9 @@
       "position": {{ forloop.index }},
       "item": {
         "@type": "Product",
-        "@id": "{{ shop.url }}{{ product.url }}",
+        "@id": "https://saturaise.com{{ product.url }}",
         "name": {{ product.title | json }},
-        "url": "{{ shop.url }}{{ product.url }}",
+        "url": "https://saturaise.com{{ product.url }}",
         {% if product.featured_image %}
         "image": "https:{{ product.featured_image | image_url: width: 600 }}",
         {% endif %}
@@ -219,7 +241,7 @@
         {% endif %}
         "offers": {
           "@type": "Offer",
-          "url": "{{ shop.url }}{{ product.url }}",
+          "url": "https://saturaise.com{{ product.url }}",
           "price": {{ product.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
           "priceCurrency": "PLN",
           "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
@@ -263,52 +285,231 @@
 {% endif %}
 
 ,{
-  "@type": "CollectionPage",
-  "@id": "{{ shop.url }}/#brand-collections",
-  "name": "Kolekcje Sneakersów",
+  "@type": "Department",
+  "@id": "https://saturaise.com/#departments",
+  "name": "Kategorie Produktów Saturaise",
   "hasPart": [
     {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/nike",
+      "@type": "Department",
+      "@id": "https://saturaise.com/#dept-shoes",
+      "name": "Buty",
+      "url": "https://saturaise.com/collections/buty",
+      "description": "Limitowane sneakersy i ekskluzywne buty",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Katalog Butów",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Yeezy",
+            "url": "https://saturaise.com/collections/yeezy",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Yeezy 350", "url": "https://saturaise.com/collections/yeezy-350"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Yeezy 500", "url": "https://saturaise.com/collections/yeezy-500"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Yeezy 700", "url": "https://saturaise.com/collections/yeezy-700"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Yeezy Slide", "url": "https://saturaise.com/collections/yeezy-slide"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Yeezy Foam Runner", "url": "https://saturaise.com/collections/yeezy-foam-runner"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Nike",
+            "url": "https://saturaise.com/collections/nike",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Air Force 1", "url": "https://saturaise.com/collections/air-force-1"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Dunk Low", "url": "https://saturaise.com/collections/dunk-low"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Air Max", "url": "https://saturaise.com/collections/air-max"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Travis Scott", "url": "https://saturaise.com/collections/travis-scott"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Off-White", "url": "https://saturaise.com/collections/off-white"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Air Jordan",
+            "url": "https://saturaise.com/collections/air-jordan",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Air Jordan 1", "url": "https://saturaise.com/collections/air-jordan-1"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Air Jordan 4", "url": "https://saturaise.com/collections/air-jordan-4"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Air Jordan 3", "url": "https://saturaise.com/collections/air-jordan-3"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Adidas",
+            "url": "https://saturaise.com/collections/adidas",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Campus", "url": "https://saturaise.com/collections/campus"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Samba", "url": "https://saturaise.com/collections/samba"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Gazelle", "url": "https://saturaise.com/collections/gazelle"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "New Balance",
+            "url": "https://saturaise.com/collections/new-balance",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "New Balance 530", "url": "https://saturaise.com/collections/new-balance-530"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "New Balance 2002R", "url": "https://saturaise.com/collections/new-balance-2002r"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "New Balance 9060", "url": "https://saturaise.com/collections/new-balance-9060"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "UGG",
+            "url": "https://saturaise.com/collections/ugg",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Ultra Mini Boot", "url": "https://saturaise.com/collections/ultra-mini-boot"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Tasman Slipper", "url": "https://saturaise.com/collections/tasman-slipper"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Tazz Slipper", "url": "https://saturaise.com/collections/tazz-slipper"}}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Department",
+      "@id": "https://saturaise.com/#dept-clothing",
+      "name": "Ubrania",
+      "url": "https://saturaise.com/collections/ubrania",
+      "description": "Streetwear i limitowana odzież",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Katalog Odzieży",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Bluzy",
+            "url": "https://saturaise.com/collections/bluzy",
+            "itemListElement": [
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Supreme", "url": "https://saturaise.com/collections/sweatshirts-supreme"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Essentials", "url": "https://saturaise.com/collections/essentials"}},
+              {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Corteiz", "url": "https://saturaise.com/collections/corteiz"}}
+            ]
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Koszulki",
+            "url": "https://saturaise.com/collections/koszulki"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Spodnie",
+            "url": "https://saturaise.com/collections/spodnie"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Department",
+      "@id": "https://saturaise.com/#dept-accessories",
+      "name": "Akcesoria i Figurki",
+      "url": "https://saturaise.com/collections/akcesoria",
+      "description": "Kolekcjonerskie figurki i akcesoria",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Katalog Akcesoriów",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Labubu", "url": "https://saturaise.com/collections/labubu"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Sonny Angel", "url": "https://saturaise.com/collections/sonny-angel"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Bearbrick", "url": "https://saturaise.com/collections/bearbrick"}}
+        ]
+      }
+    }
+  ]
+}
+
+,{
+  "@type": "SpecialAnnouncement",
+  "@id": "https://saturaise.com/#special-offers",
+  "name": "Hot Deals & Okazje",
+  "text": "Sprawdź najgorętsze oferty na limitowane sneakersy i ubrania. Specjalne ceny na wybrane modele!",
+  "url": "https://saturaise.com/collections/hot",
+  "category": "https://www.wikidata.org/wiki/Q891723",
+  "datePosted": "{{ 'now' | date: '%Y-%m-%d' }}",
+  "expires": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+  "announcementLocation": {
+    "@type": "Country",
+    "name": "Polska"
+  }
+}
+
+,{
+  "@type": "SiteNavigationElement",
+  "@id": "https://saturaise.com/#main-navigation",
+  "name": "Menu główne",
+  "hasPart": [
+    {
+      "@type": "SiteNavigationElement",
+      "position": 1,
+      "name": "HOT 🔥",
+      "url": "https://saturaise.com/collections/hot"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 2,
+      "name": "Buty",
+      "url": "https://saturaise.com/collections/buty"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 3,
       "name": "Nike",
-      "url": "{{ shop.url }}/collections/nike"
+      "url": "https://saturaise.com/collections/nike"
     },
     {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/yeezy",
+      "@type": "SiteNavigationElement",
+      "position": 4,
       "name": "Yeezy",
-      "url": "{{ shop.url }}/collections/yeezy"
+      "url": "https://saturaise.com/collections/yeezy"
     },
     {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/new-balance",
+      "@type": "SiteNavigationElement",
+      "position": 5,
+      "name": "Jordan",
+      "url": "https://saturaise.com/collections/air-jordan"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 6,
       "name": "New Balance",
-      "url": "{{ shop.url }}/collections/new-balance"
+      "url": "https://saturaise.com/collections/new-balance"
     },
     {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/air-jordan",
-      "name": "Air Jordan",
-      "url": "{{ shop.url }}/collections/air-jordan"
-    },
-    {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/adidas",
+      "@type": "SiteNavigationElement",
+      "position": 7,
       "name": "Adidas",
-      "url": "{{ shop.url }}/collections/adidas"
+      "url": "https://saturaise.com/collections/adidas"
     },
     {
-      "@type": "Collection",
-      "@id": "{{ shop.url }}/collections/ugg",
+      "@type": "SiteNavigationElement",
+      "position": 8,
       "name": "UGG",
-      "url": "{{ shop.url }}/collections/ugg"
+      "url": "https://saturaise.com/collections/ugg"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 9,
+      "name": "Ubrania",
+      "url": "https://saturaise.com/collections/ubrania"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 10,
+      "name": "Akcesoria",
+      "url": "https://saturaise.com/collections/akcesoria"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 11,
+      "name": "Okazje",
+      "url": "https://saturaise.com/collections/okazje-1"
     }
   ]
 }
 
 ,{
   "@type": "FAQPage",
-  "@id": "{{ shop.url }}/#faq-homepage",
+  "@id": "https://saturaise.com/#faq-homepage",
   "mainEntity": [
     {
       "@type": "Question",
@@ -341,16 +542,72 @@
         "@type": "Answer",
         "text": "Akceptujemy: BLIK, karty płatnicze, PayPal, Apple Pay, przelew tradycyjny, płatność przy odbiorze oraz PayPo."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy macie figurki Labubu i Sonny Angel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, oferujemy szeroką kolekcję figurek Labubu, Sonny Angel oraz Bearbrick. To jedne z najpopularniejszych kolekcjonerskich figurek dostępnych w Polsce."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak często dodajecie nowe produkty?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nowe produkty dodajemy codziennie. Śledź naszą sekcję HOT oraz social media, aby być na bieżąco z najnowszymi dropami i limitowanymi edycjami."
+      }
     }
   ]
 }
 
-{% comment %} Jeśli masz recenzje Trustmate na poziomie sklepu, dodaj Review schema {% endcomment %}
+{% comment %} Collection List for all brands {% endcomment %}
+,{
+  "@type": "CollectionPage",
+  "@id": "https://saturaise.com/#all-brand-collections",
+  "name": "Wszystkie Marki i Kolekcje",
+  "description": "Pełna lista marek dostępnych w Saturaise",
+  "hasPart": [
+    {
+      "@type": "Brand",
+      "name": "Supreme",
+      "url": "https://saturaise.com/collections/supreme"
+    },
+    {
+      "@type": "Brand",
+      "name": "Balenciaga",
+      "url": "https://saturaise.com/collections/balenciaga"
+    },
+    {
+      "@type": "Brand",
+      "name": "Essentials",
+      "url": "https://saturaise.com/collections/essentials"
+    },
+    {
+      "@type": "Brand",
+      "name": "Corteiz",
+      "url": "https://saturaise.com/collections/corteiz"
+    },
+    {
+      "@type": "Brand",
+      "name": "Denim Tears",
+      "url": "https://saturaise.com/collections/denim-tears"
+    },
+    {
+      "@type": "Brand",
+      "name": "Uniqlo",
+      "url": "https://saturaise.com/collections/uniqlo"
+    }
+  ]
+}
+
+{% comment %} Jeśli masz recenzje Trustmate na poziomie sklepu {% endcomment %}
 {% if shop.metafields.trustmate.reviews %}
 {% for review in shop.metafields.trustmate.reviews limit: 5 %}
 ,{
   "@type": "Review",
-  "@id": "{{ shop.url }}/#review-{{ forloop.index }}",
+  "@id": "https://saturaise.com/#review-{{ forloop.index }}",
   "itemReviewed": {
     "@id": "https://saturaise.com/#organization"
   },
