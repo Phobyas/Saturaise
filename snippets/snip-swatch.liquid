@@ -21,6 +21,8 @@
         assign css_color = value | split: ' ' | last | handle
         assign available = false
         assign swatch_image_url = nil
+        assign variant_price = 0
+        assign variant_found = false
         
         if value.swatch.image
           assign swatch_image_url = value.swatch.image | image_url: width: 100
@@ -30,11 +32,35 @@
           assign css_color = value.swatch.color
         endif
 
-        # Check availability
+        # Check availability and get price
         for variant in product.variants
-          if variant.available and variant[current_option] == value and variant[other_options[0]] == current_variant[other_options[0]] and variant[other_options[1]] == current_variant[other_options[1]]
-            assign available = true
-            break
+          if variant[current_option] == value 
+            if product.options.size == 1
+              # Single option product
+              assign variant_price = variant.price
+              assign variant_found = true
+              if variant.available
+                assign available = true
+              endif
+            elsif product.options.size == 2
+              # Two options product
+              if variant[other_options[0]] == current_variant[other_options[0]]
+                assign variant_price = variant.price
+                assign variant_found = true
+                if variant.available
+                  assign available = true
+                endif
+              endif
+            elsif product.options.size == 3
+              # Three options product
+              if variant[other_options[0]] == current_variant[other_options[0]] and variant[other_options[1]] == current_variant[other_options[1]]
+                assign variant_price = variant.price
+                assign variant_found = true
+                if variant.available
+                  assign available = true
+                endif
+              endif
+            endif
           endif
         endfor
 
@@ -94,10 +120,13 @@
             {{ checked }}>
 
           <label 
-            class="swatches__form--label" 
+            class="swatches__form--label swatches__form--label-with-price" 
             for="{{ product.id }}-{{ unique_id }}-{{ option.name }}-{{ forloop.index0 }}" 
             tabindex="0">
-            {{ value }}
+            <span class="swatch-size">{{ value }}</span>
+            {% if variant_found and variant_price > 0 %}
+              <span class="swatch-price">{{ variant_price | money }}</span>
+            {% endif %}
           </label>
         </div>
       {% endif %}
@@ -111,14 +140,53 @@
   flex-wrap: wrap;
   gap: 8px;
   min-width: 30vw !important
- 
 }
 
 .swatches__swatch--regular,
 .swatches__swatch--color {
   flex: 1 1 auto;
-    min-width: max(50px, calc((100% - 40px) / 6));
-    max-width: calc((100% - 40px) / 6);
+  min-width: max(50px, calc((100% - 40px) / 6));
+  max-width: calc((100% - 40px) / 6);
+}
+
+/* Add price display to existing labels */
+.swatches__form--label-with-price {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.2 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.swatches__form--label-with-price .swatch-size {
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+.swatches__form--label-with-price .swatch-price {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #666 !important;
+  line-height: 1 !important;
+}
+
+/* Adjust for selected state */
+.swatches__form--input:checked + .swatches__form--label-with-price .swatch-price {
+  color: #323232 !important;
+  font-weight: 500 !important;
+}
+
+/* Adjust for hover state */
+.swatches__form--label-with-price:hover .swatch-price {
+  color: #323232 !important;
+}
+
+/* Soldout state for price */
+.soldout .swatches__form--label-with-price .swatch-price {
+  text-decoration: line-through !important;
 }
 
 @media screen and (max-width: 768px) {
@@ -127,6 +195,10 @@
     min-width: calc((100% - 24px) / 4);
     max-width: calc((100% - 24px) / 4);
   }
+  
+  .swatches__form--label-with-price .swatch-price {
+    font-size: 12px !important;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -134,6 +206,10 @@
   .swatches__swatch--color {
     min-width: calc((100% - 16px) / 3);
     max-width: calc((100% - 16px) / 3);
+  }
+  
+  .swatches__form--label-with-price .swatch-price {
+    font-size: 11px !important;
   }
 }
 {% endstyle %}

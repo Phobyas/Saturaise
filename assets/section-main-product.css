@@ -2285,3 +2285,60 @@
     background: rgba(40, 40, 40, 1) !important;
   }
 }
+
+.product__section--main .swatches__form--label-with-price .swatch-size {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  display: block !important;
+}
+
+.product__section--main .swatches__form--label-with-price .swatch-price {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #666 !important;
+  margin-top: 2px !important;
+  display: block !important;
+}
+
+/* Ensure proper text alignment in your existing layout */
+.product__section--main .swatches__form--label-with-price {
+  text-align: center !important;
+  line-height: 1.2 !important;
+}
+
+/* Selected state price styling */
+.product__section--main
+  .swatches__form--input:checked
+  + .swatches__form--label-with-price
+  .swatch-price {
+  color: inherit !important;
+  font-weight: 500 !important;
+}
+
+/* Hover state price styling */
+.product__section--main .swatches__form--label-with-price:hover .swatch-price {
+  color: inherit !important;
+}
+
+/* Soldout price styling */
+.product__section--main .soldout .swatch-price {
+  text-decoration: line-through !important;
+  opacity: 0.7 !important;
+}
+
+/* Mobile adjustments for price text */
+@media (max-width: 768px) {
+  .product__section--main .swatches__form--label-with-price .swatch-size {
+    font-size: 14px !important;
+  }
+
+  .product__section--main .swatches__form--label-with-price .swatch-price {
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .product__section--main .swatches__form--label-with-price .swatch-price {
+    font-size: 11px !important;
+  }
+}

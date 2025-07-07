@@ -124,6 +124,252 @@
         }
       ]
     }
+
+    {% if template == 'index' %}
+,{
+  "@type": "WebPage",
+  "@id": "{{ shop.url }}/#homepage",
+  "url": "{{ shop.url }}/",
+  "name": "Saturaise - Limitowane Sneakersy | Oficjalny Sklep w Polsce",
+  "description": "Oficjalny sklep z limitowanymi sneakersami w Polsce. Nike, Yeezy, Jordan, New Balance. 100% oryginalne, certyfikat autentyczności, wysyłka z Polski.",
+  "inLanguage": "pl-PL",
+  "isPartOf": {
+    "@id": "https://saturaise.com/#website"
+  },
+  "about": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://saturaise.com/cdn/shop/files/seo-og-image.jpg"
+  }
+}
+
+,{
+  "@type": ["Organization", "Store"],
+  "@id": "https://saturaise.com/#organization-homepage",
+  "name": "Saturaise",
+  "legalName": "Saturaise",
+  "url": "https://saturaise.com",
+  "logo": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png?v=1733057916&width=800",
+  "description": "Sklep specjalizujący się w sprzedaży weryfikowanych, limitowanych sneakersów z gwarancją autentyczności.",
+  "foundingDate": "2022",
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "minValue": 1,
+    "maxValue": 5
+  },
+  {% if shop.metafields.trustmate.average_rating and shop.metafields.trustmate.review_count %}
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ shop.metafields.trustmate.average_rating }}",
+    "reviewCount": "{{ shop.metafields.trustmate.review_count }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  {% endif %}
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ogrodowa 9a",
+    "addressLocality": "Żyrowa",
+    "postalCode": "47-330",
+    "addressCountry": "PL"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+48451108247",
+    "email": "saturaisekontakt@gmail.com",
+    "contactType": "customer service",
+    "availableLanguage": "Polish"
+  }
+}
+
+{% if collections['nowosci'] and collections['nowosci'].products.size > 0 %}
+{% assign featured_products = collections['nowosci'].products | limit: 8 %}
+,{
+  "@type": "ItemList",
+  "@id": "{{ shop.url }}/#featured-sneakers",
+  "name": "Najnowsze Sneakersy",
+  "numberOfItems": {{ featured_products.size }},
+  "itemListElement": [
+    {% for product in featured_products %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "item": {
+        "@type": "Product",
+        "@id": "{{ shop.url }}{{ product.url }}",
+        "name": {{ product.title | json }},
+        "url": "{{ shop.url }}{{ product.url }}",
+        {% if product.featured_image %}
+        "image": "https:{{ product.featured_image | image_url: width: 600 }}",
+        {% endif %}
+        "brand": {
+          "@type": "Brand",
+          "name": {{ product.vendor | default: 'Saturaise' | json }}
+        },
+        {% if product.metafields.trustmate.average_rating and product.metafields.trustmate.review_count %}
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "{{ product.metafields.trustmate.average_rating }}",
+          "reviewCount": "{{ product.metafields.trustmate.review_count }}",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        {% endif %}
+        "offers": {
+          "@type": "Offer",
+          "url": "{{ shop.url }}{{ product.url }}",
+          "price": {{ product.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+          "priceCurrency": "PLN",
+          "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+          "itemCondition": "https://schema.org/NewCondition",
+          "seller": {
+            "@id": "https://saturaise.com/#organization"
+          },
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0",
+              "currency": "PLN"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "PL"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 1,
+                "maxValue": 7,
+                "unitCode": "DAY"
+              }
+            }
+          }
+        }
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+{% endif %}
+
+,{
+  "@type": "CollectionPage",
+  "@id": "{{ shop.url }}/#brand-collections",
+  "name": "Kolekcje Sneakersów",
+  "hasPart": [
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/nike",
+      "name": "Nike",
+      "url": "{{ shop.url }}/collections/nike"
+    },
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/yeezy",
+      "name": "Yeezy",
+      "url": "{{ shop.url }}/collections/yeezy"
+    },
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/new-balance",
+      "name": "New Balance",
+      "url": "{{ shop.url }}/collections/new-balance"
+    },
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/air-jordan",
+      "name": "Air Jordan",
+      "url": "{{ shop.url }}/collections/air-jordan"
+    },
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/adidas",
+      "name": "Adidas",
+      "url": "{{ shop.url }}/collections/adidas"
+    },
+    {
+      "@type": "Collection",
+      "@id": "{{ shop.url }}/collections/ugg",
+      "name": "UGG",
+      "url": "{{ shop.url }}/collections/ugg"
+    }
+  ]
+}
+
+,{
+  "@type": "FAQPage",
+  "@id": "{{ shop.url }}/#faq-homepage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Czy wszystkie sneakersy są oryginalne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, gwarantujemy 100% autentyczność wszystkich produktów. Każdy sneakers jest weryfikowany i otrzymuje certyfikat Saturaise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak długo trwa dostawa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Większość produktów wysyłamy od ręki. Czas dostawy to 1-7 dni roboczych kurierem DPD lub InPost. Dostawa jest darmowa na terenie Polski."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy mogę zwrócić produkt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, masz 14 dni na zwrot. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jakie są dostępne metody płatności?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Akceptujemy: BLIK, karty płatnicze, PayPal, Apple Pay, przelew tradycyjny, płatność przy odbiorze oraz PayPo."
+      }
+    }
+  ]
+}
+
+{% comment %} Jeśli masz recenzje Trustmate na poziomie sklepu, dodaj Review schema {% endcomment %}
+{% if shop.metafields.trustmate.reviews %}
+{% for review in shop.metafields.trustmate.reviews limit: 5 %}
+,{
+  "@type": "Review",
+  "@id": "{{ shop.url }}/#review-{{ forloop.index }}",
+  "itemReviewed": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": "{{ review.rating }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ review.author_name | default: 'Klient Saturaise' }}"
+  },
+  "datePublished": "{{ review.created_at | date: '%Y-%m-%d' }}",
+  "reviewBody": {{ review.content | truncate: 200 | json }}
+}
+{% endfor %}
+{% endif %}
+{% endif %}
     
     {% if template contains 'product' %}
     ,{
