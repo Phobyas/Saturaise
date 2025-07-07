@@ -1014,11 +1014,13 @@
               {% if variant.option1 %}
               "size": {{ variant.option1 | json }},
               {% endif %}
-              {% if variant.available %}
-              "availability": "https://schema.org/InStock"
-              {% else %}
-              "availability": "https://schema.org/OutOfStock"
-              {% endif %}
+              {% comment %} Add offers to each variant in the ProductGroup {% endcomment %}
+              "offers": {
+                "@type": "Offer",
+                "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+                "priceCurrency": "PLN",
+                "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
+              }
             }{% unless forloop.last %},{% endunless %}
             {% endfor %}
           ]
