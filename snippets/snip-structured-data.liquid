@@ -986,162 +986,11 @@
         {% endif %}
       },
       {% if product.variants.size > 1 %}
-      "model": {
-        "@type": "ProductModel",
-        "name": {{ product.title | split: ' - ' | first | json }},
-        {% if product.metafields.custom.style_code %}
-        "productModelCode": {{ product.metafields.custom.style_code.value | json }},
-        {% endif %}
-        "isVariantOf": {
-          "@type": "ProductGroup",
-          "name": {{ product.title | split: ' - ' | first | json }},
-          "productGroupID": "group-{{ product.id }}",
-          {% comment %} Add offers to ProductGroup to fix the error {% endcomment %}
-          "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": "PLN",
-            "lowPrice": "{{ product.price_min | money_without_currency | remove: ',' | replace: ',', '.' }}",
-            "highPrice": "{{ product.price_max | money_without_currency | remove: ',' | replace: ',', '.' }}",
-            "offerCount": {{ product.variants | where: 'available', true | size }},
-            "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
-          },
-          "hasVariant": [
-            {% for variant in product.variants %}
-            {
-              "@type": "Product",
-              "sku": {{ variant.sku | default: variant.id | json }},
-              "name": "{{ product.title }} - {{ variant.title }}",
-              {% if variant.option1 %}
-              "size": {{ variant.option1 | json }},
-              {% endif %}
-              {% comment %} Add offers to each variant in the ProductGroup {% endcomment %}
-              "offers": {
-                "@type": "Offer",
-                "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
-                "priceCurrency": "PLN",
-                "availability": {% if variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
-              }
-            }{% unless forloop.last %},{% endunless %}
-            {% endfor %}
-          ]
-        }
-      },
-      "hasVariant": [
-        {% for variant in product.variants %}
-        {
-          "@type": "Product",
-          "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-          "name": "{{ product.title }} - Rozmiar {{ variant.option1 }}",
-          "sku": {{ variant.sku | default: variant.id | json }},
-          {% comment %} Add description to each variant {% endcomment %}
-          "description": {% if product.description != blank %}{{ product.description | strip_html | truncatewords: 100 | json }}{% else %}{{ product.title | append: " - Rozmiar " | append: variant.option1 | json }}{% endif %},
-          {% comment %} Add image to each variant - fixes the missing image error {% endcomment %}
-          {% if variant.image %}
-          "image": "https:{{ variant.image | image_url: width: 1200 }}",
-          {% elsif product.featured_image %}
-          "image": "https:{{ product.featured_image | image_url: width: 1200 }}",
-          {% endif %}
-          {% if variant.barcode %}
-            {% assign var_barcode_length = variant.barcode | size %}
-            {% if var_barcode_length == 12 %}
-          "gtin12": {{ variant.barcode | json }},
-            {% elsif var_barcode_length == 13 %}
-          "gtin13": {{ variant.barcode | json }},
-            {% elsif var_barcode_length == 8 %}
-          "gtin8": {{ variant.barcode | json }},
-            {% else %}
-          "gtin": {{ variant.barcode | json }},
-            {% endif %}
-          {% endif %}
-          "size": {{ variant.option1 | json }},
-          {% if variant.option2 %}
-          "color": {{ variant.option2 | json }},
-          {% endif %}
-          "weight": {
-            "@type": "QuantitativeValue",
-            "value": {{ variant.weight | default: 1000 }},
-            "unitCode": "GRM"
-          },
-          "offers": {
-            "@type": "Offer",
-            "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}#offer",
-            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
-            "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
-            "priceCurrency": "PLN",
-            {% if variant.compare_at_price > variant.price %}
-            "priceSpecification": {
-              "@type": "PriceSpecification",
-              "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
-              "priceCurrency": "PLN",
-              "valueAddedTaxIncluded": true
-            },
-            {% endif %}
-            "availability": {% if variant.available %}"https://schema.org/InStock"{% elsif variant.inventory_policy == 'continue' %}"https://schema.org/BackOrder"{% else %}"https://schema.org/OutOfStock"{% endif %},
-            "inventoryLevel": {
-              "@type": "QuantitativeValue",
-              "value": {% if variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}0{% endif %},
-              "unitCode": "C62",
-              "unitText": "sztuk"
-            },
-            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
-            "seller": {
-              "@id": "https://saturaise.com/#organization"
-            },
-            "eligibleRegion": {
-              "@type": "Country",
-              "name": "Polska",
-              "identifier": "PL"
-            },
-            {% comment %} Add shipping and return policy to each variant offer {% endcomment %}
-            "shippingDetails": {
-              "@type": "OfferShippingDetails",
-              "shippingLabel": "Darmowa wysyłka w Polsce",
-              "shippingRate": {
-                "@type": "MonetaryAmount",
-                "value": "0.00",
-                "currency": "PLN"
-              },
-              "shippingDestination": [
-                {
-                  "@type": "DefinedRegion",
-                  "addressCountry": "PL",
-                  "name": "Polska"
-                }
-              ],
-              "deliveryTime": {
-                "@type": "ShippingDeliveryTime",
-                "handlingTime": {
-                  "@type": "QuantitativeValue",
-                  "minValue": 0,
-                  "maxValue": 1,
-                  "unitCode": "DAY",
-                  "name": "Czas przygotowania do wysyłki"
-                },
-                "transitTime": {
-                  "@type": "QuantitativeValue",
-                  "minValue": 1,
-                  "maxValue": 3,
-                  "unitCode": "DAY",
-                  "name": "Czas dostawy"
-                },
-                "businessDays": true
-              }
-            },
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "name": "14-dniowa polityka zwrotów",
-              "applicableCountry": "PL",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays": 14,
-              "returnMethod": "https://schema.org/ReturnByMail",
-              "returnFees": "https://schema.org/FreeReturn",
-              "refundType": "https://schema.org/FullRefund"
-            }
-          }
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ],
+      {% comment %} Use model property to indicate this is a model with size variants {% endcomment %}
+      "model": {{ product.title | split: ' - ' | first | json }},
+      {% if product.metafields.custom.style_code %}
+      "mpn": {{ product.metafields.custom.style_code.value | json }},
+      {% endif %}
       {% endif %}
       "additionalProperty": [
         {% assign properties_added = false %}
@@ -1316,6 +1165,41 @@
           "https://schema.org/CreditCard",
           "https://schema.org/PaymentCard",
           "https://schema.org/COD"
+        ],
+        {% comment %} Add individual variant offers {% endcomment %}
+        "offers": [
+          {% for variant in product.variants %}
+          {% if variant.available %}
+          {
+            "@type": "Offer",
+            "@id": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}#offer",
+            "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+            "sku": {{ variant.sku | default: variant.id | json }},
+            "name": "{{ product.title }} - Rozmiar {{ variant.option1 }}",
+            "price": {{ variant.price | money_without_currency | remove: ',' | replace: ',', '.' | json }},
+            "priceCurrency": "PLN",
+            {% if variant.barcode %}
+              {% assign var_barcode_length = variant.barcode | size %}
+              {% if var_barcode_length == 12 %}
+            "gtin12": {{ variant.barcode | json }},
+              {% elsif var_barcode_length == 13 %}
+            "gtin13": {{ variant.barcode | json }},
+              {% elsif var_barcode_length == 8 %}
+            "gtin8": {{ variant.barcode | json }},
+              {% else %}
+            "gtin": {{ variant.barcode | json }},
+              {% endif %}
+            {% endif %}
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock",
+            "inventoryLevel": {
+              "@type": "QuantitativeValue",
+              "value": {{ variant.inventory_quantity | default: 1 }}
+            },
+            "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}"
+          }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+          {% endfor %}
         ],
         "shippingDetails": {
           "@type": "OfferShippingDetails",
