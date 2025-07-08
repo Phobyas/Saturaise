@@ -164,80 +164,6 @@
 }
 
 ,{
-  "@type": ["Organization", "Store", "LocalBusiness"],
-  "@id": "https://saturaise.com/#organization-homepage",
-  "name": "Saturaise",
-  "legalName": "Saturaise",
-  "url": "https://saturaise.com",
-  "logo": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png?v=1733057916&width=800",
-  "description": "Sklep specjalizujący się w sprzedaży weryfikowanych, limitowanych sneakersów z gwarancją autentyczności.",
-  "foundingDate": "2022",
-  "founders": [
-    {
-      "@type": "Person",
-      "name": "Zespół Saturaise"
-    }
-  ],
-  "priceRange": "500-15000 PLN",
-  "numberOfEmployees": {
-    "@type": "QuantitativeValue",
-    "minValue": 1,
-    "maxValue": 5
-  },
-  {% if shop.metafields.trustmate.average_rating and shop.metafields.trustmate.review_count %}
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "{{ shop.metafields.trustmate.average_rating }}",
-    "reviewCount": "{{ shop.metafields.trustmate.review_count }}",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  {% endif %}
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Ogrodowa 9a",
-    "addressLocality": "Żyrowa",
-    "addressRegion": "Śląskie",
-    "postalCode": "47-330",
-    "addressCountry": "PL"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": "50.4938",
-    "longitude": "18.1597"
-  },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+48451108247",
-    "email": "saturaisekontakt@gmail.com",
-    "contactType": "customer service",
-    "availableLanguage": "Polish",
-    "areaServed": {
-      "@type": "Country",
-      "name": "Poland"
-    }
-  },
-  "makesOffer": [
-    {
-      "@type": "Offer",
-      "itemOffered": {
-        "@type": "Service",
-        "name": "Weryfikacja Autentyczności",
-        "description": "Każdy produkt przechodzi profesjonalną weryfikację"
-      }
-    },
-    {
-      "@type": "Offer", 
-      "itemOffered": {
-        "@type": "Service",
-        "name": "Darmowa Dostawa",
-        "description": "Darmowa wysyłka na terenie Polski"
-      }
-    }
-  ]
-}
-
-,{
   "@type": "BreadcrumbList",
   "@id": "https://saturaise.com/#breadcrumb",
   "name": "Nawigacja",
@@ -299,33 +225,6 @@
           "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
           "seller": {
             "@id": "https://saturaise.com/#organization"
-          },
-          "shippingDetails": {
-            "@type": "OfferShippingDetails",
-            "shippingRate": {
-              "@type": "MonetaryAmount",
-              "value": "0",
-              "currency": "PLN"
-            },
-            "shippingDestination": {
-              "@type": "DefinedRegion",
-              "addressCountry": "PL"
-            },
-            "deliveryTime": {
-              "@type": "ShippingDeliveryTime",
-              "handlingTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 0,
-                "maxValue": 1,
-                "unitCode": "DAY"
-              },
-              "transitTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 1,
-                "maxValue": 7,
-                "unitCode": "DAY"
-              }
-            }
           }
         }
       }
@@ -444,22 +343,6 @@
   ]
 }
 
-{% comment %} Fixed SpecialAnnouncement - removed problematic announcementLocation {% endcomment %}
-,{
-  "@type": "SpecialAnnouncement",
-  "@id": "https://saturaise.com/#special-offers",
-  "name": "Hot Deals & Okazje",
-  "text": "Sprawdź najgorętsze oferty na limitowane sneakersy i ubrania. Specjalne ceny na wybrane modele!",
-  "url": "https://saturaise.com/collections/hot",
-  "datePosted": "{{ 'now' | date: '%Y-%m-%d' }}",
-  "expires": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
-  "category": "https://schema.org/OfferForPurchase",
-  "spatialCoverage": {
-    "@type": "Country",
-    "name": "Polska"
-  }
-}
-
 ,{
   "@type": "SiteNavigationElement",
   "@id": "https://saturaise.com/#main-navigation",
@@ -535,7 +418,6 @@
   ]
 }
 
-{% comment %} Keep existing FAQ structure but with minor optimization {% endcomment %}
 ,{
   "@type": "FAQPage",
   "@id": "https://saturaise.com/#faq-homepage",
@@ -625,131 +507,9 @@
   ]
 }
 
-{% comment %} Enhanced Service Schema {% endcomment %}
-,{
-  "@type": "Service",
-  "@id": "https://saturaise.com/#authentication-service",
-  "name": "Weryfikacja Autentyczności Saturaise",
-  "description": "Profesjonalna weryfikacja autentyczności każdego produktu przez ekspertów",
-  "provider": {
-    "@id": "https://saturaise.com/#organization"
-  },
-  "serviceType": "Weryfikacja autentyczności",
-  "areaServed": {
-    "@type": "Country",
-    "name": "Polska"
-  },
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Usługi weryfikacji",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Certyfikat Autentyczności",
-          "description": "Każdy produkt otrzymuje certyfikat potwierdzający oryginalność"
-        }
-      }
-    ]
-  }
-}
-
-{% comment %} Collection List for all brands - enhanced {% endcomment %}
-,{
-  "@type": "ItemList",
-  "@id": "https://saturaise.com/#all-brand-collections",
-  "name": "Wszystkie Marki i Kolekcje",
-  "description": "Pełna lista marek dostępnych w Saturaise",
-  "numberOfItems": 6,
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Supreme",
-      "url": "https://saturaise.com/collections/supreme"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Balenciaga",
-      "url": "https://saturaise.com/collections/balenciaga"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Essentials",
-      "url": "https://saturaise.com/collections/essentials"
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "name": "Corteiz",
-      "url": "https://saturaise.com/collections/corteiz"
-    },
-    {
-      "@type": "ListItem",
-      "position": 5,
-      "name": "Denim Tears",
-      "url": "https://saturaise.com/collections/denim-tears"
-    },
-    {
-      "@type": "ListItem",
-      "position": 6,
-      "name": "Uniqlo",
-      "url": "https://saturaise.com/collections/uniqlo"
-    }
-  ]
-}
-
-{% comment %} Enhanced Article Schema {% endcomment %}
-,{
-  "@type": "Article",
-  "@id": "https://saturaise.com/#homepage-content",
-  "headline": "Odkryj Ekskluzywne Limitowane Sneakersy w Saturaise",
-  "description": "Ekskluzywna kolekcja limitowanych sneakersów Nike, Adidas, Yeezy, Jordan. 100% autentyczne produkty z gwarancją jakości.",
-  "author": {
-    "@id": "https://saturaise.com/#organization"
-  },
-  "publisher": {
-    "@id": "https://saturaise.com/#organization"
-  },
-  "datePublished": "{{ shop.created_at | date: '%Y-%m-%d' }}",
-  "dateModified": "{{ 'now' | date: '%Y-%m-%d' }}",
-  "mainEntityOfPage": {
-    "@id": "https://saturaise.com/#homepage"
-  },
-  "articleSection": ["Sneakersy", "Moda", "Streetwear"],
-  "keywords": "limitowane sneakersy, ekskluzywne buty, Nike, Adidas, Yeezy, Jordan, Travis Scott, Off-White, New Balance, UGG, Labubu, Sonny Angel, Bearbrick",
-  "wordCount": 500,
-  "inLanguage": "pl-PL"
-}
-
-{% comment %} Enhanced Action Schema {% endcomment %}
-,{
-  "@type": "Action",
-  "@id": "https://saturaise.com/#shop-action",
-  "name": "Kup Limitowane Sneakersy",
-  "target": {
-    "@type": "EntryPoint",
-    "urlTemplate": "https://saturaise.com/collections/all",
-    "actionPlatform": [
-      "https://schema.org/DesktopWebPlatform",
-      "https://schema.org/MobileWebPlatform",
-      "https://schema.org/IOSPlatform",
-      "https://schema.org/AndroidPlatform"
-    ]
-  },
-  "actionStatus": "https://schema.org/PotentialActionStatus",
-  "object": {
-    "@type": "ProductCollection",
-    "name": "Limitowane Sneakersy",
-    "url": "https://saturaise.com/collections/all"
-  }
-}
-
 {% endif %}
-    {% if template contains 'product' %}
+
+{% if template contains 'product' %}
     ,{
       "@type": "WebPage",
       "@id": "{{ shop.url }}{{ product.url }}#webpage",
