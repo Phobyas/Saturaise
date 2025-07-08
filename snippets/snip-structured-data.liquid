@@ -125,133 +125,6 @@
       ]
     }
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://saturaise.com/#organization",
-      "name": "Saturaise",
-      "alternateName": "Saturaise Sneakers",
-      "url": "https://saturaise.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
-        "width": 600,
-        "height": 60
-      },
-      "image": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
-      "description": "Saturaise to działająca od trzech lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Ogrodowa 9a",
-        "addressLocality": "Żyrowa",
-        "postalCode": "47-330",
-        "addressCountry": "PL"
-      },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+48451108247",
-        "email": "saturaisekontakt@gmail.com",
-        "contactType": "customer service",
-        "availableLanguage": "Polish",
-        "hoursAvailable": {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          "opens": "09:00",
-          "closes": "16:00"
-        }
-      },
-      "foundingDate": "2022",
-      "areaServed": "PL",
-      "sameAs": [
-        "https://www.facebook.com/people/Saturaisecom/61576843476406/",
-        "https://www.instagram.com/saturaise_com/",
-        "https://www.tiktok.com/@saturaise.com"
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Katalog Saturaise - Limitowane Sneakersy",
-        "itemListElement": [
-          {
-            "@type": "OfferCatalog",
-            "name": "Nike",
-            "url": "https://saturaise.com/collections/nike"
-          },
-          {
-            "@type": "OfferCatalog", 
-            "name": "Adidas",
-            "url": "https://saturaise.com/collections/adidas"
-          },
-          {
-            "@type": "OfferCatalog",
-            "name": "Yeezy",
-            "url": "https://saturaise.com/collections/yeezy"
-          },
-          {
-            "@type": "OfferCatalog",
-            "name": "Jordan",
-            "url": "https://saturaise.com/collections/air-jordan"
-          },
-          {
-            "@type": "OfferCatalog",
-            "name": "New Balance",
-            "url": "https://saturaise.com/collections/new-balance"
-          },
-          {
-            "@type": "OfferCatalog",
-            "name": "UGG",
-            "url": "https://saturaise.com/collections/ugg"
-          }
-        ]
-      },
-      "award": "Zaufany Sprzedawca Sneakersów 2024",
-      "knowsAbout": ["Sneakersy", "Limitowane edycje", "Streetwear", "Weryfikacja autentyczności", "Nike", "Adidas", "Yeezy", "Jordan", "Travis Scott", "Off-White"],
-      "slogan": "Limitowane sneakersy z gwarancją autentyczności",
-      "priceRange": "500 PLN - 15000 PLN",
-      "paymentAccepted": ["Karta kredytowa", "BLIK", "PayPal", "Apple Pay", "Przelew", "PayPo", "Płatność przy odbiorze"],
-      "currenciesAccepted": "PLN",
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "09:00",
-        "closes": "16:00",
-        "validFrom": "2022-01-01",
-        "validThrough": "2025-12-31"
-      }
-    },
-    
-    {
-      "@type": "WebSite",
-      "@id": "https://saturaise.com/#website",
-      "url": "https://saturaise.com",
-      "name": "Saturaise",
-      "description": "Limitowane sneakersy Nike, Adidas, Jordan - oryginalne buty i kolekcjonerskie figurki",
-      "publisher": {
-        "@id": "https://saturaise.com/#organization"
-      },
-      "inLanguage": "pl-PL",
-      "potentialAction": [
-        {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://saturaise.com/search?q={search_term_string}",
-            "actionPlatform": [
-              "https://schema.org/DesktopWebPlatform",
-              "https://schema.org/MobileWebPlatform"
-            ]
-          },
-          "query-input": {
-            "@type": "PropertyValueSpecification",
-            "valueRequired": "https://schema.org/True",
-            "valueName": "search_term_string"
-          }
-        }
-      ]
-    }
-
 {% if template == 'index' %}
 ,{
   "@type": "WebPage",
@@ -352,42 +225,6 @@
           "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
           "seller": {
             "@id": "https://saturaise.com/#organization"
-          },
-          "shippingDetails": {
-            "@type": "OfferShippingDetails",
-            "shippingLabel": "Darmowa wysyłka w Polsce",
-            "shippingRate": {
-              "@type": "MonetaryAmount",
-              "value": "0.00",
-              "currency": "PLN"
-            },
-            "shippingDestination": {
-              "@type": "DefinedRegion",
-              "addressCountry": "PL"
-            },
-            "deliveryTime": {
-              "@type": "ShippingDeliveryTime",
-              "handlingTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 0,
-                "maxValue": 1,
-                "unitCode": "DAY"
-              },
-              "transitTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 1,
-                "maxValue": 3,
-                "unitCode": "DAY"
-              }
-            }
-          },
-          "hasMerchantReturnPolicy": {
-            "@type": "MerchantReturnPolicy",
-            "applicableCountry": "PL",
-            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-            "merchantReturnDays": 14,
-            "returnMethod": "https://schema.org/ReturnByMail",
-            "returnFees": "https://schema.org/FreeReturn"
           }
         }
       }
@@ -673,7 +510,73 @@
 {% endif %}
 
 {% if template contains 'product' %}
-{
+,{
+  "@type": "WebPage",
+  "@id": "{{ shop.url }}{{ product.url }}#webpage",
+  "url": "{{ shop.url }}{{ product.url }}",
+  "name": "{{ product.title }} | Saturaise",
+  "isPartOf": {
+    "@id": "https://saturaise.com/#website"
+  },
+  "breadcrumb": {
+    "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist"
+  },
+  {% if product.featured_image %}
+  "primaryImageOfPage": {
+    "@id": "{{ shop.url }}{{ product.url }}#primaryimage"
+  },
+  {% endif %}
+  "datePublished": "{{ product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ product.updated_at | default: product.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".product__title", ".product__price", ".product__description"]
+  }
+}
+,{
+  "@type": "BreadcrumbList",
+  "@id": "{{ shop.url }}{{ product.url }}#breadcrumblist",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Saturaise",
+      "item": "{{ shop.url }}"
+    }
+    {% if collection.url %}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ collection.title | json }},
+      "item": "{{ shop.url }}{{ collection.url }}"
+    }
+    ,{
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ product.title | json }},
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% else %}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ product.title | json }},
+      "item": "{{ shop.url }}{{ product.url }}"
+    }
+    {% endif %}
+  ]
+}
+{% if product.images.first %}
+,{
+  "@type": "ImageObject",
+  "@id": "{{ shop.url }}{{ product.url }}#primaryimage",
+  "url": "https:{{ product.images.first | image_url: width: 1200 }}",
+  "contentUrl": "https:{{ product.images.first | image_url: width: 1200 }}",
+  "width": 1200,
+  "height": 1200
+}
+{% endif %}
+,{
   "@type": "Product",
   "@id": "{{ shop.url }}{{ product.url }}#product",
   "url": "{{ shop.url }}{{ product.url }}",
@@ -740,15 +643,11 @@
   {% if product.metafields.mm-google-shopping.mpn %}
   "mpn": {{ product.metafields.mm-google-shopping.mpn.value | json }},
   {% endif %}
-  
-  {% comment %} FIXED COLOR FIELD - Simple string value {% endcomment %}
   {% if product.metafields.custom.color %}
   "color": {% if product.metafields.custom.color.value.label %}{{ product.metafields.custom.color.value.label | json }}{% else %}{{ product.metafields.custom.color.value | json }}{% endif %},
   {% elsif product.metafields.shopify.color-pattern %}
-  "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% elsif product.metafields.shopify.color-pattern.label %}{{ product.metafields.shopify.color-pattern.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
+  "color": {% if product.metafields.shopify.color-pattern.value.label %}{{ product.metafields.shopify.color-pattern.value.label | json }}{% else %}{{ product.metafields.shopify.color-pattern.value | json }}{% endif %},
   {% endif %}
-  
-  {% comment %} FIXED MATERIAL FIELD {% endcomment %}
   {% if product.metafields.shopify.footwear-material %}
   "material": [
     {% for material in product.metafields.shopify.footwear-material.value %}
@@ -782,8 +681,11 @@
       {% endif %}
     {% endfor %}
   ],
+  {% elsif product.metafields.custom.material %}
+  "material": {{ product.metafields.custom.material.value | json }},
+  {% else %}
+  "material": {% case product.vendor %}{% when "Nike", "Jordan" %}"Skóra, materiały syntetyczne, guma"{% when "Adidas", "Yeezy" %}"Primeknit, Boost, guma"{% when "New Balance" %}"Zamsz, siateczka, ABZORB"{% when "UGG" %}"Owcza wełna, zamsz, EVA"{% else %}"Premium materiały"{% endcase %},
   {% endif %}
-  
   {% if product.metafields.custom.size_system or product.metafields.shopify.shoe-size %}
   "hasMeasurement": {
     "@type": "QuantitativeValue",
@@ -796,15 +698,12 @@
     "unitText": "European Shoe Size"
   },
   {% endif %}
-  
   {% if product.metafields.custom.release_date %}
   "releaseDate": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%d' }}",
   {% endif %}
-  
   {% if product.metafields.mm-google-shopping.size_type %}
   "sizeSystem": {{ product.metafields.mm-google-shopping.size_type.value | json }},
   {% endif %}
-  
   {% if product.metafields.mm-google-shopping.condition %}
     {% assign condition = product.metafields.mm-google-shopping.condition.value %}
     {% if condition == "new" %}
@@ -819,8 +718,6 @@
   {% else %}
   "itemCondition": "https://schema.org/NewCondition",
   {% endif %}
-  
-  {% comment %} FIXED AUDIENCE/GENDER FIELD {% endcomment %}
   "audience": {
     "@type": "PeopleAudience",
     {% if product.metafields.mm-google-shopping.gender %}
@@ -870,7 +767,6 @@
     "suggestedMinAge": 16
     {% endif %}
   },
-  
   {% if product.variants.size > 1 %}
   {% comment %} Use model property to indicate this is a model with size variants {% endcomment %}
   "model": {{ product.title | split: ' - ' | first | json }},
@@ -878,8 +774,6 @@
   "mpn": {{ product.metafields.custom.style_code.value | json }},
   {% endif %}
   {% endif %}
-  
-  {% comment %} FIXED ADDITIONAL PROPERTIES - Simple string values {% endcomment %}
   "additionalProperty": [
     {% assign properties_added = false %}
     {% if product.metafields.custom.release_date %}
@@ -902,7 +796,7 @@
     {
       "@type": "PropertyValue",
       "name": "Cechy obuwia",
-      "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% elsif product.metafields.shopify.shoe-features.value.label %}{{ product.metafields.shopify.shoe-features.value.label | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.shoe-features.value.first.label %}{% assign features = "" %}{% for feature in product.metafields.shopify.shoe-features.value %}{% if feature.label %}{% assign features = features | append: feature.label %}{% unless forloop.last %}{% assign features = features | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ features | json }}{% else %}{{ product.metafields.shopify.shoe-features.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
     {% if product.metafields.shopify.sneaker-style %}
@@ -918,7 +812,7 @@
     {
       "@type": "PropertyValue",
       "name": "Typ zapięcia",
-      "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% elsif product.metafields.shopify.closure-type.value.label %}{{ product.metafields.shopify.closure-type.value.label | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
+      "value": {% if product.metafields.shopify.closure-type.value.first.label %}{% assign closures = "" %}{% for closure in product.metafields.shopify.closure-type.value %}{% if closure.label %}{% assign closures = closures | append: closure.label %}{% unless forloop.last %}{% assign closures = closures | append: ", " %}{% endunless %}{% endif %}{% endfor %}{{ closures | json }}{% else %}{{ product.metafields.shopify.closure-type.value | json }}{% endif %}
     }{% assign properties_added = true %}
     {% endif %}
     {% if product.metafields.shopify.shoe-fit %}
@@ -964,11 +858,9 @@
       "value": "{{ product.created_at | date: '%Y-%m-%d' }}"
     }
   ],
-  
   {% if product.variants.size > 1 %}
   "inProductGroupWithID": {{ product.id | json }},
   {% endif %}
-  
   "hasCertification": [
     {
       "@type": "Certification",
@@ -991,7 +883,6 @@
       "validThrough": "{{ 'now' | date: '%s' | plus: 94608000 | date: '%Y-%m-%d' }}"
     }
   ],
-  
   "positiveNotes": {
     "@type": "ItemList",
     "name": "Zalety produktu",
@@ -1023,7 +914,6 @@
       }
     ]
   },
-  
   {% if product.metafields.shopify--discovery--product_recommendation.related_products %}
   "isSimilarTo": [
     {% for related_product_id in product.metafields.shopify--discovery--product_recommendation.related_products.value limit: 5 %}
@@ -1038,7 +928,6 @@
     {% endfor %}
   ],
   {% endif %}
-  
   {% if product.available %}
   "offers": {% if product.variants.size > 1 %}{
     "@type": "AggregateOffer",
@@ -1272,12 +1161,10 @@
     "itemCondition": "https://schema.org/NewCondition"
   }
   {% endif %},
-  
   "isPartOf": {
     "@type": "WebPage",
     "@id": "{{ shop.url }}{{ product.url }}"
   },
-  
   "warranty": {
     "@type": "WarrantyPromise",
     "name": "Gwarancja Autentyczności Saturaise",
@@ -1316,7 +1203,78 @@
     "availabilityStarts": "{{ product.metafields.custom.release_date.value | date: '%Y-%m-%dT%H:%M:%S%z' }}"
   }{% endif %}{% endif %}
 }
+,{
+  "@type": "FAQPage",
+  "@id": "{{ shop.url }}{{ product.url }}#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Czy {{ product.title }} jest w 100% oryginalny?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, wszystkie produkty w Saturaise są w 100% oryginalne. {{ product.title }} przechodzi szczegółową weryfikację autentyczności przez naszych ekspertów. Każdy produkt posiada certyfikat autentyczności Saturaise."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "Jaki jest czas dostawy {{ product.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oferujemy darmową wysyłkę z dostawą w ciągu 1-3 dni roboczych. Produkty wysyłamy tego samego dnia dla zamówień złożonych do godziny 14:00. Dostawa realizowana jest przez DPD lub InPost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy mogę zwrócić {{ product.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "Tak, masz 14 dni na zwrot produktu w nienaruszonym stanie. Produkt musi być nieużywany, z metkami, w oryginalnym opakowaniu. Zwrot jest darmowy, a pieniądze zwracamy w ciągu 14 dni od otrzymania produktu."
+      }
+    }{% if product.variants.size > 1 %},
+    {
+      "@type": "Question",
+      "name": "Jak dobrać odpowiedni rozmiar {{ product.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{% if product.metafields.custom.size_suggestion %}{{ product.metafields.custom.size_suggestion.value }}{% else %}Udostępniamy informacje o rozmiarach dla każdego produktu. {% case product.vendor %}{% when 'Nike', 'Jordan' %}Nike i Jordan zazwyczaj mają standardowe rozmiary (TTS).{% when 'Adidas', 'Yeezy' %}Adidas Yeezy często kroją małe rozmiary - zalecamy wybór o 0.5-1 rozmiar większy.{% when 'New Balance' %}New Balance ma komfortowe dopasowanie, zazwyczaj TTS.{% endcase %} W przypadku wątpliwości, skontaktuj się z naszym zespołem.{% endif %}"
+      }
+    }{% endif %},
+    {
+      "@type": "Question",
+      "name": "Dlaczego ceny różnią się między rozmiarami?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ceny zależą od dostępności na rynku i popytu na konkretne rozmiary. Rzadsze rozmiary mogą mieć wyższe ceny ze względu na ograniczoną dostępność. Wszystkie rozmiary są w 100% oryginalne."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak mogę się skontaktować w sprawie {{ product.title }}?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Możesz skontaktować się z nami przez email: saturaisekontakt@gmail.com lub telefon: +48 451 108 247 (pon-pt 9:00-16:00). Odpowiadamy na wszystkie zapytania w ciągu 24 godzin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jakie metody płatności są dostępne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Akceptujemy: BLIK, karty płatnicze, PayPal, Apple Pay, przelew tradycyjny, płatność przy odbiorze oraz raty PayPo. Wszystkie płatności są bezpieczne i szyfrowane."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Czy oferujecie gwarancję autentyczności?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, każdy produkt objęty jest 100% gwarancją autentyczności Saturaise. W przypadku jakichkolwiek wątpliwości co do oryginalności produktu, oferujemy pełny zwrot środków. Nasza reputacja opiera się na sprzedaży wyłącznie oryginalnych produktów."
+      }
+    }
+  ]
+}
 {% endif %}
+
 {% if template contains 'collection' and template.name != 'list-collections' %}
 
 {% comment %} Calculate accurate price range for aggregate offer {% endcomment %}
