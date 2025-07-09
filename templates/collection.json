@@ -204,6 +204,7 @@
     },
     "trustmate_reviews_GhbA8L": {
       "type": "trustmate-reviews",
+      "disabled": true,
       "name": "Trustmate Reviews",
       "settings": {
         "widget_id": "4ff47043-34e9-4d3a-beff-0aca4d8b9b93",
