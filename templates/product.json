@@ -262,11 +262,14 @@
         "content": "<p>Saturaise to działająca od dwóch lat firma specjalizująca się w sprzedaży najbardziej pożądanych na rynku butów oraz ubrań z gwarancją autentyczności każdego przedmiotu.<br/><br/>Produkty sprzedawane w naszym sklepie są weryfikowane pod kątem oryginalności oraz jakości, dzięki czemu masz pewność, że zakupy będą przebiegać bez żadnych problemów.</p>",
         "content_size": "medium",
         "text_position": "left",
-        "section_padding": "both"
+        "section_padding": "both",
+        "cta_text": "Poznaj naszą historię",
+        "cta_link": ""
       }
     },
     "trustmate_reviews_8qGWa8": {
       "type": "trustmate-reviews",
+      "disabled": true,
       "name": "Trustmate Reviews",
       "settings": {
         "widget_id": "4ff47043-34e9-4d3a-beff-0aca4d8b9b93",
