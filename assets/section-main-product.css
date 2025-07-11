@@ -2342,3 +2342,116 @@
     font-size: 11px !important;
   }
 }
+
+/* ===== SWATCH SELECTION FIX ===== */
+/* Add this to the end of section-main-product.css */
+
+/* Reset any conflicting styles and ensure proper selection states */
+.product__section--main .swatches__form--input[type="radio"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  /* Don't use display:none as it can break radio functionality */
+}
+
+/* Ensure labels are properly clickable */
+.product__section--main .swatches__form--label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  /* Remove any transform that might cause issues */
+  transform: none !important;
+  -webkit-transform: none !important;
+  /* Fast transition for immediate visual feedback */
+  transition: border-color 0.15s ease, opacity 0.15s ease !important;
+}
+
+/* Selected state - use high specificity to override conflicts */
+.product__section--main
+  .swatches__container
+  .swatches__form--input[type="radio"]:checked
+  + .swatches__form--label,
+.product__section--main
+  .swatches__form--input[type="radio"]:checked
+  + .swatches__form--label.swatches__form--label-with-price {
+  border: 2px solid #323232 !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Unselected state */
+.product__section--main
+  .swatches__container
+  .swatches__form--input[type="radio"]:not(:checked)
+  + .swatches__form--label,
+.product__section--main
+  .swatches__form--input[type="radio"]:not(:checked)
+  + .swatches__form--label.swatches__form--label-with-price {
+  border: 1px solid #eeeeee !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Hover state - only for unselected swatches */
+.product__section--main
+  .swatches__form--input[type="radio"]:not(:checked)
+  + .swatches__form--label:hover {
+  border-color: #999 !important;
+}
+
+/* Disabled state */
+.product__section--main
+  .swatches__form--input[type="radio"]:disabled
+  + .swatches__form--label {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Remove any problematic transforms or animations */
+.product__section--main .swatches__swatch--regular,
+.product__section--main .swatches__swatch--color {
+  transform: none !important;
+  -webkit-transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Remove focus visible transform that might cause issues */
+.swatches__form--label.focus-visible {
+  transform: none !important;
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure container doesn't interfere with clicks */
+.product__section--main .swatches__container {
+  pointer-events: none !important;
+}
+
+.product__section--main .swatches__container * {
+  pointer-events: auto !important;
+}
+
+/* Fix for mobile touch events */
+@media (max-width: 768px) {
+  .product__section--main .swatches__form--label {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+  }
+}
+
+/* Ensure price text inherits proper color in selected state */
+.product__section--main
+  .swatches__form--input:checked
+  + .swatches__form--label-with-price
+  .swatch-price {
+  color: #323232 !important;
+}
