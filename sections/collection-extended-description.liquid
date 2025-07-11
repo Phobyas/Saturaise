@@ -1,15 +1,9 @@
 <div class="CollectionInformation__Description container mx-auto w-full px-3 lg:px-0">
   {%- if collection.metafields.custom.collection_quick_desc != blank -%}
-    <div class="description-container collapsed">
+    <div class="description-container">
       <div class="description-content">
         {{ collection.metafields.custom.collection_quick_desc | metafield_tag }}
       </div>
-      
-      <div class="fade-overlay"></div>
-    </div>
-    
-    <div class="text-left mt-4">
-      <button class="toggle-description collection-description-button">ROZWIŃ</button>
     </div>
   {%- endif -%}
 </div>
@@ -29,36 +23,11 @@
 
   .description-container {
     position: relative;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
   }
 
   .metafield-rich_text_field h1 {
     font-size: 30px !important;
     font-weight: 700 !important;
-  }
-   
-  .description-container.collapsed {
-    max-height: 200px; /* Adjust height as needed */
-  }
-  
-  .description-container.expanded {
-    max-height: 10000px; /* Large value to accommodate any length */
-  }
-  
-  .fade-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  
-  .description-container.expanded .fade-overlay {
-    opacity: 0;
   }
 
   .CollectionInformation__Description h2 {
@@ -86,29 +55,6 @@
     margin-bottom: 0.5em !important;
     line-height: 1.6 !important;
   }
-
-  .collection-description-button {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 40px !important;
-  padding: 8px 16px !important;
-  border: 1px solid var(--dotted-color) !important;
-  border-radius: 8px !important;
-  background: var(--background, #fff) !important;
-  color: var(--text-color, #333) !important;
-  transition: all 0.3s ease !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-}
-
-.collection-description-button:hover {
-  background: var(--scheme-1-hover) !important;
-  color: var(--scheme-1-bg) !important;
-}
 </style>
 
 <script>
