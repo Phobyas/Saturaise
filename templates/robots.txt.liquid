@@ -1,5 +1,3 @@
-# Simple robots.txt for Saturaise.com
-# Let Google crawl everything they need for product indexing
 
 User-agent: *
 Allow: /
@@ -10,6 +8,11 @@ Disallow: /cart
 Disallow: /checkout
 Disallow: /account
 Disallow: /orders
+
+# Block search results to save crawl budget
+Disallow: /search
+Disallow: /search?
+Disallow: /search/suggest
 
 # Block resource-heavy crawlers to save server resources
 User-agent: MJ12bot
