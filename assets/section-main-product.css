@@ -2455,3 +2455,269 @@
   .swatch-price {
   color: #323232 !important;
 }
+
+/* Hot Product Badge - Matching Site Style */
+.hot-product-badge-wrapper {
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.hot-product-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ff5722;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  position: relative;
+  animation: badgeFadeIn 0.3s ease;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.badge-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge-emoji {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  animation: emojiGlow 2s ease-in-out infinite;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Subtle shimmer effect */
+.hot-product-badge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes badgeFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 200%;
+  }
+}
+
+@keyframes emojiGlow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Hover effect */
+.hot-product-badge:hover {
+  background: #ff6a33;
+  transform: scale(1.05);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .hot-product-badge-wrapper {
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .hot-product-badge {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .badge-text {
+    font-size: 12px;
+  }
+
+  .badge-emoji {
+    font-size: 16px;
+  }
+}
+
+/* Integration with existing styles */
+.product__section--main .hot-product-badge-wrapper {
+  display: block;
+  text-align: left;
+}
+
+/* Authenticity Guarantee - Saturaise Minimal Style */
+.authenticity-guarantee-wrapper {
+  margin: 16px 0 24px 0;
+  width: 100%;
+}
+
+.authenticity-guarantee {
+  display: flex;
+  align-items: center; /* Changed from flex-start to center */
+  gap: 16px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle hover effect */
+.authenticity-guarantee:hover {
+  background: #f3f3f3;
+}
+
+/* Icon styling */
+.guarantee-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: #1d4ed8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  position: relative;
+}
+
+/* Icon pulse animation */
+.guarantee-icon::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #1d4ed8;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.guarantee-icon svg {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Content styling */
+.guarantee-content {
+  flex: 1;
+  /* Removed padding-top: 2px; */
+}
+
+.guarantee-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.guarantee-text {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Subtle background accent */
+.authenticity-guarantee::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #1d4ed8 0%, transparent 70%);
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .authenticity-guarantee {
+    padding: 16px;
+    gap: 12px;
+    /* Keep flex-direction: row and align-items: center */
+  }
+
+  .guarantee-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .guarantee-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .guarantee-title {
+    font-size: 16px;
+  }
+
+  .guarantee-text {
+    font-size: 13px;
+  }
+}
+
+/* Animation on scroll */
+.authenticity-guarantee {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: subtleFadeIn 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes subtleFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

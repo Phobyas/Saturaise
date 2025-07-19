@@ -20,7 +20,7 @@
     .slideshow__slide
     .slide-animate.delay--1 {
     transition-delay: 0.5s;
-  } 
+  }
   .animation-text--active
     [data-section-loaded]:has(.slide-animate):not(.preview-mode)
     .slideshow__slide
@@ -86,7 +86,6 @@
 
 .slideshow__slide-image {
   position: relative;
-  
 }
 
 .slideshow__slide-image:before {

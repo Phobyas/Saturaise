@@ -895,12 +895,12 @@
           <span class="stat-number">{{ total_count }}</span>
           <span class="stat-label">Wszystkie</span>
         </div>
-        {% if min_price != max_price %}
+        {% comment %} {% if min_price != max_price %}
         <div class="stat-item">
           <span class="stat-number">{{ min_price | money_without_currency }}-{{ max_price | money_without_currency }}</span>
           <span class="stat-label">Cena (zł)</span>
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
       </div>
       
       <div class="size-grid">

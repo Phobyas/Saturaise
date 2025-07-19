@@ -18,7 +18,9 @@ function loadAssets(container) {
           loader.load([jsAssets.productPickupAvailability]).finally(() => {});
         }
         if (container.dataset.productComplementaryProducts === "true") {
-          loader.load([jsAssets.productComplementaryProducts]).finally(() => {});
+          loader
+            .load([jsAssets.productComplementaryProducts])
+            .finally(() => {});
         }
         loader.load([jsAssets.product]).finally(() => {});
       });
@@ -42,9 +44,11 @@ function loadAssets(container) {
 }
 
 // Keep the existing event listeners
-document.querySelectorAll('[data-section-type="product"].product-page').forEach(function (container) {
-  loadAssets(container);
-});
+document
+  .querySelectorAll('[data-section-type="product"].product-page')
+  .forEach(function (container) {
+    loadAssets(container);
+  });
 
 document.addEventListener("shopify:section:select", function (event) {
   if (event.target.querySelector('[data-section-type="product"]')) {

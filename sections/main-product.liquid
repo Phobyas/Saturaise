@@ -1,4 +1,3 @@
-
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign first_3d_model = product.media | where: "media_type", "model" | first
@@ -264,6 +263,16 @@
                 </div>
               {%- endunless -%}
               {%- when 'product_title' -%}
+                {% comment %} HOT PRODUCT BADGE - Added before brand name {% endcomment %}
+                {% if product.tags contains 'Hot' or product.tags contains 'hot' or product.tags contains 'HOT' %}
+                  <div class="hot-product-badge-wrapper animate--text delay--2">
+                    <span class="hot-product-badge">
+                      <span class="badge-text">Ten produkt ogląda dużo osób!</span>
+                      <span class="badge-emoji">🔥</span>
+                    </span>
+                  </div>
+                {% endif %}
+                
                 {% if product.vendor != blank %}
                   <p class="product-supplier text-[16px] text-gray-500 pt-2 mb-2 text-left font-[600]">
                     {% if product.collections.size > 0 %}
@@ -429,7 +438,7 @@
       ">
         <span style="font-weight: 600;">{{ advice_prefix }}</span> {{ size_advice }}
       </p>
-    </div>
+    </div> 
   {% endif %}
 {% endif %} 
               <div
@@ -513,6 +522,21 @@
                 data-variant-id="{{ current_variant.id }}"
               ></pickup-availability>
             {%- when 'product_description' -%}
+              {% comment %} AUTHENTICITY GUARANTEE - Added before product description {% endcomment %}
+<div class="authenticity-guarantee-wrapper animate--text delay--{{ forloop.index }}">
+  <div class="authenticity-guarantee">
+    <div class="guarantee-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 11L11 13L15.5 8.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="guarantee-content">
+      <h4 class="guarantee-title">Gwarancja autentyczności Saturaise</h4>
+      <p class="guarantee-text">Każdy produkt przechodzi szczegółową weryfikację przez nasz doświadczony zespół</p>
+    </div>
+  </div>
+</div>
+              
               {%- if product.description != blank -%}
                 <div
                   class="product-template__description rte  pt-8 md:pt-6 mt-3 mb-8 animate--text delay--{{ forloop.index }}"
