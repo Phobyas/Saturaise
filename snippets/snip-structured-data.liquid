@@ -3153,14 +3153,15 @@
       {% endif %}
     {% endif %}
   {% endfor %}
-  {% if related_articles.size > 0 %}
+
+{% if related_articles.size > 0 %}
   "relatedLink": [
     {% for related in related_articles limit: 5 %}
     "{{ shop.url }}{{ related.url }}"{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ],
   {% endif %}
-  "video": []
+  ,"video": []
 }
 
 {% comment %} Article-specific FAQ if it's a guide or has FAQ content {% endcomment %}
