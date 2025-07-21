@@ -3290,6 +3290,475 @@
 {% endif %}
 
 {% comment %} ItemList for blog article listings with pagination {% endcomment %}
+{% if template contains 'blog' %}
+,{
+  "@type": "Blog",
+  "@id": "{{ shop.url }}{{ blog.url }}#blog",
+  "url": "{{ shop.url }}{{ blog.url }}",
+  "name": {{ blog.title | json }},
+  "description": "Blog Saturaise - najnowsze informacje o sneakersach, porady dotyczące pielęgnacji butów, przewodniki po rozmiarach i nowości ze świata streetwearu.",
+  "inLanguage": "pl-PL",
+  "isPartOf": {
+    "@id": "https://saturaise.com/#website"
+  },
+  "publisher": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ blog.url }}",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Saturaise",
+          "item": "{{ shop.url }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": "{{ shop.url }}{{ blog.url }}"
+        }
+      ]
+    }
+  },
+  "blogPost": [
+    {% for article in blog.articles limit: 20 %}
+    {
+      "@type": "BlogPosting",
+      "@id": "{{ shop.url }}{{ article.url }}#blogpost",
+      "url": "{{ shop.url }}{{ article.url }}",
+      "name": {{ article.title | json }},
+      "headline": {{ article.title | truncate: 110 | json }},
+      "alternativeHeadline": {{ article.title | json }},
+      "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+      "articleBody": {{ article.content | strip_html | json }},
+      "wordCount": {{ article.content | strip_html | split: ' ' | size }},
+      "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+      "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+      "dateCreated": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+      "author": {
+        "@type": "Person",
+        "name": {{ article.author | default: 'Zespół Saturaise' | json }},
+        "url": "{{ shop.url }}/pages/o-nas",
+        "sameAs": [
+          "https://saturaise.com/pages/o-nas"
+        ]
+      },
+      "publisher": {
+        "@id": "https://saturaise.com/#organization"
+      },
+      "image": {% if article.image %}[
+        {
+          "@type": "ImageObject",
+          "url": "https:{{ article.image | image_url: width: 1200 }}",
+          "width": 1200,
+          "height": 630,
+          "caption": {{ article.image.alt | default: article.title | json }}
+        },
+        {
+          "@type": "ImageObject",
+          "url": "https:{{ article.image | image_url: width: 1200, height: 1200, crop: 'center' }}",
+          "width": 1200,
+          "height": 1200,
+          "caption": {{ article.image.alt | default: article.title | json }}
+        },
+        {
+          "@type": "ImageObject",
+          "url": "https:{{ article.image | image_url: width: 1200, height: 675, crop: 'center' }}",
+          "width": 1200,
+          "height": 675,
+          "caption": {{ article.image.alt | default: article.title | json }}
+        }
+      ]{% else %}[
+        {
+          "@type": "ImageObject",
+          "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+          "width": 600,
+          "height": 60,
+          "caption": "Saturaise Blog"
+        }
+      ]{% endif %},
+      "thumbnailUrl": {% if article.image %}"https:{{ article.image | image_url: width: 400 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
+      "keywords": {{ article.tags | join: ', ' | append: ', sneakersy, buty, streetwear, saturaise' | json }},
+      "articleSection": {{ blog.title | json }},
+      "inLanguage": "pl-PL",
+      {% if blog.comments_enabled? %}
+      "commentCount": {{ article.comments_count }},
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/CommentAction",
+          "userInteractionCount": {{ article.comments_count }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/ReadAction",
+          "userInteractionCount": {{ article.content | strip_html | split: ' ' | size | divided_by: 200 | plus: 1 }}
+        }
+      ],
+      {% endif %}
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ shop.url }}{{ article.url }}"
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ shop.url }}{{ blog.url }}?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "blogFeed": {
+    "@type": "DataFeed",
+    "name": "RSS Feed {{ blog.title }}",
+    "url": "{{ shop.url }}{{ blog.url }}.atom",
+    "dataFeedElement": [
+      {% for article in blog.articles limit: 10 %}
+      {
+        "@type": "DataFeedItem",
+        "item": {
+          "@id": "{{ shop.url }}{{ article.url }}"
+        },
+        "dateCreated": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+}
+{% endif %}
+
+{% comment %} Article Schema - Enhanced with type detection and optimizations {% endcomment %}
+{% if template contains 'article' %}
+{% comment %} Determine article type based on tags or blog {% endcomment %}
+{% assign article_type = 'Article' %}
+{% if blog.title contains 'Aktualności' or blog.title contains 'News' or article.tags contains 'news' %}
+  {% assign article_type = 'NewsArticle' %}
+{% elsif article.tags contains 'recenzja' or article.tags contains 'review' %}
+  {% assign article_type = 'Review' %}
+{% elsif article.tags contains 'poradnik' or article.tags contains 'guide' or article.tags contains 'jak' %}
+  {% assign article_type = 'TechArticle' %}
+{% elsif article.tags contains 'analiza' or article.tags contains 'analysis' %}
+  {% assign article_type = 'AnalysisNewsArticle' %}
+{% endif %}
+
+,{
+  "@type": {{ article_type | json }},
+  "@id": "{{ shop.url }}{{ article.url }}#article",
+  "url": "{{ shop.url }}{{ article.url }}",
+  "name": {{ article.title | json }},
+  "headline": {{ article.title | truncate: 110 | json }},
+  "alternativeHeadline": {{ article.title | json }},
+  "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+  "articleBody": {{ article.content | strip_html | json }},
+  "wordCount": {{ article.content | strip_html | split: ' ' | size }},
+  "timeRequired": "PT{{ article.content | strip_html | split: ' ' | size | divided_by: 200 | plus: 1 }}M",
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateCreated": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  
+  {% comment %} NewsArticle specific properties {% endcomment %}
+  {% if article_type == 'NewsArticle' or article_type == 'AnalysisNewsArticle' %}
+  "dateline": "Polska",
+  "printEdition": "Online",
+  "printSection": "Sneakersy i Streetwear",
+  {% endif %}
+  
+  {% comment %} Enhanced author with role-based information {% endcomment %}
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | default: 'Zespół Saturaise' | json }},
+    "url": "{{ shop.url }}/pages/o-nas#{{ article.author | handle | default: 'team' }}",
+    "description": {% case article.author %}
+      {% when 'Michał K.' %}"Główny ekspert ds. weryfikacji autentyczności w Saturaise"
+      {% when 'Anna S.' %}"Specjalista ds. trendów streetwearowych i limitowanych edycji"
+      {% when 'Piotr W.' %}"Ekspert ds. historii sneakersów i kolekcjonerstwa"
+      {% else %}"Ekspert ds. sneakersów i streetwearu w Saturaise"
+    {% endcase %},
+    "jobTitle": {% case article.author %}
+      {% when 'Michał K.' %}"Head of Authentication"
+      {% when 'Anna S.' %}"Trend Specialist"
+      {% when 'Piotr W.' %}"Sneaker Historian"
+      {% else %}"Sneaker Expert"
+    {% endcase %},
+    "worksFor": {
+      "@id": "https://saturaise.com/#organization"
+    },
+    "sameAs": [
+      "https://saturaise.com/pages/o-nas",
+      "https://www.instagram.com/saturaise_com/"
+    ],
+    "knowsAbout": ["Sneakersy", "Streetwear", "Limitowane edycje", "Weryfikacja autentyczności"]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://saturaise.com/#organization",
+    "name": "Saturaise",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+      "width": 600,
+      "height": 60,
+      "caption": "Logo Saturaise"
+    }
+  },
+  "image": {% if article.image %}[
+    {
+      "@type": "ImageObject",
+      "@id": "{{ shop.url }}{{ article.url }}#primaryimage",
+      "url": "https:{{ article.image | image_url: width: 1200 }}",
+      "width": 1200,
+      "height": 630,
+      "caption": {{ article.image.alt | default: article.title | json }},
+      "representativeOfPage": true
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https:{{ article.image | image_url: width: 1200, height: 1200, crop: 'center' }}",
+      "width": 1200,
+      "height": 1200,
+      "caption": {{ article.image.alt | default: article.title | json }}
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https:{{ article.image | image_url: width: 1200, height: 675, crop: 'center' }}",
+      "width": 1200,
+      "height": 675,
+      "caption": {{ article.image.alt | default: article.title | json }}
+    }
+  ]{% else %}[
+    {
+      "@type": "ImageObject",
+      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+      "width": 600,
+      "height": 60,
+      "caption": "Saturaise Blog"
+    }
+  ]{% endif %},
+  "thumbnailUrl": {% if article.image %}"https:{{ article.image | image_url: width: 400 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
+  "keywords": {{ article.tags | join: ', ' | append: ', sneakersy, buty, streetwear, saturaise' | json }},
+  "articleSection": {{ blog.title | json }},
+  "inLanguage": "pl-PL",
+  "copyrightHolder": {
+    "@id": "https://saturaise.com/#organization"
+  },
+  "copyrightYear": {{ article.published_at | date: '%Y' }},
+  
+  {% comment %} Content location for Polish market {% endcomment %}
+  "contentLocation": {
+    "@type": "Place",
+    "name": "Polska",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "PL"
+    }
+  },
+  
+  {% if blog.comments_enabled? %}
+  "commentCount": {{ article.comments_count }},
+  "discussionUrl": "{{ shop.url }}{{ article.url }}#comments",
+  "interactionStatistic": {
+    "@type": "InteractionCounter",
+    "interactionType": "https://schema.org/CommentAction",
+    "userInteractionCount": {{ article.comments_count }}
+  },
+  {% endif %}
+  
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Saturaise",
+          "item": "{{ shop.url }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ blog.title | json }},
+          "item": "{{ shop.url }}{{ blog.url }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ article.title | json }},
+          "item": "{{ shop.url }}{{ article.url }}"
+        }
+      ]
+    }
+  },
+  
+  "isPartOf": {
+    "@type": "Blog",
+    "@id": "{{ shop.url }}{{ blog.url }}#blog",
+    "name": {{ blog.title | json }},
+    "url": "{{ shop.url }}{{ blog.url }}"
+  },
+  
+  "about": {
+    "@type": "Thing",
+    "name": "Sneakersy i streetwear",
+    "description": "Informacje o limitowanych butach i modzie ulicznej"
+  },
+  
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      ".article-title",
+      ".article-meta", 
+      ".rte > p:first-of-type",
+      ".rte > p:nth-of-type(2)"
+    ]
+  },
+  
+  "potentialAction": [
+    {
+      "@type": "ReadAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}{{ article.url }}",
+        "actionPlatform": [
+          "https://schema.org/DesktopWebPlatform",
+          "https://schema.org/MobileWebPlatform"
+        ]
+      }
+    }
+    {% if blog.comments_enabled? %},
+    {
+      "@type": "CommentAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}{{ article.url }}#comments"
+      }
+    }
+    {% endif %}
+  ],
+  
+  "isAccessibleForFree": true,
+  "genre": {% case blog.title %}
+    {% when 'News', 'Aktualności' %}"Aktualności branżowe"
+    {% when 'Poradniki' %}"Poradnik"
+    {% when 'Recenzje' %}"Recenzja produktu"
+    {% else %}"Blog lifestyle"
+  {% endcase %},
+  "educationalLevel": "beginner",
+  "educationalUse": ["Informacja konsumencka", "Poradnik zakupowy"],
+  "audience": {
+    "@type": "Audience",
+    "name": "Miłośnicy sneakersów i streetwearu",
+    "audienceType": "Kolekcjonerzy butów, entuzjaści mody ulicznej",
+    "geographicArea": {
+      "@type": "Country",
+      "name": "Polska"
+    }
+  }
+  
+  {% comment %} Only add Review-specific properties if there are actual ratings {% endcomment %}
+  {% if article_type == 'Review' and article.metafields.review.rating %}
+  ,"reviewRating": {
+    "@type": "Rating",
+    "ratingValue": {{ article.metafields.review.rating | json }},
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+  {% endif %}
+}
+
+{% comment %} Article-specific FAQ if it's a guide or has FAQ content {% endcomment %}
+{% if article.content contains 'faq' or article.content contains 'FAQ' or article.content contains 'pytania' or article.tags contains 'faq' or article.tags contains 'poradnik' %}
+,{
+  "@type": "FAQPage",
+  "@id": "{{ shop.url }}{{ article.url }}#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Czy informacje w artykule '{{ article.title }}' są aktualne?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, artykuł został {% if article.updated_at %}zaktualizowany {{ article.updated_at | date: '%d.%m.%Y' }}{% else %}opublikowany {{ article.published_at | date: '%d.%m.%Y' }}{% endif %} i zawiera aktualne informacje. Zespół Saturaise regularnie weryfikuje i aktualizuje treści na blogu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Gdzie mogę kupić produkty opisane w artykule?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wszystkie produkty opisane w naszych artykułach są dostępne w sklepie Saturaise. Oferujemy 100% oryginalne sneakersy z gwarancją autentyczności, darmową dostawą i 14-dniowym prawem zwrotu."
+      }
+    }
+    {% if article.tags contains 'rozmiary' or article.tags contains 'size-guide' %},
+    {
+      "@type": "Question",
+      "name": "Czy tabela rozmiarów jest uniwersalna dla wszystkich marek?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nie, różne marki mogą mieć różne systemy rozmiarów. W artykule przedstawiamy szczegółowe informacje dla konkretnych modeli. W razie wątpliwości zawsze możesz skontaktować się z naszym zespołem obsługi klienta."
+      }
+    }
+    {% endif %}
+    {% if article.tags contains 'pielęgnacja' or article.tags contains 'czyszczenie' %},
+    {
+      "@type": "Question",
+      "name": "Czy oferujecie produkty do pielęgnacji opisane w artykule?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tak, w Saturaise znajdziesz profesjonalne środki do czyszczenia i pielęgnacji sneakersów. Oferujemy produkty najwyższej jakości, które pomogą zachować Twoje buty w idealnym stanie."
+      }
+    }
+    {% endif %}
+  ]
+}
+{% endif %}
+
+{% comment %} HowTo Schema for guide articles {% endcomment %}
+{% if article.tags contains 'poradnik' or article.tags contains 'guide' or article.tags contains 'jak' or article.title contains 'Jak' or article.title contains 'Poradnik' %}
+,{
+  "@type": "HowTo",
+  "@id": "{{ shop.url }}{{ article.url }}#howto",
+  "name": {{ article.title | json }},
+  "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+  "image": {% if article.image %}"https:{{ article.image | image_url: width: 1200 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
+  "totalTime": "PT{{ article.content | strip_html | split: ' ' | size | divided_by: 200 | plus: 1 }}M",
+  "estimatedCost": {
+    "@type": "MonetaryAmount",
+    "currency": "PLN",
+    "value": "0"
+  },
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "Sneakersy lub produkt opisany w artykule"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Przeczytaj cały artykuł",
+      "text": "Zapoznaj się dokładnie z przedstawionymi informacjami i wskazówkami.",
+      "url": "{{ shop.url }}{{ article.url }}"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Zastosuj zdobytą wiedzę",
+      "text": "Wykorzystaj informacje z artykułu przy wyborze lub pielęgnacji swoich sneakersów."
+    }
+  ]
+}
+{% endif %}
+
+{% comment %} ItemList for blog article listings with pagination {% endcomment %}
 {% if template == 'blog' and blog.articles.size > 0 %}
 ,{
   "@type": "ItemList",
@@ -3298,41 +3767,29 @@
   "description": "Lista wszystkich artykułów opublikowanych na blogu {{ blog.title }} w sklepie Saturaise",
   "numberOfItems": {{ blog.articles.size }},
   "itemListOrder": "https://schema.org/ItemListOrderDescending",
-  
-  {% comment %} Add pagination context {% endcomment %}
-  {% if paginate.pages > 1 %}
-  "mainEntity": {
-    "@type": "WebPage",
-    "url": "{{ shop.url }}{{ blog.url }}{% if current_page > 1 %}?page={{ current_page }}{% endif %}",
-    "name": "Strona {{ current_page | default: 1 }} z {{ paginate.pages }}"
-  },
-  {% endif %}
-  
   "itemListElement": [
-    {% paginate blog.articles by 20 %}
-      {% for article in blog.articles %}
-      {
-        "@type": "ListItem",
-        "position": {{ paginate.current_offset | plus: forloop.index }},
+    {% for article in blog.articles limit: 50 %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "url": "{{ shop.url }}{{ article.url }}",
+      "name": {{ article.title | json }},
+      "item": {
+        "@type": "BlogPosting",
+        "@id": "{{ shop.url }}{{ article.url }}",
+        "headline": {{ article.title | json }},
+        "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+        "author": {
+          "@type": "Person", 
+          "name": {{ article.author | default: 'Zespół Saturaise' | json }}
+        },
+        "image": {% if article.image %}"https:{{ article.image | image_url: width: 400 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
         "url": "{{ shop.url }}{{ article.url }}",
-        "name": {{ article.title | json }},
-        "item": {
-          "@type": "BlogPosting",
-          "@id": "{{ shop.url }}{{ article.url }}",
-          "headline": {{ article.title | json }},
-          "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-          "author": {
-            "@type": "Person", 
-            "name": {{ article.author | default: 'Zespół Saturaise' | json }}
-          },
-          "image": {% if article.image %}"https:{{ article.image | image_url: width: 400 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
-          "url": "{{ shop.url }}{{ article.url }}",
-          "articleSection": {{ blog.title | json }},
-          "wordCount": {{ article.content | strip_html | split: ' ' | size }}
-        }
-      }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    {% endpaginate %}
+        "articleSection": {{ blog.title | json }},
+        "wordCount": {{ article.content | strip_html | split: ' ' | size }}
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
   ]
 }
 {% endif %}
