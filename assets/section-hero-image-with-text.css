@@ -1,8 +1,9 @@
+/* Professional Contact Section CSS - Aligned with Saturaise Design */
 .section-text-with-image {
   max-width: 1280px;
-  margin: 0px auto 40px auto !important;
-  color: var(--background);
-  overflow: hidden;
+  margin: 60px auto !important;
+  overflow: visible;
+  color: var(--text-color);
 }
 
 @media (min-width: 1920px) {
@@ -11,65 +12,17 @@
   }
 }
 
-.btn-contact {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 40px !important;
-  padding: 12px 24px !important;
-  border: 1px solid var(--scheme-1-text) !important;
-  border-radius: 8px !important;
-  background: var(--scheme-1-bg) !important;
-  color: var(--scheme-1-text) !important;
-  transition: all 0.3s ease !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  margin-top: 40px;
-  width: auto !important;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.btn-contact:hover {
-  background: var(--scheme-1-hover) !important;
-  color: var(--scheme-1-bg) !important;
-}
-
+/* Remove default grid wrapper margins that might conflict */
 .section-text-with-image .grid__wrapper {
-  max-width: 1280px;
-  margin: 0 48px;
+  margin: 0;
+  padding: 0;
 }
 
-@media (min-width: 1920px) {
-  .section-text-with-image .grid__wrapper {
-    max-width: 1600px;
-  }
-}
-
-.section-text-with-image h3 {
-  color: var(--background);
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: 700 !important;
-  line-height: 1;
-  letter-spacing: var(--heading-spacing);
-  text-transform: unset;
-  word-break: break-word;
-  margin-bottom: 24px;
-}
-
-.section-text-with-image .rte p {
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.4;
-  letter-spacing: var(--main-spacing);
-}
-
-.section-text-with-image .image-container {
+/* Ensure proper height for containers */
+.section-text-with-image .image-container,
+.section-text-with-image .map-container {
   height: 600px;
+  width: 100%;
   position: relative;
 }
 
@@ -83,118 +36,259 @@
   left: 0;
 }
 
-.bg-main {
-  background-color: #efefef;
+/* Map specific styles */
+.section-text-with-image .map-container {
+  z-index: 1;
 }
 
+/* Ensure Leaflet container has proper height */
+.section-text-with-image .leaflet-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  font-family: inherit;
+  z-index: 1;
+}
+
+/* Make marker highly visible */
+.section-text-with-image .leaflet-marker-icon.custom-map-marker {
+  z-index: 1000 !important;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+}
+
+/* Pulse animation for marker */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+/* Ensure marker is interactive */
+.section-text-with-image .leaflet-zoom-animated {
+  z-index: 1000 !important;
+}
+
+.section-text-with-image .leaflet-interactive {
+  cursor: pointer !important;
+}
+
+/* Typography styles - Matching Saturaise design */
+.section-text-with-image h3 {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.025em !important;
+  margin-bottom: 24px !important;
+  font-size: 32px !important;
+}
+
+.section-text-with-image .rte p,
+.section-text-with-image .subtitle {
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+  color: #475569 !important;
+  font-weight: 400 !important;
+}
+
+/* Contact button - Matching collection badge buttons with high specificity */
+.section-text-with-image .btn-contact,
+.section-text-with-image a.btn-contact,
+.text-with-image .btn-contact,
+.hero-contact-wrapper .btn-contact {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 48px !important;
+  padding: 14px 36px !important;
+  background: #323232 !important;
+  background-color: #323232 !important;
+  border: 2px solid #323232 !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  margin-top: 32px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+  line-height: 1.2 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.section-text-with-image .btn-contact:hover,
+.section-text-with-image a.btn-contact:hover,
+.text-with-image .btn-contact:hover,
+.hero-contact-wrapper .btn-contact:hover {
+  background: #1d4ed8 !important;
+  background-color: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+  text-decoration: none !important;
+}
+
+.section-text-with-image .btn-contact:active,
+.section-text-with-image a.btn-contact:active,
+.text-with-image .btn-contact:active,
+.hero-contact-wrapper .btn-contact:active {
+  transform: translateY(-1px) scale(1.01) !important;
+  transition: all 0.1s ease !important;
+}
+
+.section-text-with-image .btn-contact:focus,
+.section-text-with-image a.btn-contact:focus,
+.text-with-image .btn-contact:focus,
+.hero-contact-wrapper .btn-contact:focus {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+/* Button text specificity */
+.section-text-with-image .btn-contact span,
+.hero-contact-wrapper .btn-contact span {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+}
+
+/* Map popup styling */
+.section-text-with-image .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.section-text-with-image .leaflet-popup-content {
+  margin: 16px 20px;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+}
+
+.section-text-with-image .leaflet-popup-tip {
+  background-color: white;
+}
+
+/* Hide attribution */
+.section-text-with-image .leaflet-control-attribution {
+  display: none;
+}
+
+/* Mobile responsive */
 @media (max-width: 767px) {
   .section-text-with-image {
+    margin: 20px auto 40px auto !important;
     padding: 0;
-    color: var(--text-color) !important;
-  }
-
-  .section-text-with-image p {
-    font-size: 14px !important;
-  }
-
-  .btn-contact {
-    width: 60% !important;
-    margin: 40px auto 40px auto !important;
-    font-size: 14px !important;
   }
 
   .section-text-with-image h3 {
-    color: var(--text-color) !important;
-    font-size: 1.5rem; /* More consistent sizing */
-    line-height: 1.2;
+    font-size: 24px !important;
+    margin-bottom: 20px !important;
   }
 
+  .section-text-with-image .subtitle,
   .section-text-with-image .rte p {
-    color: var(--text-color) !important;
-    font-size: 1em;
+    font-size: 16px !important;
+  }
+
+  .btn-contact {
+    width: 100% !important;
+    margin: 24px auto !important;
+    border-radius: 8px !important;
+  }
+
+  .section-text-with-image .image-container,
+  .section-text-with-image .map-container {
+    height: 300px;
   }
 
   .section-text-with-image article.text {
     order: 2;
-    text-align: center;
+    text-align: left;
   }
 
   .section-text-with-image article.image {
     order: 1;
   }
-
-  .section-text-with-image .image-container {
-    height: 400px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
 }
 
-@media (max-width: 1024px) {
-  .section-text-with-image h3 {
-    font-size: 24px !important;
-  }
-
-  .section-text-with-image p strong {
-    font-size: 20px !important;
-  }
-  .section-text-with-image .image-container {
-    height: 450px; /* Intermediate height between desktop and mobile */
-  }
-}
-
+/* Tablet responsive */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .section-text-with-image p {
-    font-size: 16px !important;
-  }
   .section-text-with-image {
-    padding: 40px 24px 40px 24px;
+    margin: 40px auto !important;
+    padding: 0 24px;
   }
-}
 
-.section-text-with-image .map-container {
-  height: 600px;
-  position: relative;
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* Popraw style dla popupu Leaflet */
-.section-text-with-image .leaflet-popup-content-wrapper {
-  border-radius: 4px;
-}
-
-.section-text-with-image .leaflet-popup-content {
-  margin: 10px 12px;
-  font-size: 14px;
-}
-
-.section-text-with-image .leaflet-control-attribution {
-  background-color: rgba(255, 255, 255, 0.5) !important;
-  font-size: 9px !important;
-  padding: 2px 4px !important;
-  opacity: 0 !important;
-}
-
-.section-text-with-image .leaflet-control-attribution:hover {
-  opacity: 0 !important;
-}
-
-.section-text-with-image .leaflet-control-attribution a {
-  color: #777 !important;
-}
-
-/* Style responsywne */
-@media (max-width: 767px) {
-  .section-text-with-image .map-container {
-    height: 400px;
+  .section-text-with-image h3 {
+    font-size: 40px !important;
   }
-}
 
-@media (max-width: 1024px) {
+  .section-text-with-image .subtitle,
+  .section-text-with-image .rte p {
+    font-size: 17px !important;
+  }
+
+  .section-text-with-image .image-container,
   .section-text-with-image .map-container {
     height: 450px;
   }
+}
+
+/* Remove background from text section on desktop for cleaner look */
+.bg-main {
+  background-color: transparent;
+}
+
+/* Ensure proper z-index stacking */
+.section-text-with-image .leaflet-pane,
+.section-text-with-image .leaflet-map-pane,
+.section-text-with-image .leaflet-container {
+  z-index: 1 !important;
+}
+
+/* Fix for map tiles loading */
+.section-text-with-image .leaflet-tile-container {
+  z-index: 1 !important;
+}
+
+/* Ensure interactive elements are above map */
+.section-text-with-image .leaflet-control-container {
+  z-index: 1000 !important;
+}
+
+/* Focus states for accessibility */
+.btn-contact:focus {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+/* Additional typography for contact details */
+.section-text-with-image .contact-detail {
+  font-size: 16px !important;
+  color: #323232 !important;
+}
+
+.section-text-with-image .contact-detail a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.section-text-with-image .contact-detail a:hover {
+  color: #000000 !important;
 }

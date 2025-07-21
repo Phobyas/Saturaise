@@ -3,391 +3,480 @@
 <noscript><link rel="stylesheet" href="{{ 'section-hero-image-with-text.css' | asset_url }}"></noscript>
 
 <style>
-  /* Modern Hero Section - Designed to work with existing CSS */
+  /* Professional Contact Section - Aligned with Saturaise Design */
   
-  /* Main container override */
-  .hero-modern-wrapper {
+  /* Main container with subtle elevation */
+  .hero-contact-wrapper {
     max-width: 1280px;
-    margin: 0 auto 40px auto;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 16px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
     position: relative;
   }
 
   @media (min-width: 1920px) {
-    .hero-modern-wrapper {
+    .hero-contact-wrapper {
       max-width: 1600px;
     }
   }
 
-  /* Grid system that works with your existing classes */
-  .hero-modern-wrapper .grid__wrapper {
+  /* Grid system optimized for contact layout */
+  .hero-contact-wrapper .grid__wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 500px;
+    min-height: 600px;
     align-items: stretch;
     gap: 0;
-    background: #eeeeee;
     margin: 0;
     padding: 0;
   }
 
-  /* Text section modern styling */
-  .hero-modern-wrapper .text-section {
-    margin: 48px 40px;
-    background: #eeeeee;
+  /* Text section with elegant styling */
+  .hero-contact-wrapper .text-section {
+    padding: 80px 60px;
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
-    overflow: hidden;
   }
 
-  .hero-modern-wrapper .text-section::before {
+  .hero-contact-wrapper .text-section::before {
     content: '';
+    position: absolute;
+    top: 20%;
+    right: -100px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-contact-wrapper .text-content {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+  }
+
+  /* Typography - Clean & Professional */
+  .hero-contact-wrapper h3 {
+    font-size: clamp(28px, 3.5vw, 48px) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    color: #1f2937 !important;
+    margin-bottom: 24px !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  .hero-contact-wrapper .subtitle {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    color: #475569 !important;
+    margin-bottom: 40px !important;
+    font-weight: 400 !important;
+  }
+
+  /* Contact information styling */
+  .contact-info-block {
+    margin-bottom: 40px;
+  }
+
+  .contact-info-block h4 {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    margin-bottom: 16px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #323232 !important;
+    font-size: 16px !important;
+    transition: all 0.2s ease;
+  }
+
+  .contact-detail:hover {
+    color: #000000 !important;
+    transform: translateX(5px);
+  }
+
+  .contact-detail svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  .contact-detail a {
+    color: inherit !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-detail a:hover {
+    border-bottom-color: currentColor !important;
+  }
+
+  /* Hours block */
+  .hours-block {
+    background: #EEEEEE;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .hours-block h4 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    margin-bottom: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .hours-block p {
+    font-size: 18px !important;
+    color: #323232 !important;
+    margin: 0 !important;
+    font-weight: 500 !important;
+  }
+
+  /* Modern button design - Matching Saturaise style with high specificity */
+  .section-text-with-image .hero-contact-wrapper .text-content .btn-contact,
+  .text-with-image-{{ section.id }} .hero-contact-wrapper .btn-contact,
+  .hero-contact-wrapper a.btn-contact {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 48px !important;
+    padding: 14px 36px !important;
+    background: #323232 !important;
+    background-color: #323232 !important;
+    border: 2px solid #323232 !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    margin-top: 32px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+    line-height: 1.2 !important;
+  }
+
+  .section-text-with-image .hero-contact-wrapper .text-content .btn-contact:hover,
+  .text-with-image-{{ section.id }} .hero-contact-wrapper .btn-contact:hover,
+  .hero-contact-wrapper a.btn-contact:hover {
+    background: #1d4ed8 !important;
+    background-color: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    text-decoration: none !important;
+  }
+
+  .section-text-with-image .hero-contact-wrapper .text-content .btn-contact:active,
+  .text-with-image-{{ section.id }} .hero-contact-wrapper .btn-contact:active,
+  .hero-contact-wrapper a.btn-contact:active {
+    transform: translateY(-1px) scale(1.01) !important;
+    transition: all 0.1s ease !important;
+  }
+
+  .section-text-with-image .hero-contact-wrapper .text-content .btn-contact:focus,
+  .text-with-image-{{ section.id }} .hero-contact-wrapper .btn-contact:focus,
+  .hero-contact-wrapper a.btn-contact:focus {
+    outline: 2px solid #2563eb !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Override any conflicting styles */
+  .hero-contact-wrapper .btn-contact span {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Map section with proper height */
+  .hero-contact-wrapper .map-section {
+    position: relative;
+    background: #ffffff;
+    overflow: hidden;
+    height: 100%;
+    min-height: 600px;
+  }
+
+  .hero-contact-wrapper .map-container {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    position: relative;
+  }
+
+  /* Ensure Leaflet map fills container */
+  .hero-contact-wrapper .leaflet-container {
+    height: 100%;
+    width: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
+    z-index: 1;
   }
 
-  .hero-modern-wrapper .text-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Typography - Modern & Clean */
-  .hero-modern-wrapper h3 {
-    font-size: clamp(32px, 4vw, 48px);
-    font-weight: 800;
-    line-height: 1.1;
-    color: #323232;
-    margin-bottom: 20px;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #323232 0%, #1f2937 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-modern-wrapper .rte p {
-    font-size: 18px;
-    line-height: 1.7;
-    color: #323232;
-    margin-bottom: 28px;
-    font-weight: 400;
-    opacity: 0.9;
-  }
-
-  .hero-modern-wrapper .rte p strong {
-    color: #323232;
-    font-weight: 700;
-    font-size: 19px;
-  }
-
-  /* Modern button design */
-  .hero-modern-wrapper .btn-contact {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 52px;
-    padding: 14px 32px;
-    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-    border: 2px solid transparent;
-    border-radius: 12px;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-modern-wrapper .btn-contact::before {
-    content: '';
+  /* Map overlay for better UX */
+  .map-overlay {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s ease;
-  }
-
-  .hero-modern-wrapper .btn-contact:hover::before {
-    left: 100%;
-  }
-
-  .hero-modern-wrapper .btn-contact:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 30px rgba(29, 78, 216, 0.4);
-    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
-  }
-
-  .hero-modern-wrapper .btn-contact:active {
-    transform: translateY(-1px) scale(1.01);
-    transition: all 0.1s ease;
-  }
-
-  /* Map/Image section */
-  .hero-modern-wrapper .image-section {
-    position: relative;
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    overflow: hidden;
-    height: 100%;
-  }
-
-  .hero-modern-wrapper .map-container,
-  .hero-modern-wrapper .image-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-
-  .hero-modern-wrapper .image-container img,
-  .hero-modern-wrapper .image-container .placeholder-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-  }
-
-  .hero-modern-wrapper:hover .image-container img {
-    transform: scale(1.05);
-  }
-
-  /* Map styling */
-  .hero-modern-wrapper .leaflet-container {
-    border-radius: 0;
-  }
-
-  .hero-modern-wrapper .leaflet-popup-content-wrapper {
+    bottom: 30px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px 24px;
     border-radius: 8px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-width: 280px;
+    border: 1px solid rgba(0,0,0,0.08);
   }
 
-  .hero-modern-wrapper .leaflet-popup-content {
-    margin: 12px 16px;
+  .map-overlay h5 {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin: 0 0 8px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+  }
+
+  .map-overlay p {
+    font-size: 14px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Enhanced map styling */
+  .hero-contact-wrapper .leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border: none;
+  }
+
+  .hero-contact-wrapper .leaflet-popup-content {
+    margin: 16px 20px;
     font-size: 14px;
     font-weight: 600;
-    color: #323232;
+    color: #1a1a1a;
   }
 
-  .hero-modern-wrapper .leaflet-control-attribution {
-    background-color: rgba(255, 255, 255, 0.9);
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+  .hero-contact-wrapper .leaflet-popup-tip {
+    background-color: white;
   }
 
-  .hero-modern-wrapper .leaflet-control-attribution:hover {
-    opacity: 0.9;
+  /* Custom marker animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
   }
 
-  /* Mobile responsive - Enhanced UX */
+  /* Make marker more prominent */
+  .hero-contact-wrapper .custom-map-marker {
+    z-index: 1000 !important;
+  }
+
+  /* Marker drop shadow for visibility */
+  .hero-contact-wrapper .leaflet-marker-icon {
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+  }
+
+  /* Mobile responsive - Elegant adaptation */
   @media (max-width: 767px) {
-    .hero-modern-wrapper {
-      margin: 0 12px 24px 12px;
+    .hero-contact-wrapper {
+      margin: 20px 16px 40px 16px;
       border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .hero-modern-wrapper .grid__wrapper {
+    .hero-contact-wrapper .grid__wrapper {
       grid-template-columns: 1fr;
       min-height: auto;
-      background: #eeeeee;
     }
 
-    .hero-modern-wrapper .text-section {
+    .hero-contact-wrapper .text-section {
       order: 2;
-      margin: 24px 20px;
-      text-align: center;
-      background: #eeeeee;
-      border-radius: 12px;
-      padding: 24px 16px;
-      
+      padding: 40px 24px;
+      text-align: left;
     }
 
-    .hero-modern-wrapper .text-section::before {
+    .hero-contact-wrapper .text-section::before {
       display: none;
     }
 
-    .hero-modern-wrapper .image-section {
+    .hero-contact-wrapper .map-section {
       order: 1;
-      border-radius: 12px 12px 0 0;
-      overflow: hidden;
+      height: 300px;
+      min-height: 300px;
     }
 
-    .hero-modern-wrapper h3 {
-      font-size: 24px;
-      line-height: 1.3;
-      margin-bottom: 16px;
-      color: #323232;
-      background: none;
-      -webkit-text-fill-color: #323232;
-      font-weight: 700;
+    .hero-contact-wrapper .map-container {
+      min-height: 300px;
     }
 
-    .hero-modern-wrapper .rte p {
-      font-size: 15px;
-      margin-bottom: 20px;
-      line-height: 1.6;
-      color: #323232;
-      opacity: 0.9;
+    .hero-contact-wrapper h3 {
+      font-size: 24px !important;
+      margin-bottom: 20px !important;
     }
 
-    .hero-modern-wrapper .map-container,
-    .hero-modern-wrapper .image-container {
-      min-height: 250px;
-      position: relative;
+    .hero-contact-wrapper .subtitle {
+      font-size: 16px !important;
+      margin-bottom: 32px !important;
     }
 
-    /* Mobile map interaction overlay */
-    .hero-modern-wrapper .map-container::before {
+    .contact-detail {
+      font-size: 14px !important;
+    }
+
+    .hours-block {
+      padding: 16px !important;
+      margin-top: 24px !important;
+    }
+
+    .hours-block p {
+      font-size: 16px !important;
+    }
+
+    .map-overlay {
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: none;
+      padding: 16px 20px;
+    }
+
+    .hero-contact-wrapper .btn-contact {
+      width: 100% !important;
+      margin-top: 24px !important;
+      border-radius: 8px !important;
+    }
+
+    /* Better mobile map interaction */
+    .hero-contact-wrapper .map-container::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: transparent;
-      z-index: 1000;
+      z-index: 999;
       pointer-events: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .hero-modern-wrapper .map-container.map-active::before {
+    .hero-contact-wrapper .map-container.map-active::before {
       display: none;
-    }
-
-    /* Mobile map tap indicator */
-    .hero-modern-wrapper .map-container::after {
-      content: 'Tap to interact with map';
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      z-index: 1001;
-      pointer-events: none;
-      opacity: 0.9;
-      transition: opacity 0.3s ease;
-    }
-
-    .hero-modern-wrapper .map-container.map-active::after {
-      opacity: 0;
-    }
-
-    .hero-modern-wrapper .btn-contact {
-      width: 100%;
-      max-width: 280px;
-      margin: 0 auto;
-      min-height: 44px;
-      padding: 12px 24px;
-      font-size: 13px;
-      border-radius: 8px;
-      box-shadow: 0 3px 12px rgba(29, 78, 216, 0.25);
-    }
-
-    .hero-modern-wrapper .btn-contact:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(29, 78, 216, 0.3);
-    }
-
-    /* Better mobile spacing */
-    .hero-modern-wrapper .text-content {
-      max-width: 100%;
-    }
-
-    /* Mobile typography improvements */
-    .hero-modern-wrapper .rte p strong {
-      font-size: 16px;
-      color: #323232;
     }
   }
 
   /* Tablet responsive */
   @media (min-width: 768px) and (max-width: 1024px) {
-    .hero-modern-wrapper {
-      margin: 0 24px 40px 24px;
+    .hero-contact-wrapper {
+      margin: 40px 24px;
     }
 
-    .hero-modern-wrapper .text-section {
-      margin: 40px 32px;
+    .hero-contact-wrapper .text-section {
+      padding: 60px 40px;
     }
 
-    .hero-modern-wrapper h3 {
-      font-size: 36px;
+    .hero-contact-wrapper h3 {
+      font-size: 40px;
     }
 
-    .hero-modern-wrapper .rte p {
-      font-size: 17px;
-    }
-
-    .hero-modern-wrapper .map-container,
-    .hero-modern-wrapper .image-container {
-      min-height: 450px;
+    .map-overlay {
+      max-width: 240px;
     }
   }
 
   /* Animation states */
-  .hero-modern-wrapper[data-section-loaded="false"] {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .hero-modern-wrapper[data-section-loaded="true"] {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .hero-modern-wrapper .animate--text {
+  .hero-contact-wrapper[data-section-loaded="false"] {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .hero-modern-wrapper[data-section-loaded="true"] .animate--text {
+  .hero-contact-wrapper[data-section-loaded="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hero-contact-wrapper .animate--element {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hero-contact-wrapper[data-section-loaded="true"] .animate--element {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .hero-modern-wrapper .animate--text.delay--1 {
+  .hero-contact-wrapper .animate--element.delay--1 {
+    transition-delay: 0.1s;
+  }
+
+  .hero-contact-wrapper .animate--element.delay--2 {
     transition-delay: 0.2s;
   }
 
-  .hero-modern-wrapper .animate--text.delay--3 {
+  .hero-contact-wrapper .animate--element.delay--3 {
+    transition-delay: 0.3s;
+  }
+
+  .hero-contact-wrapper .animate--element.delay--4 {
     transition-delay: 0.4s;
   }
 
-  /* Override existing bg-main to prevent conflicts */
-  .hero-modern-wrapper .bg-main {
-    background: transparent !important;
+  /* Image container styles when map is not used */
+  .hero-contact-wrapper .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    min-height: 600px;
   }
 
-  /* Ensure no conflicts with existing CSS */
-  .hero-modern-wrapper * {
-    box-sizing: border-box;
+  .hero-contact-wrapper .image-container img,
+  .hero-contact-wrapper .image-container .placeholder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 </style>
 
@@ -434,32 +523,83 @@
 
 {% comment %} Hero image with text template {% endcomment %}
 <div
-  class="mb5 global__section section-text-with-image text-with-image-{{ section.id }} {{ section_padding }} {% if section.settings.color_header %}no-section-animation{% endif %} {% if request.visual_preview_mode %}preview-mode{% endif %}"
+  class="global__section section-text-with-image text-with-image-{{ section.id }} {{ section_padding }} {% if section.settings.color_header %}no-section-animation{% endif %} {% if request.visual_preview_mode %}preview-mode{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="hero-image-with-text">
 
-  <div class="hero-modern-wrapper" data-section-loaded="false">
+  <div class="hero-contact-wrapper" data-section-loaded="false">
     <div class="grid__wrapper">
       <div class="text-section {{ text_align }} {{ vertical_align }}">
         <div class="text-content">
           {% if section.settings.title != blank %}
-            <h3 class="animate--text">{{ section.settings.title | escape }}</h3>
+            <h3 class="animate--element">{{ section.settings.title | escape }}</h3>
           {% endif %}
+          
           {% if section.settings.text != blank %}
-            <div class="rte animate--text delay--1">{{ section.settings.text }}</div>
+            <div class="subtitle animate--element delay--1">{{ section.settings.text }}</div>
           {% endif %}
+
+          <!-- Contact Details Block -->
+          <div class="contact-info-block animate--element delay--2">
+            {% if section.settings.contact_address_title != blank %}
+              <h4>{{ section.settings.contact_address_title }}</h4>
+            {% endif %}
+            
+            {% if section.settings.contact_address != blank %}
+              <div class="contact-detail">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                <span>{{ section.settings.contact_address }}</span>
+              </div>
+            {% endif %}
+
+            {% if section.settings.contact_phone != blank %}
+              <div class="contact-detail">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+                <a href="tel:{{ section.settings.contact_phone | replace: ' ', '' }}">{{ section.settings.contact_phone }}</a>
+              </div>
+            {% endif %}
+
+            {% if section.settings.contact_email != blank %}
+              <div class="contact-detail">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Hours Block -->
+          {% if section.settings.contact_hours != blank %}
+            <div class="hours-block animate--element delay--3">
+              <h4>{{ section.settings.contact_hours_title | default: 'Godziny otwarcia' }}</h4>
+              <p>{{ section.settings.contact_hours }}</p>
+            </div>
+          {% endif %}
+
           {% if section.settings.button != blank and section.settings.link != blank %}
-            <a href="{{ section.settings.link }}" class="btn-contact animate--text delay--3">
+            <a href="{{ section.settings.link }}" class="btn-contact animate--element delay--4">
               <span>{{ section.settings.button | escape }}</span>
             </a>
           {% endif %}
         </div>
       </div>
       
-      <div class="image-section {{ vertical_align }}">
+      <div class="map-section {{ vertical_align }}">
         {% if section.settings.use_map %}
           <div class="map-container" id="map-{{ section.id }}">
             <!-- Map will be initialized here -->
+          </div>
+          
+          <!-- Map overlay info -->
+          <div class="map-overlay animate--element delay--2">
+            <h5>{{ section.settings.map_marker_title | default: 'Nasza lokalizacja' }}</h5>
+            <p>{{ section.settings.contact_address | default: 'Kliknij na mapę aby przybliżyć' }}</p>
           </div>
           
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -475,71 +615,67 @@ document.addEventListener('DOMContentLoaded', function() {
   const mapContainer = document.getElementById('map-{{ section.id }}');
   const isMobile = window.innerWidth <= 767;
   
-  // Initialize map with mobile-specific options
+  // Initialize map with improved options
   const mapOptions = {
     dragging: !isMobile,
     tap: !isMobile,
-    scrollWheelZoom: !isMobile,
+    scrollWheelZoom: false,
     doubleClickZoom: true,
     boxZoom: false,
-    keyboard: false,
-    zoomControl: true
+    keyboard: true,
+    zoomControl: true,
+    attributionControl: false
   };
   
   const map = L.map('map-{{ section.id }}', mapOptions).setView([lat, lng], zoom);
   
+  // Use OpenStreetMap standard tiles for better visibility
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
   }).addTo(map);
   
-  // Modern blue marker to match the design
-  const modernIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+  // Custom marker icon - Much more visible
+  const customIcon = L.divIcon({
+    className: 'custom-map-marker',
+    html: `<div style="position: relative; width: 40px; height: 40px;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(29, 78, 216, 0.2); border-radius: 50%; animation: pulse 2s infinite;"></div>
+      <div style="position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; background: #1d4ed8; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.5);"></div>
+    </div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
   });
   
-  const marker = L.marker([lat, lng], {icon: modernIcon}).addTo(map);
+  const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
   
   if (title && title.trim() !== '') {
-    marker.bindPopup('<strong>' + title + '</strong>').openPopup();
+    marker.bindPopup('<strong>' + title + '</strong>');
   }
   
-  // Mobile tap-to-interact functionality
+  // Enable scroll zoom when user interacts
+  map.once('focus', function() {
+    map.scrollWheelZoom.enable();
+  });
+  
+  // Mobile tap functionality
   if (isMobile && mapContainer) {
     mapContainer.addEventListener('click', function() {
       mapContainer.classList.add('map-active');
       map.dragging.enable();
-      map.scrollWheelZoom.enable();
       map.tap.enable();
       
-      // Re-disable after 30 seconds of inactivity
       setTimeout(function() {
         mapContainer.classList.remove('map-active');
         map.dragging.disable();
-        map.scrollWheelZoom.disable();
         map.tap.disable();
       }, 30000);
     });
-    
-    // Disable interactions when touching outside the map
-    document.addEventListener('touchstart', function(e) {
-      if (!mapContainer.contains(e.target)) {
-        mapContainer.classList.remove('map-active');
-        map.dragging.disable();
-        map.scrollWheelZoom.disable();
-        map.tap.disable();
-      }
-    });
   }
   
-  // Mark section as loaded after map initialization
+  // Mark section as loaded
   setTimeout(function() {
     map.invalidateSize();
-    const wrapper = document.querySelector('.hero-modern-wrapper');
+    const wrapper = document.querySelector('.hero-contact-wrapper');
     if (wrapper) {
       wrapper.setAttribute('data-section-loaded', 'true');
     }
@@ -549,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {% else %}
           <div class="image-container">
             {% if section.settings.image == blank %}
-              <div class="demo-1 color-1 placeholder-image">
+              <div class="demo-1 color-1 placeholder-image" style="background: linear-gradient(135deg, #e5e5e5 0%, #d0d0d0 100%); display: flex; align-items: center; justify-content: center; height: 100%;">
                 {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg' }}
               </div>
             {% else %}
@@ -568,16 +704,17 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 
   <style media="screen">
-    /* Dynamic font size overrides */
-    .text-with-image-{{ section.id }} .hero-modern-wrapper .rte p {
+    /* Dynamic style overrides */
+    .text-with-image-{{ section.id }} .hero-contact-wrapper .subtitle {
       font-size: {{ section.settings.text_size }}px !important;
     }
 
-    .text-with-image-{{ section.id }} .hero-modern-wrapper h3 {
+    .text-with-image-{{ section.id }} .hero-contact-wrapper h3 {
       font-size: {{ section.settings.heading_size }}px !important;
     }
 
     {% if section.settings.color_header %}
+      /* Header color matching styles */
       .template-index #shopify-section-header,
       .template-index .section-header__mobile,
       .template-index .section-header__main-bar,
@@ -631,10 +768,9 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 // Initialize section loading animation
 document.addEventListener('DOMContentLoaded', function() {
-  // Mark section as loaded if no map is present
   {% unless section.settings.use_map %}
     setTimeout(function() {
-      const wrapper = document.querySelector('.hero-modern-wrapper');
+      const wrapper = document.querySelector('.hero-contact-wrapper');
       if (wrapper) {
         wrapper.setAttribute('data-section-loaded', 'true');
       }
@@ -642,11 +778,11 @@ document.addEventListener('DOMContentLoaded', function() {
   {% endunless %}
 });
 
-// Re-initialize on section reload (theme editor)
+// Theme editor reload support
 document.addEventListener('shopify:section:load', function(event) {
   if (event.target.classList.contains('text-with-image-{{ section.id }}')) {
     setTimeout(function() {
-      const wrapper = event.target.querySelector('.hero-modern-wrapper');
+      const wrapper = event.target.querySelector('.hero-contact-wrapper');
       if (wrapper) {
         wrapper.setAttribute('data-section-loaded', 'true');
       }
@@ -657,14 +793,70 @@ document.addEventListener('shopify:section:load', function(event) {
 
 {% schema %}
 {
-  "name": "Hero image with text",
+  "name": "Hero Contact Section",
   "tag": "section",
   "class": "dynamic-section",
   "settings": [
     {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Kontakt"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Subtitle text",
+      "default": "Nie ma butów, które Cię interesują lub Twojego rozmiaru? Masz problem z zamówieniem? Chcesz osobiście odebrać zakupiony produkt? Jesteśmy tutaj, by pomóc w każdej sytuacji i odpowiedzieć na wszelkie pytania!"
+    },
+    {
+      "type": "text",
+      "id": "contact_address_title",
+      "label": "Address title",
+      "default": "Adres biura:"
+    },
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Address",
+      "default": "Żyrowa 47-330, Ogrodowa 9a"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone number",
+      "default": "+48 451 108 247"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email address",
+      "default": "saturaisekontakt@gmail.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours_title",
+      "label": "Hours title",
+      "default": "Kontakt"
+    },
+    {
+      "type": "text",
+      "id": "contact_hours",
+      "label": "Business hours",
+      "default": "(9:00 - 16:00)"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
+      "label": "Image (if not using map)",
       "info": "Use an image with a 3 x 4 vertical ratio for best results"
     },
     {
@@ -690,18 +882,6 @@ document.addEventListener('shopify:section:load', function(event) {
       ]
     },
     {
-      "type": "text",
-      "id": "title",
-      "label": "Heading",
-      "default": "Image with text"
-    },
-    {
-      "type": "richtext",
-      "id": "text",
-      "label": "Text",
-      "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
-    },
-    {
       "type": "range",
       "id": "heading_size",
       "min": 22,
@@ -724,7 +904,8 @@ document.addEventListener('shopify:section:load', function(event) {
     {
       "type": "text",
       "id": "button",
-      "label": "Button label"
+      "label": "Button label",
+      "default": "Napisz do nas"
     },
     {
       "type": "url",
@@ -753,7 +934,7 @@ document.addEventListener('shopify:section:load', function(event) {
           "label": "None"
         }
       ],
-      "default": "bottom"
+      "default": "both"
     },
     {
       "type": "header",
@@ -763,7 +944,7 @@ document.addEventListener('shopify:section:load', function(event) {
       "type": "select",
       "id": "color_scheme",
       "label": "Color scheme",
-      "default": "2",
+      "default": "1",
       "options": [
         {
           "value": "1",
@@ -794,7 +975,7 @@ document.addEventListener('shopify:section:load', function(event) {
       "type": "checkbox",
       "id": "use_map",
       "label": "Use map instead of image",
-      "default": false
+      "default": true
     },
     {
       "type": "text",
@@ -823,12 +1004,12 @@ document.addEventListener('shopify:section:load', function(event) {
       "type": "text",
       "id": "map_marker_title",
       "label": "Map Marker Title",
-      "default": "Our Store Location"
+      "default": "Saturaise Store"
     }
   ],
   "presets": [
     {
-      "name": "Hero image with text"
+      "name": "Hero Contact Section"
     }
   ],
   "disabled_on": {
