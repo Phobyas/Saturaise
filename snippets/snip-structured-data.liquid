@@ -3290,79 +3290,48 @@
 {% endif %}
 
 {% comment %} ItemList for blog article listings with pagination {% endcomment %}
-{% if template == 'blog' and blog.articles.size > 0 %}
+{% if template contains 'blog' %}
 ,{
-  "@type": "ItemList",
-  "@id": "{{ shop.url }}{{ blog.url }}#articlelist",
-  "name": "Artykuły w kategorii {{ blog.title }}",
-  "description": "Lista wszystkich artykułów opublikowanych na blogu {{ blog.title }} w sklepie Saturaise",
-  "numberOfItems": {{ blog.articles.size }},
-  "itemListOrder": "https://schema.org/ItemListOrderDescending",
-  
-  {% comment %} Add pagination context {% endcomment %}
-  {% if paginate.pages > 1 %}
-  "mainEntity": {
-    "@type": "WebPage",
-    "url": "{{ shop.url }}{{ blog.url }}{% if current_page > 1 %}?page={{ current_page }}{% endif %}",
-    "name": "Strona {{ current_page | default: 1 }} z {{ paginate.pages }}"
-  },
-  {% endif %}
-  
-  "itemListElement": [
-    {% paginate blog.articles by 20 %}
-      {% for article in blog.articles %}
-      {
-        "@type": "ListItem",
-        "position": {{ paginate.current_offset | plus: forloop.index }},
-        "url": "{{ shop.url }}{{ article.url }}",
-        "name": {{ article.title | json }},
-        "item": {
-          "@type": "BlogPosting",
-          "@id": "{{ shop.url }}{{ article.url }}",
-          "headline": {{ article.title | json }},
-          "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
-          "author": {
-            "@type": "Person", 
-            "name": {{ article.author | default: 'Zespół Saturaise' | json }}
-          },
-          "image": {% if article.image %}"https:{{ article.image | image_url: width: 400 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
-          "url": "{{ shop.url }}{{ article.url }}",
-          "articleSection": {{ blog.title | json }},
-          "wordCount": {{ article.content | strip_html | split: ' ' | size }}
-        }
-      }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    {% endpaginate %}
-  ]
-}
-{% endif %}
-
-{% comment %} CollectionPage schema for blog listing {% endcomment %}
-{% if template == 'blog' %}
-,{
-  "@type": "CollectionPage",
-  "@id": "{{ shop.url }}{{ blog.url }}#collectionpage",
-  "name": "{{ blog.title }} - Kolekcja artykułów",
-  "description": "Przeglądaj wszystkie artykuły z kategorii {{ blog.title }} na blogu Saturaise",
+  "@type": "Blog",
+  "@id": "{{ shop.url }}{{ blog.url }}#blog",
   "url": "{{ shop.url }}{{ blog.url }}",
-  "isPartOf": {
-    "@id": "https://saturaise.com/#website"
-  },
-  "hasPart": [
-    {% for article in blog.articles limit: 10 %}
-    {
-      "@type": "BlogPosting",
-      "@id": "{{ shop.url }}{{ article.url }}",
-      "headline": {{ article.title | json }},
-      "url": "{{ shop.url }}{{ article.url }}"
-    }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  ],
-  "mainEntity": {
-    "@id": "{{ shop.url }}{{ blog.url }}#articlelist"
+  "name": {{ blog.title | json }},
+  "description": "Blog Saturaise - najnowsze informacje o sneakersach",
+  "inLanguage": "pl-PL",
+  "publisher": {
+    "@id": "https://saturaise.com/#organization"
   }
 }
 {% endif %}
+
+{% if template contains 'article' %}
+,{
+  "@type": "BlogPosting",
+  "@id": "{{ shop.url }}{{ article.url }}#article",
+  "url": "{{ shop.url }}{{ article.url }}",
+  "headline": {{ article.title | json }},
+  "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | default: 'Zespół Saturaise' | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Saturaise",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"
+    }
+  },
+  "image": {% if article.image %}"https:{{ article.image | image_url: width: 1200 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  },
+  "inLanguage": "pl-PL"
+}
 {% endif %}
 }
 </script>
