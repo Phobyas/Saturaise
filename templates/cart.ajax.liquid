@@ -42,18 +42,18 @@
   }
 </template>
 <template data-html="content">
-  <div class="ajax-cart__empty-cart a-center cart-wrapper mt-16 js-cart-empty {{ isEmpty }}">
+  {% comment %} <div class="ajax-cart__empty-cart a-center cart-wrapper mt-16 js-cart-empty {{ isEmpty }}">
     
-    <div class="cart__empty-message">
+    {% comment %} <div class="cart__empty-message"> {% endcomment %}
     
-    <span class="text-lg font-[600]">{{ 'cart.general.empty' | t }}</span>
+    {% comment %} <span class="text-lg font-[600]">{{ 'cart.general.empty' | t }}</span> {% endcomment %}
     {% comment %} <div>
     <span class="text-lg font-[600]">{{ 'cart.general.continue_browsing_html' | t }}</span>
     <a class="text-lg font-bold underline" href="/collections/all">tutaj</a>
     <span class="text-lg font-[600]">{{ 'cart.general.continue_browsing_html2' | t }}</span>
     </div> {% endcomment %}
 
-  </div>
+  </div> {% endcomment %}
   </div>
   {% render 'cart-form',
      drawer: drawer,

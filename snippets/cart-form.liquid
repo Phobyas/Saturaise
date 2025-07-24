@@ -23,12 +23,12 @@
         <h2 style="font-size: 24px; color: var(--cart-text-color); margin-bottom: 16px; font-weight: 700;">
           {{ 'cart.general.empty' | t }}
         </h2>
-        <p style="color: var(--cart-text-secondary); margin-bottom: 24px; font-size: 16px;">
+        {% comment %} <p style="color: var(--cart-text-secondary); margin-bottom: 24px; font-size: 16px;">
           {{ 'cart.general.empty_message' | t }}
-        </p>
-        <a href="{{ routes.collections_url }}" class="ajax-cart__view-button" style="display: inline-flex; margin: 0 auto;">
+        </p> {% endcomment %}
+        {% comment %} <a href="{{ routes.collections_url }}" class="ajax-cart__view-button" style="display: inline-flex; margin: 0 auto;">
           {{ 'cart.general.continue_shopping' | t }}
-        </a>
+        </a> {% endcomment %}
       </div>
     </div>
   {% else %}
