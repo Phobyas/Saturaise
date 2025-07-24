@@ -486,11 +486,15 @@
   // Set initial active state
   slides[0].classList.add('active');
   
-  // Drag functionality variables
+  // Enhanced drag functionality variables
   let isDragging = false;
   let startX = 0;
+  let startY = 0;
   let currentX = 0;
-  let dragThreshold = 50; // Minimum drag distance to trigger slide change
+  let currentY = 0;
+  let dragThreshold = 50;
+  let touchDirection = null; // Track if touch is horizontal or vertical
+  let hasDragStarted = false; // Track if we've committed to dragging
   
   // Maintain wrapper height
   function updateWrapperHeight() {
@@ -498,7 +502,6 @@
     const img = activeSlide.querySelector('img');
     
     function setHeight() {
-      // Use requestAnimationFrame for smooth height transitions
       requestAnimationFrame(() => {
         const rect = activeSlide.getBoundingClientRect();
         slidesWrapper.style.height = rect.height + 'px';
@@ -564,33 +567,116 @@
     }
   }
   
-  // Desktop drag functionality
-  function handleDragStart(e) {
+  // Desktop drag functionality (unchanged)
+  function handleMouseDragStart(e) {
     if (slides.length <= 1) return;
     
     isDragging = true;
-    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    hasDragStarted = true;
+    startX = e.pageX;
     currentX = startX;
     
     slidesWrapper.classList.add('dragging');
     slideshow.classList.add('dragging');
     
-    // Prevent default to avoid text selection
     e.preventDefault();
     stopAutoplay();
   }
   
-  function handleDragMove(e) {
-    if (!isDragging) return;
+  function handleMouseDragMove(e) {
+    if (!isDragging || !hasDragStarted) return;
     
     e.preventDefault();
-    currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    currentX = e.pageX;
   }
   
-  function handleDragEnd(e) {
-    if (!isDragging) return;
+  function handleMouseDragEnd(e) {
+    if (!isDragging || !hasDragStarted) return;
     
     isDragging = false;
+    hasDragStarted = false;
+    slidesWrapper.classList.remove('dragging');
+    slideshow.classList.remove('dragging');
+    
+    const diff = currentX - startX;
+    
+    if (Math.abs(diff) > dragThreshold) {
+      if (diff > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    }
+    
+    setTimeout(startAutoplay, 1000);
+  }
+  
+  // Enhanced touch functionality with direction detection
+  function handleTouchStart(e) {
+    if (slides.length <= 1) return;
+    
+    const touch = e.touches[0];
+    startX = touch.pageX;
+    startY = touch.pageY;
+    currentX = startX;
+    currentY = startY;
+    
+    // Reset state
+    isDragging = false;
+    hasDragStarted = false;
+    touchDirection = null;
+    
+    // Don't prevent default here - let the browser handle initial touch
+  }
+  
+  function handleTouchMove(e) {
+    if (slides.length <= 1) return;
+    
+    const touch = e.touches[0];
+    currentX = touch.pageX;
+    currentY = touch.pageY;
+    
+    const deltaX = Math.abs(currentX - startX);
+    const deltaY = Math.abs(currentY - startY);
+    
+    // Determine touch direction if not already determined
+    if (!touchDirection && (deltaX > 10 || deltaY > 10)) {
+      if (deltaX > deltaY) {
+        touchDirection = 'horizontal';
+      } else {
+        touchDirection = 'vertical';
+      }
+    }
+    
+    // If horizontal movement and we haven't started dragging yet
+    if (touchDirection === 'horizontal' && !hasDragStarted && deltaX > 15) {
+      isDragging = true;
+      hasDragStarted = true;
+      slidesWrapper.classList.add('dragging');
+      slideshow.classList.add('dragging');
+      stopAutoplay();
+    }
+    
+    // Only prevent default if we're committed to horizontal dragging
+    if (hasDragStarted && touchDirection === 'horizontal') {
+      e.preventDefault();
+    }
+    // For vertical scrolling or undetermined direction, let the browser handle it
+  }
+  
+  function handleTouchEnd(e) {
+    if (!hasDragStarted || touchDirection !== 'horizontal') {
+      // Clean up any state but don't trigger slide change
+      isDragging = false;
+      hasDragStarted = false;
+      touchDirection = null;
+      slidesWrapper.classList.remove('dragging');
+      slideshow.classList.remove('dragging');
+      return;
+    }
+    
+    isDragging = false;
+    hasDragStarted = false;
     slidesWrapper.classList.remove('dragging');
     slideshow.classList.remove('dragging');
     
@@ -604,6 +690,9 @@
         nextSlide();
       }
     }
+    
+    // Reset touch direction
+    touchDirection = null;
     
     // Resume autoplay after a delay
     setTimeout(startAutoplay, 1000);
@@ -631,19 +720,18 @@
   slideshow.addEventListener('mouseenter', stopAutoplay);
   slideshow.addEventListener('mouseleave', startAutoplay);
   
-  // Desktop drag events
-  slidesWrapper.addEventListener('mousedown', handleDragStart);
-  document.addEventListener('mousemove', handleDragMove);
-  document.addEventListener('mouseup', handleDragEnd);
+  // Desktop drag events (mouse)
+  slidesWrapper.addEventListener('mousedown', handleMouseDragStart);
+  document.addEventListener('mousemove', handleMouseDragMove);
+  document.addEventListener('mouseup', handleMouseDragEnd);
   
-  // Touch events (mobile)
-  slidesWrapper.addEventListener('touchstart', handleDragStart, { passive: false });
-  slidesWrapper.addEventListener('touchmove', handleDragMove, { passive: false });
-  slidesWrapper.addEventListener('touchend', handleDragEnd);
+  // Mobile touch events with proper direction detection
+  slidesWrapper.addEventListener('touchstart', handleTouchStart, { passive: true });
+  slidesWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
+  slidesWrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
   
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    // Only work if slideshow is in viewport
     const rect = slideshow.getBoundingClientRect();
     const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
     
