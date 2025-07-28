@@ -23,29 +23,6 @@
   data-section-id="{{ section.id }}"
   data-section-type="blog-template"
   data-section-loaded="false">
-
-  <!-- Blog Schema JSON-LD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ shop.url }}{{ blog.url }}"
-  },
-  "url": "{{ shop.url }}{{ blog.url }}",
-  "name": {{ blog.title | json }},
-  "description": "Blog Saturaise - najnowsze informacje o sneakersach, porady dotyczące pielęgnacji butów, przewodniki po rozmiarach i nowości ze świata streetwearu.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Saturaise",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"
-    }
-  }
-}
-</script>
  
   {% paginate blog.articles by items_per_page %}
     
