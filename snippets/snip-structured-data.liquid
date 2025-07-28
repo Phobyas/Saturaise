@@ -2517,6 +2517,7 @@
     {% endif %}
     {% comment %} Blog Schema - for blog listing pages {% endcomment %}
 {% comment %} Blog Schema - Enhanced for blog listing pages {% endcomment %}
+{% comment %} Blog Template Schema - For blog listing pages {% endcomment %}
 {% if template contains 'blog' and template != 'article' %}
 ,{
   "@type": "Blog",
@@ -2646,15 +2647,17 @@
 }
 {% endif %}
 
-{% comment %} Article Schema - Clean version for Google {% endcomment %}
+{% comment %} Article Template Schema - For individual article pages {% endcomment %}
 {% if template contains 'article' %}
 
 ,{
-  "@type": "Article",
+  "@type": "BlogPosting",
+  "@id": "{{ shop.url }}{{ article.url }}",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ shop.url }}{{ article.url }}"
   },
+  "url": "{{ shop.url }}{{ article.url }}",
   "headline": {{ article.title | strip_html | truncate: 110 | json }},
   "description": {{ article.excerpt | default: article.content | strip_html | truncate: 160 | json }},
   "image": {
@@ -2673,7 +2676,8 @@
   "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S.000Z' }}",
   "author": {
     "@type": "Person",
-    "name": {{ article.author | default: 'Zespół Saturaise' | json }}
+    "name": {{ article.author | default: 'Zespół Saturaise' | json }},
+    "url": "{{ shop.url }}/pages/o-nas"
   },
   "publisher": {
     "@type": "Organization",
@@ -2684,10 +2688,14 @@
       "width": 600,
       "height": 60
     }
-  }
+  },
+  "wordCount": {{ article.content | strip_html | split: ' ' | size }},
+  "articleSection": "Sneakersy i Streetwear",
+  "inLanguage": "pl-PL",
+  "isAccessibleForFree": true
 }
 
-{% comment %} Keep the BreadcrumbList that's already working {% endcomment %}
+{% comment %} BreadcrumbList - Separate for better detection {% endcomment %}
 ,{
   "@type": "BreadcrumbList",
   "itemListElement": [
@@ -2695,24 +2703,33 @@
       "@type": "ListItem",
       "position": 1,
       "name": "Saturaise",
-      "item": "https://saturaise.com"
+      "item": {
+        "@type": "Thing",
+        "@id": "https://saturaise.com"
+      }
     },
     {
       "@type": "ListItem",
       "position": 2,
       "name": {{ blog.title | json }},
-      "item": "{{ shop.url }}{{ blog.url }}"
+      "item": {
+        "@type": "Thing",
+        "@id": "{{ shop.url }}{{ blog.url }}"
+      }
     },
     {
       "@type": "ListItem",
       "position": 3,
-      "name": {{ article.title | json }},
-      "item": "{{ shop.url }}{{ article.url }}"
+      "name": {{ article.title | strip_html | truncate: 60 | json }},
+      "item": {
+        "@type": "Thing",
+        "@id": "{{ shop.url }}{{ article.url }}"
+      }
     }
   ]
 }
 
-{% comment %} Keep your existing FAQ that's already being detected {% endcomment %}
+{% comment %} FAQ Schema - Universal questions {% endcomment %}
 ,{
   "@type": "FAQPage",
   "mainEntity": [
@@ -2726,52 +2743,90 @@
     },
     {
       "@type": "Question",
-      "name": "Skąd pochodzą informacje w tym artykule?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Nasze artykuły powstają w oparciu o wieloletnie doświadczenie w branży sneakersów, oficjalne informacje od producentów oraz feedback od naszych klientów i społeczności sneakerheadów."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Czy produkty w Saturaise są oryginalne?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Tak, wszystkie produkty w Saturaise są w 100% oryginalne. Każdy produkt przechodzi szczegółową weryfikację autentyczności i otrzymuje certyfikat Saturaise."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak długo trwa dostawa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standardowa dostawa trwa 1-3 dni robocze. Zamówienia złożone do godziny 14:00 wysyłamy tego samego dnia. Oferujemy darmową dostawę na terenie całej Polski."
+      }
     }
+    
+    {% comment %} Dynamic questions based on article content {% endcomment %}
+    {% if article.title contains 'rozmiar' or article.content contains 'sizing' %}
+    ,{
+      "@type": "Question",
+      "name": "Jak dobrać odpowiedni rozmiar?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Szczegółowe informacje o rozmiarówce znajdziesz w artykule. Zalecamy również sprawdzenie tabeli rozmiarów na stronie produktu lub kontakt z naszym zespołem."
+      }
+    }
+    {% endif %}
+    
+    {% if article.title contains 'jak rozpoznać' or article.content contains 'oryginał' %}
+    ,{
+      "@type": "Question",
+      "name": "Jak rozpoznać oryginał od podróbki?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "W artykule znajdziesz szczegółowe wskazówki dotyczące weryfikacji autentyczności. Kupując w Saturaise masz pewność otrzymania oryginalnego produktu z certyfikatem."
+      }
+    }
+    {% endif %}
+    
+    {% if article.title contains 'pielęgn' or article.title contains 'czyści' %}
+    ,{
+      "@type": "Question",
+      "name": "Jakie produkty do pielęgnacji polecacie?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "W Saturaise oferujemy profesjonalne środki do czyszczenia i pielęgnacji sneakersów. Szczegółowe porady znajdziesz w artykule."
+      }
+    }
+    {% endif %}
   ]
 }
 
-{% comment %} Optional: Keep HowTo if you want {% endcomment %}
-{% if article.title contains 'przewodnik' %}
+{% comment %} HowTo Schema for guide articles {% endcomment %}
+{% if article.title contains 'przewodnik' or article.title contains 'jak' or article.title contains 'poradnik' %}
 ,{
   "@type": "HowTo",
-  "name": "Jak kupić {{ article.title | split: ' – ' | first }}",
+  "name": "Jak kupić {{ article.title | split: ' – ' | first | split: ' - ' | first }}",
   "description": "Przewodnik krok po kroku",
   "image": {% if article.image %}"https:{{ article.image | image_url: width: 1200, height: 675 }}"{% else %}"https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"{% endif %},
   "step": [
     {
       "@type": "HowToStep",
-      "text": "Przeczytaj nasz przewodnik",
-      "name": "Zapoznaj się z informacjami"
+      "text": "Przeczytaj nasz szczegółowy przewodnik",
+      "name": "Zapoznaj się z informacjami",
+      "url": "{{ shop.url }}{{ article.url }}"
     },
     {
       "@type": "HowToStep",
-      "text": "Sprawdź dostępność w Saturaise",
-      "name": "Sprawdź dostępność"
+      "text": "Sprawdź dostępność produktu w sklepie Saturaise",
+      "name": "Sprawdź dostępność",
+      "url": "{{ shop.url }}"
     },
     {
       "@type": "HowToStep",
-      "text": "Wybierz odpowiedni rozmiar",
+      "text": "Wybierz odpowiedni rozmiar korzystając z tabeli rozmiarów",
       "name": "Dobierz rozmiar"
     },
     {
       "@type": "HowToStep",
-      "text": "Złóż zamówienie w Saturaise",
-      "name": "Finalizuj zakup"
+      "text": "Dodaj produkt do koszyka i finalizuj zamówienie",
+      "name": "Złóż zamówienie",
+      "url": "{{ shop.url }}/cart"
     }
-  ]
+  ],
+  "totalTime": "PT10M"
 }
 {% endif %}
 
