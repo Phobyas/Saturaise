@@ -2515,89 +2515,38 @@
       ]
     }
     {% endif %}
-    {% comment %} Article Schema - Clean and Google-friendly {% endcomment %}
+    {% comment %} Blog Schema - Ultra Simple for Google {% endcomment %}
+{% if template contains 'blog' and template != 'article' %}
+,{
+  "@type": "Blog",
+  "name": {{ blog.title | json }},
+  "url": "{{ shop.url }}{{ blog.url }}",
+  "description": "Blog o sneakersach i streetwear",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Saturaise"
+  }
+}
+{% endif %}
+{% comment %} Article Schema - Simple Version {% endcomment %}
 {% if template contains 'article' %}
 ,{
-  "@type": "NewsArticle",
-  "@id": "{{ shop.url }}{{ article.url }}",
-  "url": "{{ shop.url }}{{ article.url }}",
-  "headline": {{ article.title | strip_html | escape | truncate: 110 | json }},
-  "description": {{ article.excerpt | default: article.content | strip_html | escape | truncate: 160 | json }},
-  "image": [
-    {% if article.image %}
-    "https:{{ article.image | image_url: width: 1200, height: 675 }}",
-    "https:{{ article.image | image_url: width: 1200, height: 1200 }}",
-    "https:{{ article.image | image_url: width: 1200, height: 630 }}"
-    {% else %}
-    "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"
-    {% endif %}
-  ],
-  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S+00:00' }}",
-  "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S+00:00' }}",
+  "@type": "Article",
+  "headline": {{ article.title | strip_html | json }},
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%d' }}",
   "author": {
-    "@type": "Person",
-    "name": {{ article.author | default: 'Zespół Saturaise' | strip | json }}
+    "@type": "Person", 
+    "name": "{{ article.author | default: 'Saturaise' }}"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Saturaise",
-    "@id": "https://saturaise.com/#organization",
     "logo": {
       "@type": "ImageObject",
-      "@id": "https://saturaise.com/#logo",
-      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
-      "width": 600,
-      "height": 60
+      "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"
     }
   },
-  "articleSection": "Sneakersy",
-  "inLanguage": "pl",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ shop.url }}{{ article.url }}"
-  }
-}
-
-{% comment %} Remove duplicate BreadcrumbList if it exists elsewhere {% endcomment %}
-,{
-  "@type": "BreadcrumbList",
-  "@id": "{{ shop.url }}{{ article.url }}#breadcrumb",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Saturaise",
-      "item": "https://saturaise.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": {{ blog.title | strip | json }},
-      "item": "https://saturaise.com/blogs/news"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": {{ article.title | strip_html | escape | truncate: 60 | json }},
-      "item": "{{ shop.url }}{{ article.url }}"
-    }
-  ]
-}
-{% endif %}
-{% comment %} Blog Schema - Clean and simple {% endcomment %}
-{% if template contains 'blog' and template != 'article' %}
-,{
-  "@type": "Blog",
-  "@id": "https://saturaise.com/blogs/news",
-  "url": "https://saturaise.com/blogs/news",
-  "name": {{ blog.title | strip | json }},
-  "description": "Blog Saturaise - najnowsze informacje o sneakersach, porady dotyczące pielęgnacji butów, przewodniki po rozmiarach i nowości ze świata streetwearu.",
-  "publisher": {
-    "@type": "Organization",
-    "@id": "https://saturaise.com/#organization",
-    "name": "Saturaise"
-  },
-  "inLanguage": "pl"
+  "mainEntityOfPage": "{{ shop.url }}{{ article.url }}"
 }
 {% endif %}
   ]
