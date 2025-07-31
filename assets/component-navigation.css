@@ -335,7 +335,7 @@
   padding: 0 !important;
   font-weight: normal !important;
   color: var(--dropdown-link-color) !important;
-  font-size: var(--font-size) !important;
+  font-size: 13px !important;
   font-family: var(--main-family) !important;
   font-weight: 500 !important;
   font-style: var(--main-style);
@@ -349,6 +349,7 @@
 
 .megamenu__listlink P {
   text-transform: uppercase;
+  font-size: 13px !important;
 }
 
 .megamenu__imagecontainer {

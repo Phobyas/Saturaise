@@ -107,8 +107,10 @@ Liquid logic for navigation
       {% assign columns = '4' %}
     {% when 5 %}  
       {% assign columns = '5' %}
-    {% else %}
+          {% when 6 %}  
       {% assign columns = '6' %}
+    {% else %}
+      {% assign columns = '7' %}
   {% endcase %}
   <li
     class="navigation__menuitem navigation__menuitem--dropdown js-aria-expand js-doubletap-to-go"
