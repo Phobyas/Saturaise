@@ -1,5 +1,5 @@
 {% comment %}
-section/predictive-search.liquid
+section/predictive-search.liquid - Updated to use product-loop for consistent styling
 {% endcomment %}
 
 {%- if predictive_search.performed -%}
@@ -55,10 +55,6 @@ section/predictive-search.liquid
         <!-- Products -->
         {%- if has_products -%}
           <li class="span-12 auto">
-            {% comment %} <h3 id="predictive-search-products" class="predictive-search__heading h4 a-left">
-              {{ 'general.search.products' | t }}
-            </h3>
-             {% endcomment %}
             <!-- See All Products Link (before product loop) -->
             <div class="predictive-search__view-all a-right pt-2 pb-5">
               <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="text-[16px] font-medium underline">
@@ -66,67 +62,101 @@ section/predictive-search.liquid
               </a>
             </div>
             
-            <ul class="search__product-loop grid__wrapper">
-              {%- for product in predictive_search.resources.products-%}
-                <li class="product-index span-4 auto" role="option">
-                  {% render 'product-loop', product: product, collection: collection %}
+            <ul class="search__product-loop">
+              {%- for product in predictive_search.resources.products -%}
+                <li class="product-index" role="option">
+                  {% comment %}
+                    Use the main product-loop snippet for consistent styling and prices
+                  {% endcomment %}
+                  {% render 'product-loop', 
+                    product: product,
+                    grid_items: 2,
+                    loading: 'lazy'
+                  %}
                 </li>
               {%- endfor -%}
             </ul>
           </li>
         {%- endif -%}
-  
-  
-        {% comment %} <!-- Queries/Collections -->
-        {%- if has_queries or has_collections -%}
-          <li class="{{ grid_width }} auto">
-            <h3 id="predictive-search-collections" class="predictive-search__heading h4 a-left">
-              {{ 'general.search.suggestions' | t }}
-            </h3>
-            <ul>
-              {%- for query in predictive_search.resources.queries -%}
-                <li class="predictive-search__list-item" role="option">
-                  <a class="predictive-search__item" href="{{ query.url }}">
-                    <span aria-label="{{ query.text }}">{{ query.styled_text }}</span>
-                  </a>
+        
+        <!-- Collections, Pages, Articles sections remain unchanged -->
+        {%- if has_collections or has_pages or has_articles or has_queries -%}
+          <li class="span-12 auto">
+            <ul class="grid__wrapper edge">
+              <!-- Collections -->
+              {%- if has_collections -%}
+                <li class="{{ grid_width }} sm-span-12 auto">
+                  <h3 class="predictive-search__heading">{{ 'general.search.collections' | t }}</h3>
+                  <ul class="predictive-search__results-list" role="group" aria-labelledby="predictive-search-collections">
+                    {%- for collection in predictive_search.resources.collections -%}
+                      <li class="predictive-search__results-list-item" role="option">
+                        <a href="{{ collection.url }}" class="predictive-search__results-list-item-link">
+                          <div class="predictive-search__results-list-item-content">
+                            <p class="predictive-search__results-list-item-title">{{ collection.title }}</p>
+                          </div>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
                 </li>
-              {%- endfor -%}
-              {%- for collection in predictive_search.resources.collections -%}
-                <li class="predictive-search__list-item" role="option">
-                  <a class="predictive-search__item" href="{{ collection.url }}" title="{{ collection.title }}">
-                    {{ collection.title }}
-                  </a>
+              {%- endif -%}
+              
+              <!-- Pages -->
+              {%- if has_pages -%}
+                <li class="{{ grid_width }} sm-span-12 auto">
+                  <h3 class="predictive-search__heading">{{ 'general.search.pages' | t }}</h3>
+                  <ul class="predictive-search__results-list" role="group" aria-labelledby="predictive-search-pages">
+                    {%- for page in predictive_search.resources.pages -%}
+                      <li class="predictive-search__results-list-item" role="option">
+                        <a href="{{ page.url }}" class="predictive-search__results-list-item-link">
+                          <div class="predictive-search__results-list-item-content">
+                            <p class="predictive-search__results-list-item-title">{{ page.title }}</p>
+                          </div>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
                 </li>
-              {%- endfor -%}
+              {%- endif -%}
+              
+              <!-- Articles -->
+              {%- if has_articles -%}
+                <li class="{{ grid_width }} sm-span-12 auto">
+                  <h3 class="predictive-search__heading">{{ 'general.search.articles' | t }}</h3>
+                  <ul class="predictive-search__results-list" role="group" aria-labelledby="predictive-search-articles">
+                    {%- for article in predictive_search.resources.articles -%}
+                      <li class="predictive-search__results-list-item" role="option">
+                        <a href="{{ article.url }}" class="predictive-search__results-list-item-link">
+                          <div class="predictive-search__results-list-item-content">
+                            <p class="predictive-search__results-list-item-title">{{ article.title }}</p>
+                          </div>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </li>
+              {%- endif -%}
+              
+              <!-- Search Queries -->
+              {%- if has_queries -%}
+                <li class="{{ grid_width }} sm-span-12 auto">
+                  <h3 class="predictive-search__heading">{{ 'general.search.suggestions' | t }}</h3>
+                  <ul class="predictive-search__results-list" role="group" aria-labelledby="predictive-search-queries">
+                    {%- for query in predictive_search.resources.queries -%}
+                      <li class="predictive-search__results-list-item" role="option">
+                        <a href="{{ routes.search_url }}?q={{ query.text | url_encode }}" class="predictive-search__results-list-item-link">
+                          <div class="predictive-search__results-list-item-content">
+                            <p class="predictive-search__results-list-item-title">{{ query.styled_text }}</p>
+                          </div>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </li>
+              {%- endif -%}
             </ul>
           </li>
-        {%- endif -%} {% endcomment %}
-  
-  
-        {% comment %} <!-- Pages/Articles -->
-        {%- if has_pages or has_articles -%}
-          <li class="{{ grid_width }} auto">
-            <h3 id="predictive-search-pages" class="predictive-search__heading h4 a-left">
-              {{ 'general.search.pages' | t }}
-            </h3>
-            <ul>
-              {%- for page in predictive_search.resources.pages -%}
-                <li class="predictive-search__list-item" role="option">
-                  <a class="predictive-search__item" href="{{ page.url }}" title="{{ page.title }}">
-                    {{ page.title }}
-                  </a>
-                </li>
-              {%- endfor -%}
-              {%- for article in predictive_search.resources.articles -%}
-                <li class="predictive-search__list-item" role="option">
-                  <a class="predictive-search__item" href="{{ article.url }}" title="{{ article.title }}">
-                    {{ article.title }}
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          </li>
-        {%- endif -%} {% endcomment %}
+        {%- endif -%}
       </ul>
     </div>
-  {%- endif -%}
+{%- endif -%}

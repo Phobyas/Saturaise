@@ -1,4 +1,3 @@
-// Mobile Navigation JS - Updated to improve performance and prevent CLS
 // Set initial CSS variables to prevent layout shift
 (function () {
   document.documentElement.style.setProperty("--header-mobile-height", "66px");
@@ -358,14 +357,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Mobile Search Drawer - Using Existing Predictive Search System
+// Mobile Search Drawer - Enhanced APLUG.PL Style
 (function () {
   function initMobileSearch() {
     const searchInput = document.querySelector(
       "#mobile-search-drawer .mobile-search-input"
     );
     const predictiveSearchContainer = document.querySelector(
-      "#mobile-search-drawer #predictive-search"
+      "#mobile-search-drawer #predictive-search, #mobile-search-drawer .predictive-search"
     );
     const loadingState = document.querySelector(
       "#mobile-search-drawer .mobile-search-loading"
@@ -377,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "#mobile-search-drawer .mobile-search-suggestions"
     );
 
-    if (!searchInput || !predictiveSearchContainer) return;
+    if (!searchInput) return;
 
     let searchTimeout;
 
@@ -455,6 +454,24 @@ document.addEventListener("DOMContentLoaded", function () {
       const searchDrawer = document.querySelector("#mobile-search-drawer");
       if (!searchDrawer) return;
 
+      // Force 2-column grid layout
+      const resultsLists = searchDrawer.querySelectorAll(`
+        .predictive-search__results-list,
+        .mobile-search-results-grid,
+        #predictive-search ul
+      `);
+
+      resultsLists.forEach((list) => {
+        list.style.cssText = `
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 16px !important;
+          padding: 16px !important;
+          list-style: none !important;
+          margin: 0 !important;
+        `;
+      });
+
       // Find all image containers in the search drawer
       const imageContainers = searchDrawer.querySelectorAll(`
         .predictive-search__results-list-item-image,
@@ -467,7 +484,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Force consistent container styling
         container.style.cssText = `
           aspect-ratio: 1/1 !important;
-          background-color: #eeeeee !important;
+          background-color: #f0f0f0 !important;
           border-radius: 12px !important;
           margin-bottom: 12px !important;
           overflow: hidden !important;
@@ -484,10 +501,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const images = container.querySelectorAll("img");
         images.forEach((img) => {
           img.style.cssText = `
-            width: 90% !important;
-            height: 90% !important;
-            max-width: 90% !important;
-            max-height: 90% !important;
+            width: 85% !important;
+            height: 85% !important;
+            max-width: 85% !important;
+            max-height: 85% !important;
             object-fit: contain !important;
             position: absolute !important;
             top: 50% !important;
@@ -505,6 +522,41 @@ document.addEventListener("DOMContentLoaded", function () {
       hoverImages.forEach((hover) => {
         hover.style.display = "none";
       });
+
+      // Style titles
+      const titles = searchDrawer.querySelectorAll(`
+        .predictive-search__results-list-item-title,
+        .product-loop__title
+      `);
+      titles.forEach((title) => {
+        title.style.cssText = `
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          line-height: 1.4 !important;
+          display: -webkit-box !important;
+          -webkit-line-clamp: 2 !important;
+          -webkit-box-orient: vertical !important;
+          overflow: hidden !important;
+          min-height: 40px !important;
+          margin-bottom: 8px !important;
+        `;
+      });
+
+      // Style prices
+      const prices = searchDrawer.querySelectorAll(`
+        .predictive-search__results-list-item-price,
+        .product-loop__price
+      `);
+      // prices.forEach((price) => {
+      //   price.style.cssText = `
+      //     font-size: 16px !important;
+      //     font-weight: 700 !important;
+      //     display: flex !important;
+      //     align-items: center !important;
+      //     gap: 8px !important;
+      //     margin-top: auto !important;
+      //   `;
+      // });
     }
 
     // Process predictive search results for mobile - ENHANCED VERSION
@@ -536,91 +588,13 @@ document.addEventListener("DOMContentLoaded", function () {
         productItems.forEach((item) => {
           item.classList.add("mobile-search-product-item");
 
-          // FORCE INDEX PAGE IMAGE STYLING - Remove any template-specific classes
+          // Remove any template-specific classes
           item.classList.remove(
             "template-product",
             "template-collection",
             "template-search"
           );
           item.classList.add("template-index"); // Force index template styling
-
-          // Find and standardize image containers
-          const imageContainer = item.querySelector(
-            ".predictive-search__results-list-item-image, .product-loop__img-wrapper, .predictive-search__image"
-          );
-
-          if (imageContainer) {
-            // Force consistent image container styling
-            imageContainer.style.cssText = `
-              aspect-ratio: 1/1 !important;
-              background-color: #eeeeee !important;
-              border-radius: 12px !important;
-              margin-bottom: 12px !important;
-              overflow: hidden !important;
-              display: flex !important;
-              align-items: center !important;
-              justify-content: center !important;
-              position: relative !important;
-              padding-bottom: 0 !important;
-              width: 100% !important;
-              height: auto !important;
-            `;
-
-            // Force consistent image styling
-            const images = imageContainer.querySelectorAll("img");
-            images.forEach((img) => {
-              img.style.cssText = `
-                width: 90% !important;
-                height: 90% !important;
-                max-width: 90% !important;
-                max-height: 90% !important;
-                object-fit: contain !important;
-                position: absolute !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                border-radius: 0 !important;
-              `;
-
-              // Remove any template-specific classes from images
-              img.classList.remove(
-                "product-image--cover",
-                "product-image--contain"
-              );
-              img.classList.add("product-image--contain");
-            });
-
-            // Remove any box-ratio containers that might interfere
-            const boxRatios = imageContainer.querySelectorAll(".box-ratio");
-            boxRatios.forEach((box) => {
-              box.style.cssText = `
-                padding-bottom: 0 !important;
-                position: relative !important;
-                width: 100% !important;
-                height: 100% !important;
-                aspect-ratio: 1/1 !important;
-              `;
-            });
-
-            // Hide any hover images
-            const hoverImages = imageContainer.querySelectorAll(
-              ".hover-image, .product-loop__img-wrapper--hidden"
-            );
-            hoverImages.forEach((hover) => {
-              hover.style.display = "none";
-            });
-          }
-
-          // Ensure product wrapper follows index template styling
-          const productWrapper = item.querySelector(".product-loop__item");
-          if (productWrapper) {
-            // Remove template-specific classes and add index template class
-            productWrapper.classList.remove(
-              "product-loop__item--vertical",
-              "product-loop__item--horizontal"
-            );
-            productWrapper.classList.add("product-loop__item--square");
-          }
         });
       }
 
@@ -635,7 +609,9 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
       `;
 
-      resultsContainer.insertAdjacentHTML("afterend", seeAllButton);
+      if (resultsContainer) {
+        resultsContainer.insertAdjacentHTML("afterend", seeAllButton);
+      }
 
       return tempDiv.innerHTML;
     }
@@ -669,13 +645,16 @@ document.addEventListener("DOMContentLoaded", function () {
               resultsMarkup.innerHTML,
               query
             );
-            predictiveSearchContainer.innerHTML = processedHTML;
-            predictiveSearchContainer.style.display = "block";
 
-            // CRITICAL: Enforce consistent image styling after DOM insertion
-            setTimeout(() => {
-              enforceConsistentImageStyling();
-            }, 100);
+            if (predictiveSearchContainer) {
+              predictiveSearchContainer.innerHTML = processedHTML;
+              predictiveSearchContainer.style.display = "block";
+
+              // CRITICAL: Enforce consistent image styling after DOM insertion
+              setTimeout(() => {
+                enforceConsistentImageStyling();
+              }, 100);
+            }
           } else {
             showEmptyState();
           }
@@ -698,6 +677,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showEmptyState() {
       if (emptyState) emptyState.classList.add("active");
+      if (predictiveSearchContainer)
+        predictiveSearchContainer.style.display = "none";
     }
 
     function showSuggestions() {
@@ -751,3 +732,15 @@ if (typeof Events !== "undefined") {
     }, 300);
   });
 }
+
+// Add close button handler for mobile search drawer
+document.addEventListener("DOMContentLoaded", function () {
+  const closeButton = document.querySelector(
+    "#mobile-search-drawer .mobile-search-close"
+  );
+  if (closeButton && typeof WAU !== "undefined" && WAU.Slideout) {
+    closeButton.addEventListener("click", function () {
+      WAU.Slideout._closeByName("mobile-search");
+    });
+  }
+});

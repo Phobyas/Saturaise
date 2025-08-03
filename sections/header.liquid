@@ -188,7 +188,7 @@
       {%- endif -%}
         <form class="searchbox__form py4 px6 border-bottom" action="{{ routes.search_url }}" method="get">
           <label class="visually-hidden" for="q">{{ 'general.search.title' | t }}</label>
-          <input class="searchbox__input mb0 mt5 no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" />
+          <input class="searchbox__input mb0  no-bg-color" type="text" title="{{ 'general.search.title' | t }}" autocomplete="off" name="q" id="q" placeholder="{{ 'general.search.placeholder' | t }}" />
           <input name="options[prefix]" type="hidden" value="last">
 
           {% if settings.search_show_products_only %}

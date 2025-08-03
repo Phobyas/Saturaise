@@ -1,0 +1,141 @@
+{% comment %}
+  Product Loop for Mobile Search Results - Matching main product-loop styling
+  This version matches the exact structure and styling of product-loop.liquid
+{% endcomment %}
+
+{%- liquid
+  # Badge logic from product-loop.liquid
+  assign badges = ''
+  
+  assign is_bestseller = false
+  for tag in product.tags
+    if tag == 'Hot'
+      assign is_bestseller = true
+      break
+    endif
+  endfor
+
+  if is_bestseller
+    assign badges = badges | append: 'bestseller:' | append: 'products.general.bestseller'
+  endif
+
+  # Sale detection logic
+  assign is_on_sale = false
+  if product.available
+    if product.price < product.compare_at_price or product.price_min < product.compare_at_price_min or product.price_max < product.compare_at_price_max
+      assign is_on_sale = true
+    endif
+    
+    if is_on_sale
+      if badges != ''
+        assign badges = badges | append: '|'
+      endif
+      assign badges = badges | append: 'sale-item:' | append: 'products.general.sale'
+    endif
+  else
+    if badges != ''
+      assign badges = badges | append: '|'
+    endif
+    assign badges = badges | append: 'sold-out:' | append: 'products.general.sold'
+  endif
+
+  assign badges_array = badges | split: '|'
+-%}
+
+<article class="product-loop__item relative product-loop__item--{{ settings.image_ratio }}"
+  data-alpha="{{ product.title }}"
+  data-price="{{ product.price }}">
+
+  <div class="product-image relative">
+    {% if badges != '' %}
+      {% assign badge_count = 0 %}
+      {% for badge in badges_array %}
+        {% assign badge_parts = badge | split: ':' %}
+        {% assign badge_type = badge_parts[0] %}
+        {% assign badge_text = badge_parts[1] | t %}
+        <div class="product-loop__badge-icon icon-type--{{ badge_type }} icn" style="right: {{ badge_count | times: 70 | plus: 10 }}px; top: 10px;" data-badge-index="{{ badge_count }}">{{ badge_text }}</div>
+        {% assign badge_count = badge_count | plus: 1 %}
+      {% endfor %}
+    {% endif %}
+
+    <div class="product-loop__img-wrapper relative">
+      <a href="{{ product.url | within: collection }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">
+        {%- if product.media.size < 1 -%}
+           <div class="demo-1 box-ratio" style="padding-bottom: 100%;">
+             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+           </div>
+        {%- else -%}
+          {%- liquid
+            # Use same render sizes as mobile view
+            assign sm_render = 'calc(100vw / 2)'
+            assign md_render = 'calc(100vw / 2)'
+            assign lg_render = 'calc(100vw / 2)'
+          -%}
+
+          {% render 'helper-image',
+            type: product.featured_media.preview_image,
+            sm_render: sm_render,
+            md_render: md_render,
+            lg_render: lg_render,
+            img_width: '100%',
+            img_height: '100%',
+            alt: product.title | escape,
+            additional_classes: 'product-image--contain main-image',
+            loading: 'lazy' %}
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+
+  <div class="grid__wrapper edge pt2 cg0 sm-cg0 rg0 name-wrapper">
+    <div class="product-loop__info-wrapper span-12 auto">
+      {% if settings.product_grid_vendor %}
+        <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
+      {% endif %}
+      
+      <p class="product-loop__title p-title p-title-index">
+        <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+      </p>
+    </div>
+
+    <div class="product-loop__price text-sm lg:text-base font-medium price-index">
+      {% comment %} EXACT PRICE LOGIC FROM product-loop.liquid {% endcomment %}
+      {% if product.price < product.compare_at_price %}
+        Od
+        <span class="product-loop__price--sale onsale inline-block text-base font-bold price-index">
+          {{ product.price | money }}
+        </span>
+        <span class="product-loop__price--compare was inline-block ml1 text-base font-bold price-index">
+          {{ product.compare_at_price | money }}
+        </span>
+        {% assign savings = product.compare_at_price | minus: product.price %}
+        <span class="product-loop__price--savings savings hide">
+          ({{ 'collections.general.save' | t }} {{ savings | money }})
+        </span>
+      {% else %}
+        {% if product.price_varies %}
+          Od {{ product.price_min | money }}
+        {% else %}
+          {% if product.price == 0 %}
+            {% comment %} Fallback: Find minimum price from variants {% endcomment %}
+            {% assign min_price = null %}
+            {% for variant in product.variants %}
+              {% if min_price == null or variant.price < min_price %}
+                {% assign min_price = variant.price %}
+              {% endif %}
+            {% endfor %}
+
+            {% if min_price %}
+              Od {{ min_price | money }}
+            {% else %}
+              {{ product.price | money }}
+            {% endif %}
+          {% else %}
+            {{ product.price | money }}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</article>
+

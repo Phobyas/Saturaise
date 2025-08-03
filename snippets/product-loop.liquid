@@ -405,14 +405,14 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} price-index">
+    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} {% unless is_mobile_search %}price-index{% endunless %}">
 
     {% if product.price < product.compare_at_price %}
       Od
-      <span class="product-loop__price--sale onsale inline-block text-base font-bold price-index">
+      <span class="product-loop__price--sale onsale inline-block text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
         {{ product.price | money }}
       </span>
-      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold price-index">
+      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
         {{ product.compare_at_price | money }}
       </span>
           {% assign savings = product.compare_at_price | minus: product.price %}
@@ -424,20 +424,7 @@
           Od {{ product.price_min | money }}
         {% else %}
           {{ product.price | money }}
-          {% else %}
-            {% assign min_price = null %}
-            {% for variant in product.variants %}
-              {% if min_price == null or variant.price < min_price %}
-                {% assign min_price = variant.price %}
-              {% endif %}
-            {% endfor %}
-
-            {% if min_price %}
-              Od {{ min_price | money }}
-            {% else %}
-              {{ product.price | money }}
-            {% endif %}
-          {% endif %}
+        {% endif %}
         {% endif %}
 
         {%- render 'product-unit-price', variant: product.selected_or_first_available_variant -%}

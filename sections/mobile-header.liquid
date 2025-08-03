@@ -21,8 +21,6 @@
 {% comment %} Mobile Header Assets {% endcomment %}
 <link rel="preload" href="{{ 'section-mobile-navigation.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'section-mobile-navigation.css' | asset_url }}"></noscript>
-<link rel="preload" href="{{ 'mobile-search-drawer.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ 'mobile-search-drawer.css' | asset_url }}"></noscript>
 <link rel="preload" href="{{ 'component-accordions.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="{{ 'component-accordions.css' | asset_url }}"></noscript>
 <link rel="preload" href="{{ 'component-slideouts.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -242,7 +240,7 @@
 <section
   class="section-header__mobile mobile-nav__mobile-header sticky-header {{ sticky }} lg-hide z5 js-mobile-header relative z-50"
   data-section-id="{{ section.id }}"
-  data-asset-url="{{ 'mobile-search-drawer.js' | asset_url }}"
+  data-asset-url="{{ 'section-mobile-navigation.js' | asset_url }}"
   data-asset-preload="true"
   data-section-type="mobile-header">
   
@@ -345,7 +343,7 @@
 </section>
 <div class="clear js-clear-element"></div>
 
-{% comment %} Mobile Search Drawer - Enhanced with Predictive Search {% endcomment %}
+
 {%- if section.settings.show_searchbox -%}
 <aside id="mobile-search-drawer" 
        class="slideout slideout__drawer-top mobile-search-drawer" 
@@ -356,81 +354,75 @@
   <div class="mobile-search-header">
     <div class="mobile-search-form-wrapper">
       <div class="mobile-search-input-container">
-        <input type="text" 
-               class="mobile-search-input" 
-               placeholder="{{ 'general.search.placeholder' | t | default: 'Szukaj produktów...' }}"
-               autocomplete="off"
-               autocorrect="off"
-               autocapitalize="off"
-               spellcheck="false"
-               style="font-size: 16px;">
-        <div class="mobile-search-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-        </div>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="mobile-search-form">
+          <input type="search" 
+                 name="q" 
+                 class="mobile-search-input" 
+                 placeholder="{{ 'general.search.placeholder' | t | default: 'Szukaj...' }}"
+                 aria-label="Search"
+                 autocomplete="off"
+                 autocorrect="off"
+                 autocapitalize="off"
+                 spellcheck="false"
+                 style="font-size: 16px;">
+          <span class="mobile-search-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18ZM6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11Z" fill="currentColor"/>
+            </svg>
+          </span>
+        </form>
       </div>
       <button type="button" 
               class="mobile-search-close js-slideout-close" 
+              data-wau-slideout-pane="mobile-search"
               data-slideout-direction="top"
               aria-label="Zamknij wyszukiwanie">
-        {% render 'snip-icons',
-           wrapper: '.mobile-search-close',
-           type: 'theme',
-           icon: 'close',
-           size: '16px',
-           classes: 'vib-center',
-           fill: 'var(--text-color)',
-           hover: 'var(--text-color)' %}
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M16 2L2 16M2.00002 2L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
       </button>
     </div>
   </div>
 
   <!-- Search Content -->
   <div class="mobile-search-content">
+    <!-- Search Suggestions (shown when input is empty) -->
+    <div class="mobile-search-suggestions">
+      <h4>Propozycje</h4>
+      <div class="mobile-search-suggestions-list">
+        <a href="/collections/nike-air-force" class="mobile-search-suggestion">Nike Air Force</a>
+        <a href="/collections/air-jordan" class="mobile-search-suggestion">Air Jordan</a>
+        <a href="/collections/nike-air-max" class="mobile-search-suggestion">Nike Air Max</a>
+        <a href="/collections/adidas-yeezy" class="mobile-search-suggestion">Adidas Yeezy</a>
+        <a href="/collections/new-balance" class="mobile-search-suggestion">New Balance</a>
+        <a href="/collections/nike-dunk" class="mobile-search-suggestion">Nike Dunk</a>
+        <a href="/collections/supreme" class="mobile-search-suggestion">Supreme</a>
+        <a href="/collections/travis-scott" class="mobile-search-suggestion">Travis Scott</a>
+        <a href="/collections/denim-tears" class="mobile-search-suggestion">Denim Tears</a>
+        <a href="/collections/labubu" class="mobile-search-suggestion">Labubu</a>
+        <a href="/collections/bearbrick" class="mobile-search-suggestion">Bearbrick</a>
+        <a href="/collections/akcesoria" class="mobile-search-suggestion">Akcesoria</a>
+      </div>
+    </div>
+
     <!-- Loading State -->
     <div class="mobile-search-loading">
       <div class="mobile-search-spinner"></div>
-      <p>Wyszukiwanie...</p>
+      <p>Szukam...</p>
     </div>
 
     <!-- Empty State -->
     <div class="mobile-search-empty">
-      <div class="mobile-search-empty-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-      </div>
+      <svg class="mobile-search-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <h3>Brak wyników</h3>
       <p>Spróbuj wyszukać coś innego</p>
     </div>
 
     <!-- Predictive Search Results Container -->
-    <div id="predictive-search"></div>
-
-    <!-- Popular Searches (shown when empty) -->
-    <div class="mobile-search-suggestions">
-      <h4>Propozycje</h4>
-      <div class="mobile-search-suggestions-list">
-  <a href="/search?q=Nike" class="mobile-search-suggestion">Nike</a>
-  <a href="/search?q=Adidas" class="mobile-search-suggestion">Adidas</a>
-  <a href="/search?q=Air+Jordan" class="mobile-search-suggestion">Air Jordan</a>
-  <a href="/search?q=Yeezy" class="mobile-search-suggestion">Yeezy</a>
-  <a href="/search?q=New+Balance" class="mobile-search-suggestion">New Balance</a>
-  <a href="/search?q=UGG" class="mobile-search-suggestion">UGG</a>
-  <a href="/search?q=Supreme" class="mobile-search-suggestion">Supreme</a>
-  <a href="/search?q=Denim+Tears" class="mobile-search-suggestion">Denim Tears</a>
-  <a href="/search?q=Labubu" class="mobile-search-suggestion">Labubu</a>
-  <a href="/search?q=Bearbrick" class="mobile-search-suggestion">Bearbrick</a>
-  <a href="/search?q=Akcesoria" class="mobile-search-suggestion">Akcesoria</a>
-  <a href="/search?q=Dunk+Low" class="mobile-search-suggestion">Dunk Low</a>
-  <a href="/search?q=Yeezy+350" class="mobile-search-suggestion">Yeezy 350</a>
-  <a href="/search?q=Nike+Cortez" class="mobile-search-suggestion">Nike Cortez</a>
-  <a href="/search?q=SB+Dunk" class="mobile-search-suggestion">SB Dunk</a>
-  <a href="/search?q=Travis+Scott" class="mobile-search-suggestion">Travis Scott</a>
-      </div>
+    <div class="predictive-search" data-predictive-search style="display: none;">
+      <!-- Results will be dynamically inserted here by JavaScript -->
     </div>
   </div>
 </aside>

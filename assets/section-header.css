@@ -492,3 +492,51 @@ ul.header--country_list {
   position: static !important;
   z-index: 20;
 }
+/* Desktop Search Results - 3 Column Grid ONLY */
+@media (min-width: 768px) {
+  /* 3-column grid for search results only */
+  #slideout-searchbox .search__product-loop,
+  #slideout-searchbox .predictive-search__results-list,
+  #slideout-searchbox #predictive-search .product-loop {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+    padding: 20px 0 !important;
+  }
+
+  /* Ensure product items fit in grid */
+  #slideout-searchbox .product-index,
+  #slideout-searchbox .predictive-search__results-list-item,
+  #slideout-searchbox .predictive-search__results-list > li {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Override span classes for grid items */
+  #slideout-searchbox .product-index.span-4,
+  #slideout-searchbox .product-index.span-3,
+  #slideout-searchbox .product-index.span-6,
+  #slideout-searchbox .product-loop__item.span-4,
+  #slideout-searchbox .product-loop__item.span-3,
+  #slideout-searchbox .product-loop__item.span-6 {
+    width: 100% !important;
+    max-width: none !important;
+    flex: none !important;
+  }
+}
+
+/* 2 columns on smaller screens */
+@media (min-width: 768px) and (max-width: 1200px) {
+  #slideout-searchbox .search__product-loop,
+  #slideout-searchbox .predictive-search__results-list {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Single column on mobile (no changes) */
+@media (max-width: 767px) {
+  #slideout-searchbox .search__product-loop,
+  #slideout-searchbox .predictive-search__results-list {
+    display: block !important;
+  }
+}
