@@ -78,8 +78,8 @@
         "image_e6FgMT": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/aj4_travis_2_800_1000_1.webp",
-            "mobile_image": "shopify://shop_images/aj4_travis_ad_2_1920_800_3.webp",
+            "image": "shopify://shop_images/aj4_travis_ad_2_1920_800_3.webp",
+            "mobile_image": "shopify://shop_images/aj4_travis_2_800_1000_1.webp",
             "heading": "aasda",
             "subheading": "",
             "link": "shopify://collections/labubu",
