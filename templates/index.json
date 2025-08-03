@@ -12,6 +12,27 @@
     "7773d85e-29d5-49cb-80bc-bf840c5e1664": {
       "type": "slideshow",
       "blocks": {
+        "image_e6FgMT": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/aj4_travis_ad_2_1920_800_3.webp",
+            "mobile_image": "shopify://shop_images/aj4_travis_2_800_1000_1.webp",
+            "heading": "aasda",
+            "subheading": "",
+            "link": "shopify://collections/labubu",
+            "button_text": "",
+            "second_link": "",
+            "second_button_text": "",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "slide_text_color": "#ffffff",
+            "caption_background": "rgba(0,0,0,0)",
+            "hide_caption_background": false,
+            "caption_horizontal": 50,
+            "caption_vertical": 50,
+            "text_align": "center"
+          }
+        },
         "image_Xq6gGW": {
           "type": "image",
           "settings": {
@@ -74,34 +95,13 @@
             "caption_vertical": 50,
             "text_align": "center"
           }
-        },
-        "image_e6FgMT": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/aj4_travis_ad_2_1920_800_3.webp",
-            "mobile_image": "shopify://shop_images/aj4_travis_2_800_1000_1.webp",
-            "heading": "aasda",
-            "subheading": "",
-            "link": "shopify://collections/labubu",
-            "button_text": "",
-            "second_link": "",
-            "second_button_text": "",
-            "overlay_color": "#000000",
-            "overlay_opacity": 0,
-            "slide_text_color": "#ffffff",
-            "caption_background": "rgba(0,0,0,0)",
-            "hide_caption_background": false,
-            "caption_horizontal": 50,
-            "caption_vertical": 50,
-            "text_align": "center"
-          }
         }
       },
       "block_order": [
+        "image_e6FgMT",
         "image_Xq6gGW",
         "image_9c38M3",
-        "image_YnEXEc",
-        "image_e6FgMT"
+        "image_YnEXEc"
       ],
       "settings": {
         "enable_autoplay": true,
