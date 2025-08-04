@@ -358,10 +358,12 @@
                   assign has_caption = true
                 endif
                 
-                assign loading = 'lazy'
-                if forloop.first
-                  assign loading = 'eager'
-                endif
+  assign loading = 'lazy'
+  assign fetchpriority = 'auto'
+  if forloop.first
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  endif
               %}
               
               <div id="slide-{{ block.id }}" 

@@ -1,13 +1,15 @@
 <style>
+/* OPTIMIZED STYLES - Preserving hover and mix-blend-mode functionality */
 .product-loop__img-wrapper {
   position: relative;
   width: 100%;
   padding-bottom: 100%;
   overflow: hidden;
   background: #eeeeee;
-  display: flex; /* Keep original display flex */
+  display: flex;
   align-items: center;
   justify-content: center;
+  contain: layout style; /* Performance optimization */
 }
 
 .product-loop__img-wrapper img {
@@ -17,9 +19,10 @@
   transform: translate(-50%, -50%);
   max-width: 100%;
   max-height: 100%;
-  width: auto !important; /* Keep original width auto */
-  height: auto !important; /* Keep original height auto */
+  width: auto !important;
+  height: auto !important;
   object-fit: contain;
+  mix-blend-mode: multiply; /* Preserved */
 }
 
 .image-wrapper-link {
@@ -33,7 +36,7 @@
   justify-content: center;
 }
 
-/* Updated hover image styling */
+/* Hover image with preserved functionality */
 .hover-image {
   position: absolute;
   top: 0;
@@ -45,6 +48,9 @@
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   z-index: 2;
+  display: flex; /* Added for proper centering */
+  align-items: center;
+  justify-content: center;
 }
 
 .hover-image img {
@@ -57,9 +63,10 @@
   width: auto !important;
   height: auto !important;
   object-fit: contain;
+  mix-blend-mode: multiply; /* Preserved */
 }
 
-/* Hover states */
+/* Hover states - preserved original behavior */
 .product-loop__img-wrapper:hover .hover-image {
   opacity: 1;
   visibility: visible;
@@ -75,10 +82,38 @@
   z-index: 1;
 }
 
+/* Product image container */
 .product-image {
   border-radius: 12px;
   position: relative;
   background: #eeeeee;
+  isolation: isolate; /* Ensures blend mode works correctly */
+}
+
+/* Fix for mix-blend-mode in different contexts */
+.product-loop__img-wrapper {
+  isolation: isolate;
+}
+
+/* Ensure blend mode works in scroll gallery */
+#scrollGalleryContainer {
+  mix-blend-mode: multiply;
+  isolation: isolate;
+}
+
+.product__image {
+  mix-blend-mode: multiply;
+}
+
+/* Performance: Use GPU acceleration for hover transitions */
+.hover-image,
+.main-image {
+  will-change: opacity;
+}
+
+.product-loop__img-wrapper:hover .hover-image,
+.product-loop__img-wrapper:hover .main-image {
+  will-change: auto; /* Remove after animation */
 }
 
 /* Ensure proper handling in carousel */
@@ -102,11 +137,12 @@
   object-fit: contain;
 }
 
+/* Badge positioning */
 .product-loop__badge-icon {
-  z-index: 10;  /* Higher number to ensure it's always on top */
+  z-index: 10;
+  position: absolute;
 }
 
-/* Bestseller icon styling */
 .product-loop__badge-icon.icon-type--bestseller {
   background-color: #1d4ed8;
   border-radius: 8px;
@@ -115,7 +151,7 @@
   color: #fff;
 }
 
-/* UNIFIED PRODUCT TITLE STYLING - Fix the height inconsistency */
+/* Title consistency */
 .p-title,
 .p-title-index {
   min-height: 70px !important;
@@ -134,12 +170,11 @@
   font-size: 16px !important;
 }
 
-/* Mobile styling - CONSISTENT ACROSS ALL SECTIONS */
+/* Mobile optimizations with preserved functionality */
 @media screen and (max-width: 768px) {
-  /* Keep container square but make image fill more space - PRESERVING ORIGINAL STYLING */
   .template-index .product-loop__img-wrapper,
   .template-product .product-loop__img-wrapper {
-    padding-bottom: 100%; /* Keep square aspect ratio */
+    padding-bottom: 100%;
   }
 
   .template-index .product-loop__img-wrapper img,
@@ -147,35 +182,35 @@
     width: 90% !important; 
     height: 90% !important;
     object-fit: contain;
+    mix-blend-mode: multiply; /* Preserved on mobile */
   }
   
-  /* Maintain hover image consistency */
   .template-index .hover-image img,
   .template-product .hover-image img {
     width: 90% !important;
     height: 90% !important;
     object-fit: contain;
+    mix-blend-mode: multiply; /* Preserved on mobile */
   }
 
-  /* UNIFIED MOBILE TITLE HEIGHT */
   .p-title,
   .p-title-index {
     min-height: 90px !important;
   }
 
-  /* Mobile badge spacing - smaller gap for mobile devices */
+  /* Badge spacing for mobile */
   .product-loop__badge-icon[data-badge-index="1"] {
-    right: 66px !important; /* 10 + 56 (smaller spacing for mobile) */
+    right: 66px !important;
   }
   .product-loop__badge-icon[data-badge-index="2"] {
-    right: 122px !important; /* 10 + 56 + 56 */
+    right: 122px !important;
   }
   .product-loop__badge-icon[data-badge-index="3"] {
-    right: 178px !important; /* 10 + 56 + 56 + 56 */
+    right: 178px !important;
   }
 }
 
-/* Tablet styling - CONSISTENT ACROSS ALL SECTIONS */
+/* Tablet styling */
 @media (min-width: 768px) and (max-width: 1024px) {
   .p-title,
   .p-title-index {
@@ -188,8 +223,8 @@
   }
 }
 
-/* Disable hover on touch devices */
-@media screen and (max-width: 1024px) {
+/* Disable hover on touch devices but keep blend mode */
+@media (hover: none) and (pointer: coarse) {
   .product-loop__img-wrapper:hover .hover-image {
     opacity: 0;
     visibility: hidden;
@@ -202,6 +237,21 @@
   .hover-image {
     display: none;
   }
+  
+  /* Ensure blend mode still works on touch */
+  .product-loop__img-wrapper img {
+    mix-blend-mode: multiply;
+  }
+}
+
+/* Performance optimization: Reduce paint areas */
+.product-loop__item {
+  contain: layout style;
+}
+
+/* Fix for images not loading with proper blend mode */
+img.loaded {
+  mix-blend-mode: multiply;
 }
 </style>
 
@@ -209,7 +259,6 @@
   assign date_range = settings.date_range
   assign badges = ''
 
- 
   assign is_bestseller = false
   for tag in product.tags
     if tag == 'Hot'
@@ -299,64 +348,79 @@
         {% assign badge_count = badge_count | plus: 1 %}
       {% endfor %}
     {% endif %}
-    
-    {% comment %} Removed the duplicate savings badge logic since it's now handled in the badges system above {% endcomment %}
 
     <div class="product-loop__img-wrapper relative">
       <a href="{{ product.url | within: collection }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">
         {%- if product.media.size < 1 -%}
-           <div class="demo-1 box-ratio " style="padding-bottom: 100%;">
-             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-           </div>
+          <div class="demo-1 box-ratio" style="padding-bottom: 100%;">
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
         {%- else -%}
           {%- liquid
             assign sm_render = 'calc(100vw / 2)'
             assign md_render = 'calc(100vw / ' | append: grid_items | append: ')'
             assign lg_render = 'calc(1600px / ' | append: grid_items | append: ')'
+            assign image = product.featured_media.preview_image
           -%}
 
           {%- if settings.product_grid_video -%}
-            {% render 'product-loop-video',
-              product: product %}
+            {% render 'product-loop-video', product: product %}
           {%- endif -%}
 
-          {% render 'helper-image',
-          type: product.featured_media.preview_image,
-          sm_render: sm_render,
-          md_render: md_render,
-          lg_render: lg_render,
-          img_width: '100%',
-          img_height: '100%',
-          alt: product.title | escape,
-          additional_classes: 'product-image--contain main-image',
-          loading: loading,
-          fetchpriority: fetchpriority %}
-       
-       {% if product.media.size > 1 and product.media[1].media_type == 'image' %}
-         <div class="hover-image">
-           {% render 'helper-image',
-             type: product.media[1],
-             sm_render: sm_render,
-             md_render: md_render,
-             lg_render: lg_render,
-             img_width: '100%',
-             img_height: '100%',
-             alt: product.title | append: ' - ' | append: product.media[1].alt | default: product.title | escape,
-             additional_classes: 'product-image--contain' %}
-         </div>
-       {% elsif product.media.size > 1 %}
-         <div class="hover-image">
-           {% render 'helper-image',
-             type: product.media[1].preview_image,
-             sm_render: sm_render,
-             md_render: md_render,
-             lg_render: lg_render,
-             img_width: '100%',
-             img_height: '100%',
-             alt: product.title | append: ' - ' | append: product.media[1].alt | default: product.title | escape,
-             additional_classes: 'product-image--contain' %}
-         </div>
-       {% endif %}
+          <!-- Main image with optimized loading but preserving original structure -->
+          {%- capture main_image_srcset -%}
+            {{ image | image_url: width: 400 }} 400w,
+            {{ image | image_url: width: 600 }} 600w,
+            {{ image | image_url: width: 800 }} 800w,
+            {{ image | image_url: width: 1000 }} 1000w
+          {%- endcapture -%}
+
+          <img 
+            srcset="{{ main_image_srcset | strip }}"
+            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
+            src="{{ image | image_url: width: 600 }}"
+            alt="{{ product.title | escape }}"
+            class="product-image--contain main-image"
+            style="mix-blend-mode: multiply;"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            loading="{{ loading | default: 'lazy' }}"
+            fetchpriority="{{ fetchpriority | default: 'auto' }}"
+            decoding="async"
+          >
+
+          <!-- Hover image - keeping original functionality -->
+          {% if product.media.size > 1 %}
+            {%- liquid
+              if product.media[1].media_type == 'image'
+                assign hover_image = product.media[1]
+              else
+                assign hover_image = product.media[1].preview_image
+              endif
+            -%}
+            
+            {%- capture hover_image_srcset -%}
+              {{ hover_image | image_url: width: 400 }} 400w,
+              {{ hover_image | image_url: width: 600 }} 600w,
+              {{ hover_image | image_url: width: 800 }} 800w,
+              {{ hover_image | image_url: width: 1000 }} 1000w
+            {%- endcapture -%}
+
+            <div class="hover-image">
+              <img 
+                srcset="{{ hover_image_srcset | strip }}"
+                sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
+                src="{{ hover_image | image_url: width: 600 }}"
+                alt="{{ product.title | append: ' - ' | append: hover_image.alt | default: product.title | escape }}"
+                class="product-image--contain"
+                style="mix-blend-mode: multiply;"
+                width="{{ hover_image.width }}"
+                height="{{ hover_image.height }}"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+          {% endif %}
         {%- endif -%}
       </a>
     </div>
@@ -394,7 +458,6 @@
         <p class="product-loop__vendor block mb2">{{ product.vendor }}</p>
       {% endif %}
       
-      {% comment %} FIXED: Simplified title class logic - always use consistent classes {% endcomment %}
       <p class="product-loop__title p-title p-title-index">
         <a class="text-base" href="{{ product.url | within: collection }}">{{ product.title }}</a>
       </p>
@@ -405,26 +468,25 @@
         {{ 'products.product.price_varies' | t }}
       </div>
     {%- else -%}
-    <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} {% unless is_mobile_search %}price-index{% endunless %}">
-
-    {% if product.price < product.compare_at_price %}
-      Od
-      <span class="product-loop__price--sale onsale inline-block text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
-        {{ product.price | money }}
-      </span>
-      <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
-        {{ product.compare_at_price | money }}
-      </span>
+      <div class="product-loop__price text-sm lg:text-base font-medium {{ product_info_mobile_grid_right }} {% unless is_mobile_search %}price-index{% endunless %}">
+        {% if product.price < product.compare_at_price %}
+          Od
+          <span class="product-loop__price--sale onsale inline-block text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
+            {{ product.price | money }}
+          </span>
+          <span class="product-loop__price--compare was inline-block ml1 text-base font-bold {% unless is_mobile_search %}price-index{% endunless %}">
+            {{ product.compare_at_price | money }}
+          </span>
           {% assign savings = product.compare_at_price | minus: product.price %}
           <span class="product-loop__price--savings savings hide">
             ({{ 'collections.general.save' | t }} {{ savings | money }})
           </span>
         {% else %}
-        {% if product.price_varies %}
-          Od {{ product.price_min | money }}
-        {% else %}
-          {{ product.price | money }}
-        {% endif %}
+          {% if product.price_varies %}
+            Od {{ product.price_min | money }}
+          {% else %}
+            {{ product.price | money }}
+          {% endif %}
         {% endif %}
 
         {%- render 'product-unit-price', variant: product.selected_or_first_available_variant -%}
@@ -450,33 +512,121 @@
 </article>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Here we add a script that prevents layout shift without altering the image aspect ratio
-    function preventImageShift() {
-      // Only add this on mobile where layout shift is most problematic
-      if (window.innerWidth <= 768) {
-        const articleWrappers = document.querySelectorAll('.product-loop__img-wrapper');
-        articleWrappers.forEach(wrapper => {
-          // Ensure consistent placeholder until image loads
-          const img = wrapper.querySelector('img');
-          if (img) {
-            // Add loading attribute for better loading behavior
-            if (!img.hasAttribute('loading')) {
-              img.setAttribute('loading', 'lazy');
-            }
-            
-            // We're monitoring for load but not changing image dimensions
-            img.addEventListener('load', function() {
-              wrapper.classList.add('image-loaded');
-            });
-          }
+document.addEventListener('DOMContentLoaded', function() {
+  // Fix for mix-blend-mode with lazy loaded images
+  function ensureBlendMode() {
+    const productImages = document.querySelectorAll('.product-loop__img-wrapper img');
+    
+    productImages.forEach(img => {
+      // Ensure blend mode is applied after image loads
+      if (img.complete) {
+        img.style.mixBlendMode = 'multiply';
+      } else {
+        img.addEventListener('load', function() {
+          this.style.mixBlendMode = 'multiply';
         });
       }
-    }
+      
+      // Fix for Safari
+      if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+        img.style.isolation = 'isolate';
+        setTimeout(() => {
+          img.style.mixBlendMode = 'multiply';
+        }, 100);
+      }
+    });
+  }
+  
+  // Apply blend mode fix
+  ensureBlendMode();
+  
+  // Preserve hover functionality
+  function preserveHoverEffect() {
+    const wrappers = document.querySelectorAll('.product-loop__img-wrapper');
     
-    preventImageShift();
-    
-    // Run again on window resize
-    window.addEventListener('resize', preventImageShift);
+    wrappers.forEach(wrapper => {
+      const mainImage = wrapper.querySelector('.main-image');
+      const hoverImage = wrapper.querySelector('.hover-image');
+      
+      if (mainImage && hoverImage) {
+        // Ensure smooth transitions
+        mainImage.style.transition = 'opacity 0.3s ease';
+        hoverImage.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+        
+        // Desktop hover
+        if (window.matchMedia('(hover: hover)').matches) {
+          wrapper.addEventListener('mouseenter', function() {
+            hoverImage.style.opacity = '1';
+            hoverImage.style.visibility = 'visible';
+            mainImage.style.opacity = '0';
+          });
+          
+          wrapper.addEventListener('mouseleave', function() {
+            hoverImage.style.opacity = '0';
+            hoverImage.style.visibility = 'hidden';
+            mainImage.style.opacity = '1';
+          });
+        }
+      }
+    });
+  }
+  
+  preserveHoverEffect();
+  
+  // Reapply on dynamic content load (for infinite scroll, filters, etc.)
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.addedNodes.length) {
+        ensureBlendMode();
+        preserveHoverEffect();
+      }
+    });
   });
+  
+  // Observe product grid for changes
+  const productGrid = document.querySelector('.collection__products, .search__products');
+  if (productGrid) {
+    observer.observe(productGrid, { childList: true, subtree: true });
+  }
+  
+  // Performance: Preload hover images on desktop
+  if (window.matchMedia('(hover: hover)').matches) {
+    setTimeout(() => {
+      const hoverImages = document.querySelectorAll('.hover-image img[loading="lazy"]');
+      hoverImages.forEach(img => {
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+        }
+      });
+    }, 2000); // Delay to prioritize main images
+  }
+  
+  // Prevent layout shift without altering the image aspect ratio
+  function preventImageShift() {
+    // Only add this on mobile where layout shift is most problematic
+    if (window.innerWidth <= 768) {
+      const articleWrappers = document.querySelectorAll('.product-loop__img-wrapper');
+      articleWrappers.forEach(wrapper => {
+        // Ensure consistent placeholder until image loads
+        const img = wrapper.querySelector('img');
+        if (img) {
+          // Add loading attribute for better loading behavior
+          if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+          }
+          
+          // We're monitoring for load but not changing image dimensions
+          img.addEventListener('load', function() {
+            wrapper.classList.add('image-loaded');
+          });
+        }
+      });
+    }
+  }
+  
+  preventImageShift();
+  
+  // Run again on window resize
+  window.addEventListener('resize', preventImageShift);
+});
 </script>

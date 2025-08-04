@@ -15,16 +15,27 @@
   {%- endif -%}
 
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-PHL5LW23');</script>
   <!-- End Google Tag Manager -->
 
+  <!-- DNS Prefetch for external resources -->
+  <link rel="dns-prefetch" href="//cdn.shopify.com">
+  <link rel="dns-prefetch" href="//monorail-edge.shopifysvc.com">
+  <link rel="dns-prefetch" href="//productreviews.shopifycdn.com">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
+
   <!-- Preconnect to necessary domains -->
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://monorail-edge.shopifysvc.com" crossorigin>
+  <link rel="preconnect" href="https://sessions.bugsnag.com" crossorigin>
+  <link rel="preconnect" href="https://c.tile.openstreetmap.org" crossorigin>
+  <link rel="preconnect" href="https://b.tile.openstreetmap.org" crossorigin>
+  <link rel="preconnect" href="https://a.tile.openstreetmap.org" crossorigin>
   {%- unless settings.main_font.system? and settings.heading_font.system? and settings.nav_font.system? -%}
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -35,6 +46,7 @@
   <link rel="preload" href="{{ 'vendor-flickity.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  <link rel="preload" href="{{ 'tailwind.css' | asset_url }}" as="style">
   
   <!-- Preload critical fonts -->
   {%- unless settings.main_font.system? -%}
@@ -69,10 +81,10 @@
   {% render 'snip-social-meta-tags' %}
   {% render 'snip-structured-data' %}
   
- 
-
   <style>
-  
+
+    
+    /* Keep original styles */
     .header-spacer {
       height: 106px !important; 
       display: block;
@@ -92,14 +104,13 @@
       width: 100%;
     }
     
-    /* Stabilize logo containers */
+    /* Stabilize logo containers - removed contain to prevent icon issues */
     .site-logo, 
     .mobile-nav__logo-wrapper {
       display: flex;
       align-items: center;
       justify-content: flex-start;
       min-height: 60px;
-      contain: layout;
     }
     
     /* Collection badges section stabilization */
@@ -107,6 +118,51 @@
       min-height: 80px;
       overflow: visible;
       contain: layout;
+    }
+    
+    /* Add complete badge scroller styles */
+    #badgeScroller {
+      height: 80px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    
+    }
+    
+    #badgeScroller::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .badge-item {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background-color: #EEEEEE;
+      border-radius: 8px;
+      height: 64px;
+      min-width: 120px;
+      white-space: nowrap;
+      transition: transform 0.2s ease;
+    }
+    
+    .badge-image-container {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #f5f5f5;
+      overflow: hidden;
     }
     
     @media (max-width: 767px) {
@@ -118,9 +174,26 @@
       .collection-badges-section {
         min-height: 70px;
       }
+      
+      #badgeScroller {
+        height: 70px;
+   
+        gap: 8px;
+      }
+      
+      .badge-item {
+        height: 54px;
+        min-width: 100px;
+        padding: 6px 12px;
+      }
+      
+      .badge-image-container {
+        width: 40px;
+        height: 40px;
+      }
     }
     
-    /* Navigation containers */
+    /* Navigation containers - removed contain to prevent icon issues */
     .section-header__main-bar {
       position: fixed;
       top: var(--announcement-bar-height, 40px);
@@ -128,22 +201,16 @@
       right: 0;
       height: var(--header-height, 66px);
       z-index: 999;
-      contain: layout;
     }
     
     .mobile-nav__mobile-header {
       position: fixed !important;
       top: var(--announcement-bar-height, 40px) !important;
       height: var(--header-height, 66px) !important;
-      contain: layout style;
     }
     
-    /* Ensure images maintain aspect ratio while loading */
-    img {
-      max-width: 100%;
-    }
-    
-    img[width][height] {
+    /* Basic image optimization WITHOUT affecting product images */
+    img[width][height]:not(.product-loop__img-wrapper img):not(.product-image img) {
       aspect-ratio: attr(width) / attr(height);
     }
     
@@ -178,16 +245,10 @@
       font-display: swap;
     }
     
-    /* Featured collection stabilization */
+    /* Featured collection stabilization WITHOUT affecting products */
     .section-featured-collection__wrapper--carousel {
       position: relative;
-      contain: layout;
       min-height: 400px;
-    }
-    
-    .product-loop__item {
-      min-height: 350px;
-      contain: layout;
     }
     
     /* Prevent layout shift from carousels during initialization */
@@ -198,19 +259,123 @@
       transition: none !important;
     }
     
-    /* Fix for Flickity initialization */
+    /* Fix for Flickity initialization WITHOUT transform */
     .flickity-viewport {
-      min-height: 300px; /* Adjust based on your product card height */
+      min-height: 300px;
+    }
+    
+    /* Additional performance optimizations - SAFE for all elements */
+    .js-slideout-toggle-wrapper,
+    .js-modal-toggle-wrapper {
+      opacity: 1 !important;
+    }
+
+    /* Prevent content jumping during font loading */
+    body {
+      font-display: swap;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* GPU acceleration ONLY for slideouts and modals - not overlays */
+    .slideout,
+    .modal {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+    
+    /* GPU acceleration only for specific non-cart buttons and links */
+    /* Removed general button/link acceleration to prevent cart icon shift */
+
+    /* Optimize mobile navigation performance - removed contain to prevent icon issues */
+    @media (max-width: 767px) {
+      .js-carousel {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    /* Prevent CLS for price elements */
+    .product-loop__price {
+      min-height: 24px;
+    }
+    
+    /* Single image gallery fix */
+    .single-image-gallery .flickity-slider,
+    .single-image-gallery .product__media-list,
+    .single-image-gallery .product-gallery__carousel {
       transform: none !important;
+      transition: none !important;
+    }
+    
+    .single-image-gallery .flickity-page-dots,
+    .single-image-gallery .slider-buttons,
+    .single-image-gallery .flickity-prev-next-button {
+      display: none !important;
+    }
+    
+    .single-image-gallery .image-slide,
+    .single-image-gallery .scroll--gallery_item,
+    .single-image-gallery .carousel-cell,
+    .single-image-gallery .product__media-item {
+      position: relative !important;
+      left: 0 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      touch-action: pan-y !important;
+    }
+    
+    /* Prevent layout shift for ALL slideshow images */
+    .slideshow__slide-image img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1920/800;
+    }
+    
+    /* Ensure first slide is visible and prioritized */
+    .slideshow__slide:first-child {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .slideshow__slide:first-child img {
+      /* Mark as high priority */
+      content-visibility: auto;
+    }
+
+    /* Fix for unsized images - but NOT product images */
+    img:not([width]):not([height]):not(.product-loop__img-wrapper img):not(.product-image img) {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Stabilize featured collection section WITHOUT affecting product items */
+    .section-featured-collection {
+      min-height: 400px;
+    }
+
+    @media (max-width: 767px) {
+      .section-featured-collection {
+        min-height: 350px;
+      }
     }
   </style>
 
-  <!-- CSS -->
+  <!-- Critical CSS -->
   <link rel="stylesheet" href="{{ 'tailwind.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
-  <link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
-  <link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}" media="print" onload="this.onload=null;this.media='all'">
-  {{ 'size-chart.css' | asset_url | stylesheet_tag }}
+  
+  <!-- Defer non-critical styles -->
+  <link rel="preload" href="{{ 'section-header.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="{{ 'component-navigation.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="{{ 'size-chart.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="{{ 'section-header.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'component-navigation.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
+  </noscript>
   
   <!-- JS -->
   <script>
@@ -232,11 +397,36 @@
         
         .featured-collection__wrapper--loop {
           min-height: ${window.innerWidth < 768 ? '350px' : '400px'};
-          contain: layout;
         }
       `;
       document.head.appendChild(style);
     })();
+    
+    // Early priority for first slideshow image
+    document.addEventListener('DOMContentLoaded', function() {
+      // Find first slideshow image across different selectors
+      const selectors = [
+        '.slideshow__slide:first-child img',
+        '.slideshow__slide:first-of-type img',
+        '.hero__slide:first-child img',
+        '.slider__slide:first-child img',
+        '.banner__slide:first-child img',
+        '[data-slideshow] img:first-of-type',
+        '.slideshow img:first-of-type'
+      ];
+      
+      for (let selector of selectors) {
+        const img = document.querySelector(selector);
+        if (img) {
+          img.setAttribute('fetchpriority', 'high');
+          img.setAttribute('loading', 'eager');
+          // Remove lazy loading classes if present
+          img.classList.remove('lazyload', 'lazy');
+          console.log('Prioritized first slideshow image');
+          break;
+        }
+      }
+    });
     
     // Define jsAssets early
     var jsAssets = {
@@ -248,6 +438,10 @@
       "productPickupAvailability": {{ 'pickup-availability.js' | asset_url | json }},
       "productComplementaryProducts": {{ 'complementary-products.js' | asset_url | json }},
       "parallax": {{ 'vendor-parallax.js' | asset_url | json }}
+    };
+    
+    var jsFormat = {
+      "money": {{ shop.money_format | json }}
     };
     
     // Fix for Monorail Edge errors in Lighthouse
@@ -268,64 +462,9 @@
 
   {% render 'css-variables' %}
 
-<!-- Apple Pay / Express checkout button styling -->
-<style>
-  /* Target all express checkout buttons with maximum specificity */
-  body gravity-button.accelerated-checkout-button,
-  body .shopify-payment-button__button,
-  body .shopify-payment-button__button--branded,
-  body .shopify-payment-button__button--unbranded,
-  body .shopify-payment-button__more-options,
-  body .shopify-payment-button__button--express,
-  body shop-pay-wallet-button {
-    height: 72px !important;
-    min-height: 72px !important;
-    max-height: 72px !important;
-    border-radius: 8px !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 20px 0 20px 0 !important; /* Changed to 20px bottom margin */
-    box-sizing: border-box !important;
-  }
-  
-  /* Target inner button content */
-  body gravity-button.accelerated-checkout-button .button-content,
-  body .shopify-payment-button__button--branded .shopify-cleanslate ._3zvA5H0U_35LMt95LnLT0H,
-  body shop-pay-wallet-button::part(button) {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 72px !important;
-    min-height: 72px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-radius: 8px !important;
-  }
-  
-  /* Shadow part targeting for browsers that support it */
-  shop-pay-wallet-button::part(button) {
-    height: 72px !important;
-    min-height: 72px !important;
-    max-height: 72px !important;
-    border-radius: 8px !important;
-    width: 100% !important;
-  }
-  
-  /* Container element - also add margin bottom */
-  body .shopify-payment-button,
-  body .product-additional-buttons {
-    margin-bottom: 20px !important;
-  }
-  
-  /* Prevent any transitions that might interfere */
-  body .shopify-payment-button *,
-  body gravity-button *,
-  body shop-pay-wallet-button * {
-    transition: none !important;
-  }
-  
-  /* Mobile adjustments */
-  @media screen and (max-width: 768px) {
+  <!-- Apple Pay / Express checkout button styling -->
+  <style>
+    /* Target all express checkout buttons with maximum specificity */
     body gravity-button.accelerated-checkout-button,
     body .shopify-payment-button__button,
     body .shopify-payment-button__button--branded,
@@ -333,51 +472,106 @@
     body .shopify-payment-button__more-options,
     body .shopify-payment-button__button--express,
     body shop-pay-wallet-button {
-      height: 60px !important;
-      min-height: 60px !important;
-      max-height: 60px !important;
+      height: 72px !important;
+      min-height: 72px !important;
+      max-height: 72px !important;
       border-radius: 8px !important;
-      margin: 20px 0 20px 0 !important; /* Maintained 20px bottom margin */
+      width: 100% !important;
+      padding: 0 !important;
+      margin: 20px 0 20px 0 !important; /* Changed to 20px bottom margin */
+      box-sizing: border-box !important;
     }
     
+    /* Target inner button content */
     body gravity-button.accelerated-checkout-button .button-content,
     body .shopify-payment-button__button--branded .shopify-cleanslate ._3zvA5H0U_35LMt95LnLT0H,
     body shop-pay-wallet-button::part(button) {
-      height: 60px !important;
-      min-height: 60px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 72px !important;
+      min-height: 72px !important;
+      padding: 0 !important;
+      margin: 0 !important;
       border-radius: 8px !important;
     }
-  }
-  
-  /* Target Cleanslate elements (Shopify's payment button framework) */
-  .shopify-cleanslate .kEwctmM5pguv6XkPR8mx6,
-  .shopify-cleanslate ._2zarRkvJ2j83NID3Q3t0Ix,
-  .shopify-cleanslate ._2EiMjnumZ6FVtlC7RViKtj,
-  .shopify-cleanslate ._1M9S34W-UyhhDRRQQiQ8yh,
-  .shopify-cleanslate ._3DL4HVlgeOhG7Paj6K8DqS {
-    height: 72px !important;
-    min-height: 72px !important;
-    max-height: 72px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-radius: 8px !important;
-  }
-  
-  /* Additional specificity for mobile */
-  @media (max-width: 768px) {
+    
+    /* Shadow part targeting for browsers that support it */
+    shop-pay-wallet-button::part(button) {
+      height: 72px !important;
+      min-height: 72px !important;
+      max-height: 72px !important;
+      border-radius: 8px !important;
+      width: 100% !important;
+    }
+    
+    /* Container element - also add margin bottom */
+    body .shopify-payment-button,
+    body .product-additional-buttons {
+      margin-bottom: 20px !important;
+    }
+    
+    /* Prevent any transitions that might interfere */
+    body .shopify-payment-button *,
+    body gravity-button *,
+    body shop-pay-wallet-button * {
+      transition: none !important;
+    }
+    
+    /* Mobile adjustments */
+    @media screen and (max-width: 768px) {
+      body gravity-button.accelerated-checkout-button,
+      body .shopify-payment-button__button,
+      body .shopify-payment-button__button--branded,
+      body .shopify-payment-button__button--unbranded,
+      body .shopify-payment-button__more-options,
+      body .shopify-payment-button__button--express,
+      body shop-pay-wallet-button {
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+        border-radius: 8px !important;
+        margin: 20px 0 20px 0 !important; /* Maintained 20px bottom margin */
+      }
+      
+      body gravity-button.accelerated-checkout-button .button-content,
+      body .shopify-payment-button__button--branded .shopify-cleanslate ._3zvA5H0U_35LMt95LnLT0H,
+      body shop-pay-wallet-button::part(button) {
+        height: 60px !important;
+        min-height: 60px !important;
+        border-radius: 8px !important;
+      }
+    }
+    
+    /* Target Cleanslate elements (Shopify's payment button framework) */
     .shopify-cleanslate .kEwctmM5pguv6XkPR8mx6,
     .shopify-cleanslate ._2zarRkvJ2j83NID3Q3t0Ix,
     .shopify-cleanslate ._2EiMjnumZ6FVtlC7RViKtj,
     .shopify-cleanslate ._1M9S34W-UyhhDRRQQiQ8yh,
     .shopify-cleanslate ._3DL4HVlgeOhG7Paj6K8DqS {
-      height: 60px !important;
-      min-height: 60px !important;
-      max-height: 60px !important;
+      height: 72px !important;
+      min-height: 72px !important;
+      max-height: 72px !important;
+      padding: 0 !important;
+      margin: 0 !important;
       border-radius: 8px !important;
     }
-  }
+    
+    /* Additional specificity for mobile */
+    @media (max-width: 768px) {
+      .shopify-cleanslate .kEwctmM5pguv6XkPR8mx6,
+      .shopify-cleanslate ._2zarRkvJ2j83NID3Q3t0Ix,
+      .shopify-cleanslate ._2EiMjnumZ6FVtlC7RViKtj,
+      .shopify-cleanslate ._1M9S34W-UyhhDRRQQiQ8yh,
+      .shopify-cleanslate ._3DL4HVlgeOhG7Paj6K8DqS {
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+        border-radius: 8px !important;
+      }
+    }
 
-  body .shopify-payment-button__more-options,
+    body .shopify-payment-button__more-options,
     body .shopify-payment-button__button--hidden {
       display: block !important;
       visibility: visible !important;
@@ -446,16 +640,16 @@
       position: relative !important;
       z-index: 1 !important;
     }
-</style>
+  </style>
 </head>
 
 <body id="{{ page_title | handle }}"
       class="template-{{ template.name | handle }} js-slideout-toggle-wrapper js-modal-toggle-wrapper {{ settings.scroll_animation }} {{ settings.text_animation }}">
 
-      <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHL5LW23"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHL5LW23"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <a class="skip-link button visually-hidden" href="#main-content">{{ 'accessibility.skip_to_text' | t }}</a>
 
@@ -504,26 +698,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   {% render 'cart-config' %}
 
-  <script type="text/javascript">
-    var jsAssets = {
-      "zoom": {{ 'vendor-zoom.js' | asset_url | json }},
-      "flickity": {{ 'vendor-flickity.js' | asset_url | json }},
-      "product": {{ 'product.js' | asset_url | json }},
-      "productModel": {{ 'product-model.js' | asset_url | json }},
-      "productVideo": {{ 'product-video.js' | asset_url | json }},
-      "productPickupAvailability": {{ 'pickup-availability.js' | asset_url | json }},
-      "productComplementaryProducts": {{ 'complementary-products.js' | asset_url | json }},
-      "parallax": {{ 'vendor-parallax.js' | asset_url | json }}
-    }
-    var jsFormat = {
-      "money": {{ shop.money_format | json }}
-    }
-  </script>
-
-  <!-- Load secondary scripts -->
-  <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+  <!-- Defer non-critical scripts -->
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
   <script src='{{ 'announcement-bar.js' | asset_url }}' defer></script>
-  <script src='{{ 'product-accordion.js' | asset_url }}' defer></script>
+  <!-- Remove product-accordion.js as it causes 404 -->
   <script src='{{ 'section-header.js' | asset_url }}' defer></script>
   <script src='{{ 'section-mobile-navigation.js' | asset_url }}' defer></script>
   <script src='{{ 'carousel.js' | asset_url }}' defer></script>
@@ -552,62 +730,79 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         flickityScript.async = false;
         document.head.appendChild(flickityScript);
       }
+      
+      // Set fetch priority on first slideshow image
+      const firstSlideImage = document.querySelector('.slideshow__slide:first-child img, .hero-image:first-child img, .slider__slide:first-child img');
+      if (firstSlideImage) {
+        firstSlideImage.setAttribute('fetchpriority', 'high');
+        firstSlideImage.setAttribute('loading', 'eager');
+        console.log('Set high priority on first slideshow image:', firstSlideImage.src);
+      }
+      
+      // Also handle any slideshow sections that might be lazy-loaded
+      const slideshowSections = document.querySelectorAll('.slideshow, .hero-slideshow, .image-slideshow');
+      slideshowSections.forEach(slideshow => {
+        const firstImg = slideshow.querySelector('img');
+        if (firstImg && !firstImg.hasAttribute('fetchpriority')) {
+          firstImg.setAttribute('fetchpriority', 'high');
+          firstImg.setAttribute('loading', 'eager');
+        }
+      });
     });
   </script>
   
-  <!-- Add this to your theme.liquid before </body> -->
-<script>
-// Remove Trustmate's incorrect Product schema
-document.addEventListener('DOMContentLoaded', function() {
-  // Wait a bit for Trustmate to load
-  setTimeout(function() {
-    // Find all JSON-LD scripts
-    const jsonScripts = document.querySelectorAll('script[type="application/ld+json"]');
-    
-    jsonScripts.forEach(script => {
-      try {
-        const data = JSON.parse(script.textContent);
-        
-        // Check if this is the problematic Trustmate schema
-        if (data['@type'] === 'Product' && 
-            data.name === 'Saturaise' && 
-            data.sameAs === 'https://saturaise.com' &&
-            Object.keys(data).length === 5) { // Only has @context, @type, image, name, sameAs
-          
-          console.log('Removing incorrect Trustmate Product schema');
-          script.remove();
-        }
-      } catch (e) {
-        // Not valid JSON, skip
-      }
-    });
-  }, 2000); // Wait 2 seconds for Trustmate to load
-}); 
-
-// Also use MutationObserver to catch it if added later
-const observer = new MutationObserver(function(mutations) {
-  mutations.forEach(function(mutation) {
-    mutation.addedNodes.forEach(function(node) {
-      if (node.nodeName === 'SCRIPT' && node.type === 'application/ld+json') {
+  <!-- Remove Trustmate's incorrect Product schema -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for Trustmate to load
+    setTimeout(function() {
+      // Find all JSON-LD scripts
+      const jsonScripts = document.querySelectorAll('script[type="application/ld+json"]');
+      
+      jsonScripts.forEach(script => {
         try {
-          const data = JSON.parse(node.textContent);
+          const data = JSON.parse(script.textContent);
+          
+          // Check if this is the problematic Trustmate schema
           if (data['@type'] === 'Product' && 
               data.name === 'Saturaise' && 
-              data.sameAs === 'https://saturaise.com') {
-            console.log('Removing dynamically added Trustmate Product schema');
-            node.remove();
+              data.sameAs === 'https://saturaise.com' &&
+              Object.keys(data).length === 5) { // Only has @context, @type, image, name, sameAs
+            
+            console.log('Removing incorrect Trustmate Product schema');
+            script.remove();
           }
-        } catch (e) {}
-      }
+        } catch (e) {
+          // Not valid JSON, skip
+        }
+      });
+    }, 2000); // Wait 2 seconds for Trustmate to load
+  }); 
+
+  // Also use MutationObserver to catch it if added later
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      mutation.addedNodes.forEach(function(node) {
+        if (node.nodeName === 'SCRIPT' && node.type === 'application/ld+json') {
+          try {
+            const data = JSON.parse(node.textContent);
+            if (data['@type'] === 'Product' && 
+                data.name === 'Saturaise' && 
+                data.sameAs === 'https://saturaise.com') {
+              console.log('Removing dynamically added Trustmate Product schema');
+              node.remove();
+            }
+          } catch (e) {}
+        }
+      });
     });
   });
-});
 
-// Start observing
-observer.observe(document.documentElement, { 
-  childList: true, 
-  subtree: true 
-});
-</script>
+  // Start observing
+  observer.observe(document.documentElement, { 
+    childList: true, 
+    subtree: true 
+  });
+  </script>
 </body>
 </html>

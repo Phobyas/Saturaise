@@ -184,7 +184,6 @@
 }
 
 .mobile-header__cart-links--cart a {
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -1994,4 +1993,32 @@
 #mobile-search-drawer .grid__wrapper:has(.search__product-loop) {
   display: block !important;
   width: 100% !important;
+}
+/* Fix for right slideout (cart drawer) on tablets only */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Hide right slideout drawer (cart) */
+  .slideout__drawer-right,
+  [data-wau-slideout="ajax-cart"],
+  #slideout-ajax-cart {
+    display: none !important;
+    visibility: hidden !important;
+    transform: translateX(100%) !important;
+    pointer-events: none !important;
+  }
+
+  /* Prevent body horizontal scroll from right drawer */
+  body {
+    overflow-x: hidden !important;
+  }
+
+  /* Ensure the cart trigger doesn't open slideout on tablets */
+  .js-slideout-open[data-wau-slideout-target="ajax-cart"] {
+    pointer-events: none !important;
+  }
+}
+
+/* Ensure right drawer stays off-screen when not active */
+.slideout__drawer-right:not(.slideout--active) {
+  transform: translateX(100%) !important;
+  visibility: hidden !important;
 }

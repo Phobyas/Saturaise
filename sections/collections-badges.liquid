@@ -58,43 +58,88 @@
   }
 {% endschema %}
 
-<!-- CLS prevention styles -->
-<style id="cls-prevention-{{ section.id }}">
-  /* Fixed dimensions for section container */
-  #shopify-section-{{ section.id }} {
-    min-height: 110px;
-    overflow: visible;
-    margin-bottom: 8px;
-  }
+<!-- CRITICAL CLS PREVENTION STYLES - Must load immediately -->
+<style>
+  /* ============================================
+     CRITICAL: Fixed dimensions to prevent ANY layout shift
+     These MUST be inline to load before any content
+     ============================================ */
   
+  /* Main section container - FIXED HEIGHT */
+
   @media (max-width: 767px) {
-    #shopify-section-{{ section.id }} {
-      min-height: 90px;
-    }
+  #shopify-section-{{ section.id }} {
+ margin: 0;
+  }
+  }
+
+    @media (min-width: 768px) {
+  #shopify-section-{{ section.id }} {
+     margin-bottom: 40px;
+    margin-top: 20px;
+  }
+  }
+
+  #shopify-section-{{ section.id }} {
+    height: 110px !important; /* Changed from min-height to fixed height */
+    overflow: visible;
+
+    contain: layout style; /* Strict containment */
   }
   
-  /* Fixed dimensions for scroll container */
-  #badgeScroller {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    height: 80px;
+  /* Badge container wrapper - FIXED HEIGHT */
+  .badge-container-{{ section.id }} {
+    height: 110px !important; /* Match section height */
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    
+
+  }
+  
+  /* Header row - FIXED HEIGHT */
+  .badge-header-{{ section.id }} {
+    height: 40px !important; /* Fixed header height */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Scroll container wrapper - FIXED HEIGHT */
+  .badge-scroll-wrapper-{{ section.id }} {
+    height: 70px !important; /* Fixed wrapper height */
+    position: relative;
+    overflow: hidden; /* Prevent any overflow during load */
+  }
+  
+  /* Badge scroller - FIXED DIMENSIONS from start */
+  #badgeScroller-{{ section.id }} {
+    height: 64px !important; /* Fixed scroller height */
+    display: flex;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding: 0 4px;
   }
   
-  @media (max-width: 767px) {
-    #badgeScroller {
-      height: 70px;
-    }
-  }
-  
-  #badgeScroller::-webkit-scrollbar {
+  #badgeScroller-{{ section.id }}::-webkit-scrollbar {
     display: none;
   }
-
-  /* Enhanced badge hover effects with smooth return transitions */
-  .badge-item {
+  
+  /* Badge inner container - prevent any flex layout shifts */
+  .badge-inner-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  
+  /* Individual badge items - FIXED DIMENSIONS */
+  .badge-item-{{ section.id }} {
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -102,30 +147,25 @@
     background-color: #EEEEEE;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother easing curve */
     white-space: nowrap;
-    height: 64px;
+    height: 64px !important; /* Fixed height */
     min-width: 120px;
     margin-right: 12px;
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    border: 1px solid transparent; /* Add transparent border for smooth transition */
+    border: 1px solid transparent;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    flex-shrink: 0; /* Prevent any shrinking */
+    contain: layout style; /* Isolate each badge */
   }
-
-  /* Hover effects with custom timing */
-  .badge-item:hover {
-    background-color: #ffffff;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    transform: translateY(-3px) scale(1.02);
-    border: 1px solid #ddd;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry with slight bounce */
-  }
-
-  /* Image container hover effects */
-  .badge-image-container {
-    width: 48px;
-    height: 48px;
+  
+  /* Image container - FIXED DIMENSIONS */
+  .badge-image-container-{{ section.id }} {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important; /* Prevent shrinking */
+    min-height: 48px !important;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -133,133 +173,51 @@
     border-radius: 50%;
     background-color: #f5f5f5;
     overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Longer, smoother return */
-    box-shadow: 0 0 0 rgba(0,0,0,0); /* Start with invisible shadow for smooth transition */
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    contain: size layout style; /* Strict size containment */
   }
-
-  .badge-image-container img {
-    mix-blend-mode: multiply; 
-  }
-
-  .badge-item:hover .badge-image-container {
-    background-color: #e8f4f8;
-    transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
-  }
-
-  /* Image hover effects */
-  .badge-image-container img {
-    width: 48px;
-    height: 48px;
+  
+  .badge-image-container-{{ section.id }} img {
+    width: 48px !important;
+    height: 48px !important;
     object-fit: contain;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother return */
+    mix-blend-mode: multiply;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block; /* Prevent inline spacing issues */
   }
-
-  .badge-item:hover .badge-image-container img {
-    transform: scale(1.05);
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
-  }
-
-  /* Text hover effects */
-  .badge-item span {
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth return */
+  
+  /* Badge text - prevent layout shifts */
+  .badge-text-{{ section.id }} {
+    font-size: 14px;
     font-weight: 500;
-    color: inherit; /* Explicit color for smooth transition */
-    text-shadow: 0 0 0 rgba(0,0,0,0); /* Start with invisible shadow */
+    line-height: 1.2;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-shadow: 0 0 0 rgba(0,0,0,0);
   }
-
-  .badge-item:hover span {
-    color: #2563eb;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
-  }
-
-  /* Subtle background animation on hover with smoother reset */
-  .badge-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother return */
-    z-index: 1;
-  }
-
-  .badge-item:hover::before {
-    left: 100%;
-    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Faster entry */
-  }
-
-  /* Ensure content stays above the animation */
-  .badge-item > * {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Active/pressed state with better transitions */
-  .badge-item:active {
-    transform: translateY(-1px) scale(1.01);
-    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  /* ACCESSIBILITY: Enhanced focus state for keyboard navigation */
-  .badge-item:focus {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
-    transition: outline 0.2s ease;
-  }
-
-  .badge-item:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
-  }
-
-  /* Enhanced arrow button styles */
-  .badge-arrow-btn {
+  
+  /* Arrow buttons - FIXED DIMENSIONS */
+  .badge-arrow-btn-{{ section.id }} {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease; /* Enhanced transition */
-    width: 32px;
-    height: 32px;
     border-radius: 50%;
     background-color: #323232;
     border: none;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: relative;
     z-index: 2;
-  }
-
-  .badge-arrow-btn:hover {
-    background-color: #1d4ed8;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-  }
-
-  .badge-arrow-btn:active {
-    transform: scale(1.05);
-    transition: all 0.1s ease;
-  }
-
-  .badge-arrow-btn:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-
-  .badge-arrow-btn:disabled:hover {
-    background-color: #9ca3af;
-    transform: none;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    contain: size layout style;
   }
   
-  .badge-arrow-btn svg {
+  .badge-arrow-btn-{{ section.id }} svg {
     width: 16px !important;
     height: 16px !important;
     fill: #ffffff !important;
@@ -268,96 +226,169 @@
     min-height: 16px;
   }
   
-  .badge-arrow-btn:disabled svg {
+  /* Mobile specific - FIXED DIMENSIONS */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      height: 90px !important;
+    }
+    
+    .badge-container-{{ section.id }} {
+      height: 90px !important;
+      padding-left: 12px;
+    }
+    
+    .badge-header-{{ section.id }} {
+      height: 30px !important;
+    }
+    
+    .badge-scroll-wrapper-{{ section.id }} {
+      height: 60px !important;
+    }
+    
+    #badgeScroller-{{ section.id }} {
+      height: 54px !important;
+    }
+    
+    .badge-inner-{{ section.id }} {
+      height: 54px;
+    }
+    
+    .badge-item-{{ section.id }} {
+      height: 54px !important;
+    }
+    
+    .badge-arrows-{{ section.id }} {
+      display: none !important;
+    }
+  }
+  
+  /* Large screens */
+  @media (min-width: 1920px) {
+    .badge-container-{{ section.id }} {
+      max-width: 1600px;
+    }
+  }
+  
+  /* ============================================
+     HOVER EFFECTS - Loaded after critical styles
+     ============================================ */
+  .badge-item-{{ section.id }}:hover {
+    background-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-3px) scale(1.02);
+    border: 1px solid #ddd;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} {
+    background-color: #e8f4f8;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} img {
+    transform: scale(1.05);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .badge-item-{{ section.id }}:hover .badge-text-{{ section.id }} {
+    color: #2563eb;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  /* Background animation */
+  .badge-item-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+  }
+  
+  .badge-item-{{ section.id }}:hover::before {
+    left: 100%;
+    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .badge-item-{{ section.id }} > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Active state */
+  .badge-item-{{ section.id }}:active {
+    transform: translateY(-1px) scale(1.01);
+    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Focus states for accessibility */
+  .badge-item-{{ section.id }}:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+  
+  /* Arrow button hover */
+  .badge-arrow-btn-{{ section.id }}:hover:not(:disabled) {
+    background-color: #1d4ed8;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+  
+  .badge-arrow-btn-{{ section.id }}:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .badge-arrow-btn-{{ section.id }}:disabled svg {
     opacity: 0.5;
   }
   
+  /* Disable hover on mobile */
   @media (max-width: 767px) {
-    .badge-arrows {
-      display: none;
-    }
-    
-    /* Disable hover effects on mobile to prevent sticky hover */
-    .badge-item:hover {
+    .badge-item-{{ section.id }}:hover {
       background-color: #EEEEEE;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transform: none;
-      border: none;
+      border: 1px solid transparent;
     }
     
-    .badge-item:hover .badge-image-container {
-      background-color: #f5f5f5;
-      transform: none;
-      box-shadow: none;
-    }
-    
-    .badge-item:hover .badge-image-container img {
-      transform: none;
-    }
-    
-    .badge-item:hover span {
-      color: inherit;
-      font-weight: 500;
-      text-shadow: none;
-    }
-    
-    .badge-item::before {
-      display: none;
-    }
-    
-    /* Add a subtle tap effect for mobile */
-    .badge-item:active {
+    .badge-item-{{ section.id }}:active {
       background-color: #e0e0e0;
       transform: scale(0.98);
     }
-  }
-  
-  /* Responsive container max-width */
-  .badge-container {
-    max-width: 1280px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-  
-  /* Use 1600px max-width when viewport is at least 1920px */
-  @media (min-width: 1920px) {
-    .badge-container {
-      max-width: 1600px !important;
-    }
-  }
-
-  /* Smooth transition for drag prevention */
-  .badge-item.no-pointer-events {
-    pointer-events: none;
-  }
-
-  /* Optional: Add a subtle pulse animation for featured badges */
-  .badge-item.featured {
-    animation: subtle-pulse 3s infinite;
-  }
-
-  @keyframes subtle-pulse {
-    0%, 100% {
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    50% {
-      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+    
+    .badge-item-{{ section.id }}::before {
+      display: none;
     }
   }
 </style>
 
-<div class="w-full flex justify-center mt-3">
-  <div class="badge-container relative w-full pt-3 pl-3 md:pl-0 mb-5">
-    <!-- Header with arrows - maintaining original position -->
-    <div class="flex justify-between items-center">
+<div id="shopify-section-{{ section.id }}" class="w-full flex justify-center">
+  <div class="badge-container-{{ section.id }}">
+    <!-- Header with arrows -->
+    <div class="badge-header-{{ section.id }}">
       <div></div>
-      <div class="badge-arrows flex gap-3">
-        <button id="badgePrev" class="badge-arrow-btn" aria-label="Poprzednie kategorie" disabled>
+      <div class="badge-arrows-{{ section.id }} flex gap-3 mb-5">
+        <button id="badgePrev-{{ section.id }}" 
+                class="badge-arrow-btn-{{ section.id }}" 
+                aria-label="Poprzednie kategorie" 
+                disabled>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
           </svg>
         </button>
-        <button id="badgeNext" class="badge-arrow-btn" aria-label="Następne kategorie">
+        <button id="badgeNext-{{ section.id }}" 
+                class="badge-arrow-btn-{{ section.id }}" 
+                aria-label="Następne kategorie">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" viewBox="0 0 16 16">
             <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
           </svg>
@@ -365,34 +396,38 @@
       </div>
     </div>
     
-    <!-- Badge scroller with fixed dimensions to prevent CLS -->
-    <div class="relative">
-      <div id="badgeScroller" class="w-full flex py-1 md:py-2 overflow-x-auto">
-        <div class="flex flex-shrink">
+    <!-- Badge scroller -->
+    <div class="badge-scroll-wrapper-{{ section.id }}">
+      <div id="badgeScroller-{{ section.id }}">
+        <div class="badge-inner-{{ section.id }}">
           {% for block in section.blocks %}
             {% if block.settings.title != blank and block.settings.link != blank %}
-              {% comment %} ACCESSIBILITY FIX: Add proper aria-label for link description {% endcomment %}
               <a href="{{ block.settings.link }}" 
-                 class="badge-item"
+                 class="badge-item-{{ section.id }}"
                  aria-label="Zobacz kolekcję {{ block.settings.title }}"
                  title="Przejdź do kolekcji {{ block.settings.title }}"
                  {{ block.shopify_attributes }}>
                 {% if block.settings.image %}
-                  <div class="badge-image-container">
-                    {% comment %} ACCESSIBILITY FIX: Empty alt and role=presentation to make images decorative {% endcomment %}
+                  <div class="badge-image-container-{{ section.id }}">
+                    <!-- Critical: Set explicit dimensions and eager loading for visible badges -->
                     {{ block.settings.image | image_url: width: 96 | image_tag: 
-                      class: 'w-full h-full object-contain',
+                      class: 'badge-image',
                       loading: 'eager',
                       fetchpriority: 'high',
                       width: 48,
                       height: 48,
                       alt: '',
                       role: 'presentation',
-                      style: "aspect-ratio: 1/1; width: 48px; height: 48px;"
+                      sizes: '48px'
                     }}
                   </div>
+                {% else %}
+                  <!-- Placeholder to maintain consistent layout -->
+                  <div class="badge-image-container-{{ section.id }}">
+                    <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 50%;"></div>
+                  </div>
                 {% endif %}
-                <span class="text-sm font-medium">{{ block.settings.title }}</span>
+                <span class="badge-text-{{ section.id }}">{{ block.settings.title }}</span>
               </a>
             {% endif %}
           {% endfor %}
@@ -402,66 +437,62 @@
   </div>
 </div>
 
-<!-- CLS prevention script -->
 <script>
-// Early pre-calculation script to prevent CLS
+// Optimized script - no layout-affecting operations
 (function() {
-  // Reserve space before the DOM is fully loaded
-  var sectionElement = document.getElementById('shopify-section-{{ section.id }}');
-  if (sectionElement) {
-    sectionElement.style.minHeight = window.innerWidth < 768 ? '90px' : '110px';
-  }
-})();
-
-document.addEventListener('DOMContentLoaded', function() {
-  var scroller = document.getElementById('badgeScroller');
-  var prevBtn = document.getElementById('badgePrev');
-  var nextBtn = document.getElementById('badgeNext');
-  var scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
+  'use strict';
   
-  // Skip initialization if elements don't exist
+  // Get references once
+  const sectionId = '{{ section.id }}';
+  const scroller = document.getElementById('badgeScroller-' + sectionId);
+  const prevBtn = document.getElementById('badgePrev-' + sectionId);
+  const nextBtn = document.getElementById('badgeNext-' + sectionId);
+  const scrollAmount = {{ section.settings.scroll_amount | default: 200 }};
+  
   if (!scroller || !prevBtn || !nextBtn) return;
   
-  // Set fixed height immediately
-  scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
+  // Variables for drag handling
+  let isDragging = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let hasDragged = false;
+  const dragThreshold = 5;
   
-  // Enhanced drag handling variables
-  var isDragging = false;
-  var startX = 0;
-  var startScrollLeft = 0;
-  var hasDragged = false; // Track if actual dragging occurred
-  var dragThreshold = 5; // Minimum pixels to consider it a drag
-  
-  // Basic arrow button functionality
+  // Update arrow state without causing reflow
   function updateArrowState() {
-    prevBtn.disabled = scroller.scrollLeft <= 0;
-    nextBtn.disabled = scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 5;
+    requestAnimationFrame(() => {
+      const scrollLeft = scroller.scrollLeft;
+      const maxScroll = scroller.scrollWidth - scroller.clientWidth - 5;
+      
+      prevBtn.disabled = scrollLeft <= 0;
+      nextBtn.disabled = scrollLeft >= maxScroll;
+    });
   }
   
-  // Button click handlers
-  prevBtn.addEventListener('click', function() {
+  // Smooth scroll with RAF
+  function smoothScroll(target) {
     scroller.scrollTo({
-      left: scroller.scrollLeft - scrollAmount,
+      left: target,
       behavior: 'smooth'
     });
+    
+    // Update state after animation
     setTimeout(updateArrowState, 300);
+  }
+  
+  // Button handlers
+  prevBtn.addEventListener('click', () => {
+    smoothScroll(scroller.scrollLeft - scrollAmount);
   });
   
-  nextBtn.addEventListener('click', function() {
-    scroller.scrollTo({
-      left: scroller.scrollLeft + scrollAmount,
-      behavior: 'smooth'
-    });
-    setTimeout(updateArrowState, 300);
+  nextBtn.addEventListener('click', () => {
+    smoothScroll(scroller.scrollLeft + scrollAmount);
   });
   
-  // Initialize button state
-  updateArrowState();
-  
-  // Update button state on scroll
+  // Passive scroll listener
   scroller.addEventListener('scroll', updateArrowState, { passive: true });
   
-  // Prevent clicks on badge items after dragging
+  // Prevent clicks after dragging
   function preventClickAfterDrag(e) {
     if (hasDragged) {
       e.preventDefault();
@@ -471,61 +502,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Add click prevention to all badge items
-  function addClickPrevention() {
-    var badgeItems = scroller.querySelectorAll('.badge-item');
-    badgeItems.forEach(function(item) {
-      item.addEventListener('click', preventClickAfterDrag, true);
-    });
-  }
-  
-  // Initialize click prevention
-  addClickPrevention();
-  
-  // Re-add click prevention when new items are added (for dynamic content)
-  var observer = new MutationObserver(function() {
-    addClickPrevention();
+  // Add click prevention to badges
+  const badges = scroller.querySelectorAll('.badge-item-' + sectionId);
+  badges.forEach(badge => {
+    badge.addEventListener('click', preventClickAfterDrag, true);
   });
-  observer.observe(scroller, { childList: true, subtree: true });
   
-  // Enhanced mouse drag handling
-  scroller.addEventListener('mousedown', function(e) {
+  // Mouse drag handling
+  scroller.addEventListener('mousedown', e => {
     isDragging = true;
     hasDragged = false;
     startX = e.pageX;
     startScrollLeft = scroller.scrollLeft;
-    
-    // Disable the scroll animation for dragging
     scroller.style.scrollBehavior = 'auto';
     scroller.style.cursor = 'grabbing';
-    
-    // Prevent default behaviors
     e.preventDefault();
   });
   
-  // Scroll the container when mouse moves
-  document.addEventListener('mousemove', function(e) {
+  document.addEventListener('mousemove', e => {
     if (!isDragging) return;
     
-    var x = e.pageX;
-    var distance = Math.abs(x - startX);
-    
-    // Check if we've moved enough to consider it a drag
+    const distance = Math.abs(e.pageX - startX);
     if (distance > dragThreshold) {
       hasDragged = true;
     }
     
-    // Perform the scroll
-    var scrollDistance = x - startX;
-    scroller.scrollLeft = startScrollLeft - scrollDistance;
-    
-    // Prevent other events
+    scroller.scrollLeft = startScrollLeft - (e.pageX - startX);
     e.preventDefault();
   });
-  
-  // End dragging on mouse up or leave
-  document.addEventListener('mouseup', endDrag);
-  document.addEventListener('mouseleave', endDrag);
   
   function endDrag() {
     if (!isDragging) return;
@@ -534,77 +538,66 @@ document.addEventListener('DOMContentLoaded', function() {
     scroller.style.cursor = '';
     
     // Re-enable smooth scrolling
-    setTimeout(function() {
+    setTimeout(() => {
       scroller.style.scrollBehavior = '';
     }, 50);
     
-    // Reset hasDragged flag after a short delay to allow click prevention
-    setTimeout(function() {
+    // Reset drag flag
+    setTimeout(() => {
       hasDragged = false;
     }, 100);
   }
   
-  // Enhanced touch handling for mobile
-  var touchStartX = 0;
-  var touchHasDragged = false;
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('mouseleave', endDrag);
   
-  scroller.addEventListener('touchstart', function(e) {
+  // Touch handling
+  let touchStartX = 0;
+  
+  scroller.addEventListener('touchstart', e => {
     isDragging = true;
-    touchHasDragged = false;
+    hasDragged = false;
     touchStartX = e.touches[0].pageX;
-    startX = e.touches[0].pageX;
+    startX = touchStartX;
     startScrollLeft = scroller.scrollLeft;
-    
-    // Disable scroll animation
     scroller.style.scrollBehavior = 'auto';
   }, { passive: true });
   
-  scroller.addEventListener('touchmove', function(e) {
+  scroller.addEventListener('touchmove', e => {
     if (!isDragging) return;
     
-    var x = e.touches[0].pageX;
-    var distance = Math.abs(x - touchStartX);
-    
-    // Check if we've moved enough to consider it a drag
+    const distance = Math.abs(e.touches[0].pageX - touchStartX);
     if (distance > dragThreshold) {
-      touchHasDragged = true;
       hasDragged = true;
     }
     
-    var scrollDistance = x - startX;
-    scroller.scrollLeft = startScrollLeft - scrollDistance;
+    scroller.scrollLeft = startScrollLeft - (e.touches[0].pageX - startX);
   }, { passive: true });
   
-  scroller.addEventListener('touchend', function() {
+  scroller.addEventListener('touchend', () => {
     isDragging = false;
     
-    // Re-enable smooth scrolling
-    setTimeout(function() {
+    setTimeout(() => {
       scroller.style.scrollBehavior = '';
     }, 50);
     
-    // Reset hasDragged flag after a short delay for touch
-    setTimeout(function() {
+    setTimeout(() => {
       hasDragged = false;
-      touchHasDragged = false;
-    }, 150); // Slightly longer delay for touch devices
+    }, 150);
   });
   
-  // Handle resize
-  window.addEventListener('resize', function() {
-    // Update section height based on viewport
-    var sectionElement = document.getElementById('shopify-section-{{ section.id }}');
-    if (sectionElement) {
-      sectionElement.style.minHeight = window.innerWidth < 768 ? '90px' : '110px';
-    }
-    
-    // Update scroller height
-    if (scroller) {
-      scroller.style.height = window.innerWidth < 768 ? '70px' : '80px';
-    }
-    
-    // Update arrow state
-    updateArrowState();
-  }, { passive: true });
-});
+  // Initialize arrow state
+  updateArrowState();
+  
+  // Handle dynamic content with MutationObserver
+  const observer = new MutationObserver(() => {
+    const newBadges = scroller.querySelectorAll('.badge-item-' + sectionId + ':not([data-click-handler])');
+    newBadges.forEach(badge => {
+      badge.addEventListener('click', preventClickAfterDrag, true);
+      badge.setAttribute('data-click-handler', 'true');
+    });
+  });
+  
+  observer.observe(scroller, { childList: true, subtree: true });
+})();
 </script>

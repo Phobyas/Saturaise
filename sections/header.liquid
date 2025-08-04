@@ -131,8 +131,8 @@
   data-asset-preload="true"
   data-asset-url="{{ 'section-header.js' | asset_url }}">
 
-  <section class="section-header__main-bar main-bar w100 devices-hide js-theme-header {{ sticky }} {{ sticky_js }}">
-    <div class="grid__wrapper {{ layout_style }} {% if section.settings.enable_header_overlay and template == 'index' %}absolute{% endif %}">
+  <section class="section-header__main-bar main-bar w100 bg-white devices-hide js-theme-header {{ sticky }} {{ sticky_js }}">
+    <div class="px-3 grid__wrapper xl:px-0 {{ layout_style }} {% if section.settings.enable_header_overlay and template == 'index' %}absolute{% endif %}">
       {% if section.settings.header_layout == 'inline_layout_center' or section.settings.header_layout == 'inline_layout_left' %}
         {%
           render 'header-inline',

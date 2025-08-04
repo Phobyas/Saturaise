@@ -3,7 +3,7 @@
   --header-height: 66px; /* Fixed height as requested */
 }
 
-ul.header__navigation li.dropdown ul.submenu,
+/* ul.header__navigation li.dropdown ul.submenu,
 ul.header__navigation li.dropdown ul.submenu li,
 ul.header__navigation li.dropdown ul.submenu .nested,
 #drop-mega-menu .left,
@@ -11,7 +11,7 @@ ul.header__navigation li.dropdown ul.submenu .nested,
   background-color: var(--header-bg);
   padding-right: 20px !important;
   padding-left: 12px !important;
-}
+} */
 
 .section-header__main-bar {
   border-bottom: 3px solid #efefef;
@@ -24,6 +24,7 @@ ul.header__navigation li.dropdown ul.submenu .nested,
   height: var(--header-height);
   min-height: var(--header-height);
   contain: layout;
+  background-color: white;
 }
 
 .mobile-nav__mobile-header .header__cart-links--search {

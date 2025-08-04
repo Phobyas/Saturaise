@@ -43,15 +43,20 @@
     }
   }
 
-  #mobile-slideout {
+#mobile-slideout {
     background-color: {{ bg_color }};
     z-index: 15;
     /* NEW: Flexbox layout for sticky footer */
-    display: flex !important;
+    display: none; /* Changed from flex */
     flex-direction: column !important;
     height: 100vh !important;
     overflow: hidden !important;
-  }
+}
+
+/* Only show flex when slideout is active */
+#mobile-slideout.slideout--active {
+    display: flex !important;
+}
 
   .mobile-nav__img-wrapper{
     width: 60% !important;

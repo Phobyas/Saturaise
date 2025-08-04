@@ -170,21 +170,21 @@
   display: none;
 }
 
-.featured-collection__wrapper--loop.js-carousel {
+/* .featured-collection__wrapper--loop.js-carousel {
   opacity: 0;
   -webkit-transition: opacity 0.4s;
   transition: opacity 0.4s;
-}
+} */
 
 .featured-collection__wrapper--loop.js-carousel.flickity-enabled {
   opacity: 1;
 }
 
 /* Improved carousel loading states */
-.featured-collection__wrapper--loop.carousel-loaded--false {
+/* .featured-collection__wrapper--loop.carousel-loaded--false {
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 .featured-collection__wrapper--loop.carousel-loaded--true {
   opacity: 1;
