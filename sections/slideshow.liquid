@@ -392,7 +392,7 @@
                     {% else %}
                       <img src="{{ main_image | image_url: width: 1600 }}"
                            srcset="{{ main_image | image_url: width: 750 }} 750w,
-                                   {{ main_image | image_url: width: 1200 }} 1200w,
+                                   {{ main_image | image_url: width: 1200 }} 1200w, 
                                    {{ main_image | image_url: width: 1600 }} 1600w,
                                    {{ main_image | image_url: width: 2000 }} 2000w"
                            sizes="100vw"

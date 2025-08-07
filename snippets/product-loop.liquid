@@ -66,13 +66,13 @@
   mix-blend-mode: multiply; /* Preserved */
 }
 
-/* Hover states - preserved original behavior */
-.product-loop__img-wrapper:hover .hover-image {
+/* FIXED: Hover states - ONLY apply when has-hover-image class is present */
+.product-loop__img-wrapper.has-hover-image:hover .hover-image {
   opacity: 1;
   visibility: visible;
 }
 
-.product-loop__img-wrapper:hover .main-image {
+.product-loop__img-wrapper.has-hover-image:hover .main-image {
   opacity: 0;
 }
 
@@ -106,13 +106,13 @@
 }
 
 /* Performance: Use GPU acceleration for hover transitions */
-.hover-image,
-.main-image {
+.has-hover-image .hover-image,
+.has-hover-image .main-image {
   will-change: opacity;
 }
 
-.product-loop__img-wrapper:hover .hover-image,
-.product-loop__img-wrapper:hover .main-image {
+.product-loop__img-wrapper.has-hover-image:hover .hover-image,
+.product-loop__img-wrapper.has-hover-image:hover .main-image {
   will-change: auto; /* Remove after animation */
 }
 
@@ -225,12 +225,12 @@
 
 /* Disable hover on touch devices but keep blend mode */
 @media (hover: none) and (pointer: coarse) {
-  .product-loop__img-wrapper:hover .hover-image {
+  .product-loop__img-wrapper.has-hover-image:hover .hover-image {
     opacity: 0;
     visibility: hidden;
   }
   
-  .product-loop__img-wrapper:hover .main-image {
+  .product-loop__img-wrapper.has-hover-image:hover .main-image {
     opacity: 1;
   }
   
@@ -331,6 +331,18 @@ img.loaded {
     assign product_info_mobile_grid_left = 'sm-span-12 a-left'
     assign product_info_mobile_grid_right = 'sm-span-12 a-right sm-a-left'
   endif
+  
+  comment
+    FIXED: Check if product has valid hover image
+  endcomment
+  assign has_hover_image = false
+  if product.media.size > 1
+    if product.media[1].media_type == 'image'
+      assign has_hover_image = true
+    elsif product.media[1].preview_image != blank
+      assign has_hover_image = true
+    endif
+  endif
 -%}
 
 <article class="product-loop__item {{ carousel_slide }} {% unless carousel %}{{ items_per_row }} {{ items_per_row_mobile }}{% endunless %} relative product-loop__item--{{ settings.image_ratio }}"
@@ -349,7 +361,8 @@ img.loaded {
       {% endfor %}
     {% endif %}
 
-    <div class="product-loop__img-wrapper relative">
+    <!-- FIXED: Add has-hover-image class conditionally -->
+    <div class="product-loop__img-wrapper relative{% if has_hover_image %} has-hover-image{% endif %}">
       <a href="{{ product.url | within: collection }}" tabindex="-1" title="{{ product.title | escape }}" class="image-wrapper-link">
         {%- if product.media.size < 1 -%}
           <div class="demo-1 box-ratio" style="padding-bottom: 100%;">
@@ -389,8 +402,8 @@ img.loaded {
             decoding="async"
           >
 
-          <!-- Hover image - keeping original functionality -->
-          {% if product.media.size > 1 %}
+          <!-- FIXED: Only render hover image if it exists -->
+          {% if has_hover_image %}
             {%- liquid
               if product.media[1].media_type == 'image'
                 assign hover_image = product.media[1]
@@ -540,9 +553,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Apply blend mode fix
   ensureBlendMode();
   
-  // Preserve hover functionality
+  // FIXED: Only apply hover effect to products with hover images
   function preserveHoverEffect() {
-    const wrappers = document.querySelectorAll('.product-loop__img-wrapper');
+    const wrappers = document.querySelectorAll('.product-loop__img-wrapper.has-hover-image');
     
     wrappers.forEach(wrapper => {
       const mainImage = wrapper.querySelector('.main-image');
@@ -592,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Performance: Preload hover images on desktop
   if (window.matchMedia('(hover: hover)').matches) {
     setTimeout(() => {
-      const hoverImages = document.querySelectorAll('.hover-image img[loading="lazy"]');
+      const hoverImages = document.querySelectorAll('.has-hover-image .hover-image img[loading="lazy"]');
       hoverImages.forEach(img => {
         if (img.dataset.src) {
           img.src = img.dataset.src;

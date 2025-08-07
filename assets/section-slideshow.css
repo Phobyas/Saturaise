@@ -1,64 +1,32 @@
+/* CRITICAL: LCP Optimization - First slide must be immediately visible */
 .section-slideshow[data-section-loaded="false"]:not(.preview-mode)
   .slideshow__slide.is-selected,
-.no-js .section-slideshow .slideshow__slide.is-selected {
+.no-js .section-slideshow .slideshow__slide.is-selected,
+.section-slideshow .slideshow__slide:first-child,
+.section-slideshow .slide:first-child {
   opacity: 1 !important;
   width: 100%;
-  display: block !important; /* Force display for immediate rendering */
+  display: block !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+  /* Override any animations for immediate visibility */
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
 }
 
-@media screen and (prefers-reduced-motion: no-preference) {
-  .animation-text--active
-    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide
-    .slide-animate {
-    opacity: 0;
-    transition: opacity 0.5s ease-in, transform 2s ease;
-    will-change: opacity, transform; /* Hardware acceleration hint */
-  }
-  .animation-text--active
-    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide
-    .slide-animate.delay--1 {
-    transition-delay: 0.5s;
-  }
-  .animation-text--active
-    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide
-    .slide-animate.delay--2 {
-    transition-delay: 0.65s;
-  }
-  .animation-text--active
-    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide
-    .slide-animate.delay--3 {
-    transition-delay: 0.75s;
-  }
-  .animation-text--active
-    [data-section-loaded="true"]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide.is-selected
-    .slide-animate,
-  .no-js
-    .animation-text--active
-    [data-section-loaded="false"]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide.is-selected
-    .slide-animate,
-  .animation-text--active
-    .section--reloaded
-    [data-section-loaded="false"]:has(.slide-animate):not(.preview-mode)
-    .slideshow__slide.is-selected
-    .slide-animate {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(0);
-  }
-}
-
+/* CRITICAL: Prevent layout shifts with explicit dimensions */
 .section-slideshow .slideshow {
   border: 0 !important;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  contain: content; /* Improve paint performance */
+  contain: layout; /* Improve paint performance */
+  /* Set explicit aspect ratio to prevent layout shift */
+  aspect-ratio: 1920/800;
+  position: relative;
+  overflow: hidden;
 }
 
 @media (min-width: 1920px) {
@@ -67,25 +35,74 @@
   }
 }
 
+/* CRITICAL: Mobile aspect ratio */
+@media (max-width: 767px) {
+  .section-slideshow .slideshow {
+    aspect-ratio: 4/5; /* Better for mobile */
+  }
+}
+
+/* CRITICAL: All slides positioned absolutely except first */
+.section-slideshow .slideshow__slide {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* CRITICAL: First slide image optimization - immediate visibility */
+.section-slideshow .slideshow__slide:first-child,
+.section-slideshow .slide:first-child {
+  opacity: 1 !important;
+  width: 100%;
+  display: block !important;
+  z-index: 2 !important;
+  position: relative !important;
+  visibility: visible !important;
+  /* Disable all animations for LCP element */
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* CRITICAL: First slide image must render immediately */
+.section-slideshow .slideshow__slide:first-child img,
+.section-slideshow .slideshow__slide:first-child .slideshow__slide-image img,
+.section-slideshow .slide:first-child img {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  /* Ensure proper sizing for layout stability */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  /* Explicit aspect ratio for immediate layout */
+  aspect-ratio: 1920/800;
+}
+
+@media (max-width: 767px) {
+  .section-slideshow .slideshow__slide:first-child img,
+  .section-slideshow .slide:first-child img {
+    aspect-ratio: 4/5;
+  }
+}
+
 .slideshow__slide-image .onboard {
   display: flex;
   align-items: center;
 }
 
-.section-slideshow .slideshow__slide {
-  width: 100%;
-}
-
-/* First slide optimization */
-.section-slideshow .slideshow__slide:first-child {
-  opacity: 1 !important;
-  width: 100%;
-  display: block !important;
-  z-index: 1;
-}
-
 .slideshow__slide-image {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .slideshow__slide-image:before {
@@ -104,30 +121,103 @@
 .slideshow__slide-image picture {
   display: block;
   width: 100%;
+  height: 100%;
 }
 
-/* Force image dimensions to prevent layout shifts */
+/* CRITICAL: Force image dimensions to prevent layout shifts */
 .slideshow__slide-image img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
   display: block;
   transform: translateZ(0); /* Force GPU acceleration */
 }
 
+/* CRITICAL: Animation optimizations - NO animations for first slide */
 @media screen and (prefers-reduced-motion: no-preference) {
-  .section-slideshow:not(.preview-mode) .slideshow__slide {
+  .animation-text--active
+    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide:not(:first-child)
+    .slide-animate {
+    opacity: 0;
+    transition: opacity 0.5s ease-in, transform 2s ease;
+    will-change: opacity, transform;
+  }
+
+  .animation-text--active
+    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide:not(:first-child)
+    .slide-animate.delay--1 {
+    transition-delay: 0.5s;
+  }
+
+  .animation-text--active
+    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide:not(:first-child)
+    .slide-animate.delay--2 {
+    transition-delay: 0.65s;
+  }
+
+  .animation-text--active
+    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide:not(:first-child)
+    .slide-animate.delay--3 {
+    transition-delay: 0.75s;
+  }
+
+  /* First slide animations should be disabled */
+  .animation-text--active
+    [data-section-loaded]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide:first-child
+    .slide-animate {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .animation-text--active
+    [data-section-loaded="true"]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide.is-selected:not(:first-child)
+    .slide-animate,
+  .no-js
+    .animation-text--active
+    [data-section-loaded="false"]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide.is-selected:not(:first-child)
+    .slide-animate,
+  .animation-text--active
+    .section--reloaded
+    [data-section-loaded="false"]:has(.slide-animate):not(.preview-mode)
+    .slideshow__slide.is-selected:not(:first-child)
+    .slide-animate {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0);
+  }
+}
+
+/* CRITICAL: Only apply transitions to non-first slides for LCP */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .section-slideshow:not(.preview-mode) .slideshow__slide:not(:first-child) {
     opacity: 0 !important;
     transition: opacity 1s ease !important;
   }
 
-  .section-slideshow:not(.preview-mode) .slideshow__slide.is-selected {
+  .section-slideshow:not(.preview-mode)
+    .slideshow__slide.is-selected:not(:first-child) {
     opacity: 1 !important;
     z-index: 1;
   }
 
-  /* No transition for first slide to improve LCP */
+  /* CRITICAL: No transition for first slide to improve LCP */
   .section-slideshow:not(.preview-mode) .slideshow__slide:first-child {
     transition: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    animation: none !important;
+    transform: none !important;
   }
 }
 
@@ -236,16 +326,19 @@
   .slideshow__caption.caption--below__image .btn-border-link span {
     color: var(--color-body-text);
   }
+
   .slideshow__caption.caption--below__image,
   .slideshow__caption.caption--below__image .slideshow__caption-wrapper {
     background: var(--color-body);
   }
+
   .slideshow__caption.caption--below__image .btn-border-link:before,
   .slideshow__caption.caption--below__image .btn-border-link:after,
   .slideshow__caption.caption--below__image .btn-border-link span:before,
   .slideshow__caption.caption--below__image .btn-border-link span:after {
     background: var(--color-body-text);
   }
+
   .slideshow__caption.caption--below__image .slideshow__caption-wrapper.a-left,
   .slideshow__caption.caption--below__image
     .slideshow__caption-wrapper.a-right {
@@ -295,6 +388,7 @@
   height: var(--desktop-section-height);
   contain: strict; /* Optimize paint */
 }
+
 .section-slideshow
   .slideshow.is-fixed_height
   .slideshow__slide-image
@@ -316,12 +410,14 @@
     img {
     height: var(--mobile-section-height) !important;
   }
+
   .section-slideshow
     .slideshow.is-fixed_height
     .slideshow__slide-image
     .box-ratio {
     padding-bottom: var(--mobile-section-height) !important;
   }
+
   .section-slideshow .slideshow.is-fixed_height .onboard {
     min-height: var(--mobile-section-height);
     height: var(--mobile-section-height);
@@ -332,9 +428,7 @@
   display: none;
 }
 
-/* Additional optimizations for LCP */
-
-/* Set explicit dimensions for slideshow to prevent layout shifts */
+/* CRITICAL: Set explicit dimensions for slideshow to prevent layout shifts */
 .section-slideshow .slideshow.is-fixed_height {
   height: var(--desktop-section-height);
 }
@@ -345,13 +439,7 @@
   }
 }
 
-/* Optimize first slide loading */
-.section-slideshow .slideshow__slide:first-child .slideshow__slide-image img {
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Optimize navigation buttons to reduce CLS */
+/* CRITICAL: Optimize navigation buttons to reduce CLS */
 .section-slideshow .flickity-button {
   opacity: 0.7;
   background-color: rgba(255, 255, 255, 0.7);
@@ -363,16 +451,143 @@
   opacity: 1;
 }
 
-/* Force first slide visibility */
-.section-slideshow .slideshow__slide:first-child {
-  display: block !important;
+/* CRITICAL: Ensure images maintain aspect ratio while loading */
+.slideshow img[width][height] {
+  aspect-ratio: attr(width) / attr(height);
+  border-radius: 12px;
+}
+
+/* CRITICAL: Additional LCP optimizations */
+/* Prioritize first slide image loading */
+.section-slideshow .slideshow__slide:first-child img {
+  content-visibility: auto;
+  contain-intrinsic-size: 1920px 800px;
+}
+
+@media (max-width: 767px) {
+  .section-slideshow .slideshow__slide:first-child img {
+    contain-intrinsic-size: 800px 1000px;
+  }
+}
+
+/* Remove any lazy loading from first slide */
+.section-slideshow .slideshow__slide:first-child img[loading="lazy"] {
+  loading: eager !important;
+}
+
+.section-slideshow .slideshow__slide:first-child img.lazyload,
+.section-slideshow .slideshow__slide:first-child img.lazy {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-/* Ensure images maintain aspect ratio while loading */
-.slideshow img[width][height] {
-  aspect-ratio: attr(width) / attr(height);
+/* Optimize font loading for captions */
+.slideshow__caption {
+  font-display: swap;
+}
 
-  border-radius: 12px;
+/* CRITICAL: Prevent any transforms on first slide that could delay rendering */
+.section-slideshow .slideshow__slide:first-child,
+.section-slideshow .slideshow__slide:first-child .slideshow__slide-image,
+.section-slideshow .slideshow__slide:first-child img,
+.section-slideshow .slide:first-child,
+.section-slideshow .slide:first-child .slide-image,
+.section-slideshow .slide:first-child img {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure proper sizing for responsive images */
+.section-slideshow picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section-slideshow picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* CRITICAL: Hide navigation until JS loads to prevent layout shift */
+.section-slideshow .nav-arrow,
+.section-slideshow .nav-dots,
+.section-slideshow .flickity-button {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.section-slideshow.js-loaded .nav-arrow,
+.section-slideshow.js-loaded .nav-dots,
+.section-slideshow.js-loaded .flickity-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Optimize for single slide scenarios */
+.section-slideshow .single-slide .nav-arrow,
+.section-slideshow .single-slide .nav-dots {
+  display: none !important;
+}
+
+/* CRITICAL: Additional Forge theme specific optimizations */
+/* Override Forge animation classes for first slide */
+.section-slideshow .slideshow__slide:first-child.animation--active,
+.section-slideshow .slide:first-child.animation--active {
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* Disable text animations on first slide captions */
+.section-slideshow .slideshow__slide:first-child .animation-text--active,
+.section-slideshow .slide:first-child .animation-text--active {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* Ensure slideshow container has proper dimensions immediately */
+.section-slideshow {
+  min-height: 400px;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .section-slideshow {
+    min-height: 320px;
+  }
+}
+
+/* Force visibility of first slide content immediately */
+.section-slideshow .slideshow__slide:first-child *,
+.section-slideshow .slide:first-child * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Optimize paint performance for first slide */
+.section-slideshow .slideshow__slide:first-child {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 767px) {
+  .section-slideshow .slideshow__slide:first-child img,
+  .section-slideshow .slide:first-child img {
+    /* Ensure mobile images load with proper dimensions */
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+  }
 }

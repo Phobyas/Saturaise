@@ -352,22 +352,57 @@
     opacity: 0.5;
   }
   
-  /* Disable hover on mobile */
-  @media (max-width: 767px) {
+  /* ============================================
+     MOBILE INTERACTION STYLES - Fixed hover/touch issues
+     ============================================ */
+  /* Disable all hover effects on touch devices */
+  @media (hover: none) and (pointer: coarse), (max-width: 767px) {
+    /* Remove ALL hover effects */
     .badge-item-{{ section.id }}:hover {
-      background-color: #EEEEEE;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transform: none;
-      border: 1px solid transparent;
+      background-color: #EEEEEE !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+      transform: none !important;
+      border: 1px solid transparent !important;
     }
     
+    .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} {
+      background-color: #f5f5f5 !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} img {
+      transform: none !important;
+    }
+    
+    .badge-item-{{ section.id }}:hover .badge-text-{{ section.id }} {
+      color: inherit !important;
+      font-weight: 500 !important;
+      text-shadow: none !important;
+    }
+    
+    /* Subtle tap feedback instead of hover */
     .badge-item-{{ section.id }}:active {
-      background-color: #e0e0e0;
+      background-color: #E5E5E5;
       transform: scale(0.98);
+      transition: all 0.1s ease;
     }
     
+    /* Alternative: Remove active state entirely */
+    /* .badge-item-{{ section.id }}:active {
+      background-color: #EEEEEE !important;
+      transform: none !important;
+    } */
+    
+    /* Disable the shimmer effect */
     .badge-item-{{ section.id }}::before {
-      display: none;
+      display: none !important;
+    }
+    
+    /* Optional: Add a tap highlight for better UX */
+    .badge-item-{{ section.id }} {
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      tap-highlight-color: rgba(0, 0, 0, 0.1);
     }
   }
 </style>
