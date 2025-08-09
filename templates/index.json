@@ -17,7 +17,7 @@
           "settings": {
             "image": "shopify://shop_images/aj4_travis_ad_2_1920_800_3.webp",
             "mobile_image": "shopify://shop_images/aj4_travis_2_800_1000_1.webp",
-            "heading": "Air Jordan Travis Scott Air Jordan 4",
+            "heading": "",
             "subheading": "",
             "link": "shopify://collections/labubu",
             "button_text": "",
@@ -25,6 +25,7 @@
             "second_button_text": "",
             "overlay_color": "#000000",
             "overlay_opacity": 0,
+            "overlay_gradient": false,
             "slide_text_color": "#ffffff",
             "caption_background": "rgba(0,0,0,0)",
             "hide_caption_background": false,
@@ -46,6 +47,7 @@
             "second_button_text": "",
             "overlay_color": "#000000",
             "overlay_opacity": 0,
+            "overlay_gradient": false,
             "slide_text_color": "#ffffff",
             "caption_background": "#010101",
             "hide_caption_background": false,
@@ -67,6 +69,7 @@
             "second_button_text": "",
             "overlay_color": "#000000",
             "overlay_opacity": 0,
+            "overlay_gradient": false,
             "slide_text_color": "#ffffff",
             "caption_background": "rgba(0,0,0,0)",
             "hide_caption_background": false,
@@ -88,6 +91,7 @@
             "second_button_text": "",
             "overlay_color": "#000000",
             "overlay_opacity": 0,
+            "overlay_gradient": false,
             "slide_text_color": "#ffffff",
             "caption_background": "rgba(0,0,0,0)",
             "hide_caption_background": false,
@@ -104,8 +108,15 @@
         "image_YnEXEc"
       ],
       "settings": {
+        "slideshow_title": "Limitowane Sneakersy - Darmowa Dostawa | Saturaise",
         "enable_autoplay": true,
         "slider_speed": 5,
+        "show_arrows": true,
+        "show_dots": true,
+        "show_progress": false,
+        "subheading_size": 18,
+        "slide_heading_size": 48,
+        "border_radius": 0,
         "section_padding": "none"
       }
     },
