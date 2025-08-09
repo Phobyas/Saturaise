@@ -1,4 +1,3 @@
-{% comment %} Bulletproof Responsive Slideshow {% endcomment %}
 <link rel="preload" href="{{ 'section-slideshow.css' | asset_url }}" as="style">
 <link rel="stylesheet" href="{{ 'section-slideshow.css' | asset_url }}">
 
@@ -30,272 +29,385 @@
     --h2-size: {{ section.settings.slide_heading_size }}px;
   }
 
-  /* Container with responsive max-width */
-  .slideshow-{{ section.id }} {
+  .custom-slideshow-{{ section.id }} {
     position: relative;
     width: 100%;
     overflow: hidden;
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
+    contain: layout style;
+    border-radius: {{ section.settings.border_radius | default: 0 }}px;
   }
   
-  /* Use 1600px max-width when viewport is at least 1920px */
   @media (min-width: 1920px) {
-    .slideshow-{{ section.id }} {
+    .custom-slideshow-{{ section.id }} {
       max-width: 1600px;
     }
   }
 
-  /* Slides wrapper */
-  .slideshow-{{ section.id }} .slides-wrapper {
+  .custom-slideshow-{{ section.id }} .custom-slides-wrapper {
     position: relative;
     width: 100%;
+    min-height: 300px;
   }
 
-  /* Individual slides */
-  .slideshow-{{ section.id }} .slide {
+  .custom-slideshow-{{ section.id }} .custom-slide {
     position: relative;
     width: 100%;
     display: none;
+    isolation: isolate;
   }
 
-  /* First slide visible */
-  .slideshow-{{ section.id }} .slide:first-child {
+  .custom-slideshow-{{ section.id }} .custom-slide:first-child {
     display: block;
+    opacity: 1;
+    visibility: visible;
   }
 
-  /* Fade animation */
-  .slideshow-{{ section.id }}.fade-enabled .slide {
+  .custom-slideshow-{{ section.id }}.fade-enabled .custom-slide {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     opacity: 0;
     display: block;
-    transition: opacity 0.6s ease-in-out;
+    transition: opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translateZ(0);
+    will-change: opacity;
+    backface-visibility: hidden;
   }
 
-  .slideshow-{{ section.id }}.fade-enabled .slide.active {
+  .custom-slideshow-{{ section.id }}.fade-enabled .custom-slide.active {
     opacity: 1;
     z-index: 2;
   }
 
-  /* Image wrapper */
-  .slideshow-{{ section.id }} .slide-image {
+  @media (prefers-reduced-motion: reduce) {
+    .custom-slideshow-{{ section.id }}.fade-enabled .custom-slide {
+      transition: none;
+    }
+  }
+
+  .custom-slideshow-{{ section.id }} .slide-image {
     position: relative;
     width: 100%;
     line-height: 0;
+    overflow: hidden;
+    border-radius: inherit;
   }
 
-  /* Images */
-  .slideshow-{{ section.id }} .slide-image img {
+  .custom-slideshow-{{ section.id }} .slide-image.slide-clickable {
+    cursor: pointer;
+  }
+
+  .custom-slideshow-{{ section.id }} .slide-image.slide-clickable:hover img {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+  }
+
+  .custom-slideshow-{{ section.id }} .slide-image img {
     width: 100%;
     height: auto;
     display: block;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    object-fit: cover;
+    border-radius: inherit;
   }
 
-  /* Caption */
-  .slideshow-{{ section.id }} .slide-caption {
+  .custom-slideshow-{{ section.id }} .slide-caption {
     position: absolute;
     z-index: 3;
     max-width: 90%;
+    padding: 10px;
   }
 
-  .slideshow-{{ section.id }} .caption-content {
+  .custom-slideshow-{{ section.id }} .caption-content {
     padding: 30px;
     background: var(--background);
-    border-radius: 8px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
 
-  .slideshow-{{ section.id }} .slide-title {
+  .custom-slideshow-{{ section.id }} .slide-title {
     color: var(--text-color);
     font-size: var(--h2-size);
     margin: 0 0 15px;
     line-height: 1.2;
+    font-weight: 600;
   }
 
-  .slideshow-{{ section.id }} .slide-text {
+  .custom-slideshow-{{ section.id }} .slide-text {
     color: var(--text-color);
     font-size: var(--font-size);
     margin: 0 0 20px;
+    line-height: 1.5;
   }
 
-  .slideshow-{{ section.id }} .slide-text p {
+  .custom-slideshow-{{ section.id }} .slide-text p {
     color: inherit;
     margin: 0 0 10px;
   }
 
-  .slideshow-{{ section.id }} .slide-text p:last-child {
+  .custom-slideshow-{{ section.id }} .slide-text p:last-child {
     margin-bottom: 0;
   }
 
-  .slideshow-{{ section.id }} .slide-buttons {
+  .custom-slideshow-{{ section.id }} .slide-buttons {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
   }
 
-  .slideshow-{{ section.id }} .btn-border-link {
-    display: inline-block;
-    padding: 12px 30px;
+  .custom-slideshow-{{ section.id }} .btn-border-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
     border: 2px solid var(--text-color);
     color: var(--text-color);
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
     font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    min-height: 48px;
+    white-space: nowrap;
   }
 
-  .slideshow-{{ section.id }} .btn-border-link:hover {
+  .custom-slideshow-{{ section.id }} .btn-border-link:hover,
+  .custom-slideshow-{{ section.id }} .btn-border-link:focus {
     background: var(--text-color);
     color: var(--background);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  /* Navigation arrows */
-  .slideshow-{{ section.id }} .nav-arrow {
+  .custom-slideshow-{{ section.id }} .nav-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: none;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     cursor: pointer;
     z-index: 4;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .slideshow-{{ section.id }} .nav-arrow:hover {
-    opacity: 0.8;
+  .custom-slideshow-{{ section.id }} .nav-arrow:hover,
+  .custom-slideshow-{{ section.id }} .nav-arrow:focus {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
-  .slideshow-{{ section.id }} .nav-arrow.prev {
-    left: 20px;
+  .custom-slideshow-{{ section.id }} .nav-arrow:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: translateY(-50%);
   }
 
-  .slideshow-{{ section.id }} .nav-arrow.next {
-    right: 20px;
+  .custom-slideshow-{{ section.id }} .nav-arrow.prev {
+    left: 24px;
   }
 
-  .slideshow-{{ section.id }} .nav-arrow svg {
-    width: 20px;
-    height: 20px;
+  .custom-slideshow-{{ section.id }} .nav-arrow.next {
+    right: 24px;
   }
 
-  /* Dots navigation */
-  .slideshow-{{ section.id }} .nav-dots {
+  .custom-slideshow-{{ section.id }} .nav-arrow svg {
+    width: 24px;
+    height: 24px;
+    color: #333;
+  }
+
+  .custom-slideshow-{{ section.id }} .nav-dots {
     position: absolute;
-    bottom: 20px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 4;
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
   }
 
-  .slideshow-{{ section.id }} .nav-dot {
-    width: 10px;
-    height: 10px;
+  .custom-slideshow-{{ section.id }} .nav-dot {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.6);
     border: none;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
     padding: 0;
+    min-height: 12px;
   }
 
-  .slideshow-{{ section.id }} .nav-dot.active {
+  .custom-slideshow-{{ section.id }} .nav-dot:hover,
+  .custom-slideshow-{{ section.id }} .nav-dot:focus {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+  }
+
+  .custom-slideshow-{{ section.id }} .nav-dot.active {
     background: white;
+    transform: scale(1.3);
   }
 
-  /* Drag functionality styles */
-  .slideshow-{{ section.id }} .slides-wrapper {
+  .custom-slideshow-{{ section.id }} .custom-slides-wrapper {
     cursor: grab;
     user-select: none;
+    touch-action: pan-y;
   }
   
-  .slideshow-{{ section.id }} .slides-wrapper.dragging {
+  .custom-slideshow-{{ section.id }} .custom-slides-wrapper.dragging {
     cursor: grabbing;
   }
   
-  .slideshow-{{ section.id }}.dragging a,
-  .slideshow-{{ section.id }}.dragging button {
+  .custom-slideshow-{{ section.id }}.dragging a,
+  .custom-slideshow-{{ section.id }}.dragging button {
     pointer-events: none;
   }
 
-  /* Mobile adjustments */
+  .custom-slideshow-{{ section.id }} .slide-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    z-index: 4;
+    width: 100%;
+  }
+
+  .custom-slideshow-{{ section.id }} .slide-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
   @media (max-width: 767px) {
     #shopify-section-{{ section.id }} {
-      --font-size: calc({{ section.settings.subheading_size }}px * 0.85);
-      --h2-size: calc({{ section.settings.slide_heading_size }}px * 0.85);
+      --font-size: calc({{ section.settings.subheading_size }}px * 0.9);
+      --h2-size: calc({{ section.settings.slide_heading_size }}px * 0.8);
     }
 
-    .slideshow-{{ section.id }} .caption-content {
+    .custom-slideshow-{{ section.id }} .caption-content {
       padding: 20px;
+      border-radius: 8px;
     }
 
-    .slideshow-{{ section.id }} .nav-arrow {
-      width: 36px;
-      height: 36px;
+    .custom-slideshow-{{ section.id }} .nav-arrow {
+      width: 40px;
+      height: 40px;
     }
 
-    .slideshow-{{ section.id }} .nav-arrow.prev {
-      left: 10px;
+    .custom-slideshow-{{ section.id }} .nav-arrow.prev {
+      left: 16px;
     }
 
-    .slideshow-{{ section.id }} .nav-arrow.next {
-      right: 10px;
+    .custom-slideshow-{{ section.id }} .nav-arrow.next {
+      right: 16px;
+    }
+
+    .custom-slideshow-{{ section.id }} .nav-arrow svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .custom-slideshow-{{ section.id }} .nav-dots {
+      bottom: 16px;
+      gap: 8px;
+    }
+
+    .custom-slideshow-{{ section.id }} .btn-border-link {
+      padding: 12px 24px;
+      font-size: 14px;
     }
 
     {% if caption_below %}
-      .slideshow-{{ section.id }} .slide-caption {
+      .custom-slideshow-{{ section.id }} .slide-caption {
         position: static !important;
         transform: none !important;
         max-width: 100% !important;
         width: 100% !important;
+        padding: 0;
       }
 
-      .slideshow-{{ section.id }} .caption-content {
+      .custom-slideshow-{{ section.id }} .caption-content {
         background: var(--color-body);
         border-radius: 0;
         text-align: center;
+        backdrop-filter: none;
+        box-shadow: none;
       }
 
-      .slideshow-{{ section.id }} .slide-title,
-      .slideshow-{{ section.id }} .slide-text {
+      .custom-slideshow-{{ section.id }} .slide-title,
+      .custom-slideshow-{{ section.id }} .slide-text {
         color: var(--color-body-text);
       }
 
-      .slideshow-{{ section.id }} .btn-border-link {
+      .custom-slideshow-{{ section.id }} .btn-border-link {
         color: var(--color-body-text);
         border-color: var(--color-body-text);
       }
     {% endif %}
   }
 
-  /* Text alignment */
-  .slideshow-{{ section.id }} .caption-content.text-center {
+  .custom-slideshow-{{ section.id }} .caption-content.text-center {
     text-align: center;
   }
 
-  .slideshow-{{ section.id }} .caption-content.text-left {
+  .custom-slideshow-{{ section.id }} .caption-content.text-left {
     text-align: left;
   }
 
-  .slideshow-{{ section.id }} .caption-content.text-right {
+  .custom-slideshow-{{ section.id }} .caption-content.text-right {
     text-align: right;
   }
 
-  .slideshow-{{ section.id }} .caption-content.text-center .slide-buttons {
+  .custom-slideshow-{{ section.id }} .caption-content.text-center .slide-buttons {
     justify-content: center;
   }
 
-  .slideshow-{{ section.id }} .caption-content.text-right .slide-buttons {
+  .custom-slideshow-{{ section.id }} .caption-content.text-right .slide-buttons {
     justify-content: flex-end;
+  }
+
+  .custom-slideshow-{{ section.id }}:not(.loaded) .custom-slide:not(:first-child) {
+    visibility: hidden;
+  }
+
+  .custom-slideshow-{{ section.id }}.single-slide .nav-arrow,
+  .custom-slideshow-{{ section.id }}.single-slide .nav-dots,
+  .custom-slideshow-{{ section.id }}.single-slide .slide-progress {
+    display: none;
+  }
+
+  .seo-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 </style>
 
@@ -303,14 +415,13 @@
   {% for block in section.blocks %}
     {% assign block_opacity = block.settings.overlay_opacity | plus: 0 | divided_by: 100.0 %}
     
-    #slide-{{ block.id }} {
+    #custom-slide-{{ block.id }} {
       --section-overlay-color: {{ block.settings.overlay_color | color_modify: 'alpha', block_opacity }};
       --background: {{ block.settings.caption_background }};
       --text-color: {{ block.settings.slide_text_color }};
     }
 
-    /* Overlay */
-    #slide-{{ block.id }} .slide-image:after {
+    #custom-slide-{{ block.id }} .slide-image:after {
       content: "";
       position: absolute;
       top: 0;
@@ -319,10 +430,16 @@
       height: 100%;
       background: var(--section-overlay-color);
       pointer-events: none;
+      {% if block.settings.overlay_gradient %}
+        background: linear-gradient(
+          {{ block.settings.overlay_direction | default: '180deg' }}, 
+          {{ block.settings.overlay_color | color_modify: 'alpha', 0 }}, 
+          {{ block.settings.overlay_color | color_modify: 'alpha', block_opacity }}
+        );
+      {% endif %}
     }
 
-    /* Caption position */
-    #slide-{{ block.id }} .slide-caption {
+    #custom-slide-{{ block.id }} .slide-caption {
       top: {{ block.settings.caption_vertical }}%;
       left: {{ block.settings.caption_horizontal }}%;
       transform: translate(-{{ block.settings.caption_horizontal }}%, -{{ block.settings.caption_vertical }}%);
@@ -330,24 +447,47 @@
 
     {% if block.settings.hide_caption_background %}
       @media (max-width: 767px) {
-        #slide-{{ block.id }} .caption-content {
+        #custom-slide-{{ block.id }} .caption-content {
           background: transparent;
+          backdrop-filter: none;
+          box-shadow: none;
         }
       }
     {% endif %}
   {% endfor %}
 {% endstyle %}
 
-<div class="global__section section-slideshow {{ section_padding }}">
+<div class="global__section section-slideshow {{ section_padding }}" itemscope itemtype="https://schema.org/ImageGallery">
   <div class="grid__wrapper">
     <div class="span-12">
       {% if section.blocks.size > 0 %}
-        <div class="slideshow-{{ section.id }}{% if section.blocks.size == 1 %} single-slide{% endif %}" 
-             data-slideshow 
+        <div class="custom-slideshow-{{ section.id }}{% if section.blocks.size == 1 %} single-slide{% endif %}" 
+             data-custom-slideshow 
              data-autoplay="{{ slider_speed }}"
-             data-section-id="{{ section.id }}">
+             data-section-id="{{ section.id }}"
+             role="region"
+             aria-label="Pokaz slajdów - {{ section.blocks.size }} {% if section.blocks.size == 1 %}slajd{% else %}slajdów{% endif %}">
           
-          <div class="slides-wrapper">
+          <h2 class="seo-only">{{ section.settings.slideshow_title | default: 'Limitowane Sneakersy - Darmowa Dostawa | Zwroty 14 dni | Saturaise' }}</h2>
+          
+          {% for block in section.blocks %}
+            {% if block.settings.heading != blank %}
+              <h3 class="seo-only">{{ block.settings.heading | escape }}</h3>
+              {% if block.settings.subheading != blank %}
+                <div class="seo-only">{{ block.settings.subheading | strip_html | escape }}</div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          
+          {% if template == 'index' %}
+          <div class="seo-only">
+            <p>Darmowa dostawa na terenie całej Polski. Zwroty do 14 dni bez podania przyczyny.</p>
+            <p>100% oryginalne produkty z certyfikatem autentyczności Saturaise.</p>
+            <p>Nike, Adidas, Yeezy, Jordan, New Balance, UGG - wszystkie marki dostępne od ręki.</p>
+          </div>
+          {% endif %}
+          
+          <div class="custom-slides-wrapper">
             {% for block in section.blocks %}
               {% liquid
                 assign main_image = block.settings.image
@@ -358,19 +498,22 @@
                   assign has_caption = true
                 endif
                 
-  assign loading = 'lazy'
-  assign fetchpriority = 'auto'
-  if forloop.first
-    assign loading = 'eager'
-    assign fetchpriority = 'high'
-  endif
+                assign loading = 'lazy'
+                assign fetchpriority = 'auto'
+                if forloop.first
+                  assign loading = 'eager'
+                  assign fetchpriority = 'high'
+                endif
               %}
               
-              <div id="slide-{{ block.id }}" 
-                   class="slide{% if forloop.first %} active{% endif %}" 
+              <div id="custom-slide-{{ block.id }}" 
+                   class="custom-slide{% if forloop.first %} active{% endif %}" 
+                   itemscope itemtype="https://schema.org/ImageObject"
+                   aria-hidden="{% unless forloop.first %}true{% else %}false{% endunless %}"
+                   {% if block.settings.link %}data-slide-link="{{ block.settings.link }}"{% endif %}
                    {{ block.shopify_attributes }}>
                 
-                <div class="slide-image">
+                <div class="slide-image{% if block.settings.link %} slide-clickable{% endif %}">
                   {% if main_image %}
                     {% if mobile_image %}
                       <picture>
@@ -384,10 +527,13 @@
                                         {{ main_image | image_url: width: 2000 }} 2000w"
                                 sizes="100vw">
                         <img src="{{ main_image | image_url: width: 1600 }}"
-                             alt="{{ block.settings.heading | default: main_image.alt | escape }}"
+                             alt="{% if block.settings.heading %}{{ block.settings.heading | escape }}{% else %}{{ shop.name }}{% endif %} - Darmowa dostawa | Zwroty 14 dni"
+                             title="{{ block.settings.heading | default: shop.name | escape }}"
                              width="{{ main_image.width }}"
                              height="{{ main_image.height }}"
-                             loading="{{ loading }}">
+                             loading="{{ loading }}"
+                             fetchpriority="{{ fetchpriority }}"
+                             itemprop="contentUrl">
                       </picture>
                     {% else %}
                       <img src="{{ main_image | image_url: width: 1600 }}"
@@ -396,14 +542,17 @@
                                    {{ main_image | image_url: width: 1600 }} 1600w,
                                    {{ main_image | image_url: width: 2000 }} 2000w"
                            sizes="100vw"
-                           alt="{{ block.settings.heading | default: main_image.alt | escape }}"
+                           alt="{% if block.settings.heading %}{{ block.settings.heading | escape }}{% else %}{{ shop.name }}{% endif %} - Darmowa dostawa | Zwroty 14 dni"
+                           title="{{ block.settings.heading | default: shop.name | escape }}"
                            width="{{ main_image.width }}"
                            height="{{ main_image.height }}"
-                           loading="{{ loading }}">
+                           loading="{{ loading }}"
+                           fetchpriority="{{ fetchpriority }}"
+                           itemprop="contentUrl">
                     {% endif %}
                   {% else %}
                     {% capture current %}{% cycle 1, 2 %}{% endcapture %}
-                    <div style="aspect-ratio: 16/9; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                    <div style="aspect-ratio: 16/9; background: #f5f5f5; display: flex; align-items: center; justify-content: center;" role="img" aria-label="Placeholder image">
                       {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
                     </div>
                   {% endif %}
@@ -412,12 +561,8 @@
                 {% if has_caption %}
                   <div class="slide-caption">
                     <div class="caption-content text-{{ block.settings.text_align }}">
-                      {% if block.settings.heading != blank %}
-                        <h2 class="slide-title">{{ block.settings.heading | escape }}</h2>
-                      {% endif %}
-                      
                       {% if block.settings.subheading != blank %}
-                        <div class="slide-text rte">
+                        <div class="slide-text rte" itemprop="description">
                           {{ block.settings.subheading }}
                         </div>
                       {% endif %}
@@ -425,13 +570,17 @@
                       {% if block.settings.button_text != blank or block.settings.second_button_text != blank %}
                         <div class="slide-buttons">
                           {% if block.settings.button_text != blank %}
-                            <a href="{{ block.settings.link | default: '#' }}" class="btn-border-link">
+                            <a href="{{ block.settings.link | default: '#' }}" 
+                               class="btn-border-link"
+                               {% if block.settings.link == blank %}aria-disabled="true"{% endif %}>
                               {{ block.settings.button_text | escape }}
                             </a>
                           {% endif %}
                           
                           {% if block.settings.second_button_text != blank %}
-                            <a href="{{ block.settings.second_link | default: '#' }}" class="btn-border-link">
+                            <a href="{{ block.settings.second_link | default: '#' }}" 
+                               class="btn-border-link"
+                               {% if block.settings.second_link == blank %}aria-disabled="true"{% endif %}>
                               {{ block.settings.second_button_text | escape }}
                             </a>
                           {% endif %}
@@ -445,17 +594,40 @@
           </div>
           
           {% if section.blocks.size > 1 and section.settings.show_arrows %}
-            <button class="nav-arrow prev" aria-label="Previous slide">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="nav-arrow prev" 
+                    aria-label="Poprzedni slajd"
+                    aria-controls="custom-slideshow-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M15 18l-6-6 6-6"/>
               </svg>
             </button>
-            <button class="nav-arrow next" aria-label="Next slide">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="nav-arrow next" 
+                    aria-label="Następny slajd"
+                    aria-controls="custom-slideshow-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M9 18l6-6-6-6"/>
               </svg>
             </button>
           {% endif %}
+
+          {% if section.blocks.size > 1 and section.settings.show_dots %}
+            <div class="nav-dots" role="tablist" aria-label="Nawigacja slajdów">
+              {% for block in section.blocks %}
+                <button class="nav-dot{% if forloop.first %} active{% endif %}" 
+                        role="tab"
+                        aria-label="Slajd {{ forloop.index }} z {{ section.blocks.size }}"
+                        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-controls="custom-slide-{{ block.id }}"></button>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if section.settings.show_progress and section.blocks.size > 1 %}
+            <div class="slide-progress" aria-hidden="true">
+              <div class="slide-progress-bar"></div>
+            </div>
+          {% endif %}
+        </div>
       {% else %}
         {%- render 'onboard-no-blocks' -%}
       {% endif %}
@@ -465,40 +637,40 @@
 
 <script>
 (function() {
-  const slideshow = document.querySelector('.slideshow-{{ section.id }}');
+  const slideshow = document.querySelector('.custom-slideshow-{{ section.id }}');
   if (!slideshow) return;
   
-  const slides = slideshow.querySelectorAll('.slide');
-  const slidesWrapper = slideshow.querySelector('.slides-wrapper');
+  const slides = slideshow.querySelectorAll('.custom-slide');
+  const slidesWrapper = slideshow.querySelector('.custom-slides-wrapper');
   const prevBtn = slideshow.querySelector('.nav-arrow.prev');
   const nextBtn = slideshow.querySelector('.nav-arrow.next');
   const dots = slideshow.querySelectorAll('.nav-dot');
+  const progressBar = slideshow.querySelector('.slide-progress-bar');
   const autoplayDelay = parseInt(slideshow.dataset.autoplay) || 0;
   
   let currentSlide = 0;
   let autoplayTimer = null;
   let isTransitioning = false;
+  let autoplayProgress = 0;
+  let progressTimer = null;
   
-  // Only proceed if we have multiple slides
   if (slides.length <= 1) return;
   
-  // Enable fade animation
   slideshow.classList.add('fade-enabled');
-  
-  // Set initial active state
   slides[0].classList.add('active');
   
-  // Enhanced drag functionality variables
   let isDragging = false;
   let startX = 0;
   let startY = 0;
   let currentX = 0;
   let currentY = 0;
   let dragThreshold = 50;
-  let touchDirection = null; // Track if touch is horizontal or vertical
-  let hasDragStarted = false; // Track if we've committed to dragging
+  let touchDirection = null;
+  let hasDragStarted = false;
+  let clickStartTime = 0;
+  let clickStartX = 0;
+  let clickStartY = 0;
   
-  // Maintain wrapper height
   function updateWrapperHeight() {
     const activeSlide = slides[currentSlide];
     const img = activeSlide.querySelector('img');
@@ -506,59 +678,94 @@
     function setHeight() {
       requestAnimationFrame(() => {
         const rect = activeSlide.getBoundingClientRect();
-        slidesWrapper.style.height = rect.height + 'px';
+        if (rect.height > 0) {
+          slidesWrapper.style.height = rect.height + 'px';
+        }
       });
     }
     
     if (img) {
-      if (img.complete) {
+      if (img.complete && img.naturalHeight > 0) {
         setHeight();
       } else {
         img.addEventListener('load', setHeight, { once: true });
+        img.addEventListener('error', setHeight, { once: true });
+        setTimeout(setHeight, 100);
       }
     } else {
       setHeight();
     }
   }
   
-  // Show specific slide
   function showSlide(index, instant = false) {
     if (isTransitioning && !instant) return;
+    
+    index = ((index % slides.length) + slides.length) % slides.length;
+    if (index === currentSlide && !instant) return;
+    
     isTransitioning = true;
+    const previousSlide = currentSlide;
     
-    // Remove active from all
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
+    slides[previousSlide].setAttribute('aria-hidden', 'true');
+    slides[index].setAttribute('aria-hidden', 'false');
     
-    // Add active to current
-    slides[index].classList.add('active');
-    if (dots[index]) dots[index].classList.add('active');
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+      dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
     
     currentSlide = index;
     updateWrapperHeight();
+    updateProgress();
+    
+    if (!instant && 'speechSynthesis' in window) {
+      const slideText = slides[index].querySelector('.slide-text');
+      if (slideText) {
+        const announcement = `Slajd ${index + 1}: ${slideText.textContent.trim()}`;
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.position = 'absolute';
+        liveRegion.style.left = '-9999px';
+        liveRegion.textContent = announcement;
+        document.body.appendChild(liveRegion);
+        setTimeout(() => document.body.removeChild(liveRegion), 1000);
+      }
+    }
     
     setTimeout(() => {
       isTransitioning = false;
-    }, instant ? 0 : 600);
+    }, instant ? 0 : 500);
   }
   
-  // Next slide
-  function nextSlide() {
-    const next = (currentSlide + 1) % slides.length;
-    showSlide(next);
+  function updateProgress() {
+    if (!progressBar) return;
+    
+    const progress = ((currentSlide + 1) / slides.length) * 100;
+    progressBar.style.width = progress + '%';
   }
   
-  // Previous slide
-  function prevSlide() {
-    const prev = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(prev);
-  }
-  
-  // Autoplay
   function startAutoplay() {
-    if (autoplayDelay > 0) {
-      stopAutoplay();
-      autoplayTimer = setInterval(nextSlide, autoplayDelay);
+    if (autoplayDelay <= 0) return;
+    
+    stopAutoplay();
+    autoplayProgress = 0;
+    
+    autoplayTimer = setInterval(() => {
+      nextSlide();
+    }, autoplayDelay);
+    
+    if (progressBar) {
+      progressTimer = setInterval(() => {
+        autoplayProgress += 50;
+        if (autoplayProgress >= autoplayDelay) {
+          autoplayProgress = 0;
+        }
+      }, 50);
     }
   }
   
@@ -567,38 +774,80 @@
       clearInterval(autoplayTimer);
       autoplayTimer = null;
     }
+    if (progressTimer) {
+      clearInterval(progressTimer);
+      progressTimer = null;
+    }
   }
   
-  // Desktop drag functionality (unchanged)
-  function handleMouseDragStart(e) {
-    if (slides.length <= 1) return;
-    
-    isDragging = true;
-    hasDragStarted = true;
-    startX = e.pageX;
-    currentX = startX;
-    
-    slidesWrapper.classList.add('dragging');
-    slideshow.classList.add('dragging');
+  function nextSlide() {
+    showSlide(currentSlide + 1);
+  }
+  
+  function prevSlide() {
+    showSlide(currentSlide - 1);
+  }
+  
+  function handleMouseDown(e) {
+    if (slides.length <= 1 || isTransitioning) return;
+    if (e.target.closest('a') || e.target.closest('button')) return;
     
     e.preventDefault();
+    startX = e.pageX;
+    startY = e.pageY;
+    currentX = startX;
+    currentY = startY;
+    clickStartX = startX;
+    clickStartY = startY;
+    clickStartTime = Date.now();
+    
+    isDragging = true;
+    hasDragStarted = false;
+    touchDirection = 'horizontal';
+    
+    slidesWrapper.style.cursor = 'grabbing';
     stopAutoplay();
   }
   
-  function handleMouseDragMove(e) {
-    if (!isDragging || !hasDragStarted) return;
+  function handleMouseMove(e) {
+    if (!isDragging || slides.length <= 1 || isTransitioning) return;
     
     e.preventDefault();
     currentX = e.pageX;
+    currentY = e.pageY;
+    
+    const deltaX = Math.abs(currentX - startX);
+    
+    if (!hasDragStarted && deltaX > 10) {
+      hasDragStarted = true;
+      slidesWrapper.classList.add('dragging');
+      slideshow.classList.add('dragging');
+    }
   }
   
-  function handleMouseDragEnd(e) {
-    if (!isDragging || !hasDragStarted) return;
+  function handleMouseUp(e) {
+    if (!isDragging) return;
     
     isDragging = false;
-    hasDragStarted = false;
-    slidesWrapper.classList.remove('dragging');
-    slideshow.classList.remove('dragging');
+    slidesWrapper.style.cursor = 'grab';
+    
+    const timeDiff = Date.now() - clickStartTime;
+    const distanceX = Math.abs(currentX - clickStartX);
+    const distanceY = Math.abs(currentY - clickStartY);
+    
+    if (timeDiff < 300 && distanceX < 10 && distanceY < 10) {
+      const slideLink = e.target.closest('.custom-slide')?.dataset.slideLink;
+      if (slideLink && !e.target.closest('a') && !e.target.closest('button')) {
+        window.location.href = slideLink;
+        return;
+      }
+    }
+    
+    if (!hasDragStarted) {
+      cleanup();
+      setTimeout(startAutoplay, 1000);
+      return;
+    }
     
     const diff = currentX - startX;
     
@@ -610,29 +859,36 @@
       }
     }
     
-    setTimeout(startAutoplay, 1000);
+    cleanup();
+    setTimeout(startAutoplay, 2000);
+    
+    function cleanup() {
+      hasDragStarted = false;
+      touchDirection = null;
+      slidesWrapper.classList.remove('dragging');
+      slideshow.classList.remove('dragging');
+    }
   }
   
-  // Enhanced touch functionality with direction detection
   function handleTouchStart(e) {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || isTransitioning) return;
     
     const touch = e.touches[0];
     startX = touch.pageX;
     startY = touch.pageY;
     currentX = startX;
     currentY = startY;
+    clickStartTime = Date.now();
     
-    // Reset state
     isDragging = false;
     hasDragStarted = false;
     touchDirection = null;
     
-    // Don't prevent default here - let the browser handle initial touch
+    stopAutoplay();
   }
   
   function handleTouchMove(e) {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || isTransitioning) return;
     
     const touch = e.touches[0];
     currentX = touch.pageX;
@@ -641,50 +897,43 @@
     const deltaX = Math.abs(currentX - startX);
     const deltaY = Math.abs(currentY - startY);
     
-    // Determine touch direction if not already determined
     if (!touchDirection && (deltaX > 10 || deltaY > 10)) {
-      if (deltaX > deltaY) {
-        touchDirection = 'horizontal';
-      } else {
-        touchDirection = 'vertical';
-      }
+      touchDirection = deltaX > deltaY ? 'horizontal' : 'vertical';
     }
     
-    // If horizontal movement and we haven't started dragging yet
     if (touchDirection === 'horizontal' && !hasDragStarted && deltaX > 15) {
       isDragging = true;
       hasDragStarted = true;
       slidesWrapper.classList.add('dragging');
       slideshow.classList.add('dragging');
-      stopAutoplay();
     }
     
-    // Only prevent default if we're committed to horizontal dragging
     if (hasDragStarted && touchDirection === 'horizontal') {
       e.preventDefault();
     }
-    // For vertical scrolling or undetermined direction, let the browser handle it
   }
   
   function handleTouchEnd(e) {
     if (!hasDragStarted || touchDirection !== 'horizontal') {
-      // Clean up any state but don't trigger slide change
-      isDragging = false;
-      hasDragStarted = false;
-      touchDirection = null;
-      slidesWrapper.classList.remove('dragging');
-      slideshow.classList.remove('dragging');
+      const timeDiff = Date.now() - clickStartTime;
+      const distanceX = Math.abs(currentX - startX);
+      const distanceY = Math.abs(currentY - startY);
+      
+      if (timeDiff < 300 && distanceX < 10 && distanceY < 10) {
+        const slideLink = e.target.closest('.custom-slide')?.dataset.slideLink;
+        if (slideLink && !e.target.closest('a') && !e.target.closest('button')) {
+          window.location.href = slideLink;
+          return;
+        }
+      }
+      
+      cleanup();
+      setTimeout(startAutoplay, 1000);
       return;
     }
     
-    isDragging = false;
-    hasDragStarted = false;
-    slidesWrapper.classList.remove('dragging');
-    slideshow.classList.remove('dragging');
-    
     const diff = currentX - startX;
     
-    // Check if drag distance exceeds threshold
     if (Math.abs(diff) > dragThreshold) {
       if (diff > 0) {
         prevSlide();
@@ -693,95 +942,139 @@
       }
     }
     
-    // Reset touch direction
-    touchDirection = null;
+    cleanup();
+    setTimeout(startAutoplay, 2000);
     
-    // Resume autoplay after a delay
-    setTimeout(startAutoplay, 1000);
+    function cleanup() {
+      isDragging = false;
+      hasDragStarted = false;
+      touchDirection = null;
+      slidesWrapper.classList.remove('dragging');
+      slideshow.classList.remove('dragging');
+    }
   }
   
-  // Event listeners
-  if (prevBtn) prevBtn.addEventListener('click', () => {
-    prevSlide();
-    stopAutoplay();
-  });
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      stopAutoplay();
+    });
+  }
   
-  if (nextBtn) nextBtn.addEventListener('click', () => {
-    nextSlide();
-    stopAutoplay();
-  });
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      stopAutoplay();
+    });
+  }
   
   dots.forEach((dot, index) => {
     dot.addEventListener('click', () => {
       showSlide(index);
       stopAutoplay();
     });
+    
+    dot.addEventListener('keydown', (e) => {
+      let targetIndex = index;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          targetIndex = index - 1;
+          break;
+        case 'ArrowRight':
+          targetIndex = index + 1;
+          break;
+        case 'Home':
+          targetIndex = 0;
+          break;
+        case 'End':
+          targetIndex = slides.length - 1;
+          break;
+        default:
+          return;
+      }
+      
+      e.preventDefault();
+      targetIndex = ((targetIndex % slides.length) + slides.length) % slides.length;
+      showSlide(targetIndex);
+      dots[targetIndex].focus();
+      stopAutoplay();
+    });
   });
   
-  // Pause on hover
   slideshow.addEventListener('mouseenter', stopAutoplay);
   slideshow.addEventListener('mouseleave', startAutoplay);
+  slideshow.addEventListener('focusin', stopAutoplay);
+  slideshow.addEventListener('focusout', (e) => {
+    if (!slideshow.contains(e.relatedTarget)) {
+      startAutoplay();
+    }
+  });
   
-  // Desktop drag events (mouse)
-  slidesWrapper.addEventListener('mousedown', handleMouseDragStart);
-  document.addEventListener('mousemove', handleMouseDragMove);
-  document.addEventListener('mouseup', handleMouseDragEnd);
-  
-  // Mobile touch events with proper direction detection
   slidesWrapper.addEventListener('touchstart', handleTouchStart, { passive: true });
   slidesWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
   slidesWrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
   
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    const rect = slideshow.getBoundingClientRect();
-    const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+  slidesWrapper.addEventListener('mousedown', handleMouseDown);
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+  
+  slideshow.addEventListener('keydown', (e) => {
+    if (e.target.closest('.nav-dot')) return;
     
-    if (inViewport) {
-      if (e.key === 'ArrowLeft') {
+    switch(e.key) {
+      case 'ArrowLeft':
+        e.preventDefault();
         prevSlide();
         stopAutoplay();
-      } else if (e.key === 'ArrowRight') {
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
         nextSlide();
         stopAutoplay();
-      }
+        break;
     }
   });
   
-  // Handle resize with debouncing
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      updateWrapperHeight();
-    }, 250);
-  });
-  
-  // Handle images loading after initialization
-  slides.forEach((slide) => {
-    const img = slide.querySelector('img');
-    if (img && !img.complete) {
-      img.addEventListener('load', () => {
-        if (slide.classList.contains('active')) {
-          updateWrapperHeight();
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (autoplayDelay > 0) startAutoplay();
+        } else {
+          stopAutoplay();
         }
       });
-    }
-  });
+    }, { threshold: 0.5 });
+    
+    observer.observe(slideshow);
+  }
   
-  // Initialize
+  if ('ResizeObserver' in window) {
+    const resizeObserver = new ResizeObserver(updateWrapperHeight);
+    resizeObserver.observe(slideshow);
+  } else {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateWrapperHeight, 250);
+    });
+  }
+  
   updateWrapperHeight();
-  startAutoplay();
+  updateProgress();
+  slideshow.classList.add('loaded');
   
-  // Ensure height is set correctly after all resources load
-  window.addEventListener('load', updateWrapperHeight);
+  setTimeout(() => {
+    if (autoplayDelay > 0) startAutoplay();
+  }, 500);
   
-  // Fix for Shopify theme editor
   document.addEventListener('shopify:section:load', (e) => {
     if (e.detail.sectionId === '{{ section.id }}') {
       setTimeout(() => {
         updateWrapperHeight();
         showSlide(0, true);
+        slideshow.classList.add('loaded');
       }, 100);
     }
   });
@@ -790,80 +1083,80 @@
 
 {% schema %}
 {
-  "name": "Slideshow",
+  "name": "Pokaz slajdów",
   "tag": "section",
   "class": "dynamic-section",
-  "max_blocks": 5,
+  "max_blocks": 8,
   "blocks": [
     {
       "type": "image",
-      "name": "Image slide",
+      "name": "Slajd obrazu",
       "settings": [
         {
           "type": "header",
-          "content": "Desktop settings"
+          "content": "Ustawienia desktop"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Desktop image",
-          "info": "2880px x 1620px recommended"
+          "label": "Obraz desktop",
+          "info": "2880px x 1620px rekomendowane dla najlepszej jakości"
         },
         {
           "type": "header",
-          "content": "Mobile settings"
+          "content": "Ustawienia mobile"
         },
         {
           "type": "image_picker",
           "id": "mobile_image",
-          "label": "Mobile image",
-          "info": "800px x 1200px recommended"
+          "label": "Obraz mobile (opcjonalny)",
+          "info": "800px x 1200px rekomendowane"
         },
         {
           "type": "header",
-          "content": "Caption content"
+          "content": "Treść napisu"
         },
         {
           "type": "text",
           "id": "heading",
-          "label": "Heading",
-          "default": "Slide image title"
+          "label": "Nagłówek",
+          "default": "Limitowane Sneakersy z Gwarancją Autentyczności"
         },
         {
           "type": "richtext",
           "id": "subheading",
-          "label": "Subheading",
-          "default": "<p>Slide image subheading</p>"
+          "label": "Opis",
+          "default": "<p>Darmowa dostawa • Zwroty 14 dni • 100% oryginalne</p>"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link"
+          "label": "Link głównego przycisku"
         },
         {
           "type": "text",
           "id": "button_text",
-          "label": "Button text",
-          "default": "Button"
+          "label": "Tekst głównego przycisku",
+          "default": "Zobacz kolekcję"
         },
         {
           "type": "url",
           "id": "second_link",
-          "label": "Button 2 link"
+          "label": "Link drugiego przycisku"
         },
         {
           "type": "text",
           "id": "second_button_text",
-          "label": "Button 2 text"
+          "label": "Tekst drugiego przycisku"
         },
         {
           "type": "header",
-          "content": "Appearance"
+          "content": "Ustawienia wizualne"
         },
         {
           "type": "color",
           "id": "overlay_color",
-          "label": "Image overlay color",
+          "label": "Kolor nakładki obrazu",
           "default": "#000000"
         },
         {
@@ -871,36 +1164,43 @@
           "id": "overlay_opacity",
           "min": 0,
           "max": 100,
-          "step": 1,
+          "step": 5,
           "unit": "%",
-          "label": "Image overlay opacity",
-          "default": 0
+          "label": "Przezroczystość nakładki",
+          "default": 30
+        },
+        {
+          "type": "checkbox",
+          "id": "overlay_gradient",
+          "label": "Użyj gradientu nakładki",
+          "default": false
         },
         {
           "type": "color",
           "id": "slide_text_color",
-          "label": "Caption text",
+          "label": "Kolor tekstu",
           "default": "#ffffff"
         },
         {
           "type": "color",
           "id": "caption_background",
-          "label": "Caption background",
-          "default": "transparent"
+          "label": "Tło napisu",
+          "default": "rgba(0,0,0,0.3)"
         },
         {
           "type": "checkbox",
           "id": "hide_caption_background",
-          "label": "Hide caption background on mobile"
+          "label": "Ukryj tło napisu na mobile",
+          "default": false
         },
         {
           "type": "range",
           "id": "caption_horizontal",
           "min": 0,
           "max": 100,
-          "step": 1,
+          "step": 5,
           "unit": "%",
-          "label": "Caption horizontal position",
+          "label": "Pozycja pozioma napisu",
           "default": 50
         },
         {
@@ -908,15 +1208,15 @@
           "id": "caption_vertical",
           "min": 0,
           "max": 100,
-          "step": 1,
+          "step": 5,
           "unit": "%",
-          "label": "Caption vertical position",
+          "label": "Pozycja pionowa napisu",
           "default": 50
         },
         {
           "type": "text_alignment",
           "id": "text_align",
-          "label": "Caption alignment",
+          "label": "Wyrównanie napisu",
           "default": "center"
         }
       ]
@@ -924,9 +1224,20 @@
   ],
   "settings": [
     {
+      "type": "header",
+      "content": "Ustawienia pokazu slajdów"
+    },
+    {
+      "type": "text",
+      "id": "slideshow_title",
+      "label": "Tytuł pokazu slajdów (SEO)",
+      "default": "Limitowane Sneakersy - Darmowa Dostawa | Saturaise",
+      "info": "Niewidoczny dla użytkowników, pomaga w SEO"
+    },
+    {
       "type": "checkbox",
       "id": "enable_autoplay",
-      "label": "Auto-change slides",
+      "label": "Automatyczna zmiana slajdów",
       "default": false
     },
     {
@@ -935,29 +1246,89 @@
       "min": 3,
       "max": 10,
       "step": 1,
-      "label": "Change images every (seconds)",
+      "label": "Zmiana slajdu co (sekundy)",
       "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Nawigacja"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Pokaż strzałki nawigacji",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Pokaż kropki nawigacji",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "Pokaż pasek postępu",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typografia"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Rozmiar tekstu opisu",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "slide_heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Rozmiar nagłówka",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Układ"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Zaokrąglenie rogów",
+      "default": 0
     },
     {
       "type": "select",
       "id": "section_padding",
-      "label": "Section spacing",
+      "label": "Odstępy sekcji",
       "options": [
         {
           "value": "top",
-          "label": "Top"
+          "label": "Tylko góra"
         },
         {
           "value": "bottom",
-          "label": "Bottom"
+          "label": "Tylko dół"
         },
         {
           "value": "both",
-          "label": "Both"
+          "label": "Góra i dół"
         },
         {
           "value": "none",
-          "label": "None"
+          "label": "Brak"
         }
       ],
       "default": "both"
@@ -965,13 +1336,23 @@
   ],
   "presets": [
     {
-      "name": "Slideshow",
+      "name": "Pokaz slajdów",
       "blocks": [
         {
-          "type": "image"
+          "type": "image",
+          "settings": {
+            "heading": "Limitowane Sneakersy z Gwarancją Autentyczności",
+            "subheading": "<p>Darmowa dostawa • Zwroty 14 dni • 100% oryginalne</p>",
+            "button_text": "Zobacz kolekcję"
+          }
         },
         {
-          "type": "image"
+          "type": "image",
+          "settings": {
+            "heading": "Nike, Yeezy, Jordan - Wszystkie Rozmiary",
+            "subheading": "<p>Najnowsze modele dostępne od ręki • Wysyłka 24h</p>",
+            "button_text": "Sprawdź nowości"
+          }
         }
       ]
     }

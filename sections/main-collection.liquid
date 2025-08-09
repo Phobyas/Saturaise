@@ -617,11 +617,12 @@
       </div>
       
       <!-- Fixed Footer -->
-      <div class="filter-drawer-footer">
-        <button class="filter-apply-btn" onclick="FilterDrawer.close()" type="button">
-          <span id="filterApplyText">{{ 'collections.filter.view_results' | t | default: 'Zobacz wyniki' }}</span>
-        </button>
-      </div>
+<!-- Fixed Footer -->
+<div class="filter-drawer-footer">
+  <button class="filter-apply-btn" onclick="FilterDrawer.close()" type="button">
+    <span id="filterApplyText">Zobacz Wyniki</span>
+  </button>
+</div>
     </div>
   </div>
 {% endif %}
@@ -629,79 +630,279 @@
 <script>
 
   
-// BULLETPROOF FILTER DRAWER SYSTEM - Built from Scratch
+// COMPLETE ENHANCED REAL-TIME FILTER SYSTEM WITH REQUEST MANAGEMENT
+// This version properly handles concurrent requests and prevents race conditions
+
 const FilterDrawer = {
   isOpen: false,
   isLoading: false,
+  updateTimeout: null,
+  currentRequest: null, // Track current fetch request
+  requestController: null, // AbortController for current request
+  pendingFilters: null, // Store filters to apply after current request
+  requestQueue: [], // Queue for filter changes
   activeFilters: {
     sort: '{{ collection.sort_by | default: "manual" }}',
     filters: {}
   },
   
   init() {
-    console.log('🚀 FilterDrawer System Started');
+    console.log('🚀 FilterDrawer System Starting...');
+    
+    // Add loading animation CSS
+    if (!document.getElementById('filter-drawer-animations')) {
+      const style = document.createElement('style');
+      style.id = 'filter-drawer-animations';
+      style.innerHTML = `
+        @keyframes pulse {
+          0% { opacity: 0.6; }
+          50% { opacity: 1; }
+          100% { opacity: 0.6; }
+        }
+        .drawer-loading-indicator {
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Load current state from URL
     this.loadFiltersFromURL();
-    this.loadExistingFilters();
-    this.setupEventListeners();
-    this.createBodyContainer();
+    
+    // Disable conflicting theme filters
     this.disableThemeFilters();
     
-    // Initialize drawer state to reflect current filters
-    setTimeout(() => {
-      this.updateDrawerState();
-    }, 200);
+    // Setup all event listeners
+    this.setupEventListeners();
+    
+    // Move drawer to body level
+    this.createBodyContainer();
+    
+    // Initialize drawer state
+    this.updateDrawerState();
+    
+    // Setup real-time updates
+    this.setupRealTimeUpdates();
+    
+    // Initialize current filters display
+    this.updateCurrentFiltersDisplay();
     
     console.log('✅ FilterDrawer System Ready');
   },
   
-  // Safely disable existing theme filter system to prevent conflicts
-  disableThemeFilters() {
-    // Hide existing theme filter buttons (but NOT product elements)
-    const themeFilterButtons = document.querySelectorAll('[data-wau-slideout-target="collection-filters"]:not(.modern-filter-button)');
-    themeFilterButtons.forEach(btn => {
-      btn.style.display = 'none';
+  setupRealTimeUpdates() {
+    const filterContainer = document.getElementById('filterDrawer');
+    if (!filterContainer) return;
+    
+    // Use event delegation with immediate feedback
+    filterContainer.addEventListener('change', (e) => {
+      if (e.target.matches('input[type="checkbox"], input[type="radio"]')) {
+        // Provide immediate visual feedback
+        this.updateVisualState(e.target);
+        // Handle the actual filter change
+        this.handleRealTimeChange(e.target);
+      }
     });
     
-    // Hide original collection filtering elements (but NOT product containers)
-    const selectors = [
+    // Handle price input changes with better debouncing
+    const priceInputs = filterContainer.querySelectorAll('#priceMin, #priceMax');
+    priceInputs.forEach(input => {
+      let priceTimeout;
+      
+      input.addEventListener('input', () => {
+        // Clear previous timeout for this specific input
+        if (priceTimeout) clearTimeout(priceTimeout);
+        
+        // Set new timeout
+        priceTimeout = setTimeout(() => {
+          this.applyPriceFilter();
+        }, 800); // Slightly longer delay for price inputs
+      });
+      
+      // Apply immediately on Enter key
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (priceTimeout) clearTimeout(priceTimeout);
+          this.applyPriceFilter();
+        }
+      });
+      
+      // Apply when input loses focus
+      input.addEventListener('blur', () => {
+        if (priceTimeout) clearTimeout(priceTimeout);
+        // Small delay to allow for clicking other elements
+        setTimeout(() => {
+          this.applyPriceFilter();
+        }, 200);
+      });
+    });
+  },
+  
+  updateVisualState(element) {
+    // Provide immediate visual feedback
+    const filterItem = element.closest('.filter-option-item');
+    if (!filterItem) return;
+    
+    if (element.type === 'checkbox') {
+      if (element.checked) {
+        filterItem.classList.add('active');
+      } else {
+        filterItem.classList.remove('active');
+      }
+    }
+  },
+  
+  handleRealTimeChange(element) {
+    // Cancel any pending debounced update
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+      this.updateTimeout = null;
+    }
+    
+    // Update filter state immediately
+    if (element.type === 'checkbox') {
+      this.updateFilterState(element);
+      // Apply with smart debouncing
+      this.smartApplyFilters();
+    } else if (element.type === 'radio' && element.name === 'sort_by') {
+      this.activeFilters.sort = element.value;
+      // Sorting changes should apply immediately
+      this.applyFiltersWithCancellation();
+    }
+  },
+  
+  updateFilterState(checkbox) {
+    const param = checkbox.dataset.param;
+    const value = checkbox.dataset.value;
+    
+    if (!param || !value) {
+      console.error('Missing param or value for filter:', checkbox);
+      return;
+    }
+    
+    if (!this.activeFilters.filters[param]) {
+      this.activeFilters.filters[param] = [];
+    }
+    
+    if (checkbox.checked) {
+      if (!this.activeFilters.filters[param].includes(value)) {
+        this.activeFilters.filters[param].push(value);
+      }
+    } else {
+      const index = this.activeFilters.filters[param].indexOf(value);
+      if (index > -1) {
+        this.activeFilters.filters[param].splice(index, 1);
+        if (this.activeFilters.filters[param].length === 0) {
+          delete this.activeFilters.filters[param];
+        }
+      }
+    }
+  },
+  
+  smartApplyFilters() {
+    // If a request is in progress, queue this update
+    if (this.isLoading) {
+      // Store the current filter state to apply after current request
+      this.pendingFilters = JSON.parse(JSON.stringify(this.activeFilters));
+      console.log('📋 Queued filter update for after current request');
+      return;
+    }
+    
+    // Otherwise, apply with a short debounce
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+    }
+    
+    this.updateTimeout = setTimeout(() => {
+      this.applyFiltersWithCancellation();
+    }, 400); // Short delay for multiple quick selections
+  },
+  
+  applyFiltersWithCancellation() {
+    // Cancel any pending debounced update
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+      this.updateTimeout = null;
+    }
+    
+    // Cancel any in-flight request
+    if (this.requestController) {
+      console.log('🛑 Cancelling previous request');
+      this.requestController.abort();
+      this.requestController = null;
+      this.isLoading = false;
+    }
+    
+    // Apply the filters
+    this.applyFilters();
+  },
+  
+  debounceUpdate(callback, delay) {
+    if (this.updateTimeout) {
+      clearTimeout(this.updateTimeout);
+    }
+    this.updateTimeout = setTimeout(callback, delay);
+  },
+  
+  disableThemeFilters() {
+    const themeSelectors = [
+      '[data-wau-slideout-target="collection-filters"]:not(.modern-filter-button)',
       '.slideout__trigger-filters:not(.modern-filter-button)',
       '.slideout[data-wau-slideout="collection-filters"]:not(#filterDrawerContainer *)',
       '.filter-drawer__filtering__results:not(.modern-current-filters)',
       '.collection__page--topbar .button:not(.modern-filter-button)',
-      '.collection__horizontal-toolbar .slideout__trigger-filters:not(.modern-filter-button)'
+      '.collection__horizontal-toolbar .slideout__trigger-filters:not(.modern-filter-button)',
+      '.js-filter',
+      '.js-current-filter'
     ];
     
-    selectors.forEach(selector => {
+    themeSelectors.forEach(selector => {
       try {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
-          // Only hide if it's not within a product container
-          if (!el.closest('.product-listing, .product-item, .product-loop, .grid__wrapper .span-3, .grid__wrapper .span-4, .grid__wrapper .span-6')) {
-            el.style.display = 'none';
-            el.style.visibility = 'hidden';
-            el.style.opacity = '0';
-            el.style.pointerEvents = 'none';
+          if (el.classList.contains('modern-filter-button') || 
+              el.closest('#filterDrawerContainer')) {
+            return;
+          }
+          
+          if (el.closest('.product-listing, .product-item, .product-loop, .grid__wrapper')) {
+            return;
+          }
+          
+          const clone = el.cloneNode(true);
+          clone.style.display = 'none';
+          clone.style.visibility = 'hidden';
+          clone.style.opacity = '0';
+          clone.style.pointerEvents = 'none';
+          if (el.parentNode) {
+            el.parentNode.replaceChild(clone, el);
           }
         });
       } catch (e) {
-        console.warn('Could not hide selector:', selector, e);
+        console.warn('Could not disable selector:', selector);
       }
     });
     
-    // Disable WAU slideout for collection-filters only
     if (window.WAU && window.WAU.Slideout) {
       const originalInit = window.WAU.Slideout.init;
       window.WAU.Slideout.init = function(target) {
         if (target === 'collection-filters') {
-          console.log('🚫 Blocked WAU slideout init for collection-filters');
+          console.log('🚫 Blocked WAU slideout for collection-filters');
           return;
         }
         return originalInit.call(this, target);
       };
     }
+    
+    if (window.CollectionFilters) {
+      window.CollectionFilters.renderPage = function() {
+        console.log('🚫 Blocked CollectionFilters.renderPage');
+        return;
+      };
+    }
   },
   
-  // Create container at body level for proper positioning
   createBodyContainer() {
     const container = document.getElementById('filterDrawerContainer');
     if (container && !container.parentElement.matches('body')) {
@@ -711,25 +912,72 @@ const FilterDrawer = {
   },
   
   setupEventListeners() {
-    // Escape key to close
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen) {
-        this.close();
+        // Allow escape key to force close even during loading
+        this.close(true);
       }
     });
     
-    // Prevent body scroll when drawer is open
+    window.addEventListener('popstate', (e) => {
+      // Cancel any pending requests when navigating
+      if (this.requestController) {
+        this.requestController.abort();
+      }
+      this.loadFiltersFromURL();
+      this.updateDrawerState();
+      this.applyFilters(false);
+    });
+    
     document.addEventListener('touchmove', (e) => {
       if (this.isOpen && !e.target.closest('.filter-drawer')) {
         e.preventDefault();
       }
     }, { passive: false });
+    
+    // Setup backdrop click handler
+    const backdrop = document.getElementById('filterBackdrop');
+    if (backdrop) {
+      backdrop.onclick = (e) => {
+        // Only close if not loading
+        if (!this.isLoading) {
+          this.close();
+        } else {
+          console.log('⏳ Click X button to close during loading');
+          // Optional: show a message to user
+          this.showCloseHint();
+        }
+      };
+    }
+    
+    // Setup close button to force close
+    const closeButton = document.querySelector('.filter-drawer-close');
+    if (closeButton) {
+      closeButton.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Force close even during loading
+        this.close(true);
+      };
+    }
   },
   
-  // BULLETPROOF OPEN - Works from any scroll position
+  showCloseHint() {
+    // Show a temporary hint to use X button
+    const hint = document.querySelector('.drawer-loading-indicator');
+    if (hint) {
+      const originalText = hint.innerHTML;
+      hint.innerHTML = '<span>Użyj X aby zamknąć</span>';
+      hint.style.backgroundColor = '#dc2626';
+      setTimeout(() => {
+        hint.innerHTML = originalText;
+        hint.style.backgroundColor = '#1d4ed8';
+      }, 2000);
+    }
+  },
+  
   open() {
-    if (this.isLoading) return;
-    
+    // Allow opening even if loading - better UX
     const container = document.getElementById('filterDrawerContainer');
     const backdrop = document.getElementById('filterBackdrop');
     const drawer = document.getElementById('filterDrawer');
@@ -739,18 +987,13 @@ const FilterDrawer = {
       return;
     }
     
-    // Ensure container is at body level
     if (!container.parentElement.matches('body')) {
       document.body.appendChild(container);
     }
     
-    // Update drawer state before opening to reflect current filters
     this.updateDrawerState();
-    
-    // Store current scroll position
     this.scrollPosition = window.pageYOffset;
     
-    // Show with bulletproof method
     container.style.display = 'block';
     container.style.position = 'fixed';
     container.style.top = '0';
@@ -759,13 +1002,11 @@ const FilterDrawer = {
     container.style.height = '100vh';
     container.style.zIndex = '999999';
     
-    // Trigger animations
     requestAnimationFrame(() => {
       backdrop.classList.add('active');
       drawer.classList.add('active');
     });
     
-    // Prevent body scroll
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = `-${this.scrollPosition}px`;
@@ -773,50 +1014,50 @@ const FilterDrawer = {
     
     this.isOpen = true;
     
-    // Focus management
     setTimeout(() => {
-      const firstFocusable = drawer.querySelector('button, input');
-      if (firstFocusable) firstFocusable.focus();
+      const firstInput = drawer.querySelector('input:not([disabled]), button:not([disabled])');
+      if (firstInput) firstInput.focus();
     }, 100);
     
-    console.log('✅ Drawer opened successfully');
+    console.log('✅ Drawer opened' + (this.isLoading ? ' (loading in progress)' : ''));
   },
   
-  // BULLETPROOF CLOSE - Restores scroll position
-  close() {
+  close(forceClose = false) {
+    // Don't allow backdrop clicks to close during loading unless forced
+    if (this.isLoading && !forceClose) {
+      console.log('⏳ Cannot close drawer while loading (use X button to force close)');
+      return;
+    }
+    
     const container = document.getElementById('filterDrawerContainer');
     const backdrop = document.getElementById('filterBackdrop');
     const drawer = document.getElementById('filterDrawer');
     
     if (!container || !backdrop || !drawer) return;
     
-    // Remove active classes for animation
     backdrop.classList.remove('active');
     drawer.classList.remove('active');
     
-    // Hide after animation
     setTimeout(() => {
       container.style.display = 'none';
     }, 300);
     
-    // Restore body scroll and position
     document.body.style.overflow = '';
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
     
-    // Restore scroll position
     if (this.scrollPosition !== undefined) {
       window.scrollTo(0, this.scrollPosition);
     }
     
     this.isOpen = false;
     
-    // Return focus to filter button
+    // Don't cancel the request - let it complete in background
+    console.log('✅ Drawer closed' + (this.isLoading && forceClose ? ' (forced during loading)' : ''));
+    
     const filterButton = document.querySelector('.modern-filter-button');
     if (filterButton) filterButton.focus();
-    
-    console.log('✅ Drawer closed successfully');
   },
   
   toggleSection(sectionId) {
@@ -841,44 +1082,12 @@ const FilterDrawer = {
   
   handleSort(sortValue) {
     this.activeFilters.sort = sortValue;
-    this.applyFilters();
+    this.applyFiltersWithCancellation();
   },
   
   handleFilterChange(checkbox) {
-    const param = checkbox.dataset.param;
-    const value = checkbox.dataset.value;
-    const label = checkbox.dataset.label;
-    const filterItem = checkbox.closest('.filter-option-item');
-    
-    if (!this.activeFilters.filters[param]) {
-      this.activeFilters.filters[param] = [];
-    }
-    
-    if (checkbox.checked) {
-      if (!this.activeFilters.filters[param].includes(value)) {
-        this.activeFilters.filters[param].push(value);
-        this.addFilterTag(param, value, label);
-        // Add active class to the filter item
-        if (filterItem) {
-          filterItem.classList.add('active');
-        }
-      }
-    } else {
-      const index = this.activeFilters.filters[param].indexOf(value);
-      if (index > -1) {
-        this.activeFilters.filters[param].splice(index, 1);
-        if (this.activeFilters.filters[param].length === 0) {
-          delete this.activeFilters.filters[param];
-        }
-        this.removeFilterTag(param, value);
-        // Remove active class from the filter item
-        if (filterItem) {
-          filterItem.classList.remove('active');
-        }
-      }
-    }
-    
-    this.applyFilters();
+    this.updateFilterState(checkbox);
+    this.smartApplyFilters();
   },
   
   applyPriceFilter() {
@@ -890,10 +1099,18 @@ const FilterDrawer = {
     const minValue = parseInt(minInput.value) || 0;
     const maxValue = parseInt(maxInput.value) || 0;
     
+    // Check if values actually changed
+    const currentMin = this.activeFilters.filters['filter.v.price.gte']?.[0] || 0;
+    const currentMax = this.activeFilters.filters['filter.v.price.lte']?.[0] || 0;
+    
+    if (currentMin === minValue * 100 && currentMax === maxValue * 100) {
+      console.log('💰 Price values unchanged, skipping update');
+      return;
+    }
+    
     // Remove existing price filters
     Object.keys(this.activeFilters.filters).forEach(key => {
       if (key.includes('price')) {
-        this.removeFilterTag(key, this.activeFilters.filters[key][0]);
         delete this.activeFilters.filters[key];
       }
     });
@@ -901,15 +1118,13 @@ const FilterDrawer = {
     // Add new price filters
     if (minValue > 0) {
       this.activeFilters.filters['filter.v.price.gte'] = [minValue * 100];
-      this.addFilterTag('filter.v.price.gte', minValue * 100, `Od ${minValue} zł`);
     }
     
     if (maxValue > 0) {
       this.activeFilters.filters['filter.v.price.lte'] = [maxValue * 100];
-      this.addFilterTag('filter.v.price.lte', maxValue * 100, `Do ${maxValue} zł`);
     }
     
-    this.applyFilters();
+    this.applyFiltersWithCancellation();
   },
   
   removeFilter(param, value) {
@@ -923,94 +1138,27 @@ const FilterDrawer = {
       }
     }
     
-    this.removeFilterTag(param, value);
     this.updateDrawerState();
-    this.applyFilters();
+    this.applyFiltersWithCancellation();
   },
   
   clearAll() {
+    // Cancel any pending requests
+    if (this.requestController) {
+      this.requestController.abort();
+    }
+    
     this.activeFilters.filters = {};
     this.activeFilters.sort = 'manual';
     
-    // Clear all filter tags
-    const list = document.getElementById('modernCurrentFiltersList');
-    if (list) list.innerHTML = '';
-    
-    // Hide filter container
-    const container = document.getElementById('modernCurrentFilters');
-    if (container) container.style.display = 'none';
-    
-    // Update drawer
     this.updateDrawerState();
     
-    // Navigate to clean URL
     const url = new URL(window.location.href);
     url.search = '';
     window.location.href = url.toString();
   },
   
-  addFilterTag(param, value, label) {
-    const container = document.getElementById('modernCurrentFilters');
-    const list = document.getElementById('modernCurrentFiltersList');
-    
-    if (!list || !container) return;
-    
-    // Check if already exists
-    if (list.querySelector(`[data-filter-param="${param}"][data-filter-value="${value}"]`)) return;
-    
-    const li = document.createElement('li');
-    li.className = 'modern-current-filter-item';
-    li.innerHTML = `
-      <button class="modern-current-filter-tag" 
-              type="button"
-              data-filter-param="${param}"
-              data-filter-value="${value}"
-              onclick="FilterDrawer.removeFilter('${param}', '${value}')"
-              aria-label="Usuń filtr ${label}">
-        <span class="filter-tag-text">${label}</span>
-        <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
-      </button>
-    `;
-    
-    list.appendChild(li);
-    container.style.display = 'block';
-    
-    // Add clear all button if needed
-    if (!list.querySelector('.modern-clear-all-filters')) {
-      const clearLi = document.createElement('li');
-      clearLi.className = 'modern-current-filter-item';
-      clearLi.innerHTML = `
-        <button class="modern-clear-all-filters" 
-                type="button" 
-                onclick="FilterDrawer.clearAll()"
-                aria-label="Wyczyść wszystkie filtry">
-          <span class="clear-all-text">Wyczyść wszystkie</span>
-        </button>
-      `;
-      list.appendChild(clearLi);
-    }
-  },
-  
-  removeFilterTag(param, value) {
-    const list = document.getElementById('modernCurrentFiltersList');
-    if (!list) return;
-    
-    const tag = list.querySelector(`[data-filter-param="${param}"][data-filter-value="${value}"]`);
-    if (tag) {
-      const li = tag.closest('.modern-current-filter-item');
-      if (li) li.remove();
-    }
-    
-    // Hide container if no more filters
-    const remainingTags = list.querySelectorAll('.modern-current-filter-tag');
-    if (remainingTags.length === 0) {
-      const container = document.getElementById('modernCurrentFilters');
-      if (container) container.style.display = 'none';
-    }
-  },
-  
   updateDrawerState() {
-    // Update checkboxes and labels to match active filters
     document.querySelectorAll('#filterDrawer .filter-option-item').forEach(filterItem => {
       const checkbox = filterItem.querySelector('input[type="checkbox"]');
       if (!checkbox) return;
@@ -1018,14 +1166,11 @@ const FilterDrawer = {
       const param = checkbox.dataset.param;
       const value = checkbox.dataset.value;
       
-      // Check if this filter is active
       const isActive = this.activeFilters.filters[param] && 
                       this.activeFilters.filters[param].includes(value);
       
-      // Update checkbox state
       checkbox.checked = isActive;
       
-      // Update visual state
       if (isActive) {
         filterItem.classList.add('active');
       } else {
@@ -1033,76 +1178,72 @@ const FilterDrawer = {
       }
     });
     
-    // Update sort radio buttons
     document.querySelectorAll('#filterDrawer .sort-option input[type="radio"]').forEach(radio => {
       radio.checked = radio.value === this.activeFilters.sort;
     });
     
-    // Update apply button text
-    const applyBtn = document.getElementById('filterApplyText');
-    if (applyBtn) {
-      const filterCount = Object.keys(this.activeFilters.filters).length;
-      if (filterCount > 0) {
-        applyBtn.textContent = `Zobacz wyniki`;
-      } else {
-        applyBtn.textContent = 'Zobacz wyniki';
-      }
+    const priceGte = this.activeFilters.filters['filter.v.price.gte'];
+    const priceLte = this.activeFilters.filters['filter.v.price.lte'];
+    
+    const minInput = document.getElementById('priceMin');
+    const maxInput = document.getElementById('priceMax');
+    
+    if (minInput) {
+      minInput.value = priceGte ? priceGte[0] / 100 : '';
+    }
+    if (maxInput) {
+      maxInput.value = priceLte ? priceLte[0] / 100 : '';
     }
     
-    console.log('🔄 Drawer state updated. Active filters:', this.activeFilters.filters);
+    console.log('🔄 Drawer state updated');
   },
   
   loadFiltersFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Load sort
+    this.activeFilters.filters = {};
+    this.activeFilters.sort = 'manual';
+    
     const sortBy = urlParams.get('sort_by');
     if (sortBy) {
       this.activeFilters.sort = sortBy;
     }
     
-    // Load filters
     urlParams.forEach((value, key) => {
       if (key.startsWith('filter.')) {
         if (!this.activeFilters.filters[key]) {
           this.activeFilters.filters[key] = [];
         }
-        this.activeFilters.filters[key].push(value);
-      }
-    });
-  },
-  
-  loadExistingFilters() {
-    // Load from existing filter tags in DOM
-    const existingTags = document.querySelectorAll('.modern-current-filter-tag[data-filter-param]');
-    existingTags.forEach(tag => {
-      const param = tag.getAttribute('data-filter-param');
-      const value = tag.getAttribute('data-filter-value');
-      if (param && value) {
-        if (!this.activeFilters.filters[param]) {
-          this.activeFilters.filters[param] = [];
-        }
-        if (!this.activeFilters.filters[param].includes(value)) {
-          this.activeFilters.filters[param].push(value);
+        if (!this.activeFilters.filters[key].includes(value)) {
+          this.activeFilters.filters[key].push(value);
         }
       }
     });
+    
+    console.log('📋 Loaded filters from URL:', this.activeFilters);
   },
   
-  applyFilters() {
-    if (this.isLoading) return;
+  applyFilters(pushState = true) {
+    // Prevent multiple simultaneous requests
+    if (this.isLoading && this.requestController) {
+      console.log('⏳ Request already in progress, queueing...');
+      this.pendingFilters = JSON.parse(JSON.stringify(this.activeFilters));
+      return;
+    }
+    
     this.isLoading = true;
+    
+    // Create new AbortController for this request
+    this.requestController = new AbortController();
     
     // Build URL
     const url = new URL(window.location.href);
     url.search = '';
     
-    // Add sort
-    if (this.activeFilters.sort !== 'manual') {
+    if (this.activeFilters.sort && this.activeFilters.sort !== 'manual') {
       url.searchParams.set('sort_by', this.activeFilters.sort);
     }
     
-    // Add filters
     Object.keys(this.activeFilters.filters).forEach(param => {
       this.activeFilters.filters[param].forEach(value => {
         url.searchParams.append(param, value);
@@ -1111,49 +1252,72 @@ const FilterDrawer = {
     
     console.log('🔄 Applying filters:', url.toString());
     
-    // Show loading state
     this.showLoading();
     
-    // Fetch new content with timeout and better error handling
-    const controller = new AbortController();
+    // Set a timeout for the request
     const timeoutId = setTimeout(() => {
-      controller.abort();
-      this.isLoading = false;
-      this.hideLoading();
-      console.error('❌ Filter request timed out');
-      // Fallback to page reload
-      window.location.href = url.toString();
+      if (this.requestController) {
+        this.requestController.abort();
+        console.log('⏱️ Request timed out');
+      }
     }, 10000);
     
+    // Make the fetch request
     fetch(url.toString(), {
-      signal: controller.signal,
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      signal: this.requestController.signal,
+      headers: { 
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'text/html'
+      }
     })
     .then(response => {
       clearTimeout(timeoutId);
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}`);
       }
       return response.text();
     })
     .then(html => {
-      this.updateContent(html);
-      window.history.pushState({}, '', url.toString());
+      // Request completed successfully
+      this.requestController = null;
       this.isLoading = false;
+      
+      this.updateContent(html);
+      
+      if (pushState) {
+        window.history.pushState({}, '', url.toString());
+      }
+      
       this.hideLoading();
+      this.updateCurrentFiltersDisplay();
+      
       console.log('✅ Filters applied successfully');
+      
+      // Check if there are pending filters to apply
+      if (this.pendingFilters) {
+        console.log('📋 Applying queued filters');
+        const pending = this.pendingFilters;
+        this.pendingFilters = null;
+        this.activeFilters = pending;
+        // Apply pending filters after a short delay
+        setTimeout(() => {
+          this.applyFilters();
+        }, 100);
+      }
     })
     .catch(error => {
       clearTimeout(timeoutId);
-      console.error('❌ Filter error:', error);
+      this.requestController = null;
       this.isLoading = false;
       this.hideLoading();
       
-      // Graceful fallback to page reload
-      if (error.name !== 'AbortError') {
-        setTimeout(() => {
-          window.location.href = url.toString();
-        }, 1000);
+      if (error.name === 'AbortError') {
+        console.log('🛑 Request was cancelled');
+        // Don't do anything else for cancelled requests
+      } else {
+        console.error('❌ Filter error:', error);
+        // Only fallback to page reload for actual errors
+        window.location.href = url.toString();
       }
     });
   },
@@ -1162,44 +1326,56 @@ const FilterDrawer = {
     const parser = new DOMParser();
     const newDoc = parser.parseFromString(html, 'text/html');
     
-    // Update product grid
     const currentGrid = document.querySelector('#main-collection-product-grid');
     const newGrid = newDoc.querySelector('#main-collection-product-grid');
     
     if (currentGrid && newGrid) {
-      currentGrid.innerHTML = newGrid.innerHTML;
-    }
-    
-    // Update product count - try multiple methods to get accurate count
-    let newCount = 0;
-    
-    // Method 1: Try to get count from the new HTML's product count element
-    const newCountElement = newDoc.getElementById('modernProductCount');
-    if (newCountElement) {
-      const countMatch = newCountElement.textContent.match(/(\d+)/);
-      if (countMatch) {
-        newCount = parseInt(countMatch[1]);
-      }
-    }
-    
-    // Method 2: If that fails, count products in the updated grid
-    if (newCount === 0) {
-      newCount = newDoc.querySelectorAll('.product-listing, .product-item, [data-product-id], .product-loop .span-3, .product-loop .span-4, .product-loop .span-6').length;
-    }
-    
-    // Method 3: If still 0, count in current updated grid
-    if (newCount === 0) {
+      const scrollY = window.scrollY;
+      
+      currentGrid.style.transition = 'opacity 0.2s ease';
+      currentGrid.style.opacity = '0.5';
+      
       setTimeout(() => {
-        newCount = document.querySelectorAll('#main-collection-product-grid .product-listing, #main-collection-product-grid .product-item, #main-collection-product-grid [data-product-id]').length;
-        this.updateProductCountDisplay(newCount);
+        currentGrid.innerHTML = newGrid.innerHTML;
+        currentGrid.style.opacity = '1';
+        
+        if (!this.isOpen) {
+          window.scrollTo(0, scrollY);
+        }
+        
+        setTimeout(() => {
+          currentGrid.style.transition = '';
+        }, 200);
       }, 100);
     }
     
-    // Update the product count display
-    this.updateProductCountDisplay(newCount);
+    let productCount = 0;
+    const countElement = newDoc.getElementById('modernProductCount');
+    if (countElement) {
+      const match = countElement.textContent.match(/(\d+)/);
+      if (match) {
+        productCount = parseInt(match[1]);
+      }
+    }
     
-    // Update drawer filter counts and active states
-    this.updateFilterStatesFromHTML(newDoc);
+    if (productCount === 0) {
+      productCount = newDoc.querySelectorAll('.product-listing, .product-item, [data-product-id]').length;
+    }
+    
+    this.updateProductCountDisplay(productCount);
+    this.updateFilterCounts(newDoc);
+    
+    const emptyMessage = currentGrid.querySelector('.js-coll-empty-filter');
+    if (productCount === 0 && emptyMessage) {
+      emptyMessage.style.display = 'block';
+    } else if (emptyMessage) {
+      emptyMessage.style.display = 'none';
+    }
+    
+    if (window.WAU) {
+      if (window.WAU.Quickshop) window.WAU.Quickshop.init();
+      if (window.WAU.ProductGridVideo) window.WAU.ProductGridVideo.init();
+    }
   },
   
   updateProductCountDisplay(count) {
@@ -1216,20 +1392,21 @@ const FilterDrawer = {
         countText = `${count} produktów`;
       }
       countElement.textContent = countText;
-      console.log(`✅ Product count updated: ${countText}`);
+      console.log(`📊 Product count: ${countText}`);
     }
   },
   
-  updateFilterStatesFromHTML(newDoc) {
-    // Update filter counts and active states from the new HTML
-    const newFilterSections = newDoc.querySelectorAll('.filter-section');
-    const currentFilterSections = document.querySelectorAll('#filterDrawer .filter-section');
+  updateFilterCounts(newDoc) {
+    const newDrawer = newDoc.querySelector('#filterDrawer');
+    if (!newDrawer) return;
     
-    newFilterSections.forEach((newSection, index) => {
-      const currentSection = currentFilterSections[index];
+    const newSections = newDrawer.querySelectorAll('.filter-section');
+    const currentSections = document.querySelectorAll('#filterDrawer .filter-section');
+    
+    newSections.forEach((newSection, sectionIndex) => {
+      const currentSection = currentSections[sectionIndex];
       if (!currentSection) return;
       
-      // Update filter option counts and availability
       const newOptions = newSection.querySelectorAll('.filter-option-item');
       const currentOptions = currentSection.querySelectorAll('.filter-option-item');
       
@@ -1237,61 +1414,222 @@ const FilterDrawer = {
         const currentOption = currentOptions[optionIndex];
         if (!currentOption) return;
         
-        // Update count
         const newCount = newOption.querySelector('.filter-option-count');
         const currentCount = currentOption.querySelector('.filter-option-count');
         if (newCount && currentCount) {
           currentCount.textContent = newCount.textContent;
         }
         
-        // Update disabled state
         const newInput = newOption.querySelector('input');
         const currentInput = currentOption.querySelector('input');
         if (newInput && currentInput) {
-          if (newInput.disabled) {
+          const newDisabled = newInput.disabled || newOption.hasAttribute('data-disabled');
+          const countText = newCount ? newCount.textContent : '(0)';
+          const count = parseInt(countText.match(/\d+/)?.[0] || '0');
+          
+          if ((newDisabled || count === 0) && !currentInput.checked) {
             currentInput.disabled = true;
             currentOption.setAttribute('data-disabled', 'true');
+            currentOption.style.opacity = '0.5';
+            currentOption.style.pointerEvents = 'none';
           } else {
             currentInput.disabled = false;
             currentOption.removeAttribute('data-disabled');
+            currentOption.style.opacity = '';
+            currentOption.style.pointerEvents = '';
           }
         }
       });
     });
   },
   
+  updateCurrentFiltersDisplay() {
+    const container = document.getElementById('modernCurrentFilters');
+    const list = document.getElementById('modernCurrentFiltersList');
+    
+    if (!list || !container) return;
+    
+    list.innerHTML = '';
+    
+    let hasFilters = false;
+    
+    Object.keys(this.activeFilters.filters).forEach(param => {
+      this.activeFilters.filters[param].forEach(value => {
+        hasFilters = true;
+        
+        const checkbox = document.querySelector(`[data-param="${param}"][data-value="${value}"]`);
+        let label = checkbox ? checkbox.dataset.label : value;
+        
+        if (param === 'filter.v.price.gte') {
+          label = `Od ${value / 100} zł`;
+        } else if (param === 'filter.v.price.lte') {
+          label = `Do ${value / 100} zł`;
+        }
+        
+        const li = document.createElement('li');
+        li.className = 'modern-current-filter-item';
+        li.innerHTML = `
+          <button class="modern-current-filter-tag" 
+                  type="button"
+                  data-filter-param="${param}"
+                  data-filter-value="${value}"
+                  onclick="FilterDrawer.removeFilter('${param}', '${value}')"
+                  aria-label="Usuń filtr ${label}">
+            <span class="filter-tag-text">${label}</span>
+            <span class="modern-filter-remove-icon" aria-hidden="true">×</span>
+          </button>
+        `;
+        list.appendChild(li);
+      });
+    });
+    
+    if (hasFilters) {
+      const clearLi = document.createElement('li');
+      clearLi.className = 'modern-current-filter-item modern-clear-all-desktop';
+      clearLi.innerHTML = `
+        <button class="modern-clear-all-filters" 
+                type="button" 
+                onclick="FilterDrawer.clearAll()"
+                aria-label="Wyczyść wszystkie filtry">
+          <span class="clear-all-text">Wyczyść wszystkie</span>
+        </button>
+      `;
+      list.appendChild(clearLi);
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
+    }
+  },
+  
   showLoading() {
     const wrapper = document.querySelector('.modern-collection-filters');
-    if (wrapper) wrapper.classList.add('loading');
+    if (wrapper) {
+      wrapper.classList.add('loading');
+    }
+    
+    const grid = document.querySelector('#main-collection-product-grid');
+    if (grid) {
+      grid.style.opacity = '0.5';
+      grid.style.pointerEvents = 'none';
+    }
+    
+    // Show loading indicator in drawer but DON'T disable it
+    const drawer = document.querySelector('#filterDrawer');
+    if (drawer) {
+      // Add visual loading indicator without blocking interactions
+      if (!drawer.querySelector('.drawer-loading-indicator')) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'drawer-loading-indicator';
+        loadingDiv.innerHTML = '<span>Aktualizowanie...</span>';
+        loadingDiv.style.cssText = `
+          position: absolute;
+          top: 10px;
+          right: 60px;
+          background: #1d4ed8;
+          color: white;
+          padding: 5px 15px;
+          border-radius: 20px;
+          font-size: 12px;
+          z-index: 1000;
+          animation: pulse 1.5s ease-in-out infinite;
+        `;
+        drawer.querySelector('.filter-drawer-header')?.appendChild(loadingDiv);
+      }
+    }
   },
   
   hideLoading() {
     const wrapper = document.querySelector('.modern-collection-filters');
-    if (wrapper) wrapper.classList.remove('loading');
+    if (wrapper) {
+      wrapper.classList.remove('loading');
+    }
+    
+    const grid = document.querySelector('#main-collection-product-grid');
+    if (grid) {
+      grid.style.opacity = '1';
+      grid.style.pointerEvents = '';
+    }
+    
+    // Remove loading indicator from drawer
+    const loadingIndicator = document.querySelector('.drawer-loading-indicator');
+    if (loadingIndicator) {
+      loadingIndicator.remove();
+    }
   }
 };
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait a moment for theme to load, then override
   setTimeout(() => {
     FilterDrawer.init();
     
-    // Enhanced button protection - ensure our filter button works correctly
     const filterButton = document.querySelector('.modern-filter-button');
     if (filterButton) {
-      // Remove any existing event listeners by cloning
       const newButton = filterButton.cloneNode(true);
       filterButton.parentNode.replaceChild(newButton, filterButton);
       
-      // Add only our event listener
       newButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         FilterDrawer.open();
       });
     }
+    
+    // Override inline onclick handlers for backdrop and close button
+    const backdrop = document.getElementById('filterBackdrop');
+    if (backdrop) {
+      backdrop.onclick = null; // Remove inline handler
+      backdrop.addEventListener('click', function(e) {
+        if (!FilterDrawer.isLoading) {
+          FilterDrawer.close();
+        } else {
+          FilterDrawer.showCloseHint();
+        }
+      });
+    }
+    
+    const closeButton = document.querySelector('.filter-drawer-close');
+    if (closeButton) {
+      closeButton.onclick = null; // Remove inline handler
+      closeButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        FilterDrawer.close(true); // Force close
+      });
+    }
+    
+    window.FilterDrawer = FilterDrawer;
   }, 100);
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (FilterDrawer.updateTimeout) {
+    clearTimeout(FilterDrawer.updateTimeout);
+  }
+  if (FilterDrawer.requestController) {
+    FilterDrawer.requestController.abort();
+  }
+});
+
+// Handle Shopify theme editor events
+document.addEventListener('shopify:section:load', function(event) {
+  if (event.target.querySelector('[data-section-type="collection"]')) {
+    setTimeout(() => {
+      FilterDrawer.init();
+    }, 100);
+  }
+});
+
+document.addEventListener('shopify:section:unload', function(event) {
+  if (event.target.querySelector('[data-section-type="collection"]')) {
+    if (FilterDrawer.updateTimeout) {
+      clearTimeout(FilterDrawer.updateTimeout);
+    }
+    if (FilterDrawer.requestController) {
+      FilterDrawer.requestController.abort();
+    }
+  }
 });
 </script>
 
