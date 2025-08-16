@@ -433,40 +433,68 @@
 </aside>
 {%- endif -%}
 
-{% comment %} Mobile Navigation Slideout - UPDATED STRUCTURE {% endcomment %}
+{% comment %} Mobile Navigation Slideout - FIXED LOGO ALIGNMENT {% endcomment %}
 <aside id="mobile-slideout" class="slideout slideout__drawer-left" data-wau-overlay="false" data-wau-slideout="mobile-navigation" id="slideout-mobile-navigation">
   
-  <!-- Close button and menu image section -->
+  <!-- FIXED: Close button and menu image section with proper left alignment -->
   <div class="slideout__trigger--close mobile-header--close">
-    <div class="flex px-6">
     {% if section.settings.menu_image != blank %}
-      <div class="grid__wrapper pt-12 pb-2 mt-3">
-        <div class="mobile-nav__img-wrapper span-6 auto relative">
-          {%- if section.settings.menu_image_url -%}<a href="{{ section.settings.menu_image_url }}">{%- endif -%}
-            {% render 'helper-image',
-             type: section.settings.menu_image,
-             sm_render: '360px'
-             md_render: '360px',
-             lg_render: '360px' %}
+      <div class="mobile-drawer-header" style="position: relative; padding: 48px 24px 24px 24px;">
+        <!-- Logo/Image - Explicitly left-aligned -->
+        <div class="mobile-drawer-logo" style="display: block; width: 200px; max-width: 60%; position: relative; left: 0; margin: 0;">
+          {%- if section.settings.menu_image_url -%}
+            <a href="{{ section.settings.menu_image_url }}" style="display: block;">
+          {%- endif -%}
+            <img src="{{ section.settings.menu_image | image_url: width: 360 }}" 
+                 alt="{{ section.settings.menu_image.alt | default: shop.name }}"
+                 style="width: 100%; height: auto; display: block;">
             {%- if section.settings.menu_image_text -%}
-              <p class="h2 absolute-center">{{ section.settings.menu_image_text }}</p>
+              <p class="h2" style="margin-top: 10px;">{{ section.settings.menu_image_text }}</p>
             {%- endif -%}
-          {%- if section.settings.menu_image_url -%}</a>{%- endif -%}
+          {%- if section.settings.menu_image_url -%}
+            </a>
+          {%- endif -%}
         </div>
+        
+        <!-- Close button - Absolutely positioned to top right -->
+        <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link" 
+                data-slideout-direction="top" 
+                aria-label="Close navigation" 
+                tabindex="0" 
+                type="button" 
+                name="button"
+                style="position: absolute; top: 48px; right: 24px; padding: 0; margin: 0;">
+          {% render 'snip-icons',
+             wrapper: '.section-header__mobile',
+             type: 'theme',
+             icon: 'close',
+             size: '14px',
+             classes: 'mt0 mr0 mb0 ml0',
+             fill: 'var(--header-text)',
+             hover: 'var(--header-hover)' %}
+        </button>
       </div>
-      
-      <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link  mt-12" data-slideout-direction="top" aria-label="Close navigation" tabindex="0" type="button" name="button">
-        {% render 'snip-icons',
-           wrapper: '.section-header__mobile',
-           type: 'theme',
-           icon: 'close',
-           size: '14px',
-           classes: 'mt0 mr0 mb0 ml0',
-           fill: 'var(--header-text)',
-           hover: 'var(--header-hover)' %}
-      </button>
+    {% else %}
+      <!-- If no image configured, just show close button -->
+      <div style="position: relative; padding: 24px;">
+        <button class="slideout__trigger-mobile-navigation js-slideout-close btn-as-link" 
+                data-slideout-direction="top" 
+                aria-label="Close navigation" 
+                tabindex="0" 
+                type="button" 
+                name="button"
+                style="position: absolute; top: 24px; right: 24px;">
+          {% render 'snip-icons',
+             wrapper: '.section-header__mobile',
+             type: 'theme',
+             icon: 'close',
+             size: '14px',
+             classes: 'mt0 mr0 mb0 ml0',
+             fill: 'var(--header-text)',
+             hover: 'var(--header-hover)' %}
+        </button>
+      </div>
     {% endif %}
-    </div>
   </div>
   
   <!-- Main navigation wrapper - UPDATED with flexbox structure -->
