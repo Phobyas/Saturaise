@@ -170,6 +170,24 @@
         "section_padding": "both"
       }
     },
+    "1755354508b2b45ce2": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_featured_carousel_rMfmwb": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "maxwidth": 1600
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_featured_carousel_rMfmwb"
+      ],
+      "settings": {
+        "full_width": true,
+        "section_padding": "both"
+      }
+    },
     "product-details": {
       "type": "main-product-details",
       "blocks": {
@@ -271,34 +289,15 @@
         "cta_text": "Poznaj naszą historię",
         "cta_link": ""
       }
-    },
-    "trustmate_reviews_8qGWa8": {
-      "type": "trustmate-reviews",
-      "disabled": true,
-      "name": "Trustmate Reviews",
-      "settings": {
-        "widget_id": "4ff47043-34e9-4d3a-beff-0aca4d8b9b93",
-        "heading": "Opinie Naszych Klientów",
-        "heading_alignment": "center",
-        "heading_size": 28,
-        "heading_color": "#323232",
-        "heading_margin": 30,
-        "center_widget": true,
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "background_color": ""
-      }
     }
   },
   "order": [
     "main",
     "text_with_icons_KzVrHV",
+    "1755354508b2b45ce2",
     "product-details",
     "product-recommendations",
     "featured_collection_YMFETD",
-    "section_about_us_iTXNV9",
-    "trustmate_reviews_8qGWa8"
+    "section_about_us_iTXNV9"
   ]
 }
