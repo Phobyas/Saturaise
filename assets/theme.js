@@ -3312,3 +3312,130 @@ function makeSticky(amountToScroll, elementClass, elementHeight) {
     initMapLazy();
   }
 })();
+/* Judge.me Reviews Enhancement - Optimized */
+(function () {
+  "use strict";
+
+  // Enhanced Judge.me reviews function
+  function enhanceJudgeMeReviews() {
+    document.querySelectorAll(".jdgm-carousel-item").forEach((item) => {
+      // Replace "Saturaise" with "Opinia o sklepie"
+      const titleEl = item.querySelector(".jdgm-carousel-item__product-title");
+      if (titleEl && titleEl.textContent.trim() === "Saturaise") {
+        titleEl.textContent = "Opinia o sklepie";
+      }
+
+      // Add product images for product reviews
+      const productLink = item.querySelector(".jdgm-carousel-item__product");
+      const reviewContainer = item.querySelector(".jdgm-carousel-item__review");
+
+      if (
+        productLink &&
+        reviewContainer &&
+        !item.querySelector(".jdgm-carousel-item__product-image")
+      ) {
+        const href = productLink.getAttribute("href");
+
+        if (
+          href &&
+          href.includes("/products/") &&
+          !href.includes("#judgeme_product_reviews")
+        ) {
+          const productHandle = href
+            .split("/products/")[1]
+            .split("#")[0]
+            .split("?")[0];
+
+          if (productHandle) {
+            const productImage = document.createElement("img");
+            productImage.className = "jdgm-carousel-item__product-image";
+            productImage.alt = titleEl ? titleEl.textContent : "Product";
+            productImage.loading = "lazy";
+            productImage.style.display = "none";
+
+            // Try multiple methods to get product image
+            tryGetProductImage(productHandle, productImage, reviewContainer);
+          }
+        }
+      }
+    });
+  }
+
+  // Optimized product image fetching
+  function tryGetProductImage(handle, img, container) {
+    // Method 1: Shopify Product API
+    fetch(`/products/${handle}.json`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        const imageUrl =
+          data.product?.featured_image || data.product?.images?.[0];
+        if (imageUrl) {
+          setProductImage(img, imageUrl, container);
+        } else {
+          throw new Error("No images found");
+        }
+      })
+      .catch(() => {
+        // Method 2: Fallback image URL
+        const fallbackImg = new Image();
+        fallbackImg.onload = () =>
+          setProductImage(img, fallbackImg.src, container);
+        fallbackImg.onerror = () => img.remove();
+        fallbackImg.src = `/products/${handle}/images/1`;
+      });
+  }
+
+  // Set product image with optimization
+  function setProductImage(img, url, container) {
+    // Create optimized URL
+    const optimizedUrl = url.replace(
+      /\.(jpg|jpeg|png|webp)(\?.*)?$/i,
+      "_96x96.$1"
+    );
+
+    img.src = optimizedUrl;
+    img.style.display = "block";
+
+    // Insert at beginning of review content
+    const ratingEl = container.querySelector(
+      ".jdgm-carousel-item__review-rating"
+    );
+    container.insertBefore(img, ratingEl || container.firstChild);
+  }
+
+  // Main initialization
+  function initJudgeMeEnhancements() {
+    enhanceJudgeMeReviews();
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initJudgeMeEnhancements);
+  } else {
+    initJudgeMeEnhancements();
+  }
+
+  // Observer for dynamically loaded content
+  const observer = new MutationObserver((mutations) => {
+    const shouldRun = mutations.some((mutation) =>
+      Array.from(mutation.addedNodes).some(
+        (node) =>
+          node.nodeType === 1 &&
+          (node.classList?.contains("jdgm-carousel-item") ||
+            node.querySelector?.(".jdgm-carousel-item") ||
+            node.classList?.contains("jdgm-carousel-wrapper"))
+      )
+    );
+
+    if (shouldRun) {
+      setTimeout(initJudgeMeEnhancements, 100);
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Run enhancements at intervals to catch dynamic loading
+  [1000, 3000, 5000].forEach((delay) =>
+    setTimeout(initJudgeMeEnhancements, delay)
+  );
+})();
