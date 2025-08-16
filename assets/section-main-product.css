@@ -2458,6 +2458,7 @@
 
 /* Hot Product Badge - Matching Site Style */
 .hot-product-badge-wrapper {
+  margin: 10px 0;
   margin-bottom: 12px;
   display: inline-block;
 }
@@ -2551,7 +2552,6 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .hot-product-badge-wrapper {
-    margin: 10px 0;
     width: 100%;
   }
 
@@ -2720,4 +2720,3 @@
     transform: translateY(0);
   }
 }
-
