@@ -1,5 +1,5 @@
 {% comment %}
-  product-scroll-gallery.liquid - Fixed with Flickity mobile + desktop grid
+  product-scroll-gallery.liquid - Fully Optimized for Mobile LCP
 {% endcomment %}
 
 <div id="product-images" class="product-images-container">
@@ -12,14 +12,6 @@
             assign current_id = product.selected_or_first_available_variant.media | default: product.featured_media
             if current_id.id == media.id
               assign is_selected = 'is-selected'
-            endif
-
-            assign loading = 'eager'
-            assign fetch_priority = 'high'
-
-            if section.index == 1 and forloop.first
-              assign loading = 'eager'
-              assign fetch_priority = 'high'
             endif
           -%}
           <div class="{{ media.media_type }}-slide scroll--gallery_item carousel-cell {{ is_selected }}" 
@@ -35,30 +27,78 @@
                  data-media-id="product-template-{{ media.id }}">
               {% case media.media_type %}
                 {% when 'image' %}
-                {%- capture counter -%}
-                  {%- increment image_count -%}
-                {%- endcapture -%}
-                  <img id="{{ media.id }}" 
-                       class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
-                       srcset="{%- if media.width >= 180 -%}{{ media | image_url: width: 180 }} 180w,{%- endif -%}
-                       {%- if media.width >= 360 -%}{{ media | image_url: width: 360 }} 360w,{%- endif -%}
-                       {%- if media.width >= 540 -%}{{ media | image_url: width: 540 }} 540w,{%- endif -%}
-                       {%- if media.width >= 720 -%}{{ media | image_url: width: 720 }} 720w,{%- endif -%}
-                       {%- if media.width >= 780 -%}{{ media | image_url: width: 780 }} 780w,{%- endif -%}
-                       {%- if media.width >= 900 -%}{{ media | image_url: width: 900 }} 900w,{%- endif -%}
-                       {%- if media.width >= 1080 -%}{{ media | image_url: width: 1080 }} 1080w,{%- endif -%}
-                       {%- if media.width >= 1220 -%}{{ media | image_url: width: 1220 }} 1220w,{%- endif -%}
-                       {%- if media.width >= 1520 -%}{{ media | image_url: width: 1520 }} 1520w,{%- endif -%}
-                       {%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }} 1920w{%- endif -%}"
-                       src="{{ media | image_url: width: 900 }}"
-                       sizes="(min-width: 1601px) calc(1600px / 2), (min-width: 768px) and (max-width: 1600px) calc(100vw / 2), (max-width: 767px) 100vw, 900px"
-                       alt="{{ media.alt | escape }}"
-                       width="{{ media.width }}"
-                       height="{{ media.height }}"
-                       data-zoom-src="{%- if media.width >= 1920 -%}{{ media | image_url: width: 1920 }}{%- elsif media.width >= 1520 -%}{{ media | image_url: width: 1520 }}{%- else -%}{{ media | image_url: width: 1220 }}{%- endif -%}"
-                       loading="{{ loading }}"
-                       fetchpriority="{{ fetch_priority }}"
-                       data-index="{{ counter }}">
+                  {%- capture counter -%}
+                    {%- increment image_count -%}
+                  {%- endcapture -%}
+                  
+                  {% if forloop.first %}
+                    {% comment %} FIRST IMAGE - Optimized for mobile 412px display size {% endcomment %}
+                    <picture>
+                      <source media="(max-width: 768px)"
+                              srcset="{{ media | image_url: width: 412 }} 412w,
+                                      {{ media | image_url: width: 600 }} 600w">
+                      <source media="(min-width: 769px)"
+                              srcset="{{ media | image_url: width: 600 }} 600w,
+                                      {{ media | image_url: width: 900 }} 900w,
+                                      {{ media | image_url: width: 1200 }} 1200w">
+                      <img id="{{ media.id }}" 
+                           class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
+                           src="{{ media | image_url: width: 412 }}"
+                           alt="{{ media.alt | escape }}"
+                           width="{{ media.width }}"
+                           height="{{ media.height }}"
+                           loading="eager"
+                           fetchpriority="high"
+                           decoding="sync"
+                           style="aspect-ratio: {{ media.aspect_ratio }}; object-fit: contain; content-visibility: auto;"
+                           sizes="(max-width: 768px) 412px, (min-width: 769px) 50vw"
+                           data-zoom-src="{{ media | image_url: width: 1920 }}"
+                           data-index="1">
+                    </picture>
+                  {% elsif forloop.index <= 3 %}
+                    {% comment %} IMAGES 2-3 - Preloaded but lower priority {% endcomment %}
+                    <picture>
+                      <source media="(max-width: 768px)"
+                              srcset="{{ media | image_url: width: 412 }} 412w,
+                                      {{ media | image_url: width: 600 }} 600w">
+                      <source media="(min-width: 769px)"
+                              srcset="{{ media | image_url: width: 600 }} 600w,
+                                      {{ media | image_url: width: 900 }} 900w,
+                                      {{ media | image_url: width: 1200 }} 1200w">
+                      <img id="{{ media.id }}" 
+                           class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
+                           src="{{ media | image_url: width: 412 }}"
+                           alt="{{ media.alt | escape }}"
+                           width="{{ media.width }}"
+                           height="{{ media.height }}"
+                           loading="eager"
+                           fetchpriority="low"
+                           decoding="async"
+                           style="aspect-ratio: {{ media.aspect_ratio }};"
+                           sizes="(max-width: 768px) 412px, (min-width: 769px) 50vw"
+                           data-zoom-src="{{ media | image_url: width: 1920 }}"
+                           data-index="{{ counter }}">
+                    </picture>
+                  {% else %}
+                    {% comment %} OTHER IMAGES - Lazy loaded {% endcomment %}
+                    <img id="{{ media.id }}" 
+                         class="product__image {% if section.settings.click_to_enlarge %}js-zoom-btn{% endif %}"
+                         srcset="{{ media | image_url: width: 412 }} 412w,
+                                 {{ media | image_url: width: 600 }} 600w,
+                                 {{ media | image_url: width: 900 }} 900w,
+                                 {{ media | image_url: width: 1200 }} 1200w"
+                         src="{{ media | image_url: width: 412 }}"
+                         sizes="(max-width: 768px) 412px, (min-width: 769px) 50vw"
+                         alt="{{ media.alt | escape }}"
+                         width="{{ media.width }}"
+                         height="{{ media.height }}"
+                         loading="lazy"
+                         fetchpriority="auto"
+                         decoding="async"
+                         style="aspect-ratio: {{ media.aspect_ratio }};"
+                         data-zoom-src="{{ media | image_url: width: 1920 }}"
+                         data-index="{{ counter }}">
+                  {% endif %}
 
                 {% when 'external_video' %}
                   <div class="product-gallery__product-video videoWrapper video-wrapper product-single__media js-video-external-wrapper">
@@ -73,17 +113,17 @@
                     }
                     @media screen and (min-width: 320px) and (max-width: 780px) {
                       .product-media--{{ media.id }} .plyr__poster {
-                        background-image: url({{ media.preview_image | image_url: width: 900 }}) !important;
+                        background-image: url({{ media.preview_image | image_url: width: 412 }}) !important;
                       }
                     }
                     @media screen and (min-width: 780px) and (max-width: 1080px) {
                       .product-media--{{ media.id }} .plyr__poster {
-                        background-image: url({{ media.preview_image | image_url: width: 1080 }}) !important;
+                        background-image: url({{ media.preview_image | image_url: width: 900 }}) !important;
                       }
                     }
                     @media screen and (min-width: 1080px) {
                       .product-media--{{ media.id }} .plyr__poster {
-                        background-image: url({{ media.preview_image | image_url: width: 2048 }}) !important;
+                        background-image: url({{ media.preview_image | image_url: width: 1200 }}) !important;
                       }
                     }
                   {% endstyle %}
@@ -137,431 +177,388 @@
   {% endif %}
 </div>
 
+<style>
+/* Critical CSS for LCP - Prevent layout shift */
+.product-gallery__media-container {
+  aspect-ratio: 1;
+  background: #f6f6f6;
+  position: relative;
+  overflow: hidden;
+  contain: layout style paint;
+}
+
+.product__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Ensure first image is visible immediately */
+.scroll--gallery_item:first-child {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Mobile specific optimizations */
+@media (max-width: 768px) {
+  #product-images {
+    min-height: 100vw;
+  }
+  .product-gallery__media-container {
+    width: 100%;
+    max-width: 412px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 769px) {
+  #product-images {
+    min-height: 50vw;
+  }
+}
+</style>
+
 <script>
-// Fixed Product Gallery JavaScript - Image Loading Fix
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Initializing gallery with image loading fixes...');
-  initializeGallery();
+// Optimized Gallery JavaScript - Deferred for LCP
+(function() {
+  'use strict';
   
-  // Only reinitialize on actual resize, not scroll
+  // Defer gallery initialization to not block LCP
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(initializeGallery, { timeout: 2000 });
+  } else {
+    setTimeout(initializeGallery, 100);
+  }
+  
+  function initializeGallery() {
+    console.log('Initializing optimized gallery...');
+    
+    const galleryContainer = document.getElementById('scrollGalleryContainer');
+    if (!galleryContainer) {
+      console.log('Gallery container not found');
+      return;
+    }
+    
+    const screenWidth = window.innerWidth;
+    console.log('Screen width:', screenWidth);
+    
+    if (screenWidth < 1024) {
+      setupMobileCarousel(galleryContainer);
+    } else {
+      setupDesktopGrid(galleryContainer);
+    }
+  }
+
+  function setupMobileCarousel(container) {
+    console.log('Setting up mobile carousel');
+    
+    // Store current slide index before destroying
+    let currentIndex = 0;
+    if (container.classList.contains('flickity-enabled')) {
+      const existing = Flickity.data(container);
+      if (existing) {
+        currentIndex = existing.selectedIndex || 0;
+        existing.destroy();
+      }
+    }
+    
+    // Check if Flickity exists
+    if (typeof Flickity === 'undefined') {
+      console.log('Flickity not available, falling back to basic mobile layout');
+      setupBasicMobileLayout(container);
+      return;
+    }
+    
+    const slides = container.querySelectorAll('.scroll--gallery_item');
+    console.log('Found slides for mobile:', slides.length);
+    
+    if (slides.length === 0) return;
+    
+    // Force all images to be visible first
+    slides.forEach(slide => {
+      slide.style.display = 'block';
+      slide.style.opacity = '1';
+      slide.style.visibility = 'visible';
+    });
+    
+    // Initialize Flickity with optimized settings
+    try {
+      const flickityInstance = new Flickity(container, {
+        cellAlign: 'left',
+        contain: true,
+        wrapAround: slides.length > 2,
+        prevNextButtons: slides.length > 1,
+        pageDots: slides.length > 1,
+        draggable: true,
+        freeScroll: false,
+        percentPosition: false,
+        selectedAttraction: 0.025,
+        friction: 0.28,
+        groupCells: false,
+        adaptiveHeight: false,  // Prevent layout shifts
+        cellSelector: '.scroll--gallery_item',
+        resize: true,
+        watchCSS: false,
+        imagesLoaded: false,  // We handle loading ourselves
+        lazyLoad: false  // We handle lazy loading in HTML
+      });
+      
+      console.log('Flickity initialized successfully');
+      
+      // Restore previous slide position
+      if (currentIndex > 0 && currentIndex < slides.length) {
+        flickityInstance.select(currentIndex, false, true);
+      }
+      
+      flickityInstance.on('ready', function() {
+        console.log('Flickity ready');
+        ensureDotsVisible(container);
+      });
+      
+      flickityInstance.on('change', function(index) {
+        console.log('Changed to slide:', index);
+        container.setAttribute('data-current-slide', index);
+        
+        // Preload adjacent images
+        preloadSlideImages(slides, index);
+      });
+      
+      return flickityInstance;
+      
+    } catch (error) {
+      console.error('Flickity initialization error:', error);
+      setupBasicMobileLayout(container);
+    }
+  }
+
+  function setupBasicMobileLayout(container) {
+    console.log('Setting up basic mobile layout');
+    
+    const slides = container.querySelectorAll('.scroll--gallery_item');
+    
+    // Show only first slide initially
+    slides.forEach((slide, index) => {
+      if (index === 0) {
+        slide.style.display = 'block';
+        slide.classList.add('is-selected');
+      } else {
+        slide.style.display = 'none';
+      }
+    });
+    
+    // Create simple navigation if multiple slides
+    if (slides.length > 1) {
+      createSimpleNavigation(container, slides);
+    }
+  }
+
+  function createSimpleNavigation(container, slides) {
+    // Remove existing navigation
+    const existingNav = container.querySelector('.simple-nav');
+    if (existingNav) existingNav.remove();
+    
+    const nav = document.createElement('div');
+    nav.className = 'simple-nav';
+    nav.style.cssText = `
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    `;
+    
+    slides.forEach((slide, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'simple-dot';
+      dot.style.cssText = `
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: none;
+        background: ${index === 0 ? '#333' : '#ddd'};
+        cursor: pointer;
+        transition: background 0.3s ease;
+      `;
+      
+      dot.addEventListener('click', () => {
+        // Hide all slides
+        slides.forEach(s => {
+          s.style.display = 'none';
+          s.classList.remove('is-selected');
+        });
+        
+        // Show selected slide
+        slide.style.display = 'block';
+        slide.classList.add('is-selected');
+        
+        // Update dots
+        nav.querySelectorAll('.simple-dot').forEach((d, i) => {
+          d.style.background = i === index ? '#333' : '#ddd';
+        });
+        
+        // Preload adjacent images
+        preloadSlideImages(slides, index);
+      });
+      
+      nav.appendChild(dot);
+    });
+    
+    container.appendChild(nav);
+  }
+
+  function setupDesktopGrid(container) {
+    console.log('Setting up desktop grid');
+    
+    // Destroy Flickity if exists
+    if (container.classList.contains('flickity-enabled')) {
+      const flickityInstance = Flickity.data(container);
+      if (flickityInstance) {
+        flickityInstance.destroy();
+      }
+    }
+    
+    // Remove any mobile navigation
+    const simpleNav = container.querySelector('.simple-nav');
+    if (simpleNav) simpleNav.remove();
+    
+    // Ensure all slides are visible for desktop grid
+    const slides = container.querySelectorAll('.scroll--gallery_item');
+    slides.forEach(slide => {
+      slide.style.display = 'block';
+      slide.style.opacity = '1';
+      slide.style.visibility = 'visible';
+      slide.style.position = 'static';
+    });
+    
+    // Clean up any scroll prevention
+    container.removeAttribute('data-current-slide');
+  }
+
+  function preloadSlideImages(slides, currentIndex) {
+    // Preload current and next 2 slides
+    const indicesToLoad = [
+      currentIndex,
+      Math.min(slides.length - 1, currentIndex + 1),
+      Math.min(slides.length - 1, currentIndex + 2)
+    ];
+    
+    indicesToLoad.forEach(index => {
+      const slide = slides[index];
+      if (slide) {
+        const img = slide.querySelector('img');
+        if (img && img.loading === 'lazy') {
+          img.loading = 'eager';
+        }
+      }
+    });
+  }
+
+  function ensureDotsVisible(container) {
+    if (window.innerWidth >= 1024) return;
+    
+    const slides = container.querySelectorAll('.scroll--gallery_item');
+    if (slides.length <= 1) return;
+    
+    setTimeout(() => {
+      const dots = container.querySelector('.flickity-page-dots');
+      if (dots) {
+        dots.style.display = 'block';
+        dots.style.visibility = 'visible';
+        dots.style.opacity = '1';
+        dots.style.position = 'relative';
+        dots.style.marginTop = '20px';
+        dots.style.textAlign = 'center';
+        console.log('Dots made visible');
+      }
+    }, 100);
+  }
+
+  function switchToImage(mediaId) {
+    const targetSlide = document.querySelector(`[data-image-id="${mediaId}"]`);
+    if (!targetSlide) return;
+    
+    document.querySelectorAll('.scroll--gallery_item').forEach(slide => {
+      slide.classList.remove('is-selected');
+    });
+    
+    targetSlide.classList.add('is-selected');
+    
+    if (window.innerWidth < 1024) {
+      const container = document.getElementById('scrollGalleryContainer');
+      if (container && container.classList.contains('flickity-enabled')) {
+        const flickityInstance = Flickity.data(container);
+        if (flickityInstance) {
+          const slideIndex = Array.from(container.querySelectorAll('.scroll--gallery_item')).indexOf(targetSlide);
+          flickityInstance.select(slideIndex);
+          container.setAttribute('data-current-slide', slideIndex);
+        }
+      } else {
+        // Handle simple navigation
+        const slides = document.querySelectorAll('.scroll--gallery_item');
+        const slideIndex = Array.from(slides).indexOf(targetSlide);
+        
+        slides.forEach(slide => {
+          slide.style.display = 'none';
+          slide.classList.remove('is-selected');
+        });
+        
+        targetSlide.style.display = 'block';
+        targetSlide.classList.add('is-selected');
+        
+        // Update simple navigation dots if they exist
+        const nav = document.querySelector('.simple-nav');
+        if (nav) {
+          nav.querySelectorAll('.simple-dot').forEach((dot, index) => {
+            dot.style.background = index === slideIndex ? '#333' : '#ddd';
+          });
+        }
+      }
+    }
+    
+    // Ensure image is loaded
+    const img = targetSlide.querySelector('img');
+    if (img && img.loading === 'lazy') {
+      img.loading = 'eager';
+    }
+  }
+  
+  // Handle resize with debounce
   let resizeTimer;
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(initializeGallery, 250);
   });
-  
-  // Force image loading after initialization
-  setTimeout(forceImageLoading, 500);
-});
 
-function initializeGallery() {
-  const galleryContainer = document.getElementById('scrollGalleryContainer');
-  if (!galleryContainer) {
-    console.log('Gallery container not found');
-    return;
-  }
-  
-  const screenWidth = window.innerWidth;
-  console.log('Screen width:', screenWidth);
-  
-  if (screenWidth < 1024) {
-    setupMobileCarousel(galleryContainer);
-  } else {
-    setupDesktopGrid(galleryContainer);
-  }
-}
+  // Export functions for global use
+  window.switchToImage = switchToImage;
 
-function setupMobileCarousel(container) {
-  console.log('Setting up mobile carousel');
-  
-  // Store current slide index before destroying
-  let currentIndex = 0;
-  if (container.classList.contains('flickity-enabled')) {
-    const existing = Flickity.data(container);
-    if (existing) {
-      currentIndex = existing.selectedIndex || 0;
-      existing.destroy();
-    }
-  }
-  
-  // Check if Flickity exists
-  if (typeof Flickity === 'undefined') {
-    console.log('Flickity not available, falling back to basic mobile layout');
-    setupBasicMobileLayout(container);
-    return;
-  }
-  
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  console.log('Found slides for mobile:', slides.length);
-  
-  if (slides.length === 0) return;
-  
-  // Force all images to be visible first
-  slides.forEach(slide => {
-    slide.style.display = 'block';
-    slide.style.opacity = '1';
-    slide.style.visibility = 'visible';
-  });
-  
-  // Initialize Flickity
-  try {
-const flickityInstance = new Flickity(container, {
-  cellAlign: 'left',
-  contain: true,
-  wrapAround: slides.length > 2,
-  prevNextButtons: slides.length > 1,
-  pageDots: slides.length > 1,
-  draggable: true,
-  freeScroll: false,
-  percentPosition: false,
-  selectedAttraction: 0.025,
-  friction: 0.28,
-  groupCells: false,
-  adaptiveHeight: false,    // ← CHANGE THIS TO false
-  cellSelector: '.scroll--gallery_item',
-  resize: true,
-  watchCSS: false,
-  imagesLoaded: true
-});
-    
-    console.log('Flickity initialized successfully');
-    
-    // Restore previous slide position
-    if (currentIndex > 0 && currentIndex < slides.length) {
-      flickityInstance.select(currentIndex, false, true);
-    }
-    
-    flickityInstance.on('ready', function() {
-      console.log('Flickity ready');
-      ensureDotsVisible(container);
-      forceImageLoading();
-    });
-    
-    flickityInstance.on('change', function(index) {
-      console.log('Changed to slide:', index);
-      container.setAttribute('data-current-slide', index);
-      
-      // Force load images in current and adjacent slides
-      loadSlideImages(slides, index);
-    });
-    
-    flickityInstance.on('settle', function(index) {
-      console.log('Settled on slide:', index);
-      container.setAttribute('data-current-slide', index);
-    });
-    
-    // Load initial images
-    loadSlideImages(slides, currentIndex);
-    
-    return flickityInstance;
-    
-  } catch (error) {
-    console.error('Flickity initialization error:', error);
-    setupBasicMobileLayout(container);
-  }
-}
-
-function setupBasicMobileLayout(container) {
-  console.log('Setting up basic mobile layout');
-  
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  
-  // Show only first slide initially
-  slides.forEach((slide, index) => {
-    if (index === 0) {
-      slide.style.display = 'block';
-      slide.classList.add('is-selected');
-    } else {
-      slide.style.display = 'none';
+  // Handle variant changes
+  document.addEventListener('variant:change', function(e) {
+    if (e.detail && e.detail.variant && e.detail.variant.featured_media) {
+      switchToImage(e.detail.variant.featured_media.id);
     }
   });
-  
-  // Create simple navigation if multiple slides
-  if (slides.length > 1) {
-    createSimpleNavigation(container, slides);
-  }
-  
-  forceImageLoading();
-}
 
-function createSimpleNavigation(container, slides) {
-  // Remove existing navigation
-  const existingNav = container.querySelector('.simple-nav');
-  if (existingNav) existingNav.remove();
-  
-  const nav = document.createElement('div');
-  nav.className = 'simple-nav';
-  nav.style.cssText = `
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
-  `;
-  
-  slides.forEach((slide, index) => {
-    const dot = document.createElement('button');
-    dot.className = 'simple-dot';
-    dot.style.cssText = `
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: none;
-      background: ${index === 0 ? '#333' : '#ddd'};
-      cursor: pointer;
-      transition: background 0.3s ease;
-    `;
-    
-    dot.addEventListener('click', () => {
-      // Hide all slides
-      slides.forEach(s => {
-        s.style.display = 'none';
-        s.classList.remove('is-selected');
-      });
-      
-      // Show selected slide
-      slide.style.display = 'block';
-      slide.classList.add('is-selected');
-      
-      // Update dots
-      nav.querySelectorAll('.simple-dot').forEach((d, i) => {
-        d.style.background = i === index ? '#333' : '#ddd';
-      });
-      
-      // Force load this image
-      loadSlideImages(slides, index);
-    });
-    
-    nav.appendChild(dot);
-  });
-  
-  container.appendChild(nav);
-}
-
-function setupDesktopGrid(container) {
-  console.log('Setting up desktop grid');
-  
-  // Destroy Flickity if exists
-  if (container.classList.contains('flickity-enabled')) {
-    const flickityInstance = Flickity.data(container);
-    if (flickityInstance) {
-      flickityInstance.destroy();
-    }
-  }
-  
-  // Remove any mobile navigation
-  const simpleNav = container.querySelector('.simple-nav');
-  if (simpleNav) simpleNav.remove();
-  
-  // Ensure all slides are visible for desktop grid
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  slides.forEach(slide => {
-    slide.style.display = 'block';
-    slide.style.opacity = '1';
-    slide.style.visibility = 'visible';
-    slide.style.position = 'static';
-  });
-  
-  // Clean up any scroll prevention
-  container.removeAttribute('data-current-slide');
-  
-  // Force load all images for desktop
-  forceImageLoading();
-}
-
-function loadSlideImages(slides, currentIndex) {
-  // Load current slide and adjacent slides
-  const indicesToLoad = [
-    Math.max(0, currentIndex - 1),
-    currentIndex,
-    Math.min(slides.length - 1, currentIndex + 1)
-  ];
-  
-  indicesToLoad.forEach(index => {
-    const slide = slides[index];
-    if (slide) {
-      const img = slide.querySelector('img');
-      if (img) {
-        forceImageLoad(img);
-      }
-    }
-  });
-}
-
-function forceImageLoading() {
-  console.log('Force loading all images...');
-  
-  const images = document.querySelectorAll('.scroll--gallery_item img');
-  images.forEach((img, index) => {
-    forceImageLoad(img);
-  });
-}
-
-function forceImageLoad(img) {
-  // If image is already loaded, skip
-  if (img.complete && img.naturalHeight !== 0) {
-    return;
-  }
-  
-  // Set loading to eager
-  img.loading = 'eager';
-  
-  // Force decode if available
-  if (img.decode) {
-    img.decode().catch(err => {
-      console.log('Image decode failed:', err);
-    });
-  }
-  
-  // If src is empty but srcset exists, set src from srcset
-  if (!img.src && img.srcset) {
-    const srcsetUrls = img.srcset.split(',');
-    if (srcsetUrls.length > 0) {
-      const firstUrl = srcsetUrls[0].trim().split(' ')[0];
-      img.src = firstUrl;
-    }
-  }
-  
-  // Add error handling
-  img.onerror = function() {
-    console.error('Image failed to load:', img.src);
-    // Try to load from srcset if src fails
-    if (img.srcset && !img.getAttribute('data-fallback-attempted')) {
-      img.setAttribute('data-fallback-attempted', 'true');
-      const srcsetUrls = img.srcset.split(',');
-      for (let srcsetUrl of srcsetUrls) {
-        const url = srcsetUrl.trim().split(' ')[0];
-        if (url !== img.src) {
-          img.src = url;
-          break;
-        }
-      }
-    }
-  };
-  
-  img.onload = function() {
-    console.log('Image loaded successfully:', img.src);
-  };
-}
-
-function ensureDotsVisible(container) {
-  if (window.innerWidth >= 1024) return;
-  
-  const slides = container.querySelectorAll('.scroll--gallery_item');
-  if (slides.length <= 1) return;
-  
-  setTimeout(() => {
-    const dots = container.querySelector('.flickity-page-dots');
-    if (dots) {
-      dots.style.display = 'block';
-      dots.style.visibility = 'visible';
-      dots.style.opacity = '1';
-      dots.style.position = 'relative';
-      dots.style.marginTop = '20px';
-      dots.style.textAlign = 'center';
-      console.log('Dots made visible');
-    }
-  }, 100);
-}
-
-function switchToImage(mediaId) {
-  const targetSlide = document.querySelector(`[data-image-id="${mediaId}"]`);
-  if (!targetSlide) return;
-  
-  document.querySelectorAll('.scroll--gallery_item').forEach(slide => {
-    slide.classList.remove('is-selected');
-  });
-  
-  targetSlide.classList.add('is-selected');
-  
-  if (window.innerWidth < 1024) {
-    const container = document.getElementById('scrollGalleryContainer');
-    if (container && container.classList.contains('flickity-enabled')) {
-      const flickityInstance = Flickity.data(container);
-      if (flickityInstance) {
-        const slideIndex = Array.from(container.querySelectorAll('.scroll--gallery_item')).indexOf(targetSlide);
-        flickityInstance.select(slideIndex);
-        container.setAttribute('data-current-slide', slideIndex);
-      }
-    } else {
-      // Handle simple navigation
-      const slides = document.querySelectorAll('.scroll--gallery_item');
-      const slideIndex = Array.from(slides).indexOf(targetSlide);
-      
-      slides.forEach(slide => {
-        slide.style.display = 'none';
-        slide.classList.remove('is-selected');
-      });
-      
-      targetSlide.style.display = 'block';
-      targetSlide.classList.add('is-selected');
-      
-      // Update simple navigation dots if they exist
-      const nav = document.querySelector('.simple-nav');
-      if (nav) {
-        nav.querySelectorAll('.simple-dot').forEach((dot, index) => {
-          dot.style.background = index === slideIndex ? '#333' : '#ddd';
-        });
-      }
-    }
-  }
-  
-  // Force load the target image
-  const img = targetSlide.querySelector('img');
-  if (img) {
-    forceImageLoad(img);
-  }
-}
-
-// Enhanced debounce that ignores scroll events
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    if (args[0] && args[0].type === 'scroll') {
-      return;
-    }
-    
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-// Export functions for global use
-window.switchToImage = switchToImage;
-window.forceImageLoading = forceImageLoading;
-
-// Handle variant changes
-document.addEventListener('variant:change', function(e) {
-  if (e.detail && e.detail.variant && e.detail.variant.featured_media) {
-    switchToImage(e.detail.variant.featured_media.id);
-  }
-});
-
-// Add intersection observer to load images when they come into view
-function addImageIntersectionObserver() {
+  // Intersection Observer for lazy images
   if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
+    const imageObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target;
-          forceImageLoad(img);
-          observer.unobserve(img);
+          if (img.loading === 'lazy') {
+            img.loading = 'eager';
+          }
         }
       });
+    }, {
+      rootMargin: '50px'
     });
 
-    // Observe all gallery images
-    document.querySelectorAll('.scroll--gallery_item img').forEach(img => {
+    // Only observe lazy loaded images
+    document.querySelectorAll('.scroll--gallery_item img[loading="lazy"]').forEach(img => {
       imageObserver.observe(img);
     });
   }
-}
-
-// Initialize intersection observer
-setTimeout(addImageIntersectionObserver, 1000);
-
+})();
 </script>
-<script src="{{ 'fixed-zoom-button.js' | asset_url }}" defer></script> 
+<script src="{{ 'fixed-zoom-button.js' | asset_url }}" defer></script>

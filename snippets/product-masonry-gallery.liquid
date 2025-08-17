@@ -9,7 +9,7 @@
             assign current_id = product.selected_or_first_available_variant.media | default: product.featured_media
             if current_id.id == media.id
               assign is_selected = 'is-selected'
-            endif
+            endif 
           -%}
           <div class="{{ media.media_type }}-slide scroll--gallery_item carousel-cell js-scroll--gallery_item {{ is_selected }} {%- cycle 'pos--left', 'pos--right' %}" data-image-id="{{ media.id }}" data-slide-index="{{ forloop.index0 }}" tabindex="-1">
             <div class="product-gallery__media-container product-media--{{ media.id }} {{ media.media_type }}"

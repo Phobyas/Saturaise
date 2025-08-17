@@ -1,3 +1,16 @@
+{% if product.featured_image %}
+  <link rel="preload" 
+        as="image" 
+        href="{{ product.featured_image | img_url: '412x412' }}" 
+        media="(max-width: 768px)"
+        fetchpriority="high">
+  <link rel="preload" 
+        as="image" 
+        href="{{ product.featured_image | img_url: '900x900' }}" 
+        media="(min-width: 769px)"
+        fetchpriority="high">
+{% endif %}
+
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign first_3d_model = product.media | where: "media_type", "model" | first
@@ -21,6 +34,8 @@
   assign has_video = false
   assign has_plyr = false
   assign has_ytv = false
+  assign has_youtube = false
+  
   for media in product.media
     if media.media_type == "video"
       assign has_plyr = true
@@ -30,6 +45,9 @@
     if media.media_type == "external_video"
       assign has_ytv = true
       assign has_video = true
+      if media.host == 'youtube'
+        assign has_youtube = true
+      endif
       continue
     endif
     if media.media_type == "model"
@@ -38,10 +56,25 @@
     endif
   endfor
 
+  comment Cache commonly used values
+  assign product_title_lower = product.title | downcase
+  assign product_vendor_lower = product.vendor | downcase
+  assign brand_check = product_title_lower | append: '|' | append: product_vendor_lower
+  endcomment
+
   assign popup_count = 0
+  assign has_size_chart = false
+  assign has_accordion = false
+  
   for block in section.blocks
     if block.type == 'metafield_popup'
       assign popup_count = popup_count | plus: 1
+    endif
+    if block.type == 'size_chart'
+      assign has_size_chart = true
+    endif
+    if block.type == 'accordion'
+      assign has_accordion = true
     endif
   endfor
 
@@ -104,7 +137,7 @@
 
 -%}
 
-{% comment %} Product Page Assets {% endcomment %}
+{% comment %} Product Page Assets - Optimized loading {% endcomment %}
 <link
   rel="preload"
   href="{{ 'section-main-product.css' | asset_url }}"
@@ -113,9 +146,12 @@
 >
 <noscript><link rel="stylesheet" href="{{ 'section-main-product.css' | asset_url }}"></noscript>
 
-<!-- Size Chart Assets -->
-<link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}">
-<script src="{{ 'size-chart.js' | asset_url }}" defer></script>
+{% comment %} Conditional Size Chart Assets {% endcomment %}
+{% if has_size_chart %}
+  <link rel="preload" href="{{ 'size-chart.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ 'size-chart.css' | asset_url }}"></noscript>
+  <script src="{{ 'size-chart.js' | asset_url }}" defer></script>
+{% endif %}
 
 {%- if has_media -%}
   <link
@@ -138,7 +174,7 @@
 
 {% capture product_gallery_config %}{
   "thumbPosition": {{ section.settings.thumbnail_position | json }},
-  "mainSlider": {% if product.media.size <= 1 %}false{% else %}true{% endif %},
+  "mainSlider": {% if product.media.size > 1 %}true{% else %}false{% endif %},
   "thumbSlider": {% if product.media.size >= 4 %}true{% else %}false{% endif %},
   "productId": {{ product.id | json }},
   "thumbsShown": 4,
@@ -157,7 +193,16 @@
   "swatches": {{ settings.product_variants | json }}
 }
 {% endcapture %}
-
+{% comment %} CRITICAL: Preload first image for optimal LCP {% endcomment %}
+{% if product.featured_image %}
+  <link rel="preload" as="image" 
+        href="{{ product.featured_image | img_url: '900x900' }}"
+        imagesrcset="{{ product.featured_image | img_url: '400x400' }} 400w,
+                     {{ product.featured_image | img_url: '600x600' }} 600w,
+                     {{ product.featured_image | img_url: '900x900' }} 900w,
+                     {{ product.featured_image | img_url: '1200x1200' }} 1200w"
+        imagesizes="(min-width: 1024px) 50vw, 100vw">
+{% endif %}
 {% comment %} Product Page Template {% endcomment %}
 <section
   class="
@@ -305,10 +350,11 @@
               </div>
 
               
-            {%- when 'product_form' -%}
+{%- when 'product_form' -%}
               {% comment %}
-  UPDATED SIZE NOTIFICATION - With correct sizing and brand synonyms
-  Professional style matching your About Us section
+  ENHANCED SIZE NOTIFICATION - Based on Hypesole.pl sizing data
+  Professional recommendations with specific model information
+  Using correct Polish grammar (feminine form for shoes)
 {% endcomment %}
 
 {% comment %} Only show for products with sizes {% endcomment %}
@@ -321,104 +367,230 @@
 {% endfor %}
 
 {% if has_size_option %}
-  {% comment %} Detect brand and sizing advice with synonyms {% endcomment %}
+  {% comment %} Enhanced brand and model detection with Hypesole recommendations {% endcomment %}
   {% assign size_advice = "" %}
+  {% assign size_detail = "" %}
   {% assign text_color = "#2563eb" %}
   {% assign bg_color = "#eff6ff" %}
   {% assign border_color = "#2563eb" %}
   {% assign advice_prefix = "Rozmiar:" %}
-  {% assign title_lower = product.title | downcase %}
   
-  {% comment %} YEEZY - Different sizing for different models {% endcomment %}
-  {% if product.title contains 'Yeezy' %}
-    {% if title_lower contains 'slide' %}
-      {% assign size_advice = "Yeezy Slide wypada mniejszy - weź o rozmiar większy" %}
+  {% comment %} YEEZY - Detailed model-specific sizing {% endcomment %}
+  {% if product_title_lower contains 'yeezy' %}
+    {% if product_title_lower contains '350' or product_title_lower contains '350 v2' %}
+      {% assign size_advice = "Yeezy 350 V2 wypadają wąsko - weź pół rozmiaru większy" %}
+      {% assign size_detail = "Model ma wąską konstrukcję. Osoby z szeroką stopą powinny wziąć cały rozmiar w górę." %}
+    {% elsif product_title_lower contains '700' %}
+      {% assign size_advice = "Yeezy 700 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Model ma standardową szerokość i długość. Pasują true to size." %}
+    {% elsif product_title_lower contains '500' %}
+      {% assign size_advice = "Yeezy 500 - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Ze względu na grubą podeszwę i wąski przód, zalecamy pół rozmiaru więcej." %}
+    {% elsif product_title_lower contains 'slide' %}
+      {% assign size_advice = "Yeezy Slide wypadają na mniejsze - weź cały rozmiar większy" %}
+      {% assign size_detail = "Slajdy mają kompaktową konstrukcję. Dla komfortu wybierz rozmiar w górę." %}
+    {% elsif product_title_lower contains 'foam' or product_title_lower contains 'runner' %}
+      {% assign size_advice = "Yeezy Foam Runner wypadają na bardzo małe - weź cały rozmiar w górę" %}
+      {% assign size_detail = "Model pasuje bardzo mało. Zalecamy kupno o pełny rozmiar większy." %}
     {% else %}
-      {% assign size_advice = "Yeezy wypada mniejszy - weź pół rozmiaru większy" %}
+      {% assign size_advice = "Yeezy wypadają wąsko - weź pół rozmiaru większy" %}
+      {% assign size_detail = "Większość modeli Yeezy ma wąską konstrukcję." %}
     {% endif %}
     {% assign text_color = "#c2410c" %}
     {% assign bg_color = "#fff7ed" %}
     {% assign border_color = "#ea580c" %}
     {% assign advice_prefix = "Uwaga:" %}
   
-  {% comment %} AIR JORDAN - Half size up for AJ4 {% endcomment %}
-  {% elsif product.title contains 'Jordan' %}
-    {% if title_lower contains 'air jordan 4' or title_lower contains 'jordan 4' %}
-      {% assign size_advice = "Air Jordan 4 wypada mniejszy - weź pół rozmiaru większy" %}
+  {% comment %} AIR JORDAN - Fixed detection for all Jordan variations {% endcomment %}
+  {% elsif product.title contains 'Jordan' or product.title contains 'JORDAN' or product_title_lower contains 'jordan' or product_title_lower contains 'aj1' or product_title_lower contains 'aj3' or product_title_lower contains 'aj4' or product_title_lower contains 'aj5' or product_title_lower contains 'aj11' %}
+    {% if product_title_lower contains 'jordan 1' or product_title_lower contains 'aj1' or product_title_lower contains 'air jordan 1' %}
+      {% assign size_advice = "Air Jordan 1 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Klasyczny model z wygodnym dopasowaniem. True to size." %}
+    {% elsif product_title_lower contains 'jordan 3' or product_title_lower contains 'aj3' or product_title_lower contains 'air jordan 3' %}
+      {% assign size_advice = "Air Jordan 3 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Komfortowe dopasowanie, standardowa szerokość." %}
+    {% elsif product_title_lower contains 'jordan 4' or product_title_lower contains 'aj4' or product_title_lower contains 'air jordan 4' %}
+      {% assign size_advice = "Air Jordan 4 wypadają wąsko - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Model ma wąski przód. Osoby z szerszą stopą powinny wziąć +0.5." %}
+    {% elsif product_title_lower contains 'jordan 5' or product_title_lower contains 'aj5' or product_title_lower contains 'air jordan 5' %}
+      {% assign size_advice = "Air Jordan 5 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Wygodne dopasowanie, standardowa konstrukcja." %}
+    {% elsif product_title_lower contains 'jordan 11' or product_title_lower contains 'aj11' or product_title_lower contains 'air jordan 11' %}
+      {% assign size_advice = "Air Jordan 11 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Wygodne dopasowanie dzięki lakierowanej skórze. True to size." %}
     {% else %}
-      {% assign size_advice = "Air Jordan wypada zgodnie z rozmiarem" %}
+      {% assign size_advice = "Air Jordan pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Większość modeli Jordan ma standardowe dopasowanie." %}
     {% endif %}
     {% assign text_color = "#1e40af" %}
     {% assign bg_color = "#eff6ff" %}
     {% assign border_color = "#2563eb" %}
-    {% assign advice_prefix = "Rozmiar:" %}
   
-  {% comment %} UGG - Including all synonyms {% endcomment %}
-  {% elsif product.title contains 'UGG' or 
-           title_lower contains 'lowmel' or 
-           title_lower contains 'ultra mini boot' or 
-           title_lower contains 'ultra mini platform' or 
-           title_lower contains 'tasman slipper' or 
-           title_lower contains 'tazz slipper' %}
-    {% assign size_advice = "UGG wypada większy - rozważ mniejszy rozmiar" %}
+  {% comment %} NIKE DUNK - Popular model specific sizing {% endcomment %}
+  {% elsif product_title_lower contains 'dunk' and product_title_lower contains 'nike' %}
+    {% if product_title_lower contains 'dunk low' %}
+      {% assign size_advice = "Nike Dunk Low pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Standardowe dopasowanie. Osoby między rozmiarami mogą wziąć pół w górę." %}
+    {% elsif product_title_lower contains 'dunk high' %}
+      {% assign size_advice = "Nike Dunk High pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "True to size. Wysoka cholewka zapewnia dobre trzymanie kostki." %}
+    {% elsif product_title_lower contains 'sb dunk' %}
+      {% assign size_advice = "Nike SB Dunk mają grubszy język - pasują ciasno" %}
+      {% assign size_detail = "Wzmocniony język dla skaterów. Rozważ pół rozmiaru w górę." %}
+    {% endif %}
+    {% assign text_color = "#1e40af" %}
+    {% assign bg_color = "#eff6ff" %}
+    {% assign border_color = "#2563eb" %}
+  
+  {% comment %} NIKE AIR MAX - Series specific {% endcomment %}
+  {% elsif product_title_lower contains 'air max' %}
+    {% if product_title_lower contains 'air max 1' %}
+      {% assign size_advice = "Air Max 1 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Klasyczne dopasowanie. True to size." %}
+    {% elsif product_title_lower contains 'air max 90' %}
+      {% assign size_advice = "Air Max 90 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Standardowa szerokość i długość. Wygodny model." %}
+    {% elsif product_title_lower contains 'air max 95' %}
+      {% assign size_advice = "Air Max 95 wypadają wąsko - rozważ pół rozmiaru w górę" %}
+      {% assign size_detail = "Wąska konstrukcja, szczególnie w przedniej części." %}
+    {% elsif product_title_lower contains 'air max 97' %}
+      {% assign size_advice = "Air Max 97 wypadają wąsko - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Wąski model. Osoby z szerszą stopą powinny wziąć +0.5." %}
+    {% elsif product_title_lower contains 'air max 270' %}
+      {% assign size_advice = "Air Max 270 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Wygodna poduszka Air. True to size." %}
+    {% elsif product_title_lower contains 'vapormax' %}
+      {% assign size_advice = "VaporMax wypadają wąsko - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Przylegająca cholewka Flyknit. Zalecamy +0.5 dla komfortu." %}
+    {% elsif product_title_lower contains 'tn' or product_title_lower contains 'plus' %}
+      {% assign size_advice = "Air Max Plus (TN) wypadają na mniejsze - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Model pasuje ciasno. Zalecamy pół rozmiaru więcej." %}
+    {% else %}
+      {% assign size_advice = "Air Max pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Większość modeli Air Max ma standardowe dopasowanie." %}
+    {% endif %}
+    {% assign text_color = "#1e40af" %}
+    {% assign bg_color = "#eff6ff" %}
+    {% assign border_color = "#2563eb" %}
+  
+  {% comment %} NIKE AIR FORCE 1 {% endcomment %}
+  {% elsif product_title_lower contains 'air force' or product_title_lower contains 'af1' %}
+    {% assign size_advice = "Air Force 1 wypadają za duże - rozważ pół rozmiaru mniej" %}
+    {% assign size_detail = "Model ma przestronną konstrukcję. Można wziąć -0.5 dla lepszego dopasowania." %}
+    {% assign text_color = "#047857" %}
+    {% assign bg_color = "#ecfdf5" %}
+    {% assign border_color = "#059669" %}
+  
+  {% comment %} NEW BALANCE - Model specific {% endcomment %}
+  {% elsif product.title contains 'New Balance' or product.title contains 'NEW BALANCE' or product_title_lower contains 'new balance' %}
+    {% if product_title_lower contains '550' %}
+      {% assign size_advice = "New Balance 550 wypadają za duże - rozważ pół rozmiaru mniej" %}
+      {% assign size_detail = "Model ma luźną konstrukcję. Można bezpiecznie wziąć -0.5." %}
+    {% elsif product_title_lower contains '574' %}
+      {% assign size_advice = "New Balance 574 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Standardowe dopasowanie. True to size." %}
+    {% elsif product_title_lower contains '990' or product_title_lower contains '991' or product_title_lower contains '992' %}
+      {% assign size_advice = "New Balance 99X pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Seria Made in USA/UK. Precyzyjne dopasowanie true to size." %}
+    {% elsif product_title_lower contains '2002r' %}
+      {% assign size_advice = "New Balance 2002R pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Wygodny model z amortyzacją ABZORB. True to size." %}
+    {% elsif product_title_lower contains '327' %}
+      {% assign size_advice = "New Balance 327 wypadają wąsko - rozważ pół rozmiaru w górę" %}
+      {% assign size_detail = "Wąska konstrukcja. Osoby z szerszą stopą +0.5." %}
+    {% elsif product_title_lower contains '530' %}
+      {% assign size_advice = "New Balance 530 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Retro runner z wygodnym dopasowaniem. True to size." %}
+    {% elsif product_title_lower contains '9060' %}
+      {% assign size_advice = "New Balance 9060 pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Nowoczesny model z szeroką podeszwą. True to size." %}
+    {% else %}
+      {% assign size_advice = "New Balance pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Amerykańska marka znana z precyzyjnego dopasowania." %}
+    {% endif %}
+    {% assign text_color = "#047857" %}
+    {% assign bg_color = "#ecfdf5" %}
+    {% assign border_color = "#059669" %}
+  
+  {% comment %} ADIDAS - Model specific {% endcomment %}
+  {% elsif product.vendor == 'Adidas' or product.vendor == 'adidas' or product_title_lower contains 'adidas' %}
+    {% if product_title_lower contains 'yeezy' %}
+      {% comment %} Handled above {% endcomment %}
+    {% elsif product_title_lower contains 'ultra boost' or product_title_lower contains 'ultraboost' %}
+      {% assign size_advice = "Ultra Boost pasują ciasno - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Przylegająca cholewka Primeknit. Zalecamy +0.5." %}
+    {% elsif product_title_lower contains 'nmd' %}
+      {% assign size_advice = "NMD wypadają za duże - rozważ pół rozmiaru mniej" %}
+      {% assign size_detail = "Luźne dopasowanie. Można wziąć -0.5." %}
+    {% elsif product_title_lower contains 'stan smith' %}
+      {% assign size_advice = "Stan Smith wypadają za duże - rozważ pół rozmiaru mniej" %}
+      {% assign size_detail = "Klasyczny model pasuje luźno. Zalecamy -0.5." %}
+    {% elsif product_title_lower contains 'superstar' %}
+      {% assign size_advice = "Superstar wypadają za duże - rozważ pół rozmiaru mniej" %}
+      {% assign size_detail = "Shell toe ma przestronną konstrukcję. Można wziąć -0.5." %}
+    {% elsif product_title_lower contains 'gazelle' %}
+      {% assign size_advice = "Gazelle wypadają wąsko - weź pół rozmiaru w górę" %}
+      {% assign size_detail = "Wąski model. Osoby z szerszą stopą +0.5." %}
+    {% elsif product_title_lower contains 'samba' %}
+      {% assign size_advice = "Samba wypadają wąsko i długo - sprawdź tabelę rozmiarów" %}
+      {% assign size_detail = "Specyficzna konstrukcja. Wąskie ale długie." %}
+    {% elsif product_title_lower contains 'campus' %}
+      {% assign size_advice = "Campus pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Wygodny model z zamszową cholewką. True to size." %}
+    {% elsif product_title_lower contains 'forum' %}
+      {% assign size_advice = "Forum pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Basketball-inspired. Standardowe dopasowanie." %}
+    {% else %}
+      {% assign size_advice = "Adidas pasują zgodnie z rozmiarem" %}
+      {% assign size_detail = "Większość modeli Adidas ma standardowe dopasowanie." %}
+    {% endif %}
+    {% assign text_color = "#047857" %}
+    {% assign bg_color = "#ecfdf5" %}
+    {% assign border_color = "#059669" %}
+  
+  {% comment %} UGG - Detailed winter footwear sizing {% endcomment %}
+  {% elsif product.title contains 'UGG' or product_title_lower contains 'ugg' %}
+    {% if product_title_lower contains 'classic mini' %}
+      {% assign size_advice = "UGG Classic Mini wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Owcza wełna się ugniata. Po noszeniu buty będą luźniejsze." %}
+    {% elsif product_title_lower contains 'ultra mini' %}
+      {% assign size_advice = "UGG Ultra Mini wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Niska cholewka, przestronna konstrukcja. Zalecamy -1 rozmiar." %}
+    {% elsif product_title_lower contains 'neumel' %}
+      {% assign size_advice = "UGG Neumel wypadają za duże - rozważ rozmiar mniej" %}
+      {% assign size_detail = "Luźne dopasowanie. Można wziąć rozmiar w dół." %}
+    {% elsif product_title_lower contains 'tasman' %}
+      {% assign size_advice = "UGG Tasman wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Kapcie z szeroką konstrukcją. Zalecamy -1 rozmiar." %}
+    {% elsif product_title_lower contains 'classic tall' or product_title_lower contains 'classic short' %}
+      {% assign size_advice = "UGG Classic wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Przestronna konstrukcja na grube skarpety. -1 rozmiar dla normalnego noszenia." %}
+    {% elsif product_title_lower contains 'lowmel' %}
+      {% assign size_advice = "UGG Lowmel wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Platforma. Przestronna konstrukcja, zalecamy -1." %}
+    {% elsif product_title_lower contains 'tazz' %}
+      {% assign size_advice = "UGG Tazz wypadają za duże - weź rozmiar mniej" %}
+      {% assign size_detail = "Platformowe kapcie. Bardzo przestronne, weź rozmiar w dół." %}
+    {% else %}
+      {% assign size_advice = "UGG wypadają za duże - rozważ mniejszy rozmiar" %}
+      {% assign size_detail = "Buty UGG mają luźną konstrukcję ze względu na owczą wełnę." %}
+    {% endif %}
     {% assign text_color = "#6d28d9" %}
     {% assign bg_color = "#faf5ff" %}
     {% assign border_color = "#7c3aed" %}
     {% assign advice_prefix = "Wskazówka:" %}
   
-  {% comment %} NEW BALANCE - Including all model numbers {% endcomment %}
-  {% elsif product.title contains 'New Balance' or 
-           title_lower contains '2002r' or 
-           title_lower contains '530' or 
-           title_lower contains '550' or 
-           title_lower contains '9060' %}
-    {% assign size_advice = "New Balance wypada zgodnie z rozmiarem" %}
-    {% assign text_color = "#047857" %}
-    {% assign bg_color = "#ecfdf5" %}
-    {% assign border_color = "#059669" %}
-    {% assign advice_prefix = "Rozmiar:" %}
-  
-  {% comment %} NIKE - Including all synonyms {% endcomment %}
-  {% elsif product.vendor == 'Nike' or 
-           title_lower contains 'air force' or 
-           title_lower contains 'air max' or 
-           title_lower contains 'cortez' or 
-           title_lower contains 'dunk low' or 
-           title_lower contains 'dunk sb' or 
-           title_lower contains 'kobe' or 
-           title_lower contains 'travis scott' or 
-           title_lower contains 'off-white' or 
-           title_lower contains 'nocta' or 
-           title_lower contains 'shox' %}
-    {% assign size_advice = "Nike wypada zgodnie z rozmiarem" %}
-    {% assign text_color = "#1e40af" %}
-    {% assign bg_color = "#eff6ff" %}
-    {% assign border_color = "#2563eb" %}
-    {% assign advice_prefix = "Rozmiar:" %}
-  
-  {% comment %} ADIDAS - Including all synonyms {% endcomment %}
-  {% elsif product.vendor == 'Adidas' or 
-           title_lower contains 'spezial' or 
-           title_lower contains 'campus' or 
-           title_lower contains 'samba' or 
-           title_lower contains 'superstar' or 
-           title_lower contains 'gazelle' %}
-    {% assign size_advice = "Adidas wypada zgodnie z rozmiarem" %}
-    {% assign text_color = "#047857" %}
-    {% assign bg_color = "#ecfdf5" %}
-    {% assign border_color = "#059669" %}
-    {% assign advice_prefix = "Rozmiar:" %}
-  
-  {% comment %} DEFAULT {% endcomment %}
+  {% comment %} Other brands continue... {% endcomment %}
   {% else %}
     {% assign size_advice = "Sprawdź tabelę rozmiarów przed zakupem" %}
+    {% assign size_detail = "Porównaj z rozmiarem butów, które obecnie nosisz." %}
     {% assign text_color = "#475569" %}
     {% assign bg_color = "#f8fafc" %}
     {% assign border_color = "#e2e8f0" %}
     {% assign advice_prefix = "Rozmiar:" %}
   {% endif %}
   
-  {% comment %} Render the notification {% endcomment %}
+  {% comment %} Render the notification with the ORIGINAL BETTER DESIGN {% endcomment %}
   {% if size_advice != "" %}
     <div style="
       background: {{ bg_color }};
@@ -438,9 +610,21 @@
       ">
         <span style="font-weight: 600;">{{ advice_prefix }}</span> {{ size_advice }}
       </p>
+      {% if size_detail != "" %}
+        <p style="
+          font-size: 12px;
+          font-weight: 400;
+          color: {{ text_color }};
+          margin: 4px 0 0 0;
+          line-height: 1.3;
+          opacity: 0.8;
+        ">
+          {{ size_detail }}
+        </p>
+      {% endif %}
     </div> 
   {% endif %}
-{% endif %} 
+{% endif %}
               <div
                 class="product-form__variants product__section--variants inline-block animate--text delay--{{ forloop.index }}"
                 {{ block.shopify_attributes }}
@@ -523,19 +707,19 @@
               ></pickup-availability>
             {%- when 'product_description' -%}
               {% comment %} AUTHENTICITY GUARANTEE - Added before product description {% endcomment %}
-<div class="authenticity-guarantee-wrapper animate--text delay--{{ forloop.index }}">
-  <div class="authenticity-guarantee">
-    <div class="guarantee-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 11L11 13L15.5 8.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="guarantee-content">
-      <h4 class="guarantee-title">Gwarancja autentyczności Saturaise</h4>
-      <p class="guarantee-text">Każdy produkt przechodzi szczegółową weryfikację przez nasz doświadczony zespół</p>
-    </div>
-  </div>
-</div>
+              <div class="authenticity-guarantee-wrapper animate--text delay--{{ forloop.index }}">
+                <div class="authenticity-guarantee">
+                  <div class="guarantee-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 11L11 13L15.5 8.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="guarantee-content">
+                    <h4 class="guarantee-title">Gwarancja autentyczności Saturaise</h4>
+                    <p class="guarantee-text">Każdy produkt przechodzi szczegółową weryfikację przez nasz doświadczony zespół</p>
+                  </div>
+                </div>
+              </div>
               
               {%- if product.description != blank -%}
                 <div
@@ -576,22 +760,25 @@
                 <!-- /#spi-banner -->
               {%- endform -%}
               {%- when 'metafield_popup' -%}
-                <div
-                  class="product-form__popup pb-6 mb-3 sm-pt-1 sm-mb-1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
-                  {{ block.shopify_attributes }}
-                >
-                  <button
-                    class="btn-as-link underline js-modal-open pl0"
-                    type="button"
-                    name="button"
-                    data-wau-modal-target="size-chart-modal"
+                {% comment %} Skip if size_chart block already exists {% endcomment %}
+                {% unless has_size_chart %}
+                  <div
+                    class="product-form__popup pb-6 mb-3 sm-pt-1 sm-mb-1 text-left {{ multiples }} border--{{ block.settings.show_border_label }} animate--text delay--{{ forloop.index }}"
+                    {{ block.shopify_attributes }}
                   >
-                    Tabela rozmiarów
-                  </button>
-                  <div data-wau-modal-content="size-chart-modal" style="display: none;">
-                    {% render 'size-chart-tables' %}
+                    <button
+                      class="btn-as-link underline js-modal-open pl0"
+                      type="button"
+                      name="button"
+                      data-wau-modal-target="size-chart-modal"
+                    >
+                      Tabela rozmiarów
+                    </button>
+                    <div data-wau-modal-content="size-chart-modal" style="display: none;">
+                      {% render 'size-chart-tables' %}
+                    </div>
                   </div>
-                </div>
+                {% endunless %}
             {% when 'complementary_products' %}
               <div class="product-blocks__block product-blocks__block--{{ block.type }}" {{ block.shopify_attributes }}>
                 {%
@@ -611,39 +798,51 @@
     </article>
   </div>
 
-    <div class="product-additional-content" >
-    {% render 'size-guide', product: product %}
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var accordionButtons = document.querySelectorAll('.accordion-button');
-      
-      accordionButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
-          var collapse = document.querySelector(this.dataset.bsTarget);
-          
-          // Toggle the 'show' class on the clicked item
-          collapse.classList.toggle('show');
-          
-          // Optionally, close other open items (accordion behavior)
-          var otherCollapses = document.querySelectorAll('.accordion-collapse');
-          otherCollapses.forEach(function (other) {
-            if (other !== collapse) {
-              other.classList.remove('show');
-            }
+  {% comment %} Optimized accordion script - only load if needed {% endcomment %}
+  {% if has_accordion %}
+    <script>
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          document.querySelectorAll('.accordion-button').forEach(function (button) {
+            button.addEventListener('click', function () {
+              var collapse = document.querySelector(this.dataset.bsTarget);
+              collapse.classList.toggle('show');
+              
+              document.querySelectorAll('.accordion-collapse').forEach(function (other) {
+                if (other !== collapse) {
+                  other.classList.remove('show');
+                }
+              });
+            });
           });
         });
-      });
-    });
-  </script>
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(() => {
+          document.querySelectorAll('.accordion-button').forEach(function (button) {
+            button.addEventListener('click', function () {
+              var collapse = document.querySelector(this.dataset.bsTarget);
+              collapse.classList.toggle('show');
+              
+              document.querySelectorAll('.accordion-collapse').forEach(function (other) {
+                if (other !== collapse) {
+                  other.classList.remove('show');
+                }
+              });
+            });
+          });
+        }, 100);
+      }
+    </script>
+  {% endif %}
 
   {%- if first_3d_model -%}
     <script type="application/json" id="ModelJson-{{ section.id }}">
       {{ product.media | where: 'media_type', 'model' | json }}
     </script>
   {%- endif -%}
-  {%- if has_ytv -%}
+  
+  {%- if has_youtube -%}
     <script type="text/javascript">
       // Youtube API callback
       function onYouTubeIframeAPIReady() {
