@@ -343,7 +343,7 @@
 
 /* Subtotal styling (drawer only) */
 .ajax-cart__subtotal {
-  display: flex !important;
+ 
   justify-content: space-between !important;
   align-items: center !important;
   padding: 0 !important;
@@ -351,6 +351,10 @@
   font-size: 15px !important;
   color: var(--cart-text) !important;
   font-weight: 700 !important;
+}
+
+.ajax-cart__subtotal span {
+  font-size: 14px !important;
 }
 
 .ajax-cart__subtotal span:last-child:not(.js-cart-count) {
