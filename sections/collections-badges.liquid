@@ -58,163 +58,92 @@
   }
 {% endschema %}
 
-<!-- CRITICAL CLS PREVENTION STYLES - Must load immediately -->
 <style>
-  /* ============================================
-     CRITICAL: Fixed dimensions to prevent ANY layout shift
-     These MUST be inline to load before any content
-     ============================================ */
-  
-  /* Main section container - FIXED HEIGHT */
+  /* Main section container - consistent with collection carousel */
+  #shopify-section-{{ section.id }} {
+    height: 110px !important;
+    overflow: visible;
+    contain: layout style;
+    max-width: 1280px;
+    margin: 0 auto 20px auto;
+    width: 100%;
+  }
+
+  @media (min-width: 1920px) {
+    #shopify-section-{{ section.id }} {
+      max-width: 1600px;
+    }
+  }
 
   @media (max-width: 767px) {
-  #shopify-section-{{ section.id }} {
- margin: 0;
-  }
-  }
-
-    @media (min-width: 768px) {
-  #shopify-section-{{ section.id }} {
-     margin-bottom: 40px;
-    margin-top: 20px;
-  }
+    #shopify-section-{{ section.id }} {
+      margin: 0;
+      height: 90px !important;
+    }
   }
 
-  #shopify-section-{{ section.id }} {
-    height: 110px !important; /* Changed from min-height to fixed height */
-    overflow: visible;
-
-    contain: layout style; /* Strict containment */
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      margin-bottom: 40px;
+      margin-top: 20px;
+    }
   }
-  
-  /* Badge container wrapper - FIXED HEIGHT */
+
+  /* Badge container wrapper */
   .badge-container-{{ section.id }} {
-    height: 110px !important; /* Match section height */
+    height: 110px !important;
     position: relative;
     width: 100%;
     max-width: 1280px;
-    
-
   }
-  
-  /* Header row - FIXED HEIGHT */
+
+  @media (min-width: 1920px) {
+    .badge-container-{{ section.id }} {
+      max-width: 1600px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .badge-container-{{ section.id }} {
+      height: 90px !important;
+      padding-left: 12px;
+    }
+  }
+
+  /* Header row */
   .badge-header-{{ section.id }} {
-    height: 40px !important; /* Fixed header height */
+    height: 40px !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
-  /* Scroll container wrapper - FIXED HEIGHT */
-  .badge-scroll-wrapper-{{ section.id }} {
-    height: 70px !important; /* Fixed wrapper height */
-    position: relative;
-    overflow: hidden; /* Prevent any overflow during load */
+
+  @media (max-width: 767px) {
+    .badge-header-{{ section.id }} {
+      height: 30px !important;
+    }
   }
-  
-  /* Badge scroller - FIXED DIMENSIONS from start */
-  #badgeScroller-{{ section.id }} {
-    height: 64px !important; /* Fixed scroller height */
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-    padding: 0 4px;
-  }
-  
-  #badgeScroller-{{ section.id }}::-webkit-scrollbar {
+
+  /* Enhanced badge arrow buttons - copied exactly from collection-badges styling */
+  .badge-arrows-{{ section.id }} {
     display: none;
-  }
-  
-  /* Badge inner container - prevent any flex layout shifts */
-  .badge-inner-{{ section.id }} {
-    display: inline-flex;
-    align-items: center;
-    height: 64px;
-    flex-shrink: 0;
-  }
-  
-  /* Individual badge items - FIXED DIMENSIONS */
-  .badge-item-{{ section.id }} {
-    display: inline-flex;
-    align-items: center;
     gap: 12px;
-    padding: 8px 12px;
-    background-color: #EEEEEE;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    white-space: nowrap;
-    height: 64px !important; /* Fixed height */
-    min-width: 120px;
-    margin-right: 12px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    flex-shrink: 0; /* Prevent any shrinking */
-    contain: layout style; /* Isolate each badge */
   }
-  
-  /* Image container - FIXED DIMENSIONS */
-  .badge-image-container-{{ section.id }} {
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important; /* Prevent shrinking */
-    min-height: 48px !important;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #f5f5f5;
-    overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 0 0 rgba(0,0,0,0);
-    contain: size layout style; /* Strict size containment */
-  }
-  
-  .badge-image-container-{{ section.id }} img {
-    width: 48px !important;
-    height: 48px !important;
-    object-fit: contain;
-    mix-blend-mode: multiply;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    display: block; /* Prevent inline spacing issues */
-  }
-  
-  /* Badge text - prevent layout shifts */
-  .badge-text-{{ section.id }} {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.2;
-    color: inherit;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    text-shadow: 0 0 0 rgba(0,0,0,0);
-  }
-  
-  /* Arrow buttons - FIXED DIMENSIONS */
+
   .badge-arrow-btn-{{ section.id }} {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.3s ease;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background-color: #323232;
     border: none;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: relative;
     z-index: 2;
-    transition: all 0.3s ease;
-    contain: size layout style;
   }
   
   .badge-arrow-btn-{{ section.id }} svg {
@@ -226,81 +155,214 @@
     min-height: 16px;
   }
   
-  /* Mobile specific - FIXED DIMENSIONS */
+  .badge-arrow-btn-{{ section.id }}:disabled svg {
+    opacity: 0.5;
+  }
+  
+  .badge-arrow-btn-{{ section.id }}:hover {
+    background-color: #1d4ed8;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .badge-arrow-btn-{{ section.id }}:active {
+    transform: scale(1.05);
+    transition: all 0.1s ease;
+  }
+
+  .badge-arrow-btn-{{ section.id }}:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .badge-arrow-btn-{{ section.id }}:disabled:hover {
+    background-color: #9ca3af;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  /* Show arrows only on desktop */
+  @media (min-width: 768px) {
+    .badge-arrows-{{ section.id }} {
+      display: flex;
+    }
+  }
+
+  /* Scroll container wrapper */
+  .badge-scroll-wrapper-{{ section.id }} {
+    height: 70px !important;
+    position: relative;
+    overflow: hidden;
+  }
+
   @media (max-width: 767px) {
-    #shopify-section-{{ section.id }} {
-      height: 90px !important;
-    }
-    
-    .badge-container-{{ section.id }} {
-      height: 90px !important;
-      padding-left: 12px;
-    }
-    
-    .badge-header-{{ section.id }} {
-      height: 30px !important;
-    }
-    
     .badge-scroll-wrapper-{{ section.id }} {
       height: 60px !important;
     }
-    
+  }
+
+  /* Badge scroller */
+  #badgeScroller-{{ section.id }} {
+    height: 64px !important;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding: 0;
+  }
+
+  @media (max-width: 767px) {
     #badgeScroller-{{ section.id }} {
       height: 54px !important;
     }
-    
+  }
+
+  #badgeScroller-{{ section.id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Badge inner container */
+  .badge-inner-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
     .badge-inner-{{ section.id }} {
       height: 54px;
     }
-    
+  }
+
+  /* Individual badge items - styled like collection cards */
+  .badge-item-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+    height: 64px !important;
+    min-width: 120px;
+    margin-right: 12px;
+    position: relative;
+    flex-shrink: 0;
+    contain: layout style;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    text-decoration: none;
+  }
+
+  @media (max-width: 767px) {
     .badge-item-{{ section.id }} {
       height: 54px !important;
     }
-    
-    .badge-arrows-{{ section.id }} {
-      display: none !important;
-    }
   }
-  
-  /* Large screens */
-  @media (min-width: 1920px) {
-    .badge-container-{{ section.id }} {
-      max-width: 1600px;
-    }
-  }
-  
-  /* ============================================
-     HOVER EFFECTS - Loaded after critical styles
-     ============================================ */
+
+  /* Hover effects matching collection cards */
   .badge-item-{{ section.id }}:hover {
-    background-color: #ffffff;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    transform: translateY(-3px) scale(1.02);
-    border: 1px solid #ddd;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.1);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  
-  .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} {
-    background-color: #e8f4f8;
-    transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Image container */
+  .badge-image-container-{{ section.id }} {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    contain: size layout style;
+    pointer-events: none;
   }
-  
-  .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} img {
-    transform: scale(1.05);
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .badge-image-container-{{ section.id }} img {
+    width: 48px !important;
+    height: 48px !important;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
   }
-  
-  .badge-item-{{ section.id }}:hover .badge-text-{{ section.id }} {
-    color: #2563eb;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  
-  /* Background animation */
+
+  /* Overlay with gradient effect */
   .badge-item-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0,0,0,0.02) 0%,
+      rgba(0,0,0,0.06) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .badge-item-{{ section.id }}:hover::before {
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Badge text styling */
+  .badge-text-{{ section.id }} {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #1f2937;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Loading states and accessibility */
+  .badge-item-{{ section.id }}:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .badge-item-{{ section.id }}:active {
+    transform: scale(1.01);
+    transition: all 0.1s ease;
+  }
+
+  /* Shimmer loading effect for images */
+  .badge-image-container-{{ section.id }}::before {
     content: '';
     position: absolute;
     top: 0;
@@ -308,98 +370,29 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: left 0.6s ease;
     z-index: 1;
+    pointer-events: none;
   }
-  
-  .badge-item-{{ section.id }}:hover::before {
+
+  .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }}::before {
     left: 100%;
-    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  
-  .badge-item-{{ section.id }} > * {
-    position: relative;
-    z-index: 2;
-  }
-  
-  /* Active state */
-  .badge-item-{{ section.id }}:active {
-    transform: translateY(-1px) scale(1.01);
-    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  /* Focus states for accessibility */
-  .badge-item-{{ section.id }}:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
-  }
-  
-  /* Arrow button hover */
-  .badge-arrow-btn-{{ section.id }}:hover:not(:disabled) {
-    background-color: #1d4ed8;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-  }
-  
-  .badge-arrow-btn-{{ section.id }}:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  
-  .badge-arrow-btn-{{ section.id }}:disabled svg {
-    opacity: 0.5;
-  }
-  
-  /* ============================================
-     MOBILE INTERACTION STYLES - Fixed hover/touch issues
-     ============================================ */
-  /* Disable all hover effects on touch devices */
+
+  /* Mobile interaction styles - disable hover effects on touch devices */
   @media (hover: none) and (pointer: coarse), (max-width: 767px) {
-    /* Remove ALL hover effects */
     .badge-item-{{ section.id }}:hover {
-      background-color: #EEEEEE !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-      transform: none !important;
-      border: 1px solid transparent !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     
-    .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} {
-      background-color: #f5f5f5 !important;
-      transform: none !important;
-      box-shadow: none !important;
+    .badge-item-{{ section.id }}:hover::before {
+      opacity: 0;
     }
-    
-    .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }} img {
-      transform: none !important;
+
+    .badge-item-{{ section.id }}:hover .badge-image-container-{{ section.id }}::before {
+      left: -100%;
     }
-    
-    .badge-item-{{ section.id }}:hover .badge-text-{{ section.id }} {
-      color: inherit !important;
-      font-weight: 500 !important;
-      text-shadow: none !important;
-    }
-    
-    /* Subtle tap feedback instead of hover */
-    .badge-item-{{ section.id }}:active {
-      background-color: #E5E5E5;
-      transform: scale(0.98);
-      transition: all 0.1s ease;
-    }
-    
-    /* Alternative: Remove active state entirely */
-    /* .badge-item-{{ section.id }}:active {
-      background-color: #EEEEEE !important;
-      transform: none !important;
-    } */
-    
-    /* Disable the shimmer effect */
-    .badge-item-{{ section.id }}::before {
-      display: none !important;
-    }
-    
-    /* Optional: Add a tap highlight for better UX */
+
     .badge-item-{{ section.id }} {
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
       tap-highlight-color: rgba(0, 0, 0, 0.1);
@@ -409,7 +402,6 @@
 
 <div id="shopify-section-{{ section.id }}" class="w-full flex justify-center">
   <div class="badge-container-{{ section.id }}">
-    <!-- Header with arrows -->
     <div class="badge-header-{{ section.id }}">
       <div></div>
       <div class="badge-arrows-{{ section.id }} flex gap-3 mb-5">
@@ -431,7 +423,6 @@
       </div>
     </div>
     
-    <!-- Badge scroller -->
     <div class="badge-scroll-wrapper-{{ section.id }}">
       <div id="badgeScroller-{{ section.id }}">
         <div class="badge-inner-{{ section.id }}">
@@ -444,7 +435,6 @@
                  {{ block.shopify_attributes }}>
                 {% if block.settings.image %}
                   <div class="badge-image-container-{{ section.id }}">
-                    <!-- Critical: Set explicit dimensions and eager loading for visible badges -->
                     {{ block.settings.image | image_url: width: 96 | image_tag: 
                       class: 'badge-image',
                       loading: 'eager',
@@ -457,7 +447,6 @@
                     }}
                   </div>
                 {% else %}
-                  <!-- Placeholder to maintain consistent layout -->
                   <div class="badge-image-container-{{ section.id }}">
                     <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 50%;"></div>
                   </div>
@@ -473,11 +462,9 @@
 </div>
 
 <script>
-// Optimized script - no layout-affecting operations
 (function() {
   'use strict';
   
-  // Get references once
   const sectionId = '{{ section.id }}';
   const scroller = document.getElementById('badgeScroller-' + sectionId);
   const prevBtn = document.getElementById('badgePrev-' + sectionId);
@@ -486,14 +473,12 @@
   
   if (!scroller || !prevBtn || !nextBtn) return;
   
-  // Variables for drag handling
   let isDragging = false;
   let startX = 0;
   let startScrollLeft = 0;
   let hasDragged = false;
   const dragThreshold = 5;
   
-  // Update arrow state without causing reflow
   function updateArrowState() {
     requestAnimationFrame(() => {
       const scrollLeft = scroller.scrollLeft;
@@ -504,18 +489,15 @@
     });
   }
   
-  // Smooth scroll with RAF
   function smoothScroll(target) {
     scroller.scrollTo({
       left: target,
       behavior: 'smooth'
     });
     
-    // Update state after animation
     setTimeout(updateArrowState, 300);
   }
   
-  // Button handlers
   prevBtn.addEventListener('click', () => {
     smoothScroll(scroller.scrollLeft - scrollAmount);
   });
@@ -524,10 +506,8 @@
     smoothScroll(scroller.scrollLeft + scrollAmount);
   });
   
-  // Passive scroll listener
   scroller.addEventListener('scroll', updateArrowState, { passive: true });
   
-  // Prevent clicks after dragging
   function preventClickAfterDrag(e) {
     if (hasDragged) {
       e.preventDefault();
@@ -537,13 +517,11 @@
     }
   }
   
-  // Add click prevention to badges
   const badges = scroller.querySelectorAll('.badge-item-' + sectionId);
   badges.forEach(badge => {
     badge.addEventListener('click', preventClickAfterDrag, true);
   });
   
-  // Mouse drag handling
   scroller.addEventListener('mousedown', e => {
     isDragging = true;
     hasDragged = false;
@@ -572,12 +550,10 @@
     isDragging = false;
     scroller.style.cursor = '';
     
-    // Re-enable smooth scrolling
     setTimeout(() => {
       scroller.style.scrollBehavior = '';
     }, 50);
     
-    // Reset drag flag
     setTimeout(() => {
       hasDragged = false;
     }, 100);
@@ -586,7 +562,6 @@
   document.addEventListener('mouseup', endDrag);
   document.addEventListener('mouseleave', endDrag);
   
-  // Touch handling
   let touchStartX = 0;
   
   scroller.addEventListener('touchstart', e => {
@@ -621,10 +596,8 @@
     }, 150);
   });
   
-  // Initialize arrow state
   updateArrowState();
   
-  // Handle dynamic content with MutationObserver
   const observer = new MutationObserver(() => {
     const newBadges = scroller.querySelectorAll('.badge-item-' + sectionId + ':not([data-click-handler])');
     newBadges.forEach(badge => {
