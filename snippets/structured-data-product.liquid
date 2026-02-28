@@ -1,0 +1,260 @@
+{%- comment -%}
+  structured-data-product.liquid
+  Renderuj w sekcji main-product lub uzyj w ustawieniach theme:
+  {% render 'structured-data-product', product: product, collection: collection %}
+{%- endcomment -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_brand = product.metafields.custom.brand.value | default: product.vendor
+
+  assign rating_value = nil
+  assign review_count = nil
+
+  if product.metafields.reviews.rating.value
+    assign rating_value = product.metafields.reviews.rating.value.rating
+    assign review_count = product.metafields.reviews.rating_count.value
+  elsif product.metafields.judgeme.average_rating
+    assign rating_value = product.metafields.judgeme.average_rating
+    assign review_count = product.metafields.judgeme.review_count
+  elsif product.metafields.trustmate.average_rating
+    assign rating_value = product.metafields.trustmate.average_rating
+    assign review_count = product.metafields.trustmate.review_count
+  endif
+-%}
+
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": "{{ shop.url }}{{ product.url }}#product",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "name": {{ product.title | json }},
+    "description": {{ product.description | strip_html | strip_newlines | truncate: 500 | json }},
+    {% if product.images.size > 0 -%}
+    "image": [
+      {%- for image in product.images limit: 8 %}
+      "https:{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
+      {%- endfor %}
+    ],
+    {%- endif %}
+    {% if product_brand != blank -%}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product_brand | json }}
+    },
+    {%- endif %}
+    {% if current_variant.sku != blank -%}
+    "sku": {{ current_variant.sku | json }},
+    {%- elsif product.handle != blank -%}
+    "sku": {{ product.handle | json }},
+    {%- endif %}
+    {% if current_variant.barcode != blank -%}
+      {%- assign barcode_length = current_variant.barcode | size -%}
+      {%- if barcode_length == 12 -%}
+    "gtin12": {{ current_variant.barcode | json }},
+      {%- elsif barcode_length == 13 -%}
+    "gtin13": {{ current_variant.barcode | json }},
+      {%- else -%}
+    "gtin": {{ current_variant.barcode | json }},
+      {%- endif -%}
+    {%- endif %}
+    {% if product.metafields.custom.color.value -%}
+    "color": {{ product.metafields.custom.color.value | json }},
+    {%- endif %}
+    "category": {{ product.type | default: "Sneakersy" | json }},
+    "itemCondition": "https://schema.org/NewCondition",
+    "audience": {
+      "@type": "PeopleAudience",
+      "suggestedGender": "unisex"
+    },
+    {% if rating_value and review_count -%}
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "{{ rating_value }}",
+      "reviewCount": "{{ review_count }}",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    {%- endif %}
+    {% if product.available -%}
+      {% if product.variants.size > 1 -%}
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "PLN",
+      "lowPrice": {{ product.price_min | divided_by: 100.0 }},
+      "highPrice": {{ product.price_max | divided_by: 100.0 }},
+      "offerCount": {{ product.variants | where: 'available', true | size }},
+      "availability": "https://schema.org/InStock",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+      "seller": {
+        "@type": "Organization",
+        "name": "Saturaise",
+        "@id": "https://saturaise.com/#organization"
+      },
+      "offers": [
+        {%- for variant in product.variants -%}
+          {%- if variant.available %}
+        {
+          "@type": "Offer",
+          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}",
+          {% if variant.sku != blank -%}
+          "sku": {{ variant.sku | json }},
+          {%- endif %}
+          "name": "{{ product.title }} - {{ variant.title }}",
+          "price": {{ variant.price | divided_by: 100.0 }},
+          "priceCurrency": "PLN",
+          {%- if variant.barcode != blank %}
+            {%- assign vb_len = variant.barcode | size -%}
+            {%- if vb_len == 12 %}
+          "gtin12": {{ variant.barcode | json }},
+            {%- elsif vb_len == 13 %}
+          "gtin13": {{ variant.barcode | json }},
+            {%- endif -%}
+          {%- endif %}
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}"
+        }{% unless forloop.last %},{% endunless %}
+          {%- endif -%}
+        {%- endfor %}
+      ],
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0.00",
+          "currency": "PLN"
+        },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "PL"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 0,
+            "maxValue": 1,
+            "unitCode": "DAY"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 7,
+            "unitCode": "DAY"
+          }
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "PL",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 14,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+    }
+      {%- else -%}
+    "offers": {
+      "@type": "Offer",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "price": {{ product.price | divided_by: 100.0 }},
+      "priceCurrency": "PLN",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "priceValidUntil": "{{ 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d' }}",
+      "seller": {
+        "@type": "Organization",
+        "name": "Saturaise",
+        "@id": "https://saturaise.com/#organization"
+      },
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0.00",
+          "currency": "PLN"
+        },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "PL"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 0,
+            "maxValue": 1,
+            "unitCode": "DAY"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 7,
+            "unitCode": "DAY"
+          }
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "PL",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 14,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+    }
+      {%- endif -%}
+    {%- else -%}
+    "offers": {
+      "@type": "Offer",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "price": {{ product.price | divided_by: 100.0 }},
+      "priceCurrency": "PLN",
+      "availability": "https://schema.org/OutOfStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+    {%- endif %}
+  },
+
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    {%- liquid
+      assign bc_collection = collection | default: product.collections.first
+    %}
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Strona glowna",
+        "item": "{{ shop.url }}"
+      }
+      {%- if bc_collection %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ bc_collection.title | json }},
+        "item": "{{ shop.url }}{{ bc_collection.url }}"
+      }
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ product.title | json }},
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {%- else %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ product.title | json }},
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {%- endif %}
+    ]
+  }
+]
+</script>

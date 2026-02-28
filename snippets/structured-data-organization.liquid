@@ -1,0 +1,63 @@
+{%- comment -%}
+  structured-data-organization.liquid
+  Renderuj w theme.liquid (w <head>):
+  {% render 'structured-data-organization' %}
+{%- endcomment -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://saturaise.com/#organization",
+      "name": "Saturaise",
+      "url": "https://saturaise.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png",
+        "width": 600,
+        "height": 60
+      },
+      "description": "Sklep z limitowanymi sneakersami i streetwearem. 100% oryginalne produkty z gwarancja autentycznosci.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ogrodowa 9a/4",
+        "addressLocality": "Zyrowa",
+        "postalCode": "47-330",
+        "addressCountry": "PL"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+48451108247",
+        "email": "saturaisekontakt@gmail.com",
+        "contactType": "customer service",
+        "availableLanguage": "Polish"
+      },
+      "sameAs": [
+        "https://www.facebook.com/people/Saturaisecom/61576843476406/",
+        "https://www.instagram.com/saturaise_com/",
+        "https://www.tiktok.com/@saturaise.com"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://saturaise.com/#website",
+      "url": "https://saturaise.com",
+      "name": "Saturaise",
+      "publisher": {
+        "@id": "https://saturaise.com/#organization"
+      },
+      "inLanguage": "pl-PL",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://saturaise.com/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>

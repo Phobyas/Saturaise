@@ -1,9 +1,7 @@
-
-
 <style>
 /* CRITICAL: Load immediately to prevent layout shift */
 .desc p, .rte.desc p { font-size: 16px !important; margin-top: 6px !important; margin-bottom: 0 !important; transition: none !important; animation: none !important; }
-.desc h3, .rte.desc h3, { font-size: 16px !important; font-weight: 700 !important; margin: 0 !important; transition: none !important; animation: none !important; }
+.desc h3, .rte.desc h3 { font-size: 16px !important; font-weight: 700 !important; margin: 0 !important; transition: none !important; animation: none !important; }
 @media (max-width: 1024px) { .desc p, .rte.desc p { font-size: 14px !important; } .desc h3, .rte.desc h3 { font-size: 14px !important; } }
 </style>
 
@@ -73,6 +71,8 @@
 -%}
 
 
+{% render 'structured-data-collection', collection: collection %}
+
 <section
   id="collection-page"
   class="collection__page--wrapper collection-template collection-{{ section.id }} modern-collection-filters mt6 pb9 no-section-animation"
@@ -86,26 +86,19 @@
   {% paginate collection.products by page_limit %}
     <div id="CollectionProductGrid" class="grid__wrapper px-3 lg:px-0">
       
-{%- comment -%} Enhanced Collection Header with Schema.org microdata {%- endcomment -%}
-{%- if collection.description != blank -%}
-  <section class="collection__page--description w-100 span-8 mt2 pb2 a-left" 
-           itemscope 
-           itemtype="https://schema.org/CollectionPage">
-    <div class="rte desc">
-      <h1 class="text-2xl font-bold" itemprop="name">
-        {{ collection.title }}
-      </h1>
-      <div itemprop="description">
+{%- comment -%} Collection Header - h1 always present, description conditional {%- endcomment -%}
+<div class="collection__page--description w-100 span-8 mt2 pb2 a-left">
+  <div class="rte desc">
+    <h1 class="text-2xl font-bold">
+      {{ collection.title }}
+    </h1>
+    {%- if collection.description != blank -%}
+      <div>
         {{ collection.description | replace: '<span>', '<span class=" text-base">' }}
       </div>
-      <meta itemprop="url" content="{{ shop.url }}{{ collection.url }}">
-      <meta itemprop="numberOfItems" content="{{ collection.products_count }}">
-      {% if collection.image %}
-        <meta itemprop="image" content="{{ collection.image | img_url: 'master' }}">
-      {% endif %}
-    </div>
-  </section>
-{%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
 
       {%- if collection_image -%}
        <div class="collection__page--image span-4 auto">

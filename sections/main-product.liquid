@@ -204,6 +204,7 @@
         imagesizes="(min-width: 1024px) 50vw, 100vw">
 {% endif %}
 {% comment %} Product Page Template {% endcomment %}
+{% render 'structured-data-product', product: product, collection: collection %}
 <section
   class="
     product-page
@@ -226,7 +227,7 @@
   {% render 'product-json', product: product %}
  
   <div class="product-top grid__wrapper sm-cg0 lg:pt-12 pt-6 full-width--{{ full_width }} scroll-gallery--{{ is_scroll_gallery }}">
-    <article
+    <div
       id="product-photos"
       class="product__section-images product-photos {{ image_grid_size }} dv-span-12 auto v-start {{ gallery_classes }} single_image--{{ is_single_image }} pb5 sm-pb0"
       data-product-single-media-group
@@ -248,9 +249,9 @@
           enable_video_looping: enable_video_looping
         %}
       {%- endif -%}
-    </article>
+    </div>
 
-    <article
+    <div
       id="product-description"
       class="product__section-right {{ content_grid_size }} dv-span-12 auto v-start {{ grid_desc_classes }}"
     >
@@ -715,7 +716,7 @@
                     </svg>
                   </div>
                   <div class="guarantee-content">
-                    <h4 class="guarantee-title">Gwarancja autentyczności Saturaise</h4>
+                    <p class="guarantee-title">Gwarancja autentyczności Saturaise</p>
                     <p class="guarantee-text">Każdy produkt przechodzi szczegółową weryfikację przez nasz doświadczony zespół</p>
                   </div>
                 </div>
@@ -730,7 +731,7 @@
                   {% if product.description contains '[#' %}
                     <div>
                       {{ product.description | split: '[#' | first }}
-                    </div class="desc">
+                    </div>
                   {% else %}
                     <div class="desc">
                       {{ product.description }}
@@ -795,7 +796,7 @@
           {% endcase %}
         {% endfor %}
       </div>
-    </article>
+    </div>
   </div>
 
   {% comment %} Optimized accordion script - only load if needed {% endcomment %}

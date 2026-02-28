@@ -1,0 +1,65 @@
+{%- comment -%}
+  structured-data-article.liquid
+  Renderuj w sekcji main-article:
+  {% render 'structured-data-article', article: article, blog: blog %}
+{%- endcomment -%}
+
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": "{{ shop.url }}{{ article.url }}#article",
+    "mainEntityOfPage": "{{ shop.url }}{{ article.url }}",
+    "url": "{{ shop.url }}{{ article.url }}",
+    "headline": {{ article.title | json }},
+    "description": {{ article.excerpt | default: article.content | strip_html | strip_newlines | truncate: 160 | json }},
+    {% if article.image -%}
+    "image": "https:{{ article.image | image_url: width: 1200 }}",
+    {%- endif %}
+    "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S+01:00' }}",
+    "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S+01:00' }}",
+    "author": {
+      "@type": "Organization",
+      "name": "Saturaise",
+      "@id": "https://saturaise.com/#organization"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Saturaise",
+      "@id": "https://saturaise.com/#organization",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://saturaise.com/cdn/shop/files/logo-new-saturaise2.png"
+      }
+    },
+    "inLanguage": "pl",
+    "wordCount": {{ article.content | strip_html | split: ' ' | size }}
+  },
+
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Strona glowna",
+        "item": "{{ shop.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ blog.title | json }},
+        "item": "{{ shop.url }}{{ blog.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ article.title | json }},
+        "item": "{{ shop.url }}{{ article.url }}"
+      }
+    ]
+  }
+]
+</script>
