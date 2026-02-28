@@ -1,16 +1,3 @@
-{% if product.featured_image %}
-  <link rel="preload" 
-        as="image" 
-        href="{{ product.featured_image | img_url: '412x412' }}" 
-        media="(max-width: 768px)"
-        fetchpriority="high">
-  <link rel="preload" 
-        as="image" 
-        href="{{ product.featured_image | img_url: '900x900' }}" 
-        media="(min-width: 769px)"
-        fetchpriority="high">
-{% endif %}
-
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign first_3d_model = product.media | where: "media_type", "model" | first

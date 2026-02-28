@@ -660,18 +660,18 @@
   <div class="js-slideout-overlay site-overlay"></div>
   <div class="js-modal-overlay site-overlay"></div>
 
-  <main id="main-content" class="site-wrap" role="main" tabindex="-1">
-    {% section 'mobile-header' %}
-    {% sections 'header-group' %}
-    
-    <div class="header-spacer"></div>
+  {% section 'mobile-header' %}
+  {% sections 'header-group' %}
+  
+  <div class="header-spacer"></div>
 
+  <main id="main-content" class="site-wrap" role="main" tabindex="-1">
     <div class="page-wrap">
       {{ content_for_layout }}
     </div>
-
-    {% sections 'footer-group' %}
   </main>
+
+  {% sections 'footer-group' %}
 
   {% section 'mailing-popup' %}
   {% section 'quickshop' %}
@@ -751,58 +751,6 @@
     });
   </script>
   
-  <!-- Remove Trustmate's incorrect Product schema -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for Trustmate to load
-    setTimeout(function() {
-      // Find all JSON-LD scripts
-      const jsonScripts = document.querySelectorAll('script[type="application/ld+json"]');
-      
-      jsonScripts.forEach(script => {
-        try {
-          const data = JSON.parse(script.textContent);
-          
-          // Check if this is the problematic Trustmate schema
-          if (data['@type'] === 'Product' && 
-              data.name === 'Saturaise' && 
-              data.sameAs === 'https://saturaise.com' &&
-              Object.keys(data).length === 5) { // Only has @context, @type, image, name, sameAs
-            
-            console.log('Removing incorrect Trustmate Product schema');
-            script.remove();
-          }
-        } catch (e) {
-          // Not valid JSON, skip
-        }
-      });
-    }, 2000); // Wait 2 seconds for Trustmate to load
-  }); 
 
-  // Also use MutationObserver to catch it if added later
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      mutation.addedNodes.forEach(function(node) {
-        if (node.nodeName === 'SCRIPT' && node.type === 'application/ld+json') {
-          try {
-            const data = JSON.parse(node.textContent);
-            if (data['@type'] === 'Product' && 
-                data.name === 'Saturaise' && 
-                data.sameAs === 'https://saturaise.com') {
-              console.log('Removing dynamically added Trustmate Product schema');
-              node.remove();
-            }
-          } catch (e) {}
-        }
-      });
-    });
-  });
-
-  // Start observing
-  observer.observe(document.documentElement, { 
-    childList: true, 
-    subtree: true 
-  });
-  </script>
 </body>
 </html>

@@ -14,7 +14,7 @@
          class="product-gallery__thumb-slider {{ style }} {{ width }} tablet-1 mobile-hide no-js-hidden"
          data-thumbnail-position="{{ thumbnail_position }}">
       <div class="w-full {{ js_class }} js-thumb-wrapper" id="thumb-slider-wrapper">
-        <div class="flex gap-2 {{ thumbnail_position == 'bottom' ? 'flex-row justify-center' : 'flex-col' }} product-single__thumbnails-{{ section.id }} js-thumb-carousel-nav">
+        <div class="flex gap-2 {% if thumbnail_position == 'bottom' %}flex-row justify-center{% else %}flex-col{% endif %} product-single__thumbnails-{{ section.id }} js-thumb-carousel-nav">
           {% for media in product.media %}
             {%- liquid
               assign is_selected = ''
