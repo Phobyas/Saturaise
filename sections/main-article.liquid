@@ -839,15 +839,16 @@
 
 
 {% comment %} Clean Article Template with Semantic HTML {% endcomment %}
+{% render 'structured-data-article', article: article, blog: blog %}
 <section class="article-template" data-section-id="{{ section.id }}" data-section-type="article-template" data-section-loaded="false">
   
   <!-- Simple Article Header -->
   <header class="article-header">
-    <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
+    <h1 class="article-title">{{ article.title }}</h1>
     <div class="article-meta">
       {% if article.published_at %}
         <div class="meta-item">
-          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
             {{ article.published_at | date: format: 'month_date_year' }}
           </time>
         </div>
@@ -859,8 +860,8 @@
       
       {% if article.author != blank %}
         <div class="meta-item">
-          <span itemprop="author" itemscope itemtype="https://schema.org/Person">
-            <span itemprop="name">{{ article.author }}</span>
+          <span>
+            <span>{{ article.author }}</span>
           </span>
         </div>
       {% endif %}
@@ -876,17 +877,7 @@
 
   <!-- Article Content -->
   <div class="main-container">
-    <article class="article-content" itemscope itemtype="https://schema.org/Article">
-      <!-- Hidden meta elements for Schema.org -->
-      <meta itemprop="datePublished" content="{{ article.published_at | date: '%Y-%m-%d' }}">
-      <meta itemprop="dateModified" content="{{ article.updated_at | date: '%Y-%m-%d' }}">
-      <meta itemprop="author" content="{{ article.author | default: shop.name }}">
-      <meta itemprop="publisher" content="{{ shop.name }}">
-      <meta itemprop="url" content="{{ canonical_url }}">
-      {% if article.excerpt != blank %}
-        <meta itemprop="description" content="{{ article.excerpt | strip_html | escape }}">
-      {% endif %}
-      
+    <article class="article-content">
       {% if article.image and section.settings.show_featured_image %}
         <img src="{{ article.image | image_url: width: 1200 }}" 
              alt="{{ article.image.alt | escape }}" 
@@ -894,18 +885,17 @@
              loading="{{ loading }}"
              fetchpriority="{{ fetch_priority }}"
              width="1200" 
-             height="600"
-             itemprop="image">
+             height="600">
       {% endif %}
 
-      <div class="rte" itemprop="articleBody">
+      <div class="rte">
         {{ article.content }}
       </div>
 
       {% if article.tags.size > 0 %}
         <footer class="article-tags">
           <h4>Tags</h4>
-          <div class="tag-list" itemprop="keywords">
+          <div class="tag-list">
             {% for tag in article.tags %}
               <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="tag-item" rel="tag">{{ tag }}</a>
             {% endfor %}
@@ -943,7 +933,6 @@
       
       {%- if blog.comments_enabled? -%}
         <section class="comments-wrapper" id="comments">
-          <meta itemprop="commentCount" content="{{ article.comments_count }}">
           {% render 'article-comments',
             blog: blog,
             article: article,

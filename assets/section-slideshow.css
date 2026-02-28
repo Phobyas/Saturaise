@@ -577,7 +577,7 @@
 
 /* Optimize paint performance for first slide */
 .section-slideshow .slideshow__slide:first-child {
-  contain: layout style paint;
+  contain: layout style paint;Wklej: 
   will-change: auto;
 }
 
