@@ -70,10 +70,18 @@
   {% endif %}
 
   <title>
-    {{ page_title }}
-    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- if template.name == 'product' -%}
+      {{- page_title -}}
+      {%- if product.selected_or_first_available_variant.sku != blank -%}
+        {%- unless page_title contains product.selected_or_first_available_variant.sku %} {{ product.selected_or_first_available_variant.sku }}{% endunless -%}
+      {%- endif -%}
+      {%- unless page_title contains shop.name %} | {{ shop.name }}{% endunless -%}
+    {%- else -%}
+      {{- page_title -}}
+      {%- if current_tags %} – {{ current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} – Strona {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} | {{ shop.name }}{% endunless -%}
+    {%- endif -%}
   </title>
 
   <meta name="description" content="{{ page_description | escape }}">
@@ -422,7 +430,6 @@
           img.setAttribute('loading', 'eager');
           // Remove lazy loading classes if present
           img.classList.remove('lazyload', 'lazy');
-          console.log('Prioritized first slideshow image');
           break;
         }
       }
@@ -716,41 +723,8 @@
   <aside class="slideout slideout__drawer-right" data-wau-slideout="store-availability" id="slideout-store-availability"></aside>
 
   <!-- Error handler for console errors -->
-  <script>
-    window.addEventListener('DOMContentLoaded', function() {
-      // Set fixed dimensions for header and announcement bar
-      document.documentElement.style.setProperty('--announcement-bar-height', '40px');
-      document.documentElement.style.setProperty('--header-height', '66px');
-      
-      // Fix for missing functions or resources
-      if (typeof Flickity === 'undefined') {
-        console.warn('Flickity not loaded properly. Attempting to load again.');
-        var flickityScript = document.createElement('script');
-        flickityScript.src = {{ 'vendor-flickity.js' | asset_url | json }};
-        flickityScript.async = false;
-        document.head.appendChild(flickityScript);
-      }
-      
-      // Set fetch priority on first slideshow image
-      const firstSlideImage = document.querySelector('.slideshow__slide:first-child img, .hero-image:first-child img, .slider__slide:first-child img');
-      if (firstSlideImage) {
-        firstSlideImage.setAttribute('fetchpriority', 'high');
-        firstSlideImage.setAttribute('loading', 'eager');
-        console.log('Set high priority on first slideshow image:', firstSlideImage.src);
-      }
-      
-      // Also handle any slideshow sections that might be lazy-loaded
-      const slideshowSections = document.querySelectorAll('.slideshow, .hero-slideshow, .image-slideshow');
-      slideshowSections.forEach(slideshow => {
-        const firstImg = slideshow.querySelector('img');
-        if (firstImg && !firstImg.hasAttribute('fetchpriority')) {
-          firstImg.setAttribute('fetchpriority', 'high');
-          firstImg.setAttribute('loading', 'eager');
-        }
-      });
-    });
-  </script>
   
+
 
 </body>
 </html>

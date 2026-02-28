@@ -141,7 +141,9 @@
     .slideshow__slide:not(:first-child)
     .slide-animate {
     opacity: 0;
-    transition: opacity 0.5s ease-in, transform 2s ease;
+    transition:
+      opacity 0.5s ease-in,
+      transform 2s ease;
     will-change: opacity, transform;
   }
 
@@ -304,10 +306,18 @@
 
 .section-slideshow .slideshow__btn-wrapper a {
   display: inline-block;
-  -webkit-transition: background 0.3s ease, color 0.3s ease;
-  -moz-transition: background 0.3s ease, color 0.3s ease;
-  -o-transition: background 0.3s ease, color 0.3s ease;
-  transition: background 0.3s ease, color 0.3s ease;
+  -webkit-transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  -moz-transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  -o-transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
 @media (max-width: 767px) {
@@ -577,7 +587,7 @@
 
 /* Optimize paint performance for first slide */
 .section-slideshow .slideshow__slide:first-child {
-  contain: layout style paint;Wklej: 
+  contain: layout style paint;
   will-change: auto;
 }
 
