@@ -61,7 +61,7 @@
       {%- endif -%}
     {%- endif %}
     {% if product.metafields.custom.color.value -%}
-    "color": {{ product.metafields.custom.color.value | json }},
+    "color": {{ product.metafields.custom.color.value.label | json }},
     {%- endif %}
     "category": {{ product.type | default: "Sneakersy" | json }},
     "itemCondition": "https://schema.org/NewCondition",
