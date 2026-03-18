@@ -1,60 +1,19 @@
-{% comment %} Blog Header Template - Similar to Collection Header {% endcomment %}
 {%- liquid
-  assign has_image = false
-  assign heading_placement = section.settings.heading_placement
-  if heading_placement == 'below'
-    assign float_header = false
-  else
-    assign float_header = true
-  endif
-  assign subheading = section.settings.subheading
-
-  if section.settings.image != blank
-    assign has_image = true
-  endif
-
-  if section.settings.full_width
-    assign full_width = 'edge'
-  endif
-
-  assign sm_render = '100vw'
-  assign md_render = '100vw'
-  assign lg_render = '100vw'
-  assign byline = blank
   assign heading = blog.title
-
   if section.settings.heading != blank
     assign heading = section.settings.heading
   endif
-
-  if section.settings.scale > 0
-    assign section_type = 'data-section-type="parallax"'
-    assign scale = section.settings.scale
-    assign is_parallax = true
-  else
-    assign section_type = 'data-section-type="blog-header"'
-    assign is_parallax = false
-  endif
-
-  assign text_color = 'var(--scheme-' | append: section.settings.color_scheme | append: '-text)'
-  assign bg_color = 'var(--scheme-' | append: section.settings.color_scheme | append: '-bg)'
-
-  if section.index == 1
-    assign loading = 'eager'
-    assign fetch_priority = 'high'
-  endif
+  assign subheading = section.settings.subheading
 -%}
 
-{% comment %} Blog Header Template {% endcomment %}
-<div class="global__section section__banner-{{ section.id }} mt0 grid__wrapper {{ full_width }} relative blog-header"
-data-section-id="{{ section.id }}"
-{{ section_type }}
-data-section-loaded="false"
-data-scale="1.{{ scale }}"
-{%- if is_parallax -%}data-asset-url="{{ 'section-parallax.js' | asset_url }}"{%- endif -%}>
+<div class="global__section section__banner-{{ section.id }} mt0"
+  data-section-id="{{ section.id }}"
+  data-section-type="blog-header"
+  data-section-loaded="false"
+  style="max-width: 1280px; margin: 0 auto;">
 
-  {%- capture text_content -%}
-    <div class="blog__page--description w-100 span-8 mt2 pb2 a-left">
+  <div class="grid__wrapper edge rg0 cg0">
+    <div class="collection__page--description w-100 span-8 mt2 pb2 a-left">
       <div class="rte desc">
         <h1 class="text-2xl font-bold">{{ heading }}</h1>
         {%- if subheading != blank -%}
@@ -64,7 +23,7 @@ data-scale="1.{{ scale }}"
         {%- endif -%}
         {%- if section.settings.show_post_count -%}
           <p class="blog-post-count text-sm text-text-200 mt1">
-            {{ blog.articles_count }} 
+            {{ blog.articles_count }}
             {%- if blog.articles_count == 1 -%}
               post
             {%- else -%}
@@ -74,140 +33,51 @@ data-scale="1.{{ scale }}"
         {%- endif -%}
       </div>
     </div>
-  {%- endcapture -%}
-
-  {%- capture image_content -%}
-    {%- if has_image -%}
-      {% render 'helper-image',
-         type: section.settings.image,
-         sm_render: sm_render,
-         md_render: md_render,
-         lg_render: lg_render,
-         loading: loading,
-         fetchpriority: fetch_priority %}
-    {%- endif -%}
-  {%- endcapture -%}
-
-  <div class="section__banner-inner-wrapper span-12 auto grid__wrapper edge rg0 cg0 relative">
-    {% if heading != blank and heading_placement == 'center' %}
-      <div class="section__banner-image span-12 auto">
-        {{ image_content }}
-      </div>
-      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} sm-py12 absolute-center banner-text--over">
-        {{ text_content }}
-      </div>
-    {% elsif heading != blank and heading_placement == 'below' %}
-      <div class="section__banner-image span-12 auto">
-        {{ image_content }}
-      </div>
-      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} mt2 pb2 pt9">
-        {{ text_content }}
-      </div>
-    {% elsif heading != blank and heading_placement == 'left' %}
-      <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px10 sm-py12 banner-text--over">
-        {{ text_content }}
-      </div>
-      <div class="section__banner-image span-6 v-center auto">
-        {{ image_content }}
-      </div>
-    {% elsif heading != blank and heading_placement == 'right' %}
-      <div class="section__banner-image span-6 v-center auto">
-        {{ image_content }}
-      </div>
-      <div class="section__banner-caption v-center span-6 auto {{ section.settings.alignment }} px6 sm-py12 banner-text--over">
-        {{ text_content }}
-      </div>
-    {% else %}
-      {%- comment -%} Default: No image, simple header like collection page {%- endcomment -%}
-      <div class="section__banner-caption grid__wrapper span-12 auto {{ section.settings.alignment }} mt2 pb2">
-        {{ text_content }}
-      </div>
-    {% endif %}
   </div>
 
   {%- style -%}
-    {%- unless section.settings.color_scheme == 'none' -%}
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over h1,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .rte p,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .rte a,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .blog-description p,
-    .section__banner-{{ section.id }} .section__banner-caption.banner-text--over .blog-post-count {
-      color: {{ text_color }};
+    @media (min-width: 1920px) {
+      .section__banner-{{ section.id }} {
+        max-width: 1600px !important;
+      }
     }
-      {%- unless heading_placement == 'below' -%}
-        .section__banner-{{ section.id }} .section__banner-inner-wrapper {
-          background-color: {{ bg_color }};
-        }
-      {%- endunless -%}
-    {%- endunless -%}
-    
-    {%- if has_image -%}
-      .section__banner-{{ section.id }} .box-ratio {
-        padding-bottom: {{ section.settings.banner_height }}px !important;
-      }
-      .section__banner-{{ section.id }} .box-ratio img {
-        object-fit: cover;
-        object-position: {{ section.settings.image.presentation.focal_point }};
-        height: {{ section.settings.banner_height }}px !important;
-      }
-      {%- if float_header == true -%}
-        .section__banner-{{ section.id }} .section__banner-image {
-          height: {{ section.settings.banner_height }}px !important;
-        }
-      {%- endif -%}
-    {%- else -%}
-      /* No image styling - similar to collection page */
-      .section__banner-{{ section.id }} .blog__page--description h1 {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 8px;
-      }
-      
-      @media (max-width: 767px) {
-        .section__banner-{{ section.id }} .blog__page--description h1 {
-          font-size: 24px;
-        }
-      }
-      
-      .section__banner-{{ section.id }} .blog-description {
-        color: var(--text-color-secondary, #666);
-        font-size: 16px;
-        line-height: 1.5;
-      }
-      
-      .section__banner-{{ section.id }} .blog-post-count {
-        color: var(--text-color-secondary, #666);
-        font-size: 14px;
-        font-weight: 500;
-      }
-      
-      .section__banner-{{ section.id }} .section__banner-caption {
-        border-bottom: 1px solid #efefef;
-        padding-bottom: 32px;
-        margin-bottom: 32px;
-      }
-      
-      @media (max-width: 767px) {
-        .section__banner-{{ section.id }} .section__banner-caption {
-          padding-bottom: 20px;
-          margin-bottom: 20px;
-        }
-      }
-    {%- endif -%}
-    
-    .section__banner-{{ section.id }} .section__banner-caption.absolute-center.a-left {
-      text-align: left !important;
+
+    .section__banner-{{ section.id }} .collection__page--description h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
     }
-    .section__banner-{{ section.id }} .section__banner-caption.absolute-center.a-right {
-      text-align: right !important;
-    }
-    
-    {%- if has_image and is_parallax -%}
-      .section__banner-{{ section.id }} .box-ratio img {
-        transform: scale(1.{{ scale }});
+
+    @media (max-width: 767px) {
+      .section__banner-{{ section.id }} .collection__page--description h1 {
+        font-size: 24px;
       }
-    {%- endif -%}
+    }
+
+    .section__banner-{{ section.id }} .blog-description {
+      color: var(--text-color-secondary, #666);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .section__banner-{{ section.id }} .blog-post-count {
+      color: var(--text-color-secondary, #666);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .section__banner-{{ section.id }} .collection__page--description {
+      border-bottom: 1px solid #efefef;
+      padding-bottom: 32px;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 767px) {
+      .section__banner-{{ section.id }} .collection__page--description {
+        padding-bottom: 20px;
+      }
+    }
   {%- endstyle -%}
 </div>
 
@@ -217,38 +87,6 @@ data-scale="1.{{ scale }}"
   "tag": "section",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "full_width",
-      "label": "Enable full width",
-      "default": true
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Header image",
-      "info": "2880px x 1620px recommended"
-    },
-    {
-      "type": "range",
-      "id": "scale",
-      "min": 0,
-      "max": 5,
-      "step": 1,
-      "label": "Parallax effect",
-      "default": 0,
-      "info": "The higher the scale the greater the effect, 0 removes parallax effect."
-    },
-    {
-      "type": "range",
-      "id": "banner_height",
-      "min": 200,
-      "max": 600,
-      "step": 100,
-      "unit": "px",
-      "label": "Height",
-      "default": 400
-    },
-    {
       "type": "text",
       "id": "heading",
       "label": "Custom heading",
@@ -257,83 +95,13 @@ data-scale="1.{{ scale }}"
     {
       "id": "subheading",
       "type": "richtext",
-      "label": "Subheading",
-      "default": "<p>Discover our latest thoughts, insights and updates.</p>",
-      "info": "Description text that appears below the blog title"
+      "label": "Subheading"
     },
     {
       "type": "checkbox",
       "id": "show_post_count",
       "label": "Show post count",
       "default": true
-    },
-    {
-      "type": "select",
-      "id": "heading_placement",
-      "label": "Text placement",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        },
-        {
-          "value": "center",
-          "label": "Over image"
-        },
-        {
-          "value": "below",
-          "label": "Below image"
-        }
-      ],
-      "default": "below"
-    },
-    {
-      "type": "select",
-      "id": "alignment",
-      "label": "Text alignment",
-      "options": [
-        {
-          "value": "a-left",
-          "label": "Left"
-        },
-        {
-          "value": "a-center",
-          "label": "Center"
-        },
-        {
-          "value": "a-right",
-          "label": "Right"
-        }
-      ],
-      "default": "a-left"
-    },
-    {
-      "type": "select",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "none",
-      "options": [
-        {
-          "value": "none",
-          "label": "None"
-        },
-        {
-          "value": "1",
-          "label": "1"
-        },
-        {
-          "value": "2",
-          "label": "2"
-        },
-        {
-          "value": "3",
-          "label": "3"
-        }
-      ]
     }
   ]
 }
