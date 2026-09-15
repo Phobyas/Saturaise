@@ -72,16 +72,7 @@
             assign lg_render = 'calc(100vw / 2)'
           -%}
 
-          {% render 'helper-image',
-            type: product.featured_media.preview_image,
-            sm_render: sm_render,
-            md_render: md_render,
-            lg_render: lg_render,
-            img_width: '100%',
-            img_height: '100%',
-            alt: product.title | escape,
-            additional_classes: 'product-image--contain main-image',
-            loading: 'lazy' %}
+          {% render 'helper-image', type: product.featured_media.preview_image, sm_render: sm_render, md_render: md_render, lg_render: lg_render, img_width: '100%', img_height: '100%', alt: product.title, additional_classes: 'product-image--contain main-image', loading: 'lazy' %}
         {%- endif -%}
       </a>
     </div>
@@ -139,3 +130,26 @@
   </div>
 </article>
 
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'helper-image',
+                type: product.featured_media.preview_image,
+                sm_render: sm_render,
+                md_render: md_render,
+                lg_render: lg_render,
+                img_width: '100%',
+                img_height: '100%',
+                alt: product.title | escape,
+                additional_classes: 'product-image--contain main-image',
+                loading: 'lazy' %}
+  to: "{% render 'helper-image', type: product.featured_media.preview_image, sm_render:
+    sm_render, md_render: md_render, lg_render: lg_render, img_width: '100%', img_height:
+    '100%', alt: product.title, additional_classes: 'product-image--contain main-image',
+    loading: 'lazy' %}"
+  position: 2629..2899
+{% endcomment %}

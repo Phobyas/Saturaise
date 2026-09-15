@@ -175,9 +175,7 @@ class="{{ gallery_width }} mb4">
         {%- when 'social_share' -%}
           <div class="product-template__social-share pt2 pb2 animate--text delay--{{ forloop.index }}" {{ block.shopify_attributes }}>
             <p class="inline-block mb0 mr3 v-center">{{ 'products.product.social_share' | t }}</p>
-            {% render 'snip-social-sharing',
-              share_title: 'Product Title',
-              share_permalink: # %}
+            {% render 'snip-social-sharing', share_title: 'Product Title', share_permalink: nil %}
           </div>
         {%- when 'product_pickup' -%}
           <link rel="preload" href="{{ 'section-pickup-availability.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -227,3 +225,17 @@ class="{{ gallery_width }} mb4">
 
   </div>
 </article>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'snip-social-sharing',
+                  share_title: 'Product Title',
+                  share_permalink: # %}
+  to: "{% render 'snip-social-sharing', share_title: 'Product Title', share_permalink:
+    nil %}"
+  position: 9077..9163
+{% endcomment %}
