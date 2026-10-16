@@ -35,9 +35,9 @@
         "title": "Zobacz też",
         "subheading": "",
         "link_text": "Zobacz więcej",
-        "link_url": "shopify://collections/hot",
+        "link_url": "shopify://collections/hot-najnowsze-trendy-bestsellery-sneakers-streetwear",
         "text_position": "left",
-        "collection": "hot",
+        "collection": "hot-najnowsze-trendy-bestsellery-sneakers-streetwear",
         "display_type": "carousel",
         "items_per_row": 4,
         "items_per_page": 14,
@@ -65,5 +65,10 @@
       }
     }
   },
-  "order": ["banner", "main", "16433844957d3795ed", "rich_text_fVCVTD"]
+  "order": [
+    "banner",
+    "main",
+    "16433844957d3795ed",
+    "rich_text_fVCVTD"
+  ]
 }
