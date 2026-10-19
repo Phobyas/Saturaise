@@ -319,9 +319,11 @@
   </button>
   <div class="{{ section_padding }}">
     <div class="grid__wrapper edge rg0 product__section--main">
+      {%- if request.design_mode -%}
       {% render 'onboard-single-product',
          gallery_width: gallery_width,
          form_width: form_width %}
+      {%- endif -%}
     </div>
   </div>
 </div>
