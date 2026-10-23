@@ -1437,7 +1437,166 @@
           "few": "Afficher %{count} réductions"
         },
         "automatic_discount_tooltip": "Les réductions appliquées automatiquement ne peuvent pas être supprimées.",
-        "alternative_payment_currency_chinese_yuan": "Confirmez le montant final en CNY dans l’application %{wallet}."
+        "alternative_payment_currency_chinese_yuan": "Confirmez le montant final en CNY dans l’application %{wallet}.",
+        "gift_card_title": "Carte cadeau",
+        "gift_card_label": "Carte cadeau",
+        "gift_card_placeholder": "Carte cadeau",
+        "gift_card_and_discount_title": "Code de réduction ou carte cadeau",
+        "gift_card_and_discount_label": "Code de réduction ou carte cadeau",
+        "gift_card_and_discount_placeholder": "Code de réduction ou carte cadeau",
+        "free_shipping_discount_label": "Livraison gratuite",
+        "gift_card_has_been_applied": "La carte cadeau a été utilisée",
+        "gift_card_has_been_removed": "La carte-cadeau a été supprimée",
+        "partial_total_label": "Somme",
+        "payment_due_label": "Date d’échéance",
+        "gift_card_savings_notice": "Après déduction du montant des cartes-cadeaux %{gift_card_amount}",
+        "price_label": "Dîner",
+        "order_total_updated_label": "Total actualisé",
+        "pickup_label": "Retrait en magasin",
+        "no_pickup_location": "Aucun lieu de retrait n’est disponible.",
+        "estimated_taxes_label": "Taxes estimés",
+        "information_estimated_taxes_label": "Impôts (estimés)",
+        "estimated_tax_label": "Impôt estimé",
+        "multiple_shipping_lines_label": "Livraison incluse",
+        "gift_card_subscriptions_notice": "Les cartes-cadeaux ne s’appliqueront qu’à votre premier paiement.",
+        "estimated_taxes_finalization_tooltip_content": "Le montant final de la taxe et le montant total seront confirmés par e-mail ou SMS après la commande.",
+        "percent_off_shipping": "%{percent}% de réduction sur la livraison",
+        "payment_terms_totals": {
+          "due_today": "Montant total dû aujourd’hui",
+          "due_later": "Montant total dû %{due_at}",
+          "due_later_checkout_to_draft": "Montant total dû plus tard",
+          "due_on_fulfillment": "Montant total dû après exécution",
+          "due_on_receipt": "Montant total à payer à la livraison",
+          "total_paid": "Payé au total",
+          "due_on_fulfillment_next": "Paiement après réalisation"
+        },
+        "higher_value_discount_applied": "<strong style=\"text-transform:uppercase\">%{code}</strong> ne peut pas être utilisé avec les réductions existantes.",
+        "maximum_discount_code_limit_reached": "Le nombre maximal de codes de réduction a été atteint. Supprimez un code existant pour utiliser <strong style=\"text-transform:uppercase\">%{code}</strong>.",
+        "order_total_label": "Montant de la commande",
+        "due_on_fulfillment": "Paiement après réalisation",
+        "duties_label": "Droits de douane",
+        "duties_and_taxes_label": "Droits de douane et taxes",
+        "error_duties_tooltip": "Cette commande est expédiée depuis un autre pays, des droits de douane et des taxes peuvent donc être appliqués à la livraison.",
+        "may_be_charged_on_delivery": "Des frais peuvent être facturés à la livraison.",
+        "full_price": "Prix total : %{price}",
+        "expand_component_information": {
+          "one": "Afficher %{count} élément",
+          "other": "Afficher %{count} article(s)",
+          "few": "Afficher %{count} article(s)",
+          "many": "Afficher %{count} article(s)"
+        },
+        "group_title_label": "Section « %{group_title} »",
+        "enter_shipping_address": "Saisissez l’adresse de livraison",
+        "gift_card_applied": "Une carte-cadeau a été utilisée.",
+        "duties_included_label": "Le montant comprend les taxes et les droits de douane. Aucun frais supplémentaire à la livraison.",
+        "eligible_customer_missing_notice": "Le code de réduction <strong style=\"text-transform:uppercase\">%{code}</strong> est réservé aux clients éligibles.",
+        "more_items_modal": {
+          "empty_results": "Aucun résultat trouvé pour « %{searchText} ». Vérifiez l’orthographe ou essayez un autre mot ou une autre expression.",
+          "number_items_shown": "%{shownNumber} sur %{totalNumber} éléments",
+          "search_item": "Recherche"
+        },
+        "number_items": {
+          "one": "%{count} article",
+          "other": "%{count} articles",
+          "few": "%{count} articles",
+          "many": "%{count} articles"
+        },
+        "pickup_unavailable_banner_body": {
+          "ship_to_address": "Adresse de livraison",
+          "ship_to_address_instead_html": "À la place, %{link}"
+        },
+        "pickup_unavailable_banner_title": {
+          "one": "Les magasins proposant ce produit ne sont pas disponibles.",
+          "other": "Les boutiques proposant ces produits ne sont pas disponibles.",
+          "few": "Les boutiques proposant ces produits ne sont pas disponibles.",
+          "many": "Les boutiques proposant ces produits ne sont pas disponibles."
+        },
+        "for_add_on": "Concerne : %{group_title}",
+        "from_shop_heading": "De la boutique %{shop_name}",
+        "from_other_stores_heading": "D’autres magasins",
+        "estimated_taxes_label_short": "Montant estimatif",
+        "order_discounts_apply_to_local_shop": "Les réductions sur les commandes s’appliquent uniquement aux articles de %{shop_name}",
+        "gift_cards_apply_to_local_shop": "Les cartes-cadeaux sont valables uniquement pour les articles de %{shop_name}",
+        "from_multiple_stores_heading": "De nombreux magasins",
+        "pay_merchant_label": "Payez %{merchant_name}",
+        "estimated_taxes_finalization_tooltip_content_short": "Finalisation de la taxe après paiement",
+        "pickup_unavailable_banner_title_with_country": {
+          "one": "Aucun magasin proposant votre article n’est disponible dans %{country} W",
+          "other": "Aucun magasin proposant vos articles n’est disponible dans le pays %{country}",
+          "few": "Aucun magasin proposant vos articles n’est disponible dans le pays %{country}",
+          "many": "Aucun magasin proposant vos articles n’est disponible dans le pays %{country}"
+        },
+        "product_disclosures": {
+          "title": "Informations sur le produit"
+        },
+        "lpm": {
+          "wechat_pay": {
+            "checkout_disclosure": "Confirmez le montant final en CNY dans l’application WeChat.",
+            "post_purchase_disclosure": "Consultez le montant total en CNY dans l’application WeChat",
+            "checkout_disclosure_with_alternative_payment_currency": "%{shop_name} traitera ce paiement d’un montant de %{amount_due} %{processing_currency}, que WeChat convertira en CNY"
+          },
+          "alipay": {
+            "checkout_disclosure": "Confirmez le montant final en CNY dans l’application Alipay.",
+            "post_purchase_disclosure": "Consultez le montant total en CNY dans l’application Alipay",
+            "checkout_disclosure_with_alternative_payment_currency": "%{shop_name} traitera ce paiement d’un montant de %{amount_due} %{processing_currency}, qu’Alipay convertira en CNY."
+          }
+        },
+        "title": "Récapitulatif de la commande",
+        "shopping_cart_label": "Panier d'achat",
+        "remove_gift_card_label": "Nettoyez la carte-cadeau",
+        "remove_discount_label": "Supprimer la remise",
+        "shipping_information_does_not_meet_discount_requirements_notice": "Le code de réduction <strong style=\"text-transform:uppercase\">%{code}</strong> n’est pas disponible pour votre adresse de livraison.",
+        "shipping_policy_link": "Frais d’expédition",
+        "taxes_label": "Données",
+        "total_label": "Somme",
+        "vat_label_html": "Taxes incluses : %{amount}",
+        "scroll_order_summary": "Faites défiler pour afficher plus d’articles",
+        "total_updated_label": "Prix total mis à jour :",
+        "unit_price": {
+          "accessible_separator": "pour",
+          "per_item": {
+            "single": "%{price} par pièce",
+            "one": "%{price} pour %{count} pièces.",
+            "other": "%{price} pour %{count} pièces.",
+            "few": "%{price} pour %{count} pièces.",
+            "many": "%{price} pour %{count} pièces."
+          }
+        },
+        "recurring_subtotal_label": "Somme partielle périodique",
+        "recurring_total_label": "Somme périodique",
+        "recurring_total_tooltip": "Hors frais de livraison, taxes, droits de douane et remises applicables.",
+        "total_updated_label_with_price": "Prix total mis à jour : %{totalPrice}",
+        "recurring_payments": "Paiements périodiques",
+        "recurring_total_multiple_label": "Cette commande comprend des frais périodiques pour plusieurs articles.",
+        "updated_shipping_method": "Méthode d’expédition mise à jour : %{shipping_method}",
+        "return_restocking_fee_label": "Frais de retour de l’article",
+        "return_shipping_fee_label": "Expédition de retour",
+        "shipping_discount_title": "Réduction sur la livraison",
+        "subtotal_label_with_quantity": {
+          "one": "Sous-total · %{count} article",
+          "other": "Sous-total · articles : %{count}",
+          "few": "Sous-total · articles : %{count}",
+          "many": "Sous-total · articles : %{count}"
+        },
+        "view_all_items": {
+          "one": "Afficher %{count} élément",
+          "other": "Afficher tous les articles : %{count}",
+          "few": "Afficher tous les articles : %{count}",
+          "many": "Afficher tous les articles : %{count}"
+        },
+        "total_due_today_label": "Montant total dû aujourd’hui",
+        "total_due_later_label": "Montant total dû plus tard",
+        "total_due_label": "Montant total dû",
+        "total_paid_label": "Payé au total",
+        "tax_line": {
+          "hst": "HST",
+          "gst": "GST",
+          "pst": "HNP",
+          "rst": "RST",
+          "qst": "QST",
+          "vpt": "VPT"
+        },
+        "tax_label": "Impôt"
       },
       "order_payment_collection": {
         "additional_payment_requested": "Le paiement de %{total_outstanding} est requis.",
@@ -1480,6 +1639,41 @@
             "signature_mismatch": "Incompatibilité des signatures du produit dans la ligne %{stable_id}."
           }
         }
+      },
+      "payment": {
+        "amazon_payments_login_hint": "Une demande de connexion à Amazon apparaîtra.",
+        "amazon_payments_failed_mfa_challenge": "Le mode de paiement sélectionné ne peut pas être utilisé. Choisissez un autre mode de paiement ou contactez votre banque ou l’émetteur de votre carte.",
+        "amazon_payments_abandoned_mfa_challenge": "Votre paiement n’a pas pu être effectué. Choisissez un autre mode de paiement ou contactez votre banque ou l’émetteur de votre carte.",
+        "amazon_payments_could_not_enqueue_authorize": "Un problème est survenu lors du traitement du paiement. Réessayez ou utilisez un autre mode de paiement.",
+        "amount_left_to_pay_label": "Date limite de paiement :",
+        "billing_address_description": "Choisissez l’adresse qui correspond à votre carte ou à votre mode de paiement.",
+        "billing_address_description_no_shipping_address": "Saisissez l’adresse associée à votre carte ou à votre moyen de paiement.",
+        "apple_pay_payment_error": "Votre paiement n’a pas pu être effectué. Réessayez ou utilisez un autre mode de paiement.",
+        "apple": {
+          "not_available": "Le service Apple Pay n’est pas disponible dans ce navigateur. Pour connecter votre compte Apple Pay, vous devez utiliser le navigateur Safari sur un appareil Apple."
+        },
+        "billing_address_associated_with_mandate": "Utilisez l’adresse associée au mode de paiement",
+        "billing_address_associated_with_mandate_info": "Si vous souhaitez modifier votre adresse de facturation, supprimez les données de votre carte de crédit et saisissez-les à nouveau.",
+        "billing_address_invalid_phone": "Mettez à jour le numéro de téléphone de l’adresse de facturation pour {{label}} {{last_digits}} afin de continuer.",
+        "billing_address_invalid_phone_no_card": "Mettez à jour le numéro de téléphone de l’adresse de facturation pour continuer.",
+        "alternative_payment_currency_total_notice": "Remarque : des frais de %{amount_due} vous seront facturés.",
+        "add_credit_card_modal": {
+          "title": "Ajoutez une carte",
+          "save": "Enregistrez"
+        },
+        "alternative_payment_currency_total_manual_payment_notice": "Attention : le montant recalculé est %{amount_due}.",
+        "bank_account_type": {
+          "checking": "En cours",
+          "savings": "Épargne"
+        },
+        "bank_account_connect_another": "Connecter un autre compte bancaire",
+        "bank_account_connect": "Connecter un compte bancaire",
+        "bank_account_missing": "Le compte bancaire doit être lié",
+        "bank_account_disclaimer": "Le traitement des paiements via le service ACH peut prendre jusqu’à 4 jours ouvrables.",
+        "bank_account_generic_error": "Impossible d’ajouter le compte bancaire. Réessayez plus tard.",
+        "add_payment_method": "Ajouter un mode de paiement",
+        "add_new_payment_method": "Ajoutez un nouveau mode de paiement",
+        "bank_payment_method_label": "Méthode de paiement bancaire"
       }
     },
     "attributes": {
