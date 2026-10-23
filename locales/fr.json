@@ -2893,7 +2893,121 @@
         "checkout_on_remote_shop_link_text": "Effectuez votre achat chez %{remoteShopName}",
         "checkout_on_another_store": "Effectuez votre achat dans un autre magasin.",
         "checkout_again": "Effectuer à nouveau l’achat",
-        "cashback_notice": "Vous recevrez le cashback après 30 jours."
+        "cashback_notice": "Vous recevrez le cashback après 30 jours.",
+        "return_to_store_link_label": "Continuer les achats",
+        "print_link_label": "Imprimer le reçu",
+        "payment_information_title": "Informations sur le paiement",
+        "shipping_information_title": "Informations sur l’expédition",
+        "page_title_no_name": "Merci !",
+        "shipping_address_map_title": "Carte Google Maps indiquant l’adresse de livraison : %{address}",
+        "payment_method_title": "Mode de paiement",
+        "re-order": "Commandez à nouveau les mêmes articles",
+        "thank_you_title": "Votre commande est confirmée.",
+        "thank_you_confirmed_order_with_email": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_confirmed_order_with_phone": "Vous recevrez bientôt un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_confirmed_order_with_email_and_phone": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_confirmed_order_with_missing": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_confirmed_order_with_email_pick_up": "Lorsque votre commande sera prête à être récupérée, vous recevrez un e-mail.",
+        "thank_you_confirmed_order_with_phone_pick_up": "Lorsque votre commande sera prête à être retirée, vous recevrez un SMS.",
+        "thank_you_confirmed_order_with_email_and_phone_pick_up": "Lorsque votre commande sera prête à être récupérée, vous recevrez un e-mail.",
+        "ready_for_pickup_title": "Votre commande est prête à être récupérée.",
+        "ready_for_pickup_description": "Votre commande est prête à être récupérée. Pour la récupérer, munissez-vous de la confirmation de commande.",
+        "picked_up_title": "Votre commande a été récupérée",
+        "pick_up_in_store_marker": {
+          "current": "Localisation actuelle de l’envoi",
+          "shipping": "Lieu de retrait"
+        },
+        "ready_for_delivery_title": "Votre commande est prête à être livrée.",
+        "ready_for_delivery_description": "Votre commande est prête.",
+        "shop_phone_description": "Vous recevrez un message avec un lien vers l’application Shop qui vous aidera à suivre votre commande.",
+        "qr_code": {
+          "title": "Suivez avec votre téléphone",
+          "send_link_to_phone": "ou envoyez le lien sur votre téléphone"
+        },
+        "resend_gift_cards": "Renvoyez les cartes-cadeaux",
+        "thank_you_confirmed_order_with_email_payment": "Vous avez effectué le paiement de la commande %{date}.",
+        "thank_you_confirmed_order_with_phone_payment": "Vous avez effectué le paiement de la commande %{date}.",
+        "thank_you_confirmed_order_with_email_and_phone_payment": "Vous avez effectué le paiement de la commande %{date}.",
+        "shop_qr_with_sms_upsell": {
+          "qr_code": {
+            "title": "Scannez le code avec votre téléphone"
+          },
+          "sms": {
+            "title": "ou envoyez le lien sur votre téléphone"
+          }
+        },
+        "thank_you_title_review": "Votre commande a été envoyée pour vérification.",
+        "thank_you_confirmed_order_with_draft": "Nous vous informerons si nous avons besoin de renseignements supplémentaires ou lorsque votre commande sera confirmée.",
+        "purchase_order_number_title": "Numéro de commande %{purchase_order_number}",
+        "thank_you_ready_for_picked_up": "Votre commande a été récupérée à %{address}.",
+        "ready_for_delivery": "Prêt à être livré",
+        "subscriptions_management": {
+          "description": "Accédez à votre compte pour consulter et gérer vos abonnements.",
+          "button_label": "Gérez votre abonnement"
+        },
+        "thank_you_title_payments_app_pending_default": "Votre paiement est en cours de traitement.",
+        "thank_you_title_payments_app_pending_buyer_action_required": "Votre commande a été acceptée.",
+        "thank_you_title_payments_app_failed_pending_payment": "Votre paiement n’a pas pu être traité.",
+        "thank_you_payments_app_failed_pending_payment": "Votre commande n’a pas été débitée. Retournez à votre panier pour vérifier votre commande et réessayer de payer.",
+        "thank_you_confirmed_order_with_missing_payment": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_confirmed_order_with_missing_pick_up": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_confirmed_order_with_draft_payment": "Nous vous informerons si nous avons besoin de renseignements supplémentaires ou lorsque votre commande sera confirmée.",
+        "thank_you_confirmed_order_with_draft_pick_up": "Nous vous informerons si nous avons besoin de renseignements supplémentaires ou lorsque votre commande sera confirmée.",
+        "thank_you_payments_app_failed_pending_payment_payment": "Votre commande n’a pas été débitée. Retournez à votre panier pour vérifier votre commande et réessayer de payer.",
+        "thank_you_payments_app_failed_pending_payment_pick_up": "Votre commande n’a pas été débitée. Retournez à votre panier pour vérifier votre commande et réessayer de payer.",
+        "thank_you_payments_app_pending_payment_description_default_with_missing": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_missing_payment": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_missing_pick_up": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email_and_phone": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email_and_phone_payment": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email_and_phone_pick_up": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email_payment": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_email_pick_up": "Vous recevrez bientôt un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_phone": "Vous recevrez bientôt un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_phone_payment": "Vous recevrez bientôt un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_default_with_phone_pick_up": "Vous recevrez bientôt un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_missing": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_missing_payment": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_missing_pick_up": "Contactez-nous par e-mail ou par téléphone pour recevoir la confirmation de votre commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email_and_phone": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email_and_phone_payment": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email_and_phone_pick_up": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email_payment": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_email_pick_up": "Après le paiement, vous recevrez un e-mail de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_phone": "Après le paiement, vous recevrez un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_phone_payment": "Après le paiement, vous recevrez un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_buyer_action_required_with_phone_pick_up": "Après le paiement, vous recevrez un SMS de confirmation contenant votre numéro de commande.",
+        "thank_you_payments_app_pending_payment_description_provider_action_required_default": "Vous recevrez un e-mail lorsque le paiement sera confirmé.",
+        "thank_you_confirmed_orders_with_email": "Vous recevrez bientôt des e-mails de confirmation distincts contenant les numéros de commande.",
+        "thank_you_confirmed_orders_with_phone": "Vous recevrez bientôt des SMS séparés de confirmation contenant les numéros de commande.",
+        "thank_you_confirmed_orders_with_email_and_phone": "Vous recevrez bientôt des e-mails de confirmation distincts contenant les numéros de commande.",
+        "thank_you_item_label": {
+          "one": "%{count} article",
+          "other": "Articles : %{count}",
+          "few": "Articles : %{count}",
+          "many": "Articles : %{count}"
+        },
+        "payment_method_not_charged": "Aucun frais n’a été facturé.",
+        "thank_you_confirmed_with_email_description": {
+          "single_store": "Vous recevrez bientôt un e-mail de confirmation.",
+          "multi_store": "Vous recevrez bientôt des e-mails de confirmation séparés de chaque boutique."
+        },
+        "thank_you_confirmed_with_phone_description": {
+          "single_store": "Vous recevrez bientôt un SMS de confirmation.",
+          "multi_store": "Vous recevrez bientôt des SMS de confirmation distincts de chaque magasin."
+        },
+        "thank_you_confirmed_with_email_and_phone_description": {
+          "single_store": "Vous recevrez bientôt un e-mail de confirmation.",
+          "multi_store": "Vous recevrez bientôt des e-mails de confirmation séparés de chaque boutique."
+        },
+        "thank_you_from_other_store": "D’un autre magasin",
+        "pickup_address_title": "Prise en charge à",
+        "pickup_map_marker": {
+          "callout": "Retrait à : {{location}}",
+          "directions_link_accessibility_label": "Retrait à : {{location}}, obtenir un itinéraire"
+        }
       }
     },
     "attributes": {
