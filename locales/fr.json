@@ -381,8 +381,8 @@
       "variant": "Variante",
       "call_to_action": "Achetez maintenant",
       "social_share": "Partager",
-      "view_in_space": "Voir dans votre espace",
-      "view_in_space_label": "Visualisez dans votre espace, charge l'élément dans la fenêtre de réalité augmentée",
+      "view_in_space": "Découvrez dans votre espace",
+      "view_in_space_label": "Voir dans votre espace, charger un objet dans une fenêtre de réalité augmentée",
       "starting_at": "De",
       "onboarding": {
         "title": "Titre du produit",
@@ -416,16 +416,17 @@
   },
   "recipient": {
     "form": {
-      "checkbox": "Je veux envoyer ce produit comme cadeau",
-      "email_label": "E‑mail du destinataire",
+      "checkbox": "Je souhaite l’envoyer comme cadeau.",
+      "email_label": "Adresse e-mail du destinataire",
       "email_label_optional": "E‑mail du destinataire (facultatif)",
-      "email": "E‑mail",
+      "email": "E-mail",
       "name_label": "Nom du destinataire (facultatif)",
-      "name": "Nom",
+      "name": "Prénom",
       "message_label": "Message (facultatif)",
       "message": "Message",
-      "max_characters": "{{ max_chars }} caractères au maximum",
-      "send_on_label": "envoyer le"
+      "max_characters": "{{ max_chars }} caractères maximum",
+      "send_on_label": "envoyez le jour",
+      "email_label_optional_for_no_js_behavior": "Adresse e-mail du destinataire (facultatif)"
     }
   },
   "social": {
@@ -437,5 +438,99 @@
   },
   "date_formats": {
     "month_date_year": "%d %B %Y"
+  },
+  "shopify": {
+    "checkout": {
+      "contact": {
+        "address2_label": "Appartement, appartement de luxe, etc.",
+        "country_code": "Code du pays/de la région",
+        "civic_number_warning": "Ajoutez le numéro de maison si vous en avez un.",
+        "change_company_location_link_label": "Modifiez l’emplacement de l’entreprise",
+        "change_location_link_label": "Changer de lieu",
+        "company_attention_label": "Entreprise/Destinataire",
+        "colony_label": "Cologne",
+        "commune_label": "Commune rurale",
+        "block_label": "Bloc"
+      },
+      "alternative_payment_method_banner": {
+        "express_checkout": "Traitement express de l’achat",
+        "or": "LUB",
+        "or_pay_another_way": "ou payez autrement",
+        "or_check_out_another_way": "ou effectuez votre achat autrement",
+        "or_pay_with_credit_card": "ou payez par carte de crédit"
+      },
+      "change_currency": {
+        "credit_card_will_be_charged_html": "Votre carte de crédit sera débitée de %{amount}.",
+        "payment_total_label": "Paiement intégral",
+        "change_currency_link": "Changez en %{currency_name}",
+        "card_provider_fx_charges_warning": "L’émetteur de votre carte peut facturer des frais pour les transactions en %{currency_code}.",
+        "currency_not_supported_by_shop": "La devise sélectionnée n’est plus disponible. Tous les prix sont maintenant en %{currency_code}."
+      },
+      "change_country": {
+        "cart_updated_based_on_country": "Votre panier a été mis à jour en fonction du pays de livraison.",
+        "cart_and_currency_updated_based_on_country": "Votre panier et votre devise ont été mis à jour en fonction du pays de livraison.",
+        "currency_updated_for_country": "Devise mise à jour pour le pays : %{country}"
+      },
+      "change_cart_localization": {
+        "verify_shipping_address": "Votre pays/région a été mis à jour. Saisissez votre adresse de livraison pour poursuivre votre achat."
+      },
+      "cart_checkout_validation": {
+        "runtime_error": "Un problème est survenu lors du traitement de votre demande. Contactez le propriétaire de la boutique."
+      },
+      "captcha": {
+        "title": "Effectuez la tâche CAPTCHA pour continuer.",
+        "errors": {
+          "not_solved": "Effectuez la tâche CAPTCHA pour continuer."
+        }
+      },
+      "billing": {
+        "billing_address_title": "Facture pour",
+        "same_as_shipping": "Identique à l’adresse de livraison",
+        "add_address": "Utilisez une autre adresse",
+        "address_delete": "Supprime l’adresse",
+        "address_confirm": "Voulez-vous vraiment supprimer cette adresse de votre compte ?",
+        "address_form": {
+          "save": "Enregistrez"
+        },
+        "billing_address_rollup_accessibility_label": "Options de l’adresse de facturation"
+      },
+      "company_location": {
+        "location_rollup_accessibility_label": "Options de localisation de l’entreprise"
+      },
+      "artifact_errors": {
+        "artifact_dissatisfaction_without_violation": "Un problème est survenu lors du traitement de la commande. Réessayez dans quelques minutes."
+      },
+      "b2b_errors": {
+        "lost_b2b_purchasing_permissions": "Vous n’êtes pas autorisé à passer des commandes B2B. %{logout_url}, pour passer plutôt une commande individuelle.",
+        "log_out_link_text": "Déconnectez-vous",
+        "lost_permissions_subtitle": "Vous n’avez plus l’autorisation de passer des commandes B2B. Déconnectez-vous pour passer une commande individuelle.",
+        "lost_permissions_title": "Autorisation de localisation manquante"
+      },
+      "address_management": {
+        "saved_with_store": "Enregistré dans cette boutique"
+      }
+    },
+    "attributes": {
+      "password_confirmation": "Confirmation du mot de passe",
+      "first_name": "prénom",
+      "last_name": "nom de famille",
+      "body": "contenu"
+    },
+    "addresses": {
+      "zip_code": "Code postal",
+      "pincode": "Code PIN",
+      "province": "Voïvodie",
+      "state": "Étalon",
+      "state_and_territory": "Pays / territoire",
+      "confirm": "Voulez-vous vraiment supprimer cette adresse ?"
+    },
+    "cart": {
+      "discounts_with_count": "Nombre de réductions appliquées : %{count}"
+    },
+    "challenge": {
+      "message": "Pour continuer, confirmez que vous n’êtes pas un robot.",
+      "error": "La réponse était incorrecte, réessayez.",
+      "submit_button_text": "Envoyer"
+    }
   }
 }
