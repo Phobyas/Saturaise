@@ -3074,13 +3074,85 @@
           "detour": {
             "price_change": "Le prix de certains articles a changé. Fermez {{walletName}} pour vérifier la commande, puis réessayez.",
             "currency_change": "Une autre adresse ne peut pas être utilisée dans {{walletName}}. Utilisez l’adresse d’origine ou essayez un autre mode de paiement.",
-            "currency_change_with_country": "La méthode {{walletName}} ne peut pas être utilisée, car la devise a changé. Utilisez une adresse dans le pays {{countryName}} ou choisissez un autre mode de paiement."
-          }
+            "currency_change_with_country": "La méthode {{walletName}} ne peut pas être utilisée, car la devise a changé. Utilisez une adresse dans le pays {{countryName}} ou choisissez un autre mode de paiement.",
+            "queue": "Vous avez été ajouté à la file d’attente pour finaliser votre achat. Fermez {{walletName}} pour continuer."
+          },
+          "unavailable": {
+            "title": "L’option {{walletName}} n’est pas disponible.",
+            "description": "Le service {{walletName}} était indisponible. Utilisez un autre moyen de paiement ou réessayez plus tard.",
+            "instructions": "Un problème est survenu avec l’option {{walletName}}. Retournez à la boutique pour réessayer ou effectuer votre achat autrement.",
+            "unavailable_for_country": "{{walletName}} n’est pas disponible en {{countryName}}. Choisissez un autre moyen de paiement pour finaliser votre achat."
+          },
+          "generic": "Un problème est survenu avec le service {{walletName}}. Réessayez ou utilisez un autre moyen de paiement.",
+          "terminal": "Un problème est survenu avec {{walletName}}. Utilisez un autre mode de paiement.",
+          "unsupported": {
+            "address": "Le vendeur ne peut pas livrer le colis à l’adresse choisie.",
+            "wallet_is_unavailable": "Le portefeuille {{walletName}} ne peut pas être utilisé avec cette adresse. Choisissez une autre adresse ou fermez {{walletName}} pour finaliser votre achat."
+          },
+          "outdated": {
+            "shipping_method": "Les options de livraison de votre commande ont changé. Vérifiez votre choix.",
+            "payment_terms": "Les conditions de paiement ont changé. Vérifiez la commande."
+          },
+          "invalid": {
+            "shipping_address": "Saisissez une adresse de livraison valide",
+            "shipping_option": "Choisissez l’option d’expédition appropriée",
+            "email": "Saisissez une adresse e-mail valide",
+            "zone": "Saisissez l’État / la province correct(e)",
+            "postal_code": "Saisissez un code postal valide",
+            "reduction_code": "Saisissez un code de réduction valide ou une carte-cadeau",
+            "billing_must_match_shipping": "Il doit correspondre à l’adresse de livraison.",
+            "phone": "Saisissez un numéro de téléphone valide",
+            "emirate": "Saisissez l’émirat correct",
+            "billing_zone": "Saisissez l’État ou la province correct(e) dans l’adresse de facturation.",
+            "billing_phone": "Saisissez un numéro de téléphone valide dans l’adresse de facturation.",
+            "billing_zip": "Saisissez le bon code postal dans l’adresse de facturation"
+          },
+          "missing": {
+            "first_name": "Saisissez le prénom",
+            "last_name": "Saisissez le nom de famille",
+            "address1": "Saisissez l’adresse",
+            "address2": "Saisissez appartement, studio, etc.",
+            "city": "Saisissez la ville",
+            "province": "Choisissez une voïvodie",
+            "country": "Choisissez le pays/la région",
+            "zip": "Saisissez le code postal",
+            "phone": "Saisissez le numéro de téléphone",
+            "billing_first_name": "Saisissez le prénom dans l’adresse de facturation.",
+            "billing_address1": "Saisissez l’adresse de facturation",
+            "billing_address2": "Indiquez votre logement, appartement, etc. dans l’adresse de facturation",
+            "billing_city": "Saisissez la localité dans l’adresse de facturation",
+            "billing_province": "Sélectionnez l’État / la province dans l’adresse de facturation",
+            "billing_zip": "Saisissez le code postal dans l’adresse de facturation.",
+            "contact_info": "Saisissez les coordonnées de contact"
+          },
+          "formatting": {
+            "name_contains_emojis": "Supprimez les émojis de votre nom de famille",
+            "postal_code_contains_emoji": "Supprimez les emojis du code postal.",
+            "last_name_too_long": "Le nom de famille contient trop de lettres",
+            "address_too_long": "La ligne d’adresse est trop longue."
+          },
+          "select_different_shipping_address_to_resolve_errors": "Votre adresse de livraison n’est pas valide. Choisissez une autre adresse ou utilisez-en une nouvelle.",
+          "unavailable_terminal": {
+            "instructions": "{{walletName}} n’est actuellement pas disponible pour votre commande. Pour poursuivre votre achat, choisissez un autre mode de paiement."
+          },
+          "processing_error_checkout_as_guest": "Un problème est survenu lors du traitement du paiement. Réessayez ou {{checkout_as_guest_link}}.",
+          "subscription_review_required": "Votre commande comprend un abonnement. Avant de passer commande, vous devez prendre connaissance des conditions ci-dessous.",
+          "sdk_load_failure": "Un problème est survenu lors du chargement de {{walletName}}. {{refresh_link}} pour réessayer, ou utilisez un autre moyen de paiement.",
+          "refresh_link": "Rafraîchir"
         },
         "deceleration": {
           "one_more_step_to_complete_order": "Encore une étape avant de finaliser votre commande",
           "one_more_step": "Encore une étape..."
-        }
+        },
+        "redirect_hint": "Une demande de connexion via {{walletName}} s’affichera.",
+        "payment_in_progress_body": "Votre paiement est en cours de traitement. Votre commande sera bientôt traitée.",
+        "redirection_notice": "Vous allez être redirigé vers {{walletName}} pour finaliser votre achat.",
+        "return_to_checkout": "Reprendre le paiement",
+        "scrim": {
+          "and_return_to_checkout": "et revenez à la finalisation de l’achat"
+        },
+        "place_order": "Passez commande",
+        "recovery_notice": "Un problème est survenu avec les détails de votre commande. Pour payer, mettez à jour vos informations."
       },
       "vaulted": {
         "loading_section": "Chargement de la section {{section}}…"
@@ -3137,6 +3209,184 @@
       "message": "Pour continuer, confirmez que vous n’êtes pas un robot.",
       "error": "La réponse était incorrecte, réessayez.",
       "submit_button_text": "Envoyer"
+    },
+    "collections": {
+      "sorting": {
+        "manual": "Recommandé",
+        "best_selling": "Les meilleures ventes",
+        "az": "Par ordre alphabétique, A-Z",
+        "za": "Par ordre alphabétique, Z-A",
+        "price_ascending": "Prix, du moins cher au plus cher",
+        "price_descending": "Prix, du plus élevé au plus bas",
+        "date_ascending": "Dates, de la plus ancienne à la plus récente",
+        "most_relevant": "Les mieux adaptés"
+      }
+    },
+    "checkpoint": {
+      "message": "Résolvez le CAPTCHA pour continuer",
+      "error": "La vérification du CAPTCHA a échoué.",
+      "submit_button_text": "Envoyer"
+    },
+    "email_marketing": {
+      "subscribed": {
+        "confirmation": "Merci de vous être abonné à notre liste de diffusion.",
+        "unsubscribe": "Annuler l’abonnement"
+      },
+      "open_tracking": {
+        "opt_in": {
+          "opted_in_html": "<b>Vous avez consenti au suivi des ouvertures d’e-mails.</b>",
+          "visibility": "Les taux d’ouverture des e-mails seront communiqués de manière anonyme. Nous ne verrons que le taux global d’ouverture des e-mails, sans savoir si vous avez ouvert le message.",
+          "opt_out_html": "Si vous ne souhaitez pas partager ces informations, vous pouvez <a style='text-decoration:underline;' href='%{link}'>désactiver</a> le suivi des ouvertures d’e-mails.",
+          "preview_bar": "Vous affichez un aperçu de ce que verront les clients qui décideront de suivre les ouvertures des e-mails."
+        },
+        "opt_out": {
+          "opted_out_html": "<b>Vous avez désactivé le suivi des ouvertures d’e-mails.</b>",
+          "opt_in_html": "<a style='text-decoration:underline;' href='%{link}'>Acceptez</a> le suivi des ouvertures d’e-mails.",
+          "preview_bar": "Vous affichez un aperçu de ce que verront les clients qui désactiveront le suivi des ouvertures d’e-mails."
+        },
+        "no_longer_track": {
+          "status_html": "<b>Nous ne suivons plus les ouvertures des e-mails.</b>",
+          "privacy_policy": "Après l’envoi de cet e-mail, nous avons mis à jour notre politique de confidentialité et ne suivons plus les ouvertures."
+        },
+        "track": {
+          "status_html": "<b>Le suivi des ouvertures d’e-mails est effectué.</b>",
+          "visibility": "L’information indiquant que vous avez ouvert un e-mail ne sera visible pour nous que sous la forme d’un indicateur du nombre total d’ouvertures des e-mails."
+        },
+        "updated_policy": {
+          "status_html": "<b>Le suivi des ouvertures d’e-mails est effectué.</b>",
+          "visibility": "Nous avons mis à jour notre politique et suivons désormais les ouvertures des e-mails. Les taux d’ouverture des e-mails seront rapportés de manière anonyme. Le fait que vous ayez ouvert un e-mail ne sera visible pour nous que sous la forme du taux global d’ouverture des e-mails.",
+          "opt_out_html": "Si vous ne souhaitez pas partager ces informations, vous pouvez <a style='text-decoration:underline;' href='%{link}'>vous désabonner</a>."
+        }
+      },
+      "sms_unsubscribe_confirm": {
+        "message": "Êtes-vous sûr de vouloir vous désabonner des SMS marketing ?",
+        "button": "Annuler l’abonnement"
+      },
+      "unsubscribed": {
+        "disclaimer": "Vous ne recevrez aucune communication marketing de notre part. Vous pouvez vous réabonner à tout moment.",
+        "preview": "Vous voyez un aperçu de ce que les clients verront après s’être désabonnés."
+      }
+    },
+    "links": {
+      "powered_by_shopify": "Technologie Shopify"
+    },
+    "errors": {
+      "blank": "ne peut pas être vide",
+      "credit_card_session_expired": "Le délai de validité de l’autorisation de la carte de crédit a expiré. Saisissez à nouveau vos informations de paiement. Votre carte n’a pas été débitée.",
+      "empty": "ne peut pas être vide",
+      "discount_disabled": "Cette remise a été désactivée.",
+      "discount_expired": "Cette réduction a expiré.",
+      "discount_limit_reached": "La limite d’utilisation de cette réduction a été atteinte.",
+      "discount_not_found": "Impossible de trouver une remise valide correspondant au code saisi.",
+      "customer_already_used_once_per_customer_discount_notice": "La limite d’utilisation de cette réduction a été atteinte.",
+      "gift_card_already_applied": "Le code a déjà été utilisé pour effectuer l’achat.",
+      "gift_card_code_invalid": "Le code est incorrect.",
+      "gift_card_currency_mismatch": "Cette carte-cadeau ne peut pas être utilisée pour cet achat. Contactez %{shop_name} pour qu’elle soit réémise.",
+      "gift_card_depleted": "Il ne reste plus de crédit sur cette carte-cadeau.",
+      "gift_card_disabled": "La carte-cadeau est désactivée.",
+      "invalid": "est incorrect(e)",
+      "bad_domain": "contient un nom de domaine invalide",
+      "taken": "– déjà utilisé",
+      "too_short": "est trop court (le nombre minimum de caractères est de %{count})",
+      "too_long": "trop long (le nombre maximal de caractères est %{count})",
+      "password_mismatch": "doivent correspondre au mot de passe indiqué",
+      "invalid_for_country": "est incorrect(e) pour : %{country}",
+      "invalid_for_country_and_province": "est invalide pour : %{province} et %{country}",
+      "invalid_province_in_country": "n’est pas une voïvodie valide dans : %{country}",
+      "invalid_state_in_country": "n’est pas un état valide dans : %{country}",
+      "invalid_region_in_country": "n’est pas une région valide en : %{country}",
+      "not_supported": "n’est pas pris en charge / prise en charge / pris en charge",
+      "full_name_required": "Saisissez le prénom et le nom",
+      "invalid_for_card_type": "est incorrect(e)",
+      "invalid_type": "Désolés, nous n’acceptons pas les cartes de ce type.",
+      "invalid_format": "le format est incorrect",
+      "expired": "– expiré(e)",
+      "invalid_start_date_or_issue_number_for_debit": "une date de début de validité ou un numéro d’édition correct est requis",
+      "invalid_expiry_year": "n’est pas une année d’expiration valide",
+      "reset_password_html": "Cette adresse e-mail est déjà associée à un compte. Si ce compte vous appartient, vous pouvez <a href=\"/account/login#recover\">réinitialiser votre mot de passe</a>",
+      "verify_email": "Nous avons envoyé un e-mail à %{customer_email}. Cliquez sur le lien qu’il contient pour vérifier votre adresse e-mail.",
+      "product_not_available": "Le produit n’a pas été publié pour ce client.",
+      "shop_404": {
+        "title": "Créez une boutique en ligne et vendez en ligne ! Logiciel e-commerce de Shopify",
+        "heros": {
+          "no_storefront": "Ce magasin n’a pas encore de site Internet.",
+          "store_will_be_right_back": "Ce magasin sera bientôt de nouveau disponible."
+        },
+        "links": {
+          "explore_other_stores": "Découvrez d’autres boutiques",
+          "start_free_trial": "Commencez votre période d’essai gratuite",
+          "refresh_page": "Actualisez la page"
+        },
+        "owner_ctas": {
+          "header": "Êtes-vous propriétaire d’un magasin ?",
+          "fix_domain": "Terminez la configuration de votre nouvelle adresse Internet en accédant à %{domain_settings_link}. Cliquez sur l’option Connecter un domaine et saisissez : %{domain}.<br>Si vous avez du mal à accéder à votre boutique, rendez-vous sur %{forgot_your_store_link}.",
+          "fix_domain_link_text": "paramètres du domaine",
+          "forgot_your_store_link_text": "Je ne me souviens pas des informations du magasin.",
+          "add_storefront": "Vous pouvez configurer un site Web en ajoutant le canal de la boutique en ligne dans %{admin_link}. Si vous avez du mal à accéder à votre boutique, rendez-vous sur %{forgot_your_store_link}.",
+          "admin_link_text": "panneau d’administration"
+        },
+        "ctas": {
+          "sell_in_person": {
+            "header": "Vente personnelle",
+            "caption": "Profitez des fonctionnalités nécessaires pour gérer un commerce de détail, que vous débutiez ou souhaitiez vous développer.",
+            "link_text": "Lancez l’essai gratuit"
+          },
+          "open_a_store": {
+            "caption": "Profitez de l’essai de 3 jours, puis payez seulement 1 USD/mois pendant les 3 mois suivants.",
+            "link_text": "Inscrivez-vous maintenant"
+          },
+          "editions": {
+            "header": "Découvrez les possibilités de Shopify Editions",
+            "caption": "Plus de 100 mises à jour du produit vous permettent de développer votre activité commerciale de manière plus créative et efficace que jamais.",
+            "link_text": "Découvrez la dernière version des éditions"
+          },
+          "store_owner": {
+            "header": "Êtes-vous propriétaire d’un magasin ?",
+            "caption": "Si vous avez des difficultés à accéder à votre boutique, utilisez %{forgot_your_store_link}. Si vous souhaitez réactiver votre boutique, contactez %{shopify_support_link}.",
+            "shopify_support_link_text": "Assistance technique Shopify"
+          }
+        },
+        "subtitles": {
+          "store_will_be_right_back": "Shopify travaille à le remettre en ligne dès que possible."
+        },
+        "status_card": {
+          "eyebrow": "Aide aux propriétaires de magasins",
+          "header": "Vérifiez le statut de la plateforme Shopify.",
+          "caption": "Vérifiez s’il y a eu une panne qui a touché d’autres boutiques Shopify que celle-ci.",
+          "link_text": "Afficher l’état des systèmes Shopify"
+        }
+      }
+    },
+    "notices": {
+      "address": {
+        "updated": "Adresse mise à jour avec succès.",
+        "error_updating": "Erreur lors de la mise à jour de l’adresse",
+        "created": "Adresse créée avec succès",
+        "error_creating": "Erreur de création de l’adresse.",
+        "deleted": "Adresse supprimée avec succès",
+        "error_deleting": "Erreur lors de la suppression de l’adresse."
+      },
+      "cart": {
+        "all_items_in_cart": "Tous les %{count} %{name} sont dans votre panier.",
+        "empty_update": "impossible de mettre à jour un panier vide",
+        "generic_error": "Erreur du panier",
+        "changed": "Panier modifié",
+        "digital_product_not_available_for_company_locations": "Cet article ne peut pas être ajouté à une commande B2B.",
+        "bundle_requires_components": "Le produit du pack « %{name} » ne peut pas être ajouté au panier.",
+        "buyer_cannot_purchase_for_company_locations": "L’achat n’est pas possible à cet emplacement.",
+        "cart_attributes_error": "Les attributs du panier contiennent des données invalides."
+      }
+    },
+    "filters": {
+      "availability": {
+        "value": {
+          "out_of_stock": "Stock épuisé"
+        }
+      }
+    },
+    "managed_markets": {
+      "buyer_consent": "En passant commande, vous acceptez d’acheter auprès de Global-e, revendeur officiel, conformément aux documents suivants : %{termsAndConditionsLink} et %{privacyPolicyLink} de Global-e. Vous acceptez également que vos données soient communiquées à la boutique %{shopName}.",
+      "terms_and_conditions": "Conditions générales"
     }
   }
 }
