@@ -2781,7 +2781,24 @@
               "fi": "Saisissez un numéro d’identification TVA valide pour la Finlande.",
               "fr": "Saisissez un numéro de TVA valide pour la France.",
               "de": "Saisissez un numéro d’identification à la TVA valide pour l’Allemagne.",
-              "es": "Saisissez un numéro d’identification à la TVA valide pour l’Espagne."
+              "es": "Saisissez un numéro d’identification à la TVA valide pour l’Espagne.",
+              "hr": "Saisissez un numéro de TVA valide pour la Croatie.",
+              "gr": "Saisissez un numéro de TVA grec valide.",
+              "hu": "Saisissez un numéro d’identification à la TVA valide pour la Hongrie.",
+              "ie": "Saisissez un numéro de TVA irlandais valide.",
+              "it": "Saisissez un numéro d’identification TVA italien valide",
+              "lv": "Saisissez un numéro d’identification à la TVA valide pour la Lettonie.",
+              "lt": "Saisissez un numéro d’identification à la TVA valide pour la Lituanie.",
+              "lu": "Saisissez un numéro d’identification à la TVA valide pour le Luxembourg.",
+              "mt": "Saisissez un numéro d’identification à la TVA valide pour Malte.",
+              "nl": "Saisissez un numéro de TVA valide pour les Pays-Bas.",
+              "pl": "Saisissez un numéro d’identification à la TVA valide pour la Pologne.",
+              "pt": "Saisissez un numéro d’identification à la TVA valide pour le Portugal.",
+              "ro": "Saisissez un numéro d’identification à la TVA valide pour la Roumanie.",
+              "sk": "Saisissez un numéro d’identification à la TVA valide pour la Slovaquie.",
+              "si": "Saisissez un numéro d’identification à la TVA valide pour la Slovénie",
+              "se": "Saisissez un numéro d’identification à la TVA valide pour la Suède.",
+              "gb": "Saisissez un numéro d’identification à la TVA valide pour le Royaume-Uni."
             }
           },
           "accessibility": {
@@ -2794,13 +2811,89 @@
               "service_unavailable": "Impossible de vérifier l’exonération de TVA",
               "service_error": "Impossible de vérifier l’exonération de TVA"
             }
-          }
+          },
+          "vaulted": "Numéro d’identification à la TVA : %{number}"
         }
       },
       "tax": {
         "attribution": {
           "orders_sold_by_shop_marketplace": "Commandes vendues par la plateforme commerciale Shop"
         }
+      },
+      "thank_you": {
+        "confirmation_email_sent_text": "Un e-mail de confirmation a été envoyé à %{email}",
+        "contact_information_title": "Coordonnées de contact",
+        "company_tracking_number": "Numéro de suivi %{company} :",
+        "estimated_arrival": "Date de livraison prévue :",
+        "confirmed_title": "Votre commande est confirmée.",
+        "confirmed_description": "Nous avons accepté votre commande et la préparons. Revenez sur cette page pour obtenir les dernières informations sur le statut de l’envoi.",
+        "attempted_delivery_title": "Une tentative de livraison de votre commande a été effectuée.",
+        "attempted_delivery_description_html": "Une tentative de livraison de votre colis a échoué. %{contact_us} pour convenir d’une nouvelle tentative de livraison.",
+        "delivered_title": "Votre commande a été livrée.",
+        "delivered_description_html": "La commande a été livrée à l’adresse que vous avez indiquée. Si vous ne l’avez pas reçue ou si vous rencontrez d’autres problèmes, %{contact_us}.",
+        "contact_us": "Contactez-nous",
+        "contact_us_lowercase": "contactez-nous",
+        "contact_us_html": "Besoin d’aide ? %{contact_us}",
+        "failed_title": "La livraison de votre commande a été impossible.",
+        "failed_contact_merchant": "Contactez %{company} pour convenir de la livraison.",
+        "failed_contact_merchant_no_company": "Contactez-nous pour convenir de la livraison.",
+        "customer_information_hidden_fields_message": "Connectez-vous pour afficher toutes les informations concernant le client.",
+        "cancelled_title": "La commande a été annulée.",
+        "cancelled_description": "La commande a été annulée le %{date}. Contactez-nous si vous avez des questions.",
+        "customer_validation_error": "Saisissez une adresse e-mail ou un numéro de commande valide.",
+        "fulfillment": {
+          "fulfilled_table_title": "Articles de cet envoi",
+          "unfulfilled_table_title": "Préparation des articles à expédier"
+        },
+        "delivery_information_label": "Informations sur la livraison :",
+        "gift_card_sent_confirmation": "Les cartes-cadeaux ont été envoyées.",
+        "delivered_local_title": "Votre commande a été livrée.",
+        "delivered_local_description_html": "Vous n’avez pas reçu votre commande ? %{let_us_know}.",
+        "attempted_delivery_local_title": "Livraison non récupérée",
+        "attempted_delivery_local_description_html": "Nous n’avons pas pu livrer votre commande. Pour planifier la prochaine livraison, %{contact_us}.",
+        "estimated_delivery": "Livraison prévue :",
+        "company_location_title": "Localisation",
+        "breadcrumbs_submitted": "Envoyé",
+        "breadcrumbs_in_review": "En cours de vérification",
+        "first_payment_complete": "La première transaction a été effectuée.",
+        "choose_payment_method_later": "Choisissez un mode de paiement plus tard",
+        "gift_card_confirmation_by_text_typ": {
+          "one": "Vous recevrez un SMS avec une carte cadeau dans quelques minutes.",
+          "other": "Vous recevrez un SMS avec les cartes cadeaux dans quelques minutes.",
+          "few": "Vous recevrez un SMS avec les cartes cadeaux dans quelques minutes.",
+          "many": "Vous recevrez un SMS avec des cartes-cadeaux dans quelques minutes."
+        },
+        "gift_card_confirmation_by_email_typ": {
+          "one": "Vous recevrez un e-mail contenant une carte cadeau dans quelques minutes.",
+          "other": "Vous recevrez un e-mail contenant les cartes cadeaux dans quelques minutes.",
+          "few": "Vous recevrez un e-mail contenant des cartes-cadeaux dans quelques minutes.",
+          "many": "Vous recevrez les cartes-cadeaux par e-mail dans quelques minutes."
+        },
+        "gift_card_email_title": {
+          "one": "La carte cadeau a été envoyée par e-mail.",
+          "other": "Les cartes-cadeaux ont été envoyées par e-mail.",
+          "few": "Les cartes-cadeaux ont été envoyées par e-mail.",
+          "many": "Les cartes-cadeaux ont été envoyées par e-mail."
+        },
+        "gift_card_text_title": {
+          "few": "Les cartes-cadeaux ont été envoyées par SMS."
+        },
+        "gift_card_resent_confirmation": {
+          "one": "La carte cadeau a été renvoyée.",
+          "few": "Les cartes-cadeaux ont été renvoyées."
+        },
+        "gift_card_resend_failure": {
+          "one": "Un problème est survenu lors du renvoi de votre carte cadeau. Réessayez ou contactez-nous.",
+          "few": "Un problème est survenu lors du renvoi de vos cartes-cadeaux. Réessayez ou contactez-nous."
+        },
+        "announcement": {
+          "collapse": "Replier"
+        },
+        "confirmed_items_count": "%{confirmed_count} articles sur %{total_count} ont été confirmés",
+        "checkout_on_remote_shop_link_text": "Effectuez votre achat chez %{remoteShopName}",
+        "checkout_on_another_store": "Effectuez votre achat dans un autre magasin.",
+        "checkout_again": "Effectuer à nouveau l’achat",
+        "cashback_notice": "Vous recevrez le cashback après 30 jours."
       }
     },
     "attributes": {
