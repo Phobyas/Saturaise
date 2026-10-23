@@ -10,18 +10,18 @@
 {
   "general": {
     "password_page": {
-      "thanks": "Merci pour votre inscription sur notre liste",
-      "enter_store": "Entrer dans la boutique en utilisant le mot de passe :",
-      "register": "Inscrivez-vous pour les mises à jour",
+      "thanks": "Merci de vous être inscrit à notre liste",
+      "enter_store": "Se connecter avec un mot de passe",
+      "register": "Inscrivez-vous pour recevoir les mises à jour.",
       "password": "Mot de passe",
       "enter": "Entrer",
       "email_address": "Adresse e-mail",
-      "submit": "Soumettre",
-      "powered": "Cette boutique sera optimisée par"
+      "submit": "Envoyer",
+      "powered": "Cette boutique sera exploitée par"
     },
     "homepage": {
       "onboarding": {
-        "no_content": "Cette rubrique ne contient rien pour le moment. Ajoutez-y du contenu à l'aide de la barre latérale."
+        "no_content": "Cette section ne contient actuellement aucun contenu. Ajoutez du contenu à cette section à l’aide de la barre latérale."
       }
     },
     "404": {
@@ -36,25 +36,26 @@
       "home": "Page d’accueil"
     },
     "newsletter_form": {
-      "newsletter_email": "Entrer l'adresse e-mail",
-      "email_placeholder": "Entrer l'adresse e-mail",
-      "confirmation": "Merci pour votre inscription",
-      "submit": "Joindre"
+      "newsletter_email": "Restons amis",
+      "email_placeholder": "Adresse e-mail",
+      "confirmation": "Merci pour votre abonnement",
+      "submit": "ENVOYER"
     },
     "search": {
-      "no_results": "Aucun résultat trouvé",
-      "no_results_html": "Votre recherche de \"{{ terms }}\" n'a donné aucun résultat.",
-      "results_for_html": "Votre recherche de \"{{ terms }}\" a révélé ce qui suit :",
-      "title": "Rechercher dans notre magasin",
+      "no_results": "Aucun résultat",
+      "no_results_html": "Votre recherche « {{ terms }} » n’a donné aucun résultat.",
+      "results_for_html": "Résultats pour votre recherche « {{ terms }} » :",
+      "title": "Parcourez notre boutique",
       "title_results": "Résultats de recherche",
-      "placeholder": "Recherche",
-      "products": "Des produits",
-      "articles": "Des articles",
+      "placeholder": "Saisissez votre recherche...",
+      "products": "Produits",
+      "articles": "Articles",
       "pages": "Pages",
-      "collections": "Des Collections",
-      "search_for": "Rechercher “{{ terms }}”",
-      "vendor": "Distributeur",
-      "suggestions": "Suggestions"
+      "collections": "Collections",
+      "search_for": "Rechercher « {{ terms }} »",
+      "vendor": "Vendeur",
+      "suggestions": "Suggestion",
+      "browse_all": "Tout parcourir"
     },
     "currency": {
       "dropdown_label": "Devise"
@@ -68,10 +69,10 @@
       "error": "Erreur"
     },
     "header": {
-      "search": "Connexion",
+      "search": "Rechercher",
       "login": "Connectez-vous",
       "account": "Compte",
-      "logout": "Déconnexion",
+      "logout": "Déconnectez-vous",
       "cart": "Panier",
       "bag": "Sac"
     }
@@ -328,48 +329,49 @@
   },
   "products": {
     "general": {
-      "new": "NOUVEAU",
-      "sale": "SOLDES",
-      "sold": "ÉPUISÉ",
+      "new": "Nouveau",
+      "sale": "BONNE AFFAIRE !",
+      "sold": "Épuisé",
       "set": "Ensemble",
       "from": "De",
-      "view_full": "Voir tous les détails",
-      "sale_price": "Prix soldé",
-      "regular_price": "Prix ordinaire"
+      "view_full": "Voir le produit",
+      "sale_price": "Prix promotionnel",
+      "regular_price": "Prix normal",
+      "bestseller": "EN PROMO !🔥"
     },
     "product": {
-      "designer": "Designer",
+      "designer": "Concepteur",
       "sold_out": "Épuisé",
-      "customize_set": "Personnalisez l'ensemble",
+      "customize_set": "Personnalisez l’ensemble",
       "set_only_default": "Option par défaut sélectionnée.",
-      "regular_price": "Prix ordinaire",
-      "set_price": "Fixer le prix",
-      "price_varies": "Le prix varie",
-      "unavailable": "Non disponible",
+      "regular_price": "Prix normal",
+      "set_price": "Prix du kit",
+      "price_varies": "Prix variable",
+      "unavailable": "Indisponible",
       "compare_at": "Comparer à",
-      "include_taxes": "Taxes incluses.",
-      "shipping_policy_html": "<a href=\"{{ link }}\">Frais d'expédition</a> calculés lors du paiement.",
+      "include_taxes": "Avec taxe.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Frais de livraison</a> calculés au moment du paiement.",
       "add_to_cart": "Ajouter au panier",
-      "pre_order": "Pré-commander",
-      "add_set_to_cart": "Ajouter l'ensemble au panier",
-      "instore_only": "Disponible en magasin seulement",
+      "pre_order": "Prévente",
+      "add_set_to_cart": "Ajouter le kit au panier",
+      "instore_only": "Disponible uniquement en magasin",
       "back_to": "Retour à",
-      "or": "ou",
-      "adding": "Ajout...",
+      "or": "lub",
+      "adding": "Ajout en cours...",
       "thank_you": "Merci !",
       "added": "Ajouté au panier",
       "added_success": "Ajouté au panier",
       "view_cart": "Voir le panier",
-      "continue": "Continer les achats",
+      "continue": "Continuer les achats",
       "quantity": "Quantité",
       "product_details": "Détails du produit",
-      "product_info": "Information sur le produit",
+      "product_info": "Description du produit",
       "product_type": "Type de produit",
       "brand": "Marque",
       "collection": "Collection",
       "product_description": "Description du produit",
-      "product_more_details": "En détail",
-      "size_guide": "Guides des tailles :",
+      "product_more_details": "Plus de détails",
+      "size_guide": "Tableau des tailles :",
       "delivery": "Livraison :",
       "returns": "Retours :",
       "related_products": "Produits associés",
@@ -377,7 +379,7 @@
       "weight": "Poids",
       "sku": "SKU",
       "variant": "Variante",
-      "call_to_action": "Acheter maintenant",
+      "call_to_action": "Achetez maintenant",
       "social_share": "Partager",
       "view_in_space": "Voir dans votre espace",
       "view_in_space_label": "Visualisez dans votre espace, charge l'élément dans la fenêtre de réalité augmentée",
@@ -386,28 +388,28 @@
         "title": "Titre du produit",
         "subtitle": "Petit sous-titre avec les détails du produit"
       },
-      "choose_option": "Choisissez l'option",
+      "choose_option": "Choisissez une option",
       "required": "Obligatoire"
     }
   },
   "product_pickup_availability": {
-    "view_store_info": "Obtenir des informations",
+    "view_store_info": "Obtenez des informations",
     "check_other_stores": "Voir les magasins",
-    "pick_up_available": "Ramassage disponible",
-    "pick_up_currently_unavailable": "Ramassage actuellement indisponible",
-    "pick_up_available_at_html": "Ramassage disponible à {{ location_name }}",
-    "pick_up_unavailable_at_html": "Ramassage actuellement indisponible à {{ location_name }}",
-    "pickup": "Ramasser"
+    "pick_up_available": "Retrait disponible",
+    "pick_up_currently_unavailable": "Retrait actuellement indisponible",
+    "pick_up_available_at_html": "Retrait disponible à {{ location_name }}",
+    "pick_up_unavailable_at_html": "Retrait actuellement indisponible à {{ location_name }}",
+    "pickup": "Récupération"
   },
   "gift_cards": {
     "issued": {
-      "title": "Voici votre {{ value }} carte cadeau pour {{ shop }}!",
-      "subtext": "Voici votre carte cadeau !",
-      "disabled": "Désactivé",
-      "expired": "Expiré le {{ expiry }}",
+      "title": "Voici votre carte-cadeau d’une valeur de {{ value }} pour {{ shop }} !",
+      "subtext": "Voici votre carte-cadeau !",
+      "disabled": "Désactivée",
+      "expired": "A expiré le {{ expiry }}",
       "active": "Expire le {{ expiry }}",
-      "redeem": "Utilisez ce code lors de l'achat pour utiliser votre carte cadeau",
-      "shop_link": "Commencer vos achats",
+      "redeem": "Utilisez ce code au moment du paiement pour utiliser votre carte-cadeau.",
+      "shop_link": "Commencez vos achats",
       "print": "Imprimer",
       "email": "E-mail"
     }
