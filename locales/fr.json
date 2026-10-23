@@ -2304,6 +2304,156 @@
           "other": "Arrivera en %{count} envois",
           "few": "Arrivera en %{count} envois",
           "many": "Arrivera en %{count} envois"
+        },
+        "subscription_shipping": "Envoi des abonnements",
+        "subscription_delivery_description": {
+          "prepaid_delivery_frequency": {
+            "one": "pour %{count} livraisons",
+            "other": "pour %{count} livraison(s)",
+            "few": "pour %{count} livraison(s)",
+            "many": "pour %{count} livraison(s)"
+          },
+          "subscription_delivery_frequency": {
+            "day": {
+              "one": "quotidiennement",
+              "other": "avec %{count} jours",
+              "few": "avec %{count} jours",
+              "many": "avec %{count} jours"
+            },
+            "week": {
+              "other": "tous les %{count} semaines",
+              "few": "tous les %{count} semaines",
+              "many": "tous les %{count} semaines"
+            },
+            "month": {
+              "other": "tous les %{count} mois",
+              "few": "tous les %{count} mois",
+              "many": "tous les %{count} mois"
+            },
+            "year": {
+              "one": "que dirais-tu de l’année dernière",
+              "other": "avec %{count} ans",
+              "few": "avec %{count} ans",
+              "many": "avec %{count} ans"
+            }
+          },
+          "multiple_subscriptions_shipping_price_label": "%{shipping_price} pour la livraison",
+          "prepaid_shipping_price_label": "%{shipping_price} pour la livraison x %{delivery_interval_count}",
+          "initial_order_discounted": "Frais d’expédition initiaux de %{discounted_shipping_cost}, puis %{frequency_description}",
+          "prepaid_initial_order_discounted": "D’abord, les frais de livraison %{discounted_shipping_price} %{prepaid_delivery_frequency}",
+          "prepaid_initial_order_discounted_with_per_delivery_price": "Coût d’expédition initial %{discounted_shipping_price} %{prepaid_delivery_frequency} (%{discounted_cost_per_delivery})",
+          "prepaid_initial_order_discounted_with_renewal": "Coût d’expédition initial de %{discounted_shipping_price} %{prepaid_delivery_frequency}, puis %{shipping_price} %{billing_cycle}",
+          "prepaid_initial_order_discounted_with_per_delivery_price_and_renewal": "D’abord, les frais d’expédition %{discounted_shipping_price} %{prepaid_delivery_frequency} (%{discounted_cost_per_delivery}), puis %{shipping_price} %{billing_cycle}",
+          "shipping_price_included": "Pris en compte",
+          "recurring_order_shipping_price": "puis %{recurring_order_shipping_price}",
+          "first_order_shipping_price_included": "Première commande incluse, les suivantes %{recurring_order_shipping_price}",
+          "first_order_different_shipping_price": "%{first_order_shipping_price} (%{per_delivery_price} par livraison), puis %{recurring_order_shipping_price}",
+          "first_n_order_free": {
+            "other": "Les %{count} premières commandes gratuites",
+            "few": "Les %{count} premières commandes gratuites",
+            "many": "Les %{count} premières commandes gratuites"
+          },
+          "free_for_first_n_order": {
+            "other": "Pour les %{count} premières commandes",
+            "few": "Pour les %{count} premières commandes",
+            "many": "Pour les %{count} premières commandes"
+          },
+          "subscription_free_with_frequency_label": "Livraison gratuite %{delivery_frequency}",
+          "free_shipping_cycles": {
+            "one": "Livraison gratuite pour %{count} prochaine livraison",
+            "other": "Livraison gratuite pour %{count} prochaines livraisons",
+            "few": "Livraison gratuite pour %{count} prochaines livraisons",
+            "many": "Livraison gratuite pour %{count} prochaines livraisons"
+          },
+          "free_shipping_cycles_delivery_not_included": {
+            "one": "Livraison gratuite pour %{count} livraison",
+            "other": "Livraison gratuite pour %{count} livraisons",
+            "few": "Livraison gratuite pour %{count} livraisons",
+            "many": "Livraison gratuite pour %{count} livraisons"
+          },
+          "first_n_order_free_with_cycle": {
+            "one": "Livraison gratuite pour %{count} prochaine livraison, puis %{recurring_order_shipping_price}",
+            "other": "Livraison gratuite pour %{count} prochaines livraisons, puis %{recurring_order_shipping_price}",
+            "few": "Livraison gratuite pour %{count} prochaines livraisons, puis %{recurring_order_shipping_price}",
+            "many": "Livraison gratuite pour %{count} prochaines livraisons, puis %{recurring_order_shipping_price}"
+          },
+          "first_n_order_free_with_cycle_delivery_not_included": {
+            "one": "Livraison gratuite pour la livraison %{count}, puis %{recurring_order_shipping_price}",
+            "other": "Livraison gratuite pour %{count} livraisons, puis %{recurring_order_shipping_price}",
+            "few": "Livraison gratuite pour %{count} livraisons, puis %{recurring_order_shipping_price}",
+            "many": "Livraison gratuite pour %{count} livraisons, puis %{recurring_order_shipping_price}"
+          },
+          "max_cycles_base_shipping": {
+            "one": "Prochaine livraison %{count} pour %{shipping_price}",
+            "other": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}",
+            "few": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}",
+            "many": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}"
+          },
+          "max_cycles_base_shipping_delivery_not_included": {
+            "one": "Prochaine livraison %{count} pour %{shipping_price}",
+            "other": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}",
+            "few": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}",
+            "many": "Pour %{count} livraisons consécutives, le prix de chacune est de %{shipping_price}"
+          },
+          "prepaid_free_shipping_with_cycles": {
+            "one": "Livraison gratuite pendant les %{cycle} premiers, puis %{recurring_order_shipping_price}",
+            "other": "Livraison gratuite pendant les %{cycle} premiers, puis %{recurring_order_shipping_price}",
+            "few": "Livraison gratuite pendant les %{cycle} premiers, puis %{recurring_order_shipping_price}",
+            "many": "Livraison gratuite pendant les %{cycle} premiers, puis %{recurring_order_shipping_price}"
+          },
+          "prepaid_order_one_cycle": {
+            "one": "%{shipping_price} pour %{count} prochaine livraison",
+            "other": "%{shipping_price} pour %{count} livraisons supplémentaires (%{per_delivery_cost})",
+            "few": "%{shipping_price} pour %{count} livraisons supplémentaires (%{per_delivery_cost})",
+            "many": "%{shipping_price} pour %{count} livraisons supplémentaires (%{per_delivery_cost})"
+          },
+          "prepaid_order_one_cycle_delivery_not_included": {
+            "one": "%{shipping_price} pour %{count} livraisons",
+            "few": "%{shipping_price} pour %{count} livraisons (%{per_delivery_cost})"
+          },
+          "prepaid_order_no_cycle": {
+            "one": "%{shipping_price} pour %{count} prochaine livraison, puis %{recurring_order_shipping_price}",
+            "other": "%{shipping_price} pour %{count} livraisons suivantes (%{per_delivery_cost}), puis %{recurring_order_shipping_price}",
+            "few": "%{shipping_price} pour %{count} livraisons suivantes (%{per_delivery_cost}), puis %{recurring_order_shipping_price}",
+            "many": "%{shipping_price} pour %{count} livraisons suivantes (%{per_delivery_cost}), puis %{recurring_order_shipping_price}"
+          },
+          "prepaid_order_no_cycle_delivery_not_included": {
+            "one": "%{shipping_price} pour %{count} livraison, puis %{recurring_order_shipping_price}",
+            "other": "%{shipping_price} pour %{count} livraisons (%{per_delivery_cost}), puis %{recurring_order_shipping_price}",
+            "few": "%{shipping_price} pour %{count} livraisons (%{per_delivery_cost}), puis %{recurring_order_shipping_price}",
+            "many": "%{shipping_price} pour %{count} livraisons (%{per_delivery_cost}), puis %{recurring_order_shipping_price}"
+          }
+        },
+        "subscription_local_delivery": "Livraison locale pour les abonnements",
+        "subscription_pickup": "Réception en cas d’abonnement",
+        "split_shipping_shipped_by_shop": "Envoyé par %{shop_name}",
+        "split_shipping_option_free": "Livraison gratuite",
+        "third_party_address_timeout": "Impossible de charger les adresses. Réessayez ou utilisez une autre adresse.",
+        "third_party_address_error": "Une erreur s’est produite lors du chargement de la sélection d’adresse. Saisissez votre adresse manuellement ci-dessous.",
+        "split_shipping_shipment_count_notice_one_time_purchase": {
+          "one": "La commande arrivera dans %{count} envoi",
+          "other": "La commande arrivera en %{count} envois",
+          "few": "La commande arrivera en %{count} envois",
+          "many": "La commande arrivera en %{count} envois"
+        },
+        "waiting_on_rate_notice": "Récupération des tarifs d’expédition disponibles...",
+        "waiting_on_pickup_location_notice": "Téléchargement des lieux de retrait disponibles…",
+        "two_day_delivery": "Livraison sous 2 jours %{time}",
+        "unbranded_default_description": "Prêt à être expédié",
+        "third_party_payment_timeout": "Impossible de charger les modes de paiement. Réessayez ou utilisez un autre mode de paiement.",
+        "third_party_payment_error": "Une erreur s’est produite lors du chargement des options de paiement. Utilisez un autre mode de paiement.",
+        "unbranded_description_same_day": "Expédition le jour ouvrable même",
+        "unbranded_description_with_fulfillment_days": {
+          "one": "Expédition : le jour ouvré suivant",
+          "other": "Expédition sous %{count} jours ouvrés",
+          "few": "Expédition sous %{count} jours ouvrés",
+          "many": "Expédition sous %{count} jours ouvrés"
+        },
+        "unbranded_description_with_fulfillment_weeks": {
+          "one": "Expédition sous %{count} semaine",
+          "other": "Expédition sous %{count} semaines",
+          "few": "Expédition sous %{count} semaines",
+          "many": "Expédition sous %{count} semaines"
         }
       },
       "review": {
@@ -2400,6 +2550,114 @@
         "errors": {
           "interaction_required": "Une interaction avec l’extension est nécessaire pour effectuer l’achat."
         }
+      },
+      "shipping_errors": {
+        "shipping_method": "Les options d’expédition de votre commande ont changé. Vérifiez votre sélection.",
+        "shipping_method_not_available": "Votre panier a été mis à jour et les produits ajoutés ne peuvent pas être expédiés à votre adresse. Supprimez des articles pour finaliser votre commande.",
+        "shipping_method_not_available_generic": {
+          "one": "Votre commande ne peut pas être expédiée à l’adresse sélectionnée. Vérifiez que l’adresse est correcte et réessayez, ou choisissez une autre adresse.",
+          "other": "Certains articles de votre panier ne peuvent pas être expédiés à l’adresse indiquée. Vérifiez que l’adresse est correcte et réessayez, ou choisissez une autre adresse.",
+          "few": "Certains articles de votre panier ne peuvent pas être expédiés à l’adresse indiquée. Vérifiez que l’adresse est correcte et réessayez, ou choisissez une autre adresse.",
+          "many": "Certains articles de votre panier ne peuvent pas être expédiés à l’adresse indiquée. Vérifiez que l’adresse est correcte et réessayez, ou choisissez une autre adresse."
+        },
+        "shipping_method_not_available_updated": {
+          "one": "L’article que vous avez ajouté ne peut pas être expédié à votre adresse. Retirez-le pour finaliser votre achat ou contactez le magasin.",
+          "other": "L’article/Les articles que vous avez ajoutés ne peuvent pas être expédiés à votre adresse. Retirez-le(s) pour finaliser votre achat ou contactez la boutique.",
+          "few": "L’article/Les articles que vous avez ajoutés ne peuvent pas être expédiés à votre adresse. Retirez-le(s) pour finaliser votre achat ou contactez la boutique.",
+          "many": "L’article/Les articles que vous avez ajoutés ne peuvent pas être expédiés à votre adresse. Retirez-le(s) pour finaliser votre achat ou contactez la boutique."
+        },
+        "payment_method_not_supported": "Vous ne pouvez pas utiliser ce mode de paiement pour le pays : %{country}. Utilisez un autre mode de paiement pour une livraison dans ce pays.",
+        "empty_state": "Saisissez l’adresse de livraison pour afficher les modes de livraison disponibles.",
+        "shipping_method_not_available_due_to_unsatisfied_conditions": "Les produits dans le panier ne respectent pas les exigences de prix ou de poids et ne sont pas admissibles à la livraison. Mettez à jour le panier et réessayez.",
+        "title": "La livraison n’est pas disponible.",
+        "invalid_selected_address": "L’adresse de livraison sélectionnée est invalide.",
+        "invalid_selected_address_with_update_link": "L’adresse de livraison sélectionnée est invalide. %{update_address_link} ou choisissez une autre adresse.",
+        "unavailable_selected_address": "La livraison à l’adresse choisie n’est pas disponible",
+        "unavailable_selected_address_for_region": "La livraison n’est pas disponible dans la région {{region}}. Choisissez une autre adresse pour continuer.",
+        "unavailable_addresses_only_countries": "Votre commande peut uniquement être expédiée vers les pays suivants : {{countriesList}}. Ajoutez une nouvelle adresse pour continuer.",
+        "unavailable_address_country": "La livraison n’est pas disponible dans le pays sélectionné. Pour continuer, utilisez une autre adresse."
+      },
+      "shop_policies": {
+        "terms_of_service": "Conditions de prestation de services",
+        "legal_notice": "Mention légale",
+        "terms_of_sale": "Conditions de vente",
+        "purchase_options_policy": "Politique d’options d’achat",
+        "cookie_preferences": "Fichiers témoins",
+        "select_policy_label": "Choisissez une politique",
+        "terms_and_policies": "Conditions et politiques"
+      },
+      "shop_pay_external": {
+        "errors": {
+          "problem_loading": "Un problème est survenu lors du chargement de Shop Pay.",
+          "checkout_has_expired": "Votre session d’achat a expiré. Fermez cette fenêtre et réessayez de finaliser votre achat sur {{shopName}}."
+        },
+        "return_to_store": "Retour à {{shopName}}",
+        "return_to_store_simple": "Retourner à la boutique",
+        "title": "Paiement avec Shop Pay"
+      },
+      "split_delivery": {
+        "delivery_method": "Méthode de livraison fractionnée",
+        "delivery_method_menu": "Menu de la méthode de livraison fractionnée",
+        "inventory_issue_banner": {
+          "heading": {
+            "cannot_be_picked_up": {
+              "few": "Impossible de récupérer %{count} articles"
+            }
+          }
+        },
+        "cross_border": {
+          "modal": {
+            "content": "Les lieux de retrait et d’expédition doivent se trouver dans le même pays. Changer de pays réinitialisera tous les articles à expédier.",
+            "change_country": "Change country"
+          },
+          "banner": "Le mode de livraison a été mis à jour."
+        },
+        "accessibility": {
+          "status": {
+            "pickup_in_store": "%{items} seront récupérés en magasin.",
+            "remove_items": "%{items} ont été supprimés du panier."
+          }
+        }
+      },
+      "shop_wallet": {
+        "title": "Portefeuille Shop Pay",
+        "loading": "Chargement du portefeuille Shop Pay…",
+        "retry": "Réessayez",
+        "choose_again": "Sélectionner à nouveau",
+        "payment_method": {
+          "heading": "Mode de paiement",
+          "accessibility_label": "{{brand}} avec le suffixe {{lastDigits}}"
+        },
+        "confirm": {
+          "success_title": "Choix confirmé",
+          "success_message": "Les données sélectionnées du portefeuille sont prêtes. Ce prototype ne les renvoie pas encore à l’application partenaire.",
+          "retryable_error_title": "La sélection n’a pas été partagée.",
+          "retryable_error_message": "Réessayez de confirmer le choix du portefeuille.",
+          "terminal_error_title": "Connexion au portefeuille terminée",
+          "terminal_error_message": "Revenez et ouvrez à nouveau Shop Pay."
+        },
+        "cancelled": {
+          "message": "Les données du portefeuille n’ont pas été communiquées et aucun achat n’a été effectué."
+        },
+        "empty": {
+          "message": "Aucune carte n’est enregistrée dans ce portefeuille Shop Pay."
+        },
+        "ineligible": {
+          "title": "Absence de cartes adaptées"
+        },
+        "expired": {
+          "title": "Votre session de portefeuille a expiré",
+          "message": "Retournez à l’application partenaire et recommencez votre achat."
+        },
+        "revoked": {
+          "title": "La connexion au service Shop Pay a été interrompue",
+          "message": "Avant de continuer, reconnectez Shop Pay dans l’application partenaire."
+        },
+        "error": {
+          "title": "Impossible de charger le portefeuille Shop Pay",
+          "message": "Retournez à Hatch et réessayez d’ouvrir Shop Pay."
+        },
+        "ready_status": "Votre portefeuille Shop Pay est prêt. Choisissez un mode de paiement."
       }
     },
     "attributes": {
