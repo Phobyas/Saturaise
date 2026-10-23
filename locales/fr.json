@@ -2097,7 +2097,18 @@
         "continue_to_payment_gateway_button_label_error": "Mettez à jour les informations de paiement",
         "redirecting_to_bank": "Redirection vers {{bank}}",
         "modal_notice": "Nous vous contactons au sujet de {{paymentMethod}}.",
-        "remote_shops_payments_processing": "Traitement des paiements"
+        "remote_shops_payments_processing": "Traitement des paiements",
+        "your_order_has_been_received_title": "Merci d’avoir passé commande.",
+        "you_will_receive_confirmation": "Nous recevons actuellement beaucoup de commandes. Vous recevrez bientôt une confirmation par e-mail ou SMS. Si vous ne la recevez pas dans l’heure qui suit, veuillez nous en informer.",
+        "wait": {
+          "long": "Vous recevrez un e-mail immédiatement après le traitement de votre commande. Nous avons actuellement beaucoup de commandes.",
+          "medium": {
+            "one": "Votre commande est en cours de traitement. Temps d’attente estimé : %{count} minute.",
+            "other": "Votre commande est en cours de traitement. Temps d’attente estimé : %{count} minute(s).",
+            "few": "Votre commande est en cours de traitement. Temps d’attente estimé : %{count} minute(s).",
+            "many": "Votre commande est en cours de traitement. Temps d’attente estimé : %{count} minute(s)."
+          }
+        }
       },
       "payment_gateway": {
         "bank_deposit_label": "Versement sur le compte",
@@ -2187,6 +2198,207 @@
           "other": "Aucun point de retrait n’est disponible pour ces produits.",
           "few": "Aucun point de retrait n’est disponible pour ces produits.",
           "many": "Aucun point de retrait n’est disponible pour ces produits."
+        }
+      },
+      "shipping": {
+        "add_address": "Utilisez une autre adresse",
+        "add_delivery_instructions": "Ajouter des instructions de livraison",
+        "address_delete": "Supprime l’adresse",
+        "address_confirm": "Voulez-vous vraiment supprimer cette adresse de votre compte ?",
+        "address_form": {
+          "generic_error": "Un problème est survenu lors de l’enregistrement de l’adresse. Réessayez.",
+          "save": "Enregistrez",
+          "one_time_address_subtitle": "Utilisez une adresse à usage unique pour cette commande."
+        },
+        "no_rates_for_cart_or_destination_notice": "Aucune méthode d’expédition n’est disponible pour votre panier ou votre adresse.",
+        "no_pickup_location_notice": "Au moins un de vos produits n’est pas disponible pour le retrait.",
+        "no_rates_for_country_notice": "Aucun tarif d’expédition n’a été trouvé pour cette adresse.",
+        "no_rates_contact_notice": "Contactez-nous pour obtenir plus d’informations",
+        "cheapest_rate_label": "Les moins chers",
+        "estimated_delivery_date_range": "de %{minimum} à %{maximum} jours ouvrables",
+        "shipping_line_phone_label": "Numéro de téléphone portable (obligatoire)",
+        "shipping_line_phone": "Le coursier peut utiliser ce numéro pour vous contacter.",
+        "optional_shipping_line_delivery_instructions_label": "Instructions de livraison (facultatif)",
+        "estimated_delivery_date": {
+          "one": "%{count} jour ouvré",
+          "other": "Nombre de jours ouvrés : %{count}",
+          "few": "Nombre de jours ouvrés : %{count}",
+          "many": "Nombre de jours ouvrés : %{count}"
+        },
+        "other_method": {
+          "zero": "Aucune autre méthode disponible",
+          "one": "%{count} autre méthode disponible dans",
+          "other": "Nombre d’autres méthodes disponibles : %{count} – de",
+          "few": "Nombre d’autres méthodes disponibles : %{count} – de",
+          "many": "Nombre d’autres méthodes disponibles : %{count} – de"
+        },
+        "shipping_line_delivery_phone": "Nous pouvons vous contacter pour vous tenir informé du statut de la livraison.",
+        "shipping_line_delivery_phone_label": "Numéro de téléphone portable",
+        "shipping_line_delivery_instructions": "Saisissez les informations nécessaires, comme les codes d’accès aux portes ou les instructions pour envoyer des colis.",
+        "one_time_purchase_shipping": "Envoi unique",
+        "estimated_delivery_time": "Délai de livraison estimé : %{time}",
+        "estimated_delivery_time_range": "Délai de livraison prévu : %{min_time}–%{max_time}",
+        "arrives_time": "Arrivée %{time}",
+        "arrives_time_range": "Arrivée entre %{min_time} et %{max_time}",
+        "estimated_time": "Délai de livraison estimé : %{time}",
+        "estimated_time_range": "Délai de livraison prévu : %{min_time}–%{max_time}",
+        "duties_and_taxes_title": "Droits de douane et taxes",
+        "shipping_information_required_notice": "Les informations d’expédition sont requises. {{link}}.",
+        "loading_progressive_rates": "Recherche de tarifs supplémentaires...",
+        "no_other_methods_available": "Aucune autre méthode disponible",
+        "duties_and_taxes_options": {
+          "ddu_title": "Payez à la livraison",
+          "ddu_caption": "Des frais supplémentaires peuvent s’appliquer.",
+          "ddp_title": "Payez maintenant",
+          "ddp_caption": "Aucun frais supplémentaire à la réception"
+        },
+        "shipping_used_as_billing_notice": "Il sera également utilisé comme adresse de facturation pour cette commande.",
+        "address_update": "Mettez à jour l’adresse",
+        "shipping_address_title": "Envoyez à",
+        "different_shipping_method_summary": "Saisissez une autre adresse de livraison pour afficher les modes de livraison disponibles.",
+        "invalid_shipping_method_summary": "Saisissez une adresse de livraison valide pour voir les modes de livraison disponibles.",
+        "method_summary": {
+          "incomplete_address_entered": "Saisissez l’adresse de livraison complète pour afficher les modes de livraison disponibles",
+          "incomplete_address_selected": "Sélectionnez une adresse de livraison complète pour afficher les modes de livraison disponibles."
+        },
+        "local_pickup": {
+          "search_address": "Rechercher une adresse",
+          "rollup_title": "Lieu de retrait",
+          "rollup_accessibility_label": "Options de lieu de retrait"
+        },
+        "missing_shipping_address": "Aucune adresse de livraison",
+        "shipping_method_first_shipment_group_title": {
+          "other": "Premières expéditions",
+          "few": "Premières expéditions",
+          "many": "Premières expéditions"
+        },
+        "shipping_method_recurring_shipments_group_title": {
+          "one": "Expédition périodique",
+          "other": "Envois périodiques",
+          "few": "Envois périodiques",
+          "many": "Envois périodiques"
+        },
+        "split_shipping_merchandise_quantity_label_standard": "%{quantity} articles",
+        "split_shipping_merchandise_quantity_label_additional": "+%{quantity} de plus",
+        "split_shipping_merchandise_shipment_number": "Envoi %{number} sur %{total}",
+        "pre_order_ships_now": "Envoyer maintenant",
+        "pre_order_ships_later": "Il envoie plus tard",
+        "pre_order_ships_date": "Envoie %{date}",
+        "split_shipping_multiple_shipment_quantity_label": "%{quantity} colis",
+        "split_shipping_multiple_shipment_notice": "La commande sera livrée en plusieurs colis.",
+        "split_shipping_multiple_shipment_notice_one_time_purchase": "La commande sera livrée en %{quantity} colis.",
+        "split_shipping_more_shipping_options": "Plus d’options de livraison",
+        "split_shipping_option_custom": "Personnalisé",
+        "default_description": "Expédition sous 1 jour ouvré",
+        "prime_not_available": {
+          "default": "La livraison Prime n’est pas disponible pour votre commande. Les options d’expédition ont été mises à jour."
+        },
+        "split_shipping_first_shipment_notice": "Votre première commande sera livrée en %{quantity_shipments}",
+        "shipping_method_rollup_accessibility_label": "Options du mode de livraison",
+        "shipping_address_rollup_accessibility_label": "Options d’adresse de livraison",
+        "invalid_shipping_method_summary_selected": "Choisissez une autre adresse de livraison pour afficher les modes de livraison disponibles.",
+        "choose_new_address": "Choisissez une nouvelle adresse",
+        "includes_recurring_items": "Contient des articles récurrents",
+        "split_shipping_arrives_in_shipments": {
+          "one": "Arrivera avec %{count} expédition",
+          "other": "Arrivera en %{count} envois",
+          "few": "Arrivera en %{count} envois",
+          "many": "Arrivera en %{count} envois"
+        }
+      },
+      "review": {
+        "title": "Vérifiez",
+        "review_title": "Finalisez votre commande",
+        "checkout_as_guest": "Effectuez votre achat en tant qu’invité",
+        "blocks": {
+          "billing_address_title": "Décompte",
+          "shipping_address_title": "Destinataire de la livraison",
+          "payment_method_title": "Mode de paiement",
+          "change_contact_method_link_label": "Modifier les coordonnées de contact",
+          "change_shipping_method_link_label": "Modifier le mode de livraison",
+          "pick_up_in_store_shipping_method_html": "Retrait en magasin · %{location_name}",
+          "purchase_order_number_title": "Numéro de commande",
+          "change_purchase_order_number_label": "Modifier le numéro de commande",
+          "change_delivery_method_link_label": "Changez le mode de livraison",
+          "no_purchase_order_number": "(Aucun numéro de commande)",
+          "no_purchase_order_number_long": "Aucun numéro de commande",
+          "due_after_order_reviewed_html": "À régler après vérification de la commande",
+          "review_title_free_order": "Vérifiez et finalisez votre commande",
+          "company_location": "Localisation de l’entreprise",
+          "change_company_location_link_label": "Modifiez l’emplacement de l’entreprise",
+          "pickup_items_at": {
+            "one": "Récupération de %{count} articles à",
+            "other": "Récupération de %{count} articles à",
+            "few": "Récupération de %{count} articles à",
+            "many": "Récupération de %{count} articles à"
+          },
+          "ship_items_to": {
+            "one": "Expédition de %{count} articles vers",
+            "other": "Expédition de %{count} articles vers",
+            "few": "Expédition de %{count} articles vers",
+            "many": "Expédition de %{count} articles vers"
+          }
+        },
+        "block_title": "Vérifiez vos données",
+        "checkout_a_different_way": "Effectuez l’achat autrement.",
+        "review_and_confirm_title": "Vérifiez et confirmez"
+      },
+      "session_errors": {
+        "session_not_unique": "Un problème est survenu lors du traitement de la commande. Actualisez cette page pour retourner à la boutique.",
+        "session_already_finished": "La commande a déjà été envoyée. Vous pouvez retourner à la boutique pour commencer une nouvelle commande."
+      },
+      "review_address_modal": {
+        "title": "Vérifiez l’adresse",
+        "subtitle": {
+          "one": "Cette commande sera expédiée à l’adresse indiquée par {{merchant}}.",
+          "other": "Cette commande sera envoyée à l’adresse indiquée par {{merchant}}. Choisissez une adresse de livraison.",
+          "few": "Cette commande sera envoyée à l’adresse indiquée par {{merchant}}. Choisissez une adresse de livraison.",
+          "many": "Cette commande sera envoyée à l’adresse indiquée par {{merchant}}. Choisissez une adresse de livraison."
+        },
+        "subtitle_no_match": "Cette adresse ne correspond à aucune de vos adresses enregistrées.",
+        "continue": "Utilisez cette adresse pour continuer",
+        "use_saved_address": "Utilisez une autre adresse",
+        "return_to_cart": "Retourner au panier"
+      },
+      "redeemable_errors": {
+        "gift_card": {
+          "duplicate": "Cette carte-cadeau a déjà été appliquée à votre commande.",
+          "insufficient_funds": "Il ne reste plus de crédit sur cette carte-cadeau.",
+          "expired": "La carte cadeau a expiré",
+          "not_available": "Cette carte cadeau n’est plus disponible.",
+          "invalid": "Saisissez une carte-cadeau importante",
+          "currency_mismatch": "Seules les cartes cadeaux en %{shop_currency} sont acceptées.",
+          "generic": "Impossible d’ajouter une carte cadeau à la page de paiement",
+          "throttle_limit_exceeded": "Le nombre maximal de tentatives a été dépassé. Veuillez réessayer plus tard.",
+          "no_longer_available": "La carte-cadeau ne peut plus être utilisée lors de cette commande."
+        }
+      },
+      "remote": {
+        "errors": {
+          "currency_mismatch": "Cet article ne peut pas être ajouté au panier, car il provient d’une boutique qui utilise une autre devise.",
+          "max_remote_shops_exceeded": "Impossible d’ajouter ce produit, car votre panier contient déjà le nombre maximal de produits provenant d’autres boutiques.",
+          "currency_mismatch_removal": "L’article a été retiré du panier, car il provient d’une boutique qui utilise une autre devise.",
+          "only_remote_merchandise_lines": "La finalisation de l’achat ne concerne que les produits vendus à distance. Pour finaliser l’achat, vous devez être redirigé vers la boutique en ligne."
+        }
+      },
+      "remote_merchandise_only": {
+        "title": "Effectuer un achat",
+        "remote_only_notice": "Ces articles sont vendus et expédiés par d’autres boutiques. Pour finaliser votre achat, effectuez vos achats dans chaque boutique.",
+        "checkout_on_shop_label": "Effectuez votre achat chez %{shop_name}",
+        "single_shop_transition": "Redirection vers %{advertiser} pour finaliser l’achat.",
+        "detail_item_label": {
+          "one": "{{count}} élément",
+          "other": "{{count}} articles",
+          "few": "{{count}} articles",
+          "many": "{{count}} articles"
+        }
+      },
+      "remote_policies": {
+        "unavailable_policy": "Aucune politique (%{policy_name}) n’a été fournie pour cette boutique. Pour obtenir plus d’informations, contactez directement la boutique %{shop_name}."
+      },
+      "required_extensions": {
+        "errors": {
+          "interaction_required": "Une interaction avec l’extension est nécessaire pour effectuer l’achat."
         }
       }
     },
