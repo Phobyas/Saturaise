@@ -735,7 +735,60 @@
           }
         },
         "delivery_address_code_contains_emojis": "Le code d’adresse ne peut pas contenir d’émojis.",
-        "delivery_address_code_contains_html_tags": "Le code postal ne peut pas contenir de balises HTML."
+        "delivery_address_code_contains_html_tags": "Le code postal ne peut pas contenir de balises HTML.",
+        "handle_phone_invalid": "Saisissez un numéro de téléphone valide",
+        "handle_email_invalid": "Saisissez une adresse e-mail valide",
+        "email_invalid": "Saisissez une adresse e-mail valide",
+        "email_or_phone_invalid": "Saisissez une adresse e-mail ou un numéro de téléphone portable valide.",
+        "delivery_line_detail_changed": "Certaines informations de livraison ont peut-être changé. Vérifiez votre mode d’expédition et réessayez.",
+        "reduction_code_code_not_found": "Saisissez un code de réduction valide ou une carte-cadeau",
+        "reduction_code_discount_not_found": "Saisissez un code de réduction valide",
+        "reduction_code_gift_card_code_invalid": "Saisissez une carte-cadeau importante",
+        "reduction_code_gift_card_unusable": "Une carte cadeau ne peut pas être utilisée pour acheter une autre carte cadeau.",
+        "shipping_line_phone_blank": "Saisissez un numéro de téléphone pour utiliser cette méthode de livraison.",
+        "shipping_line_phone_invalid": "Saisissez un numéro de téléphone valide",
+        "gift_card_already_applied": "Cette carte-cadeau a déjà été appliquée à votre commande.",
+        "gift_card_disabled": "Cette carte cadeau n’est plus disponible.",
+        "gift_card_expired": "La carte cadeau a expiré",
+        "gift_card_depleted": "Il ne reste plus de crédit sur cette carte-cadeau.",
+        "gift_card_currency_mismatch": "Pour cette commande, seules les cartes-cadeaux en %{checkout_currency} peuvent être utilisées.",
+        "payment_gateway_needs_paid_plan_error": "Ce mode de paiement n’est actuellement pas disponible dans la boutique.",
+        "payment_gateway_incompatible_with_multi_currency": "Pour effectuer cet achat dans votre devise locale, vous devez payer par carte de crédit.",
+        "physical_gift_card_invalid_quantity": "Le nombre d’articles de cartes-cadeaux physiques doit correspondre au nombre de codes de cartes-cadeaux.",
+        "physical_gift_card_duplicate_code": "L’article de la carte-cadeau physique contient un code dupliqué.",
+        "physical_gift_card_invalid_code": "Le code de la carte-cadeau physique est incorrect.",
+        "payment_gateway_not_in_test_mode": "n’est pas configuré pour tester les commandes. Cette boutique ne peut pas accepter de vraies commandes ni de vrais paiements.",
+        "tips_invalid_tip_amount": "Saisissez un pourboire inférieur à %{amount}",
+        "payment_gateway_unsupported_for_subscriptions": "Ce mode de paiement n’est actuellement pas disponible pour les commandes par abonnement.",
+        "gift_cards_not_supported_with_deferred_purchase_options": "Les cartes-cadeaux ne sont pas prises en charge pour les options d’achat avec paiement différé.",
+        "gift_card_buying_gift_card": "Une carte cadeau ne peut pas être utilisée pour acheter une autre carte cadeau.",
+        "payment_gateway_unsupported_for_country": "Ce mode de paiement n’est actuellement pas disponible pour votre pays de livraison.",
+        "purchase_options_agreement_blank": "Pour poursuivre votre achat, vous devez accepter les conditions d’achat avec paiement différé ou d’achat récurrent.",
+        "payment_gateway_unsupported_for_deferred_purchase_options": "Ce mode de paiement n’est pas disponible pour les achats avec paiement différé.",
+        "reduction_code_gift_cards_not_supported_with_deferred_purchase_options": "Les cartes-cadeaux ne sont pas prises en charge pour les options d’achat avec paiement différé.",
+        "delivery_zone_not_found": "La zone spécifiée est introuvable dans le pays spécifié.",
+        "payment_gateway_unsupported_for_development_store_html": "Pour passer une commande test, vous devez utiliser la passerelle de paiement de test. En savoir plus sur les <a href=\"%{docs_link}\">tests de commandes dans les boutiques en développement</a>.",
+        "payment_gateway_unsupported_for_order_above_maximum_orders_html": "La limite de commandes a été atteinte dans la boutique en phase de développement de ce prestataire de paiement. Pour passer une autre commande, vous devez utiliser une passerelle de paiement de test. En savoir plus sur <a href=\"%{docs_link}\">les tests de commandes dans les boutiques en phase de développement</a>.",
+        "email_blank": "Saisissez votre adresse e-mail",
+        "phone_blank": "Saisissez le numéro de téléphone",
+        "gift_card_invalid": "La carte-cadeau «••••%{last_four_characters}» a expiré.",
+        "vaulting_agreement_blank": "Votre mode de paiement doit être enregistré, car l’échéance de cette commande est ultérieure.",
+        "sms_marketing_phone_invalid": "Saisissez un numéro de téléphone valide",
+        "payment_gateway_missing": "Choisissez un mode de paiement.",
+        "split_cart_international_shipping_not_supported": "Pour tous les articles, la même méthode de livraison doit être utilisée pour les envois internationaux. Modifiez la méthode de livraison ou créez plusieurs commandes.",
+        "split_quantity_per_delivery_line_not_allowed": "Au moins une ligne de produits est associée à plusieurs lignes de livraison.",
+        "split_cart_tax_engine_not_supported": "Tous les articles doivent utiliser la même méthode de livraison pour le mécanisme fiscal utilisé par l’emplacement du magasin.",
+        "split_cart_not_allowed": "Session invalide ou fonctionnalité non activée pour cette boutique.",
+        "invalid_delivery_address_reference_handle": "Impossible de faire correspondre l’identifiant de l’adresse de livraison à aucune adresse de livraison disponible.",
+        "must_use_available_delivery_address": "L’adresse de livraison doit être choisie parmi les adresses de livraison disponibles.",
+        "must_use_available_shipping_rate": "Le tarif d’expédition doit être choisi parmi les tarifs d’expédition disponibles.",
+        "shipping_method_invalid_phone_number": "Mettez à jour le numéro de téléphone de l’adresse de livraison pour voir les modes d’expédition disponibles.",
+        "split_by_delivery_method_not_allowed": "La répartition par méthode de livraison n’est pas disponible pour cette session ou cette boutique.",
+        "split_by_delivery_method_unsupported_method_type": "Une tentative de répartition selon la méthode de livraison a été effectuée à l’aide d’un type de méthode de livraison non pris en charge.",
+        "split_by_delivery_method_requires_merchandise_from_single_location": "La répartition selon le mode de livraison exige que les différents articles soient expédiés depuis un seul et même lieu.",
+        "gift_card_not_found": "Cette carte cadeau est introuvable.",
+        "delivery_address_code_too_long": "Le code d’adresse est trop long (maximum %{count} caractères)",
+        "delivery_address_code_contains_mathematical_symbols": "Le code d’adresse ne peut pas contenir de symboles mathématiques."
       },
       "failed_payment": {
         "page_title": "Le traitement du paiement était impossible.",
@@ -794,6 +847,38 @@
         "header": {
           "review_order": "Vérifiez votre commande"
         }
+      },
+      "general": {
+        "complete_purchase_button_label": "Je commande et je paie",
+        "authenticate_purchase_button_label": "Authentifiez le paiement",
+        "continue_to_shipping_method": "Passer à l’expédition",
+        "continue_to_payment_method": "Passer au paiement",
+        "back_to_cart": "Retourner au panier",
+        "back_to_payment_method": "Revenir au paiement",
+        "choose_shipping_method": "Choisissez un mode de livraison",
+        "choose_payment_method": "Choisissez un mode de paiement",
+        "choose_billing_address": "Sélectionnez une adresse de facturation",
+        "contact_us_html": "Contactez-nous pour obtenir plus d’informations",
+        "autocomplete_title": "Suggestion",
+        "autocomplete_single_item": "1 article disponible",
+        "autocomplete_multi_item": "Nombre d’articles disponibles : {{number}}",
+        "checkout_context": {
+          "step_one": "%{shop_name} - finalisation de l’achat"
+        },
+        "continue_to_payment_plans_button_label": "Accéder aux plans de paiement",
+        "choose_delivery_strategy": "Choisissez le mode de livraison",
+        "autocomplete_powered_by_google": "Technologie {{brandName}}",
+        "dates": {
+          "months": {
+            "november": "novembre"
+          }
+        },
+        "datepicker": {
+          "range_start": "Début de la plage",
+          "in_range": "W portée",
+          "range_end": "Fin de la plage"
+        },
+        "confirm_order_button_label": "Confirmez la commande"
       }
     },
     "attributes": {
