@@ -2658,6 +2658,149 @@
           "message": "Retournez à Hatch et réessayez d’ouvrir Shop Pay."
         },
         "ready_status": "Votre portefeuille Shop Pay est prêt. Choisissez un mode de paiement."
+      },
+      "stock": {
+        "unpurchasable_product": {
+          "title": "Produit indisponible à l’achat",
+          "header": "Certains articles ont été supprimés du panier."
+        },
+        "unpurchasable_product_generic": {
+          "title": "Produit indisponible à l’achat",
+          "header": "Certains articles ont été supprimés du panier."
+        },
+        "unshippable_product": {
+          "title": "Livraison impossible",
+          "header": {
+            "one": "Livraison impossible pour %{count} articles",
+            "other": "Livraison impossible pour %{count} articles",
+            "few": "Livraison impossible pour %{count} articles",
+            "many": "Livraison impossible pour %{count} articles"
+          },
+          "message": {
+            "one": "Cet article sera retiré du panier, car aucune méthode de livraison n’est disponible pour votre adresse.",
+            "other": "Ces articles seront retirés du panier, car aucun mode de livraison n’est disponible pour votre adresse.",
+            "few": "Ces articles seront retirés du panier, car aucun mode de livraison n’est disponible pour votre adresse.",
+            "many": "Ces articles seront retirés du panier, car aucun mode de livraison n’est disponible pour votre adresse."
+          },
+          "status_column_header": "Absence de livraison"
+        }
+      },
+      "subscriptions": {
+        "recurring_totals": "%{total_price} par %{interval}",
+        "recurring_totals_with_policies": {
+          "first_cycles": {
+            "one": "Premier paiement %{total_price}",
+            "other": "Les %{count} premiers paiements de %{total_price} chacun",
+            "few": "Les %{count} premiers paiements de %{total_price} chacun",
+            "many": "Les %{count} premiers paiements de %{total_price} chacun"
+          },
+          "following_cycles": "puis %{total_price} tous les %{interval}"
+        },
+        "recurring_total_intervals": {
+          "day": {
+            "other": "%{count} jours",
+            "few": "%{count} jours",
+            "many": "%{count} jours"
+          },
+          "week": {
+            "other": "%{count} semaines",
+            "few": "%{count} semaines",
+            "many": "%{count} semaines"
+          },
+          "month": {
+            "other": "%{count} mois",
+            "few": "%{count} mois",
+            "many": "%{count} mois"
+          },
+          "year": {
+            "one": "jupe",
+            "other": "%{count} large(-a)",
+            "few": "%{count} large(-a)",
+            "many": "%{count} large(-a)"
+          }
+        },
+        "recurring_totals_with_initial_order_shipping_discount": "Paiement initial de %{total_price_with_discount}, puis %{recurring_total}",
+        "recurring_totals_with_initial_order_shipping_discount_with_policies": {
+          "first_cycles": {
+            "one": ", puis %{count} paiement de %{total_price}",
+            "other": ", puis %{count} paiements de %{total_price}",
+            "few": ", puis %{count} paiements de %{total_price}",
+            "many": ", puis %{count} paiements de %{total_price}"
+          }
+        }
+      },
+      "taxes": {
+        "tax_details": "Informations supplémentaires sur les taxes",
+        "vat_number": {
+          "field": {
+            "label": "Numéro d’identification à la TVA (facultatif)",
+            "tooltip": "Vérifie le numéro d’identification à la TVA et applique automatiquement l’autoliquidation aux commandes admissibles."
+          },
+          "add": "Ajoutez le numéro d’identification à la TVA",
+          "badge": "Numéro d’identification à la TVA : %{number}",
+          "domestic_order": "L’exonération de l’autoliquidation s’applique uniquement aux commandes transfrontalières au sein de l’UE. Pour les commandes locales, la TVA standard est appliquée.",
+          "status": {
+            "invalid_format": {
+              "at": "Les numéros d’identification à la TVA en Autriche contiennent le préfixe AT et 9 caractères.",
+              "be": "Les numéros d’identification à la TVA en Belgique contiennent le préfixe BE et 10 caractères",
+              "bg": "Les numéros d’identification à la TVA en Bulgarie comportent le préfixe BG suivi de 9 à 10 caractères.",
+              "hr": "Les numéros d’identification fiscale à la TVA en Croatie comportent le préfixe HR et 11 caractères.",
+              "cy": "Les numéros d’identification à la TVA à Chypre comportent le préfixe CY et 9 caractères",
+              "cz": "Les numéros d’identification à la TVA en Tchéquie comportent le préfixe CZ et 8 à 10 caractères.",
+              "dk": "Les numéros d’identification à la TVA au Danemark contiennent le préfixe DK et 8 caractères.",
+              "ee": "Les numéros d’identification à la TVA en Estonie comprennent le préfixe EE et 9 caractères.",
+              "fi": "Les numéros d’identification à la TVA en Finlande contiennent le préfixe FI et 8 caractères",
+              "fr": "Les numéros d’identification fiscale à la TVA en France comportent le préfixe FR suivi de 11 caractères.",
+              "de": "Les numéros d’identification à la TVA en Allemagne comportent le préfixe DE suivi de 9 caractères.",
+              "gr": "Les numéros d’identification fiscale à la TVA en Grèce comportent le préfixe EL suivi de 9 caractères.",
+              "hu": "Les numéros d’identification à la TVA en Hongrie comportent le préfixe HU suivi de 8 caractères.",
+              "ie": "Les numéros d’identification à la TVA en Irlande comportent le préfixe IE et 8 à 9 caractères.",
+              "it": "Les numéros d’identification à la TVA en Italie comportent le préfixe IT suivi de 11 caractères.",
+              "lv": "Les numéros d’identification à la TVA en Lettonie contiennent le préfixe LV et 11 caractères.",
+              "lt": "Les numéros d’identification à la TVA en Lituanie commencent par le préfixe LT et comportent de 9 à 12 caractères.",
+              "lu": "Les numéros d’identification à la TVA au Luxembourg comportent le préfixe LU et 8 caractères.",
+              "mt": "Les numéros d’identification à la TVA à Malte contiennent le préfixe MT et 8 caractères.",
+              "nl": "Les numéros d’identification à la TVA aux Pays-Bas comprennent le préfixe NL et 12 caractères.",
+              "pl": "Les numéros d’identification fiscale à la TVA en Pologne comportent le préfixe PL et 10 chiffres.",
+              "pt": "Les numéros d’identification fiscale à la TVA au Portugal comportent le préfixe PT et 9 caractères",
+              "ro": "Les numéros d’identification à la TVA en Roumanie comportent le préfixe RO et 10 caractères.",
+              "sk": "Les numéros d’identification à la TVA en Slovaquie comportent le préfixe SK suivi de 10 caractères",
+              "si": "Les numéros d’identification TVA en Slovénie contiennent le préfixe SI suivi de 8 caractères.",
+              "es": "Les numéros d’identification à la TVA en Espagne comprennent le préfixe ES et 9 caractères.",
+              "se": "Les numéros d’identification fiscale à la TVA en Suède contiennent le préfixe SE et 12 caractères.",
+              "gb": "Les numéros d’identification à la TVA au Royaume-Uni comportent le préfixe GB ou XI suivi de 5 à 12 caractères."
+            },
+            "invalid_number": {
+              "at": "Saisissez un numéro d’identification à la TVA valide pour l’Autriche.",
+              "be": "Saisissez un numéro de TVA belge valide.",
+              "bg": "Saisissez un numéro d’identification à la TVA valide pour la Bulgarie.",
+              "cy": "Saisissez un numéro d’identification TVA chypriote valide.",
+              "cz": "Saisissez un numéro d’identification à la TVA valide pour la Tchéquie.",
+              "dk": "Saisissez un numéro d’identification à la TVA valide pour le Danemark.",
+              "ee": "Saisissez un numéro d’identification à la TVA valide pour l’Estonie.",
+              "fi": "Saisissez un numéro d’identification TVA valide pour la Finlande.",
+              "fr": "Saisissez un numéro de TVA valide pour la France.",
+              "de": "Saisissez un numéro d’identification à la TVA valide pour l’Allemagne.",
+              "es": "Saisissez un numéro d’identification à la TVA valide pour l’Espagne."
+            }
+          },
+          "accessibility": {
+            "status": {
+              "validating": "Vérification du numéro d’identification à la TVA en cours.",
+              "valid": "Le numéro d’identification à la TVA est valide.",
+              "applied": "Une exonération de TVA a été appliquée.",
+              "domestic": "Aucune exonération de TVA n’a été appliquée.",
+              "invalid_number": "L’application de l’exonération de TVA a échoué.",
+              "service_unavailable": "Impossible de vérifier l’exonération de TVA",
+              "service_error": "Impossible de vérifier l’exonération de TVA"
+            }
+          }
+        }
+      },
+      "tax": {
+        "attribution": {
+          "orders_sold_by_shop_marketplace": "Commandes vendues par la plateforme commerciale Shop"
+        }
       }
     },
     "attributes": {
