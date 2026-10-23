@@ -1673,7 +1673,226 @@
         "bank_account_generic_error": "Impossible d’ajouter le compte bancaire. Réessayez plus tard.",
         "add_payment_method": "Ajouter un mode de paiement",
         "add_new_payment_method": "Ajoutez un nouveau mode de paiement",
-        "bank_payment_method_label": "Méthode de paiement bancaire"
+        "bank_payment_method_label": "Méthode de paiement bancaire",
+        "discount_button_action_label": "Appliquez le code de réduction",
+        "detected_card_brand": "Marque de carte détectée : {brand}",
+        "card_expiry_label": "Date d’expiration (MM / AA)",
+        "card_expiry_placeholder": "Date d’expiration (MM / AA)",
+        "card_verification_value_label": "Code de vérification",
+        "card_verification_value_placeholder": "Code de vérification",
+        "card_expiry_date_explanation": "Date d’expiration de la carte au format : mois, mois, année, année",
+        "card_verification_value_explanation": "Code de vérification à 3 chiffres généralement situé au dos de la carte. Les cartes American Express ont un code à 4 chiffres situé à l’avant.",
+        "card_verification_value_explanation_amex": "Code de vérification à 4 chiffres au recto de la carte",
+        "card_verification_value_explanation_other": "code de vérification à 3 chiffres au verso de la carte",
+        "card_start_label": "Date de sortie (MM / AA)",
+        "card_start_placeholder": "Date de sortie (MM / AA)",
+        "card_issue_number_label": "Numéro de l’édition",
+        "card_issue_number_placeholder": "Numéro de l’édition",
+        "different_billing_address_label": "Utilisez une autre adresse de facturation",
+        "card_fields_container_prefix": "Conteneur de champ pour :",
+        "card_fields_processing_error": "Un problème est survenu lors du traitement du paiement. Essayez d’actualiser cette page ou vérifiez votre connexion Internet.",
+        "card_information_notice": "Toutes les transactions sont sécurisées et chiffrées. Les informations relatives à la carte de crédit ne sont jamais enregistrées.",
+        "credit_card_start_month": "Mois de début",
+        "credit_card_start_year": "Année de début",
+        "billing_address_not_supported_for_payment_method_error": "Ce mode de paiement n’est pas disponible pour votre adresse de facturation et votre devise. Veuillez essayer un autre mode de paiement.",
+        "change_currency_section_description": "Choisissez une option de devise",
+        "card_fields_unavailable_html": {
+          "one": "Les paiements par carte de crédit et de débit sont actuellement indisponibles.<br><a href=\"%{current_url}\">Actualisez cette page</a> ou réessayez plus tard.",
+          "other": "Les paiements par carte de crédit et de débit sont actuellement indisponibles.<br><a href=\"%{current_url}\">Actualisez cette page</a> ou utilisez un autre moyen de paiement.",
+          "few": "Les paiements par carte de crédit et de débit sont actuellement indisponibles.<br><a href=\"%{current_url}\">Actualisez cette page</a> ou utilisez un autre moyen de paiement.",
+          "many": "Les paiements par carte de crédit et de débit sont momentanément indisponibles.<br><a href=\"%{current_url}\">Actualisez cette page</a> ou utilisez un autre moyen de paiement."
+        },
+        "card_security_vault_notice": "Nous avons besoin de vos données pour les prochains paiements. Toutes les transactions sont sécurisées et chiffrées.",
+        "card_expired": "La validité a expiré.",
+        "card_verification_confirm": "Pour vérification, saisissez le code de vérification de votre carte.",
+        "different_credit_card_label": "Utilisez une autre carte de crédit",
+        "credit_card_vaulting_sign_in_banner_info": "Connectez-vous ou créez un compte pour enregistrer votre carte de crédit pour vos prochains achats.",
+        "credit_card_vaulting_sign_in_banner_button_label": "Connectez-vous",
+        "delete_customer_mandate_modal_title": "Supprimer cette carte de paiement ?",
+        "delete_customer_mandate_modal_body": "Si vous supprimez cette carte, vous devrez l’ajouter à nouveau avant de pouvoir l’utiliser pour effectuer un paiement.",
+        "delete_customer_mandate_modal_confirm": "Retirez la carte",
+        "clear": "Nettoyez",
+        "billing_must_match_shipping_notice": "L’adresse de facturation de votre mode de paiement doit correspondre à l’adresse de livraison.",
+        "brand_not_available": "Ce magasin n’accepte pas {{brand}}. Utilisez une autre carte pour payer.",
+        "card_fields": {
+          "errors": {
+            "required": {
+              "issue_date": "Saisissez la date de délivrance correcte",
+              "issue_number": "Saisissez le numéro d’édition correct"
+            },
+            "invalid": {
+              "verification_value": "Saisissez un code CVV ou un code de vérification valide"
+            }
+          }
+        },
+        "business_customer_vaulting_payment_label": "Enregistrez ce mode de paiement lors du passage à la caisse et autorisez %{company} à le débiter pour vos prochains achats à cet emplacement. Toute personne de contact associée à cet emplacement peut utiliser ce mode de paiement.",
+        "custom_onsite_payment_method_modal": {
+          "title": "Confirmation du paiement personnalisé du client sur la page"
+        },
+        "delete_credit_card_modal": {
+          "confirmation": "Voulez-vous vraiment supprimer {{brandName}} se terminant par {{lastDigits}} ?"
+        },
+        "cashapppay_label": "Paiement Cash App",
+        "card_nickname_label": "Pseudonyme (facultatif)",
+        "billing_address_rollup_accessibility_label": "Options de l’adresse de facturation",
+        "crypto_modal": {
+          "header": "Payez %{shop_name} %{total_price} USDC",
+          "error": {
+            "refresh": "Rafraîchir",
+            "close": "ferme",
+            "sandbox_error": "Quelque chose s’est mal passé.",
+            "web_component_error": "Un problème est survenu lors du chargement de cette page."
+          }
+        },
+        "crypto_payment_method": {
+          "description": "Connectez votre portefeuille numérique en toute sécurité. Votre solde et votre adresse ne seront pas communiqués.",
+          "tooltip": "Le solde et l’adresse de votre portefeuille ne seront pas communiqués et seul le montant demandé pourra être prélevé.",
+          "cashback_descriptor": {
+            "one": "Vous recevrez du cashback après %{count} jours",
+            "other": "Vous recevrez du cashback après %{count} jours",
+            "few": "Vous recevrez du cashback après %{count} jours",
+            "many": "Vous recevrez du cashback après %{count} jours"
+          }
+        },
+        "discount_show_more_warnings": {
+          "few": "Afficher encore %{count}",
+          "many": "Afficher encore %{count}",
+          "one": "Afficher encore %{count}",
+          "other": "Afficher encore %{count}"
+        },
+        "business_customer_with_bank_account_vaulting_payment_label": "Enregistrez ce moyen de paiement lors du passage à la caisse et autorisez, jusqu’à annulation, %{company} à débiter votre compte pour vos futurs achats approuvés pour cet établissement. Toute personne de contact associée à cet établissement peut utiliser ce moyen de paiement.",
+        "discount_codes_removed_summary": {
+          "one": "%{count} code de réduction supprimé",
+          "other": "Nombre de codes de réduction supprimés : %{count}",
+          "few": "Nombre de codes de réduction supprimés : %{count}",
+          "many": "Nombre de codes de réduction supprimés : %{count}"
+        },
+        "continue_to_guest_checkout": "Passer à la finalisation de l’achat en tant qu’invité",
+        "choose_new_payment_method": "Choisissez un nouveau mode de paiement",
+        "discount_codes_modified_summary": {
+          "one": "%{count} code promo modifié",
+          "other": "Nombre de codes de réduction modifiés : %{count}",
+          "few": "Nombre de codes de réduction modifiés : %{count}",
+          "many": "Nombre de codes de réduction modifiés : %{count}"
+        },
+        "discount_codes_removed_or_modified_summary": {
+          "one": "%{count} code de réduction a été supprimé ou modifié",
+          "other": "Nombre de codes de réduction supprimés ou modifiés : %{count}",
+          "few": "Nombre de codes de réduction supprimés ou modifiés : %{count}",
+          "many": "Nombre de codes de réduction supprimés ou modifiés : %{count}"
+        },
+        "bogus_test_checkout": {
+          "intro": "Utilisez ces valeurs pour tester le processus d’achat :",
+          "approved_transaction": "{{card_number}}, pour simuler une transaction approuvée",
+          "gateway_failure": "{{card_number}}, pour simuler une erreur de passerelle",
+          "additional_instructions": "Utilisez n’importe quelle date d’expiration future et n’importe quel code de vérification à 3 chiffres.",
+          "support_link": "Obtenez de l’aide"
+        },
+        "gift_card_code_label": "Code de la carte-cadeau",
+        "gift_card_balance_label": "Solde :",
+        "express_checkout_free_order": "Aucun frais ne vous sera facturé pour une commande gratuite.",
+        "generic_incorrect_card_info": "Impossible de vérifier les détails du paiement. Vérifiez les informations de votre carte et réessayez.",
+        "klarna_pay_later_label": "Payez plus tard avec Klarna",
+        "eps_label": "virement EPS (virement EPS)",
+        "klarna_slice_it_label": "Financement avec Klarna",
+        "expiry_long": "(Expire %{month}/%{year})",
+        "expiry_short": "(Expire %{month}/%{year})",
+        "ftd_vault_credit_card_label": "Enregistrez cette carte de crédit sur mon compte pour accélérer le paiement.",
+        "google": {
+          "connect": "Cliquez pour connecter votre compte Google Pay",
+          "error_authorizing": "Erreur d’autorisation du paiement"
+        },
+        "expired_cards_info": {
+          "one": "Vous avez %{count} carte obsolète que vous pouvez consulter et modifier dans votre compte.",
+          "other": "Vous avez %{count} carte(s) obsolète(s), que vous pouvez consulter et modifier dans votre compte.",
+          "few": "Vous avez %{count} carte(s) obsolète(s), que vous pouvez consulter et modifier dans votre compte.",
+          "many": "Vous avez %{count} carte(s) obsolète(s), que vous pouvez consulter et modifier dans votre compte."
+        },
+        "local_payment_method_receiver_notice": "Après avoir passé commande, vous recevrez les informations relatives au paiement. Effectuez le paiement à un distributeur automatique ou en ligne dans les {{dueDays}} jours.",
+        "gift_card_wrapper": {
+          "heading": "Carte cadeau",
+          "apply_gift_card_label": "Utilisez une carte cadeau",
+          "payment_tag": "Carte cadeau",
+          "apply_another_gift_card_label": "Utilisez une autre carte cadeau",
+          "gift_card_label": "carte-cadeau %{identifier}",
+          "add_label": "Ajoutez une carte-cadeau",
+          "manage_label": "Gérez les cartes-cadeaux"
+        },
+        "edit_credit_card_modal": {
+          "title": "Modifier les cartes",
+          "done": "Terminé",
+          "description": "Vous pouvez modifier uniquement l’adresse de facturation de votre carte.",
+          "fields": {
+            "default": "Définir comme valeur par défaut",
+            "security_code": "Code de vérification",
+            "billing": "Facture pour"
+          }
+        },
+        "expired_payment_method": "Le mode de paiement sélectionné a expiré.",
+        "gift_card_store_credit": {
+          "add_label": "Ajoutez une carte-cadeau ou un crédit en magasin",
+          "manage_label": "Gérez les cartes-cadeaux ou les crédits en magasin"
+        },
+        "gift_cards_unavailable": "Votre carte cadeau ne peut plus être utilisée pour cette commande et a été supprimée.",
+        "gift_card_checkbox_label": "Utilisez une carte cadeau",
+        "lpm": {
+          "oxxo": {
+            "voucher": {
+              "barcode_alt": "Code-barres du coupon OXXO pour le numéro de référence %{reference_number}"
+            }
+          },
+          "multibanco": {
+            "voucher": {
+              "codes": {
+                "reference_number": "Numéro de référence"
+              },
+              "steps": {
+                "pay_at_atm_or_online": "Payez au distributeur Multibanco ou via les services bancaires en ligne en utilisant les informations ci-dessous."
+              }
+            }
+          },
+          "konbini": {
+            "voucher": {
+              "label": "Supérette",
+              "steps": {
+                "familymart": {
+                  "1": "Sur l’appareil multifonction, sélectionnez 代金支払い／チャージ (« Paiement / Recharge »)",
+                  "2": "Saisissez le code de paiement et appuyez sur OK.",
+                  "3": "Saisissez le code de confirmation et appuyez sur OK.",
+                  "4": "Vérifiez les détails et appuyez sur 確認 (« Confirmer ») pour imprimer le reçu.",
+                  "5": "Présentez le reçu à la caisse dans les 30 minutes et payez en espèces ou avec FamiPay."
+                },
+                "lawson": {
+                  "1": "W terminalu Loppi wybierz 各種番号をお持ちの方 (« Je possède un numéro »)",
+                  "2": "Saisissez le code de paiement et appuyez sur 次へ (« Suivant »)",
+                  "3": "Saisissez le code de confirmation et appuyez sur 次へ",
+                  "4": "Vérifiez les détails et appuyez sur はい (« Oui ») pour imprimer le reçu",
+                  "5": "Apportez le reçu à la caisse dans les 30 minutes et payez en espèces"
+                },
+                "ministop": {
+                  "1": "W terminalu Loppi wybierz 各種番号をお持ちの方 (« Je possède un numéro »)",
+                  "2": "Saisissez le code de paiement et appuyez sur 次へ (« Suivant »)",
+                  "3": "Saisissez le code de confirmation et appuyez sur 次へ",
+                  "4": "Vérifiez les détails et appuyez sur はい (« Oui ») pour imprimer le reçu",
+                  "5": "Apportez le reçu à la caisse dans les 30 minutes et payez en espèces"
+                },
+                "seicomart": {
+                  "1": "À la caisse, dites au caissier « インターネット支払い » (« paiement en ligne »).",
+                  "2": "Saisissez le code de paiement sur l’écran du client et sélectionnez 登録 (« Saisir »)",
+                  "3": "Saisissez le code de confirmation et sélectionnez 登録"
+                },
+                "1": "Apportez le code de paiement et le code de confirmation à un terminal ou à la caisse du magasin et payez en espèces avant l’expiration du coupon."
+              },
+              "pay": "Payez %{amount}",
+              "choose_outlet": "Sélectionnez la boutique Konbini pour voir vos codes et votre mode de paiement",
+              "expiry_date_time": "%{date} ou %{time} JST",
+              "copy_code": "Copiez %{label}",
+              "keep_receipt": "Conservez le reçu comme preuve de paiement.",
+              "expired_title": "Le code de paiement a expiré."
+            }
+          }
+        },
+        "konbini_label": "Supérette"
       }
     },
     "attributes": {
