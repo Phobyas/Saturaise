@@ -25,15 +25,15 @@
       }
     },
     "404": {
-      "title": "Oups - Nous n'avons pas pu trouver celui-là",
-      "subtext": "Cette page n'existe pas. Essayez de chercher ce que vous souhaitez trouver:",
-      "button": "Rentrer à la maison"
+      "title": "Hmm... On dirait que vous vous êtes perdu.",
+      "subtext": "La page que vous recherchez est introuvable.",
+      "button": "Retour à la page d’accueil"
     },
     "forms": {
-      "post_error": "Désolé, il semble que des champs n'aient pas été remplis:"
+      "post_error": "Veuillez corriger les erreurs suivantes :"
     },
     "breadcrumbs": {
-      "home": "Accueil"
+      "home": "Page d’accueil"
     },
     "newsletter_form": {
       "newsletter_email": "Entrer l'adresse e-mail",
@@ -64,12 +64,12 @@
     },
     "accessibility": {
       "unit_price_label": "Prix unitaire",
-      "unit_price_separator": "par",
+      "unit_price_separator": "pour",
       "error": "Erreur"
     },
     "header": {
       "search": "Connexion",
-      "login": "Connexion",
+      "login": "Connectez-vous",
       "account": "Compte",
       "logout": "Déconnexion",
       "cart": "Panier",
@@ -221,109 +221,109 @@
   },
   "customer": {
     "account": {
-      "title": "Détails du compte",
+      "title": "Compte",
       "details": "Détails du compte",
-      "view_addresses": "Afficher les adresses",
+      "view_addresses": "Voir les adresses",
       "return": "Retour aux détails du compte",
-      "logout": "Déconnecter",
-      "help": "Vous ne trouvez pas les réponses que vous cherchez ? Écrivez-nous à "
+      "logout": "Déconnectez-vous",
+      "help": "Vous ne trouvez pas les réponses que vous cherchez ? Écrivez-nous à l’adresse suivante"
     },
     "activate_account": {
-      "title": "Activer le compte",
-      "subtext": "Créez votre mot de passe pour activer votre compte.",
+      "title": "Activez le compte",
+      "subtext": "Créez un mot de passe pour activer votre compte.",
       "password": "Mot de passe",
       "password_confirm": "Confirmez le mot de passe",
-      "submit": "Activer le compte",
-      "cancel": "Refuser l'invitation"
+      "submit": "Activez le compte",
+      "cancel": "Refuser l’invitation"
     },
     "addresses": {
-      "title": "Vos adresses",
-      "default": "Défaut",
+      "title": "Carnet d’adresses",
+      "default": "Par défaut",
       "add_new": "Ajouter une nouvelle adresse",
-      "edit_address": "Modifier l'adresse",
+      "edit_address": "Modifier l’adresse",
       "first_name": "Prénom",
       "last_name": "Nom de famille",
       "company": "Entreprise",
       "address1": "Adresse 1",
-      "address2": "Adresse 2",
+      "address2": "Adresse2",
       "city": "Ville",
-      "country": "Pays",
-      "province": "Province",
-      "zip": "Code postal / Zip",
+      "country": "Bordure",
+      "province": "Voïvodie",
+      "zip": "Code postal",
       "phone": "Téléphone",
       "set_default": "Définir comme adresse par défaut",
-      "add": "Ajoutez l'adresse",
-      "update": "Mettre à jour l'adresse",
+      "add": "Ajouter une adresse",
+      "update": "Mettre à jour l’adresse",
       "cancel": "Annuler",
-      "edit": "Éditer",
+      "edit": "Modifier",
       "delete": "Supprimer",
-      "delete_confirm": "Êtes-vous certain(e) de vouloir supprimer cette adresse ?"
+      "delete_confirm": "Voulez-vous vraiment supprimer cette adresse ?"
     },
     "login": {
-      "title": "S'identifier",
+      "title": "Connexion",
       "email": "E-mail",
       "password": "Mot de passe",
-      "forgot_password": "Mot de passe oublié ?",
-      "sign_in": "Se connecter",
+      "forgot_password": "Vous avez oublié votre mot de passe ?",
+      "sign_in": "Connectez-vous",
       "cancel": "Retour à la boutique",
-      "guest_title": "Continuer en tant qu'invité",
+      "guest_title": "Continuer en tant qu’invité",
       "guest_continue": "Continuer"
     },
     "orders": {
       "title": "Historique des commandes",
       "order_number": "Commande",
-      "date": "Date",
-      "payment_status": "État du paiement",
-      "fulfillment_status": "État d'exécution",
-      "total": "Total",
-      "none": "Vous n'avez pas encore passé de commande"
+      "date": "Données",
+      "payment_status": "Statut du paiement",
+      "fulfillment_status": "État d’avancement",
+      "total": "Ensemble",
+      "none": "Vous n’avez encore passé aucune commande."
     },
     "order": {
       "title": "Commande",
-      "date": "Placé sur",
+      "date": "Passée le",
       "cancelled": "Commande annulée le",
-      "cancelled_reason": "Raison: {{ reason }}",
+      "cancelled_reason": "Motif : {{ reason }}",
       "billing_address": "Adresse de facturation",
-      "payment_status": "Statut de paiement",
+      "payment_status": "Statut du paiement",
       "shipping_address": "Adresse de livraison",
-      "fulfillment_status": "Statut de réalisation",
-      "discount": "Remise",
-      "shipping": "livraison",
+      "fulfillment_status": "État d’avancement",
+      "discount": "Rabat",
+      "shipping": "Expédition",
       "tax": "Impôt",
-      "total": "Le total",
+      "total": "Ensemble",
       "details": {
         "product": "Produit",
         "sku": "SKU",
-        "price": "Prix",
+        "price": "Dîner",
         "quantity": "Quantité",
-        "total": "Total",
-        "fulfilled_at": "Fulfilled {{ date }}",
-        "subtotal": "Total"
+        "total": "Ensemble",
+        "fulfilled_at": "Réalisé le {{ date }}",
+        "subtotal": "Sous-total"
       }
     },
     "recover_password": {
-      "title": "Réinitialiser votre mot de passe",
+      "title": "Réinitialisez le mot de passe",
       "email": "E-mail",
-      "submit": "Soumettre",
+      "submit": "Envoyer",
       "cancel": "Annuler",
-      "enter_for": "Entrez un nouveau mot de passe pour",
+      "enter_for": "Saisissez un nouveau mot de passe pour",
       "subtext": "Nous vous enverrons un e-mail pour réinitialiser votre mot de passe.",
       "success": "Nous vous avons envoyé un e-mail avec un lien pour mettre à jour votre mot de passe."
     },
     "reset_password": {
-      "title": "Réinitialiser votre mot de passe",
-      "subtext": "Entrer un nouveau mot de passe pour {{ email }}",
+      "title": "Réinitialisez le mot de passe du compte",
+      "subtext": "Saisissez un nouveau mot de passe pour {{ email }}",
       "password": "Mot de passe",
-      "password_confirm": "Confirmer le mot de passe",
-      "submit": "Réinitialiser le mot du passe"
+      "password_confirm": "Confirmez le mot de passe",
+      "submit": "Réinitialisez le mot de passe"
     },
     "register": {
-      "title": "Créer un compte",
+      "title": "Créez un compte",
       "first_name": "Prénom",
       "last_name": "Nom de famille",
-      "email": "Email",
+      "email": "E-mail",
       "password": "Mot de passe",
-      "submit": "Soumettre"
+      "submit": "Créer"
     }
   },
   "products": {
@@ -434,6 +434,6 @@
     }
   },
   "date_formats": {
-    "month_date_year": "%B %d %Y"
+    "month_date_year": "%d %B %Y"
   }
 }
