@@ -904,7 +904,19 @@
             "maximum_quantity_exceeded": "La quantité de certains articles dépasse la limite maximale.",
             "bundle_requires_components": "Ce produit en kit ne contient aucun composant.",
             "combined_listing_parent_not_purchasable": "Les produits principaux d’une offre groupée ne peuvent pas être achetés directement.",
-            "fixed_selling_plans_not_supported_for_draft_orders": "Cette option d’achat n’est pas prise en charge pour les commandes de travail."
+            "fixed_selling_plans_not_supported_for_draft_orders": "Cette option d’achat n’est pas prise en charge pour les commandes de travail.",
+            "only_value_constraint": "W danych wejściowych towaru dozwolone są tylko dokładne wartości.",
+            "merchandise_variant_not_found": "Variante du produit introuvable.",
+            "selling_plan_mismatch": "Abonnement mis à jour.",
+            "selling_plan_not_supported_b2b": "Les abonnements ne sont pas pris en charge pour les achats B2B.",
+            "price_mismatch": "Le prix précédemment proposé pour cet article était incorrect et a été mis à jour.",
+            "minimum_quantity_not_met": "La quantité de certains articles ne respecte pas la limite minimale requise.",
+            "quantity_increment_not_met": "La quantité de certains articles dépasse les limites de commande.",
+            "quantity_rules_not_met": "La quantité de certains articles dépasse les limites de commande.",
+            "title_too_long": "Le titre du produit est trop long.",
+            "title_empty": "Le titre du produit est vide.",
+            "mixed_currencies": "La commande comprend des articles dans différentes devises.",
+            "product_not_published_in_buyer_location": "Le produit n’est pas disponible dans la région actuelle de l’acheteur."
           },
           "buyer_identity": {
             "business_customer_does_not_match_company": "La personne de contact de l’entreprise n’a pas accès à l’entreprise.",
@@ -979,12 +991,104 @@
           },
           "checkout_source": {
             "revoked": "La finalisation de l’achat n’est plus disponible."
+          },
+          "session_identifier_not_unique_error": "Un problème est survenu avec votre commande. Veuillez réessayer de finaliser votre achat.",
+          "only_empty_terms_accepted": "Dans le cadre de cette politique, seules les conditions vides sont acceptées.",
+          "session_is_already_finished": "Cette session de paiement a déjà été finalisée.",
+          "tax": {
+            "new_tax_must_be_accepted": "Les informations relatives à votre commande ont changé. Vérifiez-les et réessayez.",
+            "unresolvable_tax_terms": "Compte tenu du contexte actuel des négociations, il est impossible de trancher la question des conditions proposées.",
+            "tax_inclusivity_mismatch": "Renégociez en indiquant une valeur précise pour totalTaxAndDutyAmount ou totalAmountIncludedInTarget.",
+            "tax_exemption_not_supported": "Les exonérations fiscales ne sont pas prises en charge dans la session de négociation en cours.",
+            "delivery_tax_exemption_not_supported": "Les exonérations fiscales pour les lignes de livraison ne sont actuellement pas prises en charge.",
+            "proposed_allocations_required": "Absence du champ « affectations proposées ».",
+            "merchandise_terms_must_be_defined": "Il faut définir les conditions relatives aux marchandises.",
+            "delivery_terms_must_be_defined": "Il faut définir les conditions de livraison.",
+            "merchandise_discount_terms_must_be_defined": "Il faut définir les conditions relatives à la remise sur les marchandises.",
+            "delivery_discount_terms_must_be_defined": "Il convient de définir les conditions relatives à la remise sur la livraison.",
+            "allocated_required": "Champ « attribué » manquant.",
+            "value_required": "Champ « valeur » manquant.",
+            "line_splits_not_supported": "Le champ « ligne de produit » doit être divisé de sorte que chaque partie contienne un seul composant de ligne dans la proposition du vendeur.",
+            "mixed_tax_inclusivity_not_supported": "Tous les éléments fiscaux doivent inclure la taxe, ou aucun ne doit l’inclure."
+          },
+          "payment": {
+            "total_amount_mismatch": "Le montant à payer ne correspond pas au montant du paiement.",
+            "subscription_terms_not_accepted": "Les conditions d’abonnement n’ont pas été acceptées.",
+            "missing_session_id": "Aucune information sur la session de la carte de crédit.",
+            "gateway_not_supported": "La passerelle de paiement ne prend pas en charge l’enregistrement du moyen de paiement.",
+            "credit_card_last_name_required": "« nom de famille » ne peut pas avoir la valeur nil.",
+            "invalid_address_type": "Le type d’adresse fourni n’est pas valide pour ce mode de paiement.",
+            "missing_retail_attributions": "Les paiements par carte de crédit saisis manuellement nécessitent des attributions de vente au détail.",
+            "unexpected_retail_attributions": "Les attributions des ventes au détail ont été activées de manière inattendue pour les paiements par carte de crédit.",
+            "invalid_card_source": "Cette session n’est pas autorisée à utiliser cette source de carte.",
+            "wallet_content_missing": "Solde du portefeuille vide.",
+            "payment_instrument_not_found": "Impossible de trouver un moyen de paiement",
+            "unauthorized_capture_method": "La configuration de la méthode d’enregistrement des paiements n’est pas autorisée.",
+            "saved_payment_methods_not_allowed": "Les modes de paiement enregistrés ne sont pas autorisés.",
+            "saved_payment_methods_not_enabled": "Les modes de paiement enregistrés ne sont pas activés pour cette boutique.",
+            "store_credit_not_enabled": "Le crédit en magasin n’est pas activé pour cette boutique.",
+            "store_credit_account_not_found": "Aucun compte de crédit en magasin trouvé.",
+            "store_credit_account_mismatch": "Le compte de crédit en magasin ne correspond pas à l’identité de l’acheteur.",
+            "store_credit_mismatched_currency": "La devise du compte de crédit en magasin ne correspond pas à la devise utilisée pour finaliser l’achat.",
+            "store_credit_insufficient_funds": "Le compte de crédit magasin ne dispose pas de fonds suffisants.",
+            "store_credit_buying_gift_card": "Le crédit magasin ne peut pas être utilisé pour acheter une carte-cadeau.",
+            "method_required": "Il faut proposer un moyen de paiement.",
+            "saved_payment_methods_cvv_verification_disabled": "Le mode de paiement sélectionné nécessite une vérification du CVV, qui n’est pas activée pour cette boutique. Choisissez un autre mode de paiement."
+          },
+          "tip": {
+            "not_accepted_by_shop": "Le magasin n’accepte pas les pourboires.",
+            "only_one_tip_line_allowed": "Plusieurs options de pourboire ne sont pas prises en charge.",
+            "tips_not_allowed_for_b2b": "Les pourboires ne sont pas autorisés dans les magasins B2B.",
+            "currency_change_reset": "Le pourboire a été réinitialisé en raison du changement de devise.",
+            "tips_not_allowed_for_deferred_purchase_options": "Les pourboires ne sont pas encore pris en charge avec les options d’achat à paiement différé."
+          },
+          "sale_attribution": {
+            "draft_order_not_exist": "Ce brouillon de commande n’existe pas dans la boutique actuelle.",
+            "staff_member_not_exist": "Cet employé n’existe pas dans la boutique actuelle.",
+            "point_of_sale_device_not_exist": "Cet appareil de point de vente n’existe pas dans le magasin actuel.",
+            "unresolvable_target_merchandise_lines": "Compte tenu du contexte actuel des négociations, la question des attributions de ventes proposées ne peut être tranchée."
+          },
+          "non_negotiable": {
+            "missing_non_negotiable_terms": "L’offre de l’acheteur doit contenir les conditions non négociables.",
+            "invalid_signature": "La signature de {{target_terms}} est incorrecte."
+          },
+          "optional_duties": {
+            "optional_duties_not_permitted": "Le refus des droits de douane n’est pas autorisé pour cet achat."
           }
         },
         "dropzone": {
           "invalid_file_type": "Le type de fichier n’est pas pris en charge.",
           "dragged_over": "Déposez un fichier pour le téléverser"
-        }
+        },
+        "page_title": "Finalisation de l’achat",
+        "skip_to_content": "Aller au contenu",
+        "pay_now_button_label": "Payez maintenant",
+        "expand_notice_label": "Afficher plus",
+        "forwarding_indicator": {
+          "external": "Ouvre un site web externe.",
+          "external_and_new_window": "Ouvre un site web externe dans une nouvelle fenêtre."
+        },
+        "full_price": "Prix total :",
+        "full_title": "{{pageTitle}} - {{shopName}} - Finalisation de l’achat",
+        "loading_title": "Finalisation de l’achat - {{shopName}}",
+        "google_map_title": "Google Maps",
+        "processing": "Traitement…",
+        "stepper": {
+          "decrease": "Réduisez {{type}}"
+        },
+        "remove_tag": "Supprimer le tag",
+        "map": {
+          "cluster_title": {
+            "one": "Marqueur de cluster {{number}}",
+            "other": "Cluster de {{number}} marqueurs",
+            "few": "Cluster de {{number}} marqueurs",
+            "many": "Cluster de {{number}} marqueurs"
+          }
+        },
+        "sheet": {
+          "expand": "Élargir"
+        },
+        "loading": "Chargement…"
       }
     },
     "attributes": {
