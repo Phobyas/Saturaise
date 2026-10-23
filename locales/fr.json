@@ -3007,6 +3007,112 @@
         "pickup_map_marker": {
           "callout": "Retrait à : {{location}}",
           "directions_link_accessibility_label": "Retrait à : {{location}}, obtenir un itinéraire"
+        },
+        "title": "Merci pour votre achat !",
+        "updated_time": "Mis à jour il y a %{time_ago}",
+        "unfulfilled_items_title": "Préparation à l’expédition",
+        "unfulfilled_items_description": "Nous préparons actuellement ces articles pour l’expédition.",
+        "view_business_customer_account": "Afficher le compte",
+        "verify_shop_account_title": "Vérifiez votre compte Shop",
+        "verify_shop_account_message": "Vos données ont été enregistrées dans Shop. Vérifiez votre compte pour les utiliser automatiquement dans des millions de boutiques.",
+        "verify_shop_account_cta": "Vérifiez votre compte",
+        "verify_shop_account_confirmation": "Détails de l’achat enregistrés",
+        "track_your_order_link_text": "Suivez votre commande",
+        "thank_you_unconfirmed_items_heading": {
+          "one": "1 article n’est pas confirmé",
+          "other": "Certains articles ne sont pas confirmés.",
+          "few": "Certains articles ne sont pas confirmés.",
+          "many": "Certains articles ne sont pas confirmés."
+        },
+        "thank_you_unconfirmed_items_description": {
+          "one": "Cela ne t’a pas été facturé.",
+          "other": "Tu n’as pas été facturé pour ces",
+          "few": "Tu n’as pas été facturé pour ces",
+          "many": "Tu n’as pas été facturé pour ces"
+        }
+      },
+      "tips": {
+        "description": "Montrez votre soutien à l’équipe %{shop_name}",
+        "presets_description": "Choisissez le pourcentage du pourboire",
+        "update_tip": "Mettre à jour le pourboire",
+        "message": "Merci, nous vous en sommes reconnaissants.",
+        "no_tip_label": "Manque",
+        "not_available_with_spi": "Indisponible avec les paiements échelonnés Shop Pay"
+      },
+      "throttle": {
+        "line_to_check_out": "Vous êtes dans la file d’attente pour finaliser votre achat.",
+        "inventory": {
+          "partial_inventory_banner": "Une partie des articles du panier est épuisée et ne pourra pas être achetée lors du paiement.",
+          "sold_out": {
+            "heading": "Les articles de votre panier sont épuisés.",
+            "storefront_body": "Retournez à la boutique pour continuer vos achats.",
+            "link": "Retourner à la boutique"
+          }
+        },
+        "time_to_checkout_title": "Il est temps de faire des achats - {{shopName}}",
+        "estimated_wait_time": {
+          "calculating": "Calcul du temps d’attente estimé",
+          "less_than_one": "Le temps d’attente estimé est de : moins d’une minute",
+          "one": "Temps d’attente estimé : {{count}} minute",
+          "other": "Temps d’attente estimé : {{count}} minute(s)",
+          "few": "Temps d’attente estimé : {{count}} minute(s)",
+          "many": "Temps d’attente estimé : {{count}} minute(s)"
+        },
+        "last_checked": "(Dernier contrôle : {{time}})",
+        "footer": {
+          "heading": "Ne rafraîchissez pas cette page, elle se mettra à jour automatiquement.",
+          "body": "Les articles de votre panier ne sont pas réservés tant que vous n’avez pas finalisé votre achat."
+        },
+        "too_many_attempts": {
+          "message": "Trop de tentatives",
+          "description": "Réessayez dans quelques minutes."
+        }
+      },
+      "wallets": {
+        "call_to_action": "Payez avec {{walletName}}",
+        "errors": {
+          "detour": {
+            "price_change": "Le prix de certains articles a changé. Fermez {{walletName}} pour vérifier la commande, puis réessayez.",
+            "currency_change": "Une autre adresse ne peut pas être utilisée dans {{walletName}}. Utilisez l’adresse d’origine ou essayez un autre mode de paiement.",
+            "currency_change_with_country": "La méthode {{walletName}} ne peut pas être utilisée, car la devise a changé. Utilisez une adresse dans le pays {{countryName}} ou choisissez un autre mode de paiement."
+          }
+        },
+        "deceleration": {
+          "one_more_step_to_complete_order": "Encore une étape avant de finaliser votre commande",
+          "one_more_step": "Encore une étape..."
+        }
+      },
+      "vaulted": {
+        "loading_section": "Chargement de la section {{section}}…"
+      },
+      "units": {
+        "fluid_ounce": "once liquide",
+        "gallon": "mec",
+        "inch": "dans",
+        "foot": "pied",
+        "item": "pcs."
+      },
+      "tooltip": {
+        "additional_payment_methods": "Modes de paiement supplémentaires"
+      },
+      "too_many_requests": {
+        "title": "Trop de tentatives pour finaliser l’achat",
+        "body": "Attendez quelques minutes et réessayez dans le panier.",
+        "body_no_cart": "Attendez quelques minutes et réessayez."
+      },
+      "ucp": {
+        "standard_errors": {
+          "item_unavailable": "Impossible d’acheter l’article"
+        },
+        "totals": {
+          "tax": "Impôt",
+          "total": "Somme"
+        },
+        "validation_errors": {
+          "invalid_gid": "n’est pas un identifiant GID valide de type %{type} (reçu : %{value})",
+          "missing_destination_country": "Le champ address_country du lieu de destination de la méthode de traitement est manquant.",
+          "invalid_destination_country": "Il était attendu que %{country_code} soit l’un des suivants : %{valid_country_codes}",
+          "unsupported_quantity_unit": "Seules les quantités exprimées en unités (C62) avec une échelle de 0 sont prises en charge. Utilisez cette unité ou omettez cette valeur."
         }
       }
     },
