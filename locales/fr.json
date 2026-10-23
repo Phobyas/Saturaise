@@ -871,6 +871,15 @@
         "dates": {
           "months": {
             "november": "novembre"
+          },
+          "weekdays_abbreviation": {
+            "monday": "Pn",
+            "tuesday": "Quoi",
+            "wednesday": "Monsieur",
+            "thursday": "Cz.",
+            "friday": "Pt",
+            "saturday": "Sb",
+            "sunday": "Nd"
           }
         },
         "datepicker": {
@@ -878,7 +887,104 @@
           "in_range": "W portée",
           "range_end": "Fin de la plage"
         },
-        "confirm_order_button_label": "Confirmez la commande"
+        "confirm_order_button_label": "Confirmez la commande",
+        "errors": {
+          "line_item_limit_reached": "Le nombre maximal d’articles individuels a été atteint.",
+          "merchandise": {
+            "bundle_products_not_supported_for_b2b": "À cet emplacement, il n’est pas possible d’ajouter des articles en lot aux commandes B2B.",
+            "gift_card_quantity_mismatch": "Lors de la définition des codes de cartes-cadeaux, le nombre d’articles doit correspondre au nombre de codes de cartes-cadeaux.",
+            "gift_card_not_supported": "Les cartes-cadeaux ne sont pas acceptées pour cet achat.",
+            "gift_card_not_unique": "La carte cadeau avec le code {{code}} apparaît plusieurs fois dans cette commande. Les codes sont normalisés avant la comparaison.",
+            "gift_card_used": "Le code de la carte cadeau {{code}} est déjà associé à une carte cadeau. Les codes sont formatés avant la comparaison.",
+            "gift_card_invalid": "Le code de la carte cadeau {{code}} est invalide.",
+            "gift_card_code_changed": "Le code de la carte-cadeau {{proposed_code}} a été modifié en {{formatted_code}} afin de respecter les règles de formatage.",
+            "gift_card_with_components_not_supported": "Les cartes-cadeaux avec des composants ne sont pas prises en charge dans le cadre de cet achat.",
+            "inventory_not_found": "Aucune réserve n’a été trouvée pour cet article.",
+            "duplicated_stable_id": "Cette ligne de marchandises a le même identifiant stable qu’une autre ligne.",
+            "maximum_quantity_exceeded": "La quantité de certains articles dépasse la limite maximale.",
+            "bundle_requires_components": "Ce produit en kit ne contient aucun composant.",
+            "combined_listing_parent_not_purchasable": "Les produits principaux d’une offre groupée ne peuvent pas être achetés directement.",
+            "fixed_selling_plans_not_supported_for_draft_orders": "Cette option d’achat n’est pas prise en charge pour les commandes de travail."
+          },
+          "buyer_identity": {
+            "business_customer_does_not_match_company": "La personne de contact de l’entreprise n’a pas accès à l’entreprise.",
+            "customer_account_required": "Pour continuer, vous devez vous connecter.",
+            "contact_info_does_not_match_customer_account": "Les coordonnées doivent correspondre au compte utilisé pour se connecter.",
+            "phone_number_does_not_match_expected_pattern": "Le numéro de téléphone fourni ne correspond pas au format attendu.",
+            "email_required": "Lors de l’achat d’un produit dans le cadre d’un abonnement, une adresse e-mail est requise.",
+            "email_domain_is_invalid": "Impossible de reconnaître le domaine indiqué.",
+            "missing_contact_method": "Aucun moyen de contact valide.",
+            "checkout_completion_target_is_missing": "Aucun objectif de réalisation de l’achat.",
+            "invalid_customer_profile": "Un profil client invalide a été fourni.",
+            "customer_profile_access_restricted": "La fonction de traitement des achats n’a pas l’autorisation d’accéder au profil client.",
+            "checkout_completion_target_is_invalid_proc": "Destination de finalisation de l’achat invalide.",
+            "company_location_required": "Pour continuer, le client doit sélectionner l’emplacement de l’entreprise.",
+            "lost_access_to_company": "Le client a perdu l’accès à toutes les entreprises.",
+            "company_purchase_permission_required": "Le client n’est pas autorisé à passer des commandes professionnelles.",
+            "personal_order_not_allowed": "Les commandes personnalisées sont interdites dans cette boutique.",
+            "buyer_identity_presentment_currency_does_not_match": "Un problème est survenu lors du traitement de la commande. Réessayez dans quelques minutes."
+          },
+          "delivery": {
+            "only_one_delivery_line_allowed": "Le panier ne peut comporter qu’une seule ligne de livraison.",
+            "wrong_number_of_delivery_lines": "Pour chaque groupe de marchandises, il faut définir la ligne de livraison.",
+            "external_delivery_promise_error": "Erreur lors de la récupération de la déclaration externe concernant le délai de livraison.",
+            "options_instructions_invalid": "Les instructions fournies ne correspondent pas au modèle attendu.",
+            "destination_address_required": "La poursuite nécessite de fournir une adresse de destination.",
+            "pickup_points_unavailable": "Les points de retrait sont actuellement indisponibles.",
+            "local_pickup_delivery_line_detail_changed": "Pour continuer, remplacez la stratégie de livraison actuelle par le retrait local.",
+            "local_pickup_no_delivery_strategy_available": "Aucune stratégie de livraison avec retrait local disponible n’a été trouvée.",
+            "origin_location_id_required": "L’identifiant du lieu d’expédition est requis lorsque la méthode de livraison SPRZEDAŻ DETALICZNA est demandée.",
+            "invalid_origin_location_id": "Impossible de trouver un emplacement correspondant à l’ID du lieu d’expédition.",
+            "origin_location_id_not_allowed": "Les méthodes de livraison demandées ne prennent pas en charge l’ID de localisation du lieu d’expédition.",
+            "auto_fulfill_not_allowed": "Cette session n’est pas autorisée à remplacer le comportement d’exécution.",
+            "auto_fulfill_required": "Pour une demande de méthode de livraison VENTE AU DÉTAIL, l’exécution automatique est requise.",
+            "prefetch_shipping_rates_used": "Les tarifs d’expédition préchargés ne devraient jamais renvoyer de tarifs.",
+            "fulfillment_constraints_not_satisfied": "La conformité à au moins une contrainte de mise en œuvre n’a pas été assurée.",
+            "must_fulfill_from_constraint_not_satisfied": "La conformité aux contraintes d’exécution n’a pas été garantie, car les articles ne peuvent pas être exécutés depuis les emplacements requis.",
+            "must_fulfill_from_same_location_constraint_not_satisfied": "La conformité aux contraintes d’exécution n’a pas été assurée, car les articles ne peuvent pas être traités depuis le même emplacement.",
+            "delivery_strategy_conditions_not_satisfied": "Les stratégies de livraison sont disponibles pour cet emplacement, mais leurs conditions ne sont pas remplies.",
+            "out_of_stock_at_origin_location": "Rupture de stock au point d’expédition.",
+            "invalid_signature": "Signature de remise invalide.",
+            "selected_pickup_option_no_longer_available": "L’option de retrait sélectionnée précédemment n’est plus disponible.",
+            "mixed_destination_countries": "La livraison n’est pas disponible, car les articles de livraison concernent plusieurs pays."
+          },
+          "discount": {
+            "discounts_not_allowed_for_b2b": "Les remises ne sont pas autorisées dans les boutiques B2B.",
+            "custom_discount_not_honoured": "La remise personnalisée fournie n’a pas été reconnue.",
+            "unsupported_expectation": "La ligne de remise fournie contenait une attente que la politique ne pouvait pas interpréter.",
+            "additional_requested_discount_code_discarded": "{{code}} est valide, mais ne peut pas être utilisé. Vérifiez les conditions de la remise.",
+            "allocations_mismatch": "Votre code de réduction a changé. Vérifiez votre panier et réessayez.",
+            "discount_title_too_long": "Le titre des remises ne peut pas dépasser 255 caractères.",
+            "additional_requested_discount_discarded": "La remise est importante, mais elle ne peut pas être appliquée. Vérifiez les conditions de la remise.",
+            "mixed_destination_countries": "Les remises ne sont pas disponibles, car les articles de la livraison couvrent plusieurs pays."
+          },
+          "inventory": {
+            "missing_quantity_value": "Dans les positions de stock de l’acheteur, le champ de quantité est manquant.",
+            "changing_behavior_not_allowed": "Ce client n’est pas autorisé à modifier le comportement des stocks.",
+            "only_one_inventory_behavior_allowed": "Actuellement, un seul comportement de stock est autorisé pour chaque exécution d’achat."
+          },
+          "attribution": {
+            "retail_attribution_not_allowed": "L’attribution des ventes au détail n’est pas autorisée pour cet achat.",
+            "retail_attribution_required": "L’attribution des ventes au détail est requise pour cet achat."
+          },
+          "captcha": {
+            "metadata_missing": "La réalisation de cet achat nécessite de réussir un test CAPTCHA.",
+            "metadata_mismatch": "Le fournisseur et le type de test CAPTCHA ne correspondent pas aux valeurs attendues.",
+            "token_missing": "Pour finaliser votre achat, vous devez fournir un jeton captcha.",
+            "job_enqueue_failed": "Impossible de mettre en file d’attente la tâche de validation du test captcha.",
+            "job_already_queued": "La validation du test CAPTCHA a déjà été mise en file d’attente pour ce jeton CAPTCHA.",
+            "token_expired": "Le jeton captcha fourni a expiré. Effectuez un nouveau test captcha pour poursuivre votre achat.",
+            "token_invalid": "Le jeton captcha fourni était invalide. Effectuez un nouveau test captcha pour poursuivre votre achat.",
+            "token_not_valid_for_session": "Le test captcha fourni ne peut pas être utilisé pour cet achat."
+          },
+          "checkout_source": {
+            "revoked": "La finalisation de l’achat n’est plus disponible."
+          }
+        },
+        "dropzone": {
+          "invalid_file_type": "Le type de fichier n’est pas pris en charge.",
+          "dragged_over": "Déposez un fichier pour le téléverser"
+        }
       }
     },
     "attributes": {
