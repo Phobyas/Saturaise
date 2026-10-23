@@ -1919,7 +1919,8 @@
             "buyer_action_info": "Le paiement de %{amount_due} est exigible.",
             "expiry_date_time": "%{date} ou %{time}",
             "expired": "Expiré %{date}",
-            "expired_title": "Le numéro de référence du paiement a expiré."
+            "expired_title": "Le numéro de référence du paiement a expiré.",
+            "pay": "Payez %{amount}"
           },
           "apple_wallet": {
             "pass": {
@@ -1927,6 +1928,29 @@
               "payment_due_label": "À payer",
               "ordered_on_label": "Date de commande"
             }
+          },
+          "oxxo": {
+            "steps": {
+              "1": "Scannez le code-barres dans le point de vente OXXO le plus proche."
+            },
+            "print_voucher": "Imprimer le coupon",
+            "barcode_alt": "Code-barres du coupon OXXO pour le numéro de référence %{reference_number}",
+            "expires_when_unknown": "Utilisez le bon avant son expiration",
+            "print": {
+              "instructions_title": "Instructions de paiement OXXO :",
+              "important_details_title": "Informations importantes :"
+            },
+            "important_details": {
+              "canceled_by_expiry": "La commande sera annulée si le paiement n’est pas reçu avant le %{date}.",
+              "canceled_when_expired": "La commande sera annulée si le paiement n’est pas reçu avant l’expiration du bon.",
+              "non_refundable": "Les commandes OXXO ne sont pas remboursables."
+            },
+            "days_left": {
+              "few": "%{count} jours"
+            },
+            "pay": "Payez %{amount}",
+            "expiry_date_time": "%{date} ou %{time}",
+            "reference_number": "Numéro de référence :"
           }
         },
         "paypal_modal": {
@@ -1984,7 +2008,77 @@
         "pay_with_debit_card": "Payez par carte de débit",
         "order_edit_banner_no_taxes_label": "Manque",
         "payment_method_unavailable_error": "Ce mode de paiement est actuellement indisponible. Choisissez un autre mode de paiement.",
-        "payment_method_loading_error": "Ce mode de paiement est toujours en cours de chargement. Réessayez dans quelques secondes."
+        "payment_method_loading_error": "Ce mode de paiement est toujours en cours de chargement. Réessayez dans quelques secondes.",
+        "supported_card_brands_more_label": "et plus...",
+        "saved_by_payment_method": "Économisé grâce à : %{payment_method}",
+        "technical_error": "Impossible de traiter le paiement pour le moment en raison d’un problème technique. Réessayez dans quelques minutes.",
+        "sofort_label": "Virement bancaire Sofort",
+        "subscription_agreement_label_html": "Je confirme que je souhaite m’abonner. L’abonnement sera renouvelé au prix et selon la fréquence indiqués jusqu’à sa résiliation ou \n<a class=\"link--small\" data-modal=\"true\" data-title-text=\"%{subscription_policy}\" href=\"%{policy_href}\">annulation</a>.\n",
+        "subscription_card_update_agreement_label": "La modification du mode de paiement mettra à jour l’abonnement et les futurs paiements récurrents.",
+        "taxes_not_included": "Les taxes n’ont pas été incluses",
+        "subscription_agreement_label": "Au moins un article du panier est un achat différé ou un abonnement. En poursuivant le paiement, vous acceptez les prélèvements automatiques selon le mode de paiement choisi, au prix et à la fréquence indiqués sur cette page, jusqu’à la fin de la période de validité ou à l’annulation de ce mode de paiement. Toutes les annulations sont soumises à %{cancelled}.",
+        "subscription_agreement_cancelled": "politique d’annulation",
+        "purchase_options_card_update_agreement_label_html": "En mettant à jour son moyen de paiement, l’utilisateur consent à effectuer les paiements pour tout achat récurrent ou achat à paiement différé conformément à la <a class=\"link--small\" data-modal=\"true\" data-title-text=\"%{cancellation_policy}\" href=\"%{policy_href}\">politique d’annulation</a> de la boutique.",
+        "receiver_payment_experience_hint": "Après avoir passé votre commande, vous recevrez les détails du paiement. Effectuez le paiement via Multibanco ou en ligne dans un délai de %{due_days} jours.",
+        "purchase_options_agreement_label": "Au moins un article de votre panier fait l’objet d’un achat différé ou récurrent. En poursuivant le paiement, vous acceptez que votre moyen de paiement soit débité automatiquement au prix et à la fréquence indiqués sur cette page jusqu’à la fin ou à l’annulation de cet achat. Toutes les annulations sont soumises à %{cancellation_policy_label}.",
+        "update_payment_method": "Mettez à jour le mode de paiement",
+        "purchase_options_agreement_label_html": "Je comprends qu’au moins un article de mon panier correspond à un achat différé ou récurrent. En poursuivant, j’accepte les\n<a class=\"link--small\" data-modal=\"true\" data-title-text=\"%{subscription_policy}\" href=\"%{policy_href}\">conditions d’annulation</a>\net j’autorise le prélèvement sur mon moyen de paiement selon les prix, la fréquence et les dates indiqués sur cette page jusqu’à\nl’exécution de ma commande ou à son annulation par mes soins, dans la mesure où cela est autorisé.\n",
+        "store_credit": {
+          "label": "Crédit boutique",
+          "apply_label": "Utilisez le crédit en magasin",
+          "add_label": "Ajoutez un crédit en magasin",
+          "manage_label": "Gérez votre crédit en magasin",
+          "buying_gift_card": "Le crédit en magasin ne peut pas être utilisé pour acheter une carte-cadeau.",
+          "no_fixed_selling_plans": "Le crédit en magasin ne peut pas être utilisé avec les options d’achat à paiement différé."
+        },
+        "same_billing_address_checkbox_label": "Utilisez l’adresse de livraison comme adresse de facturation.",
+        "shipping_rate_updated": "Les modes de livraison disponibles ont été mis à jour. Confirmez votre choix avant de finaliser votre achat.",
+        "preview_not_available": {
+          "title": "Aperçu indisponible",
+          "content": "Ne vous inquiétez pas, ce traitement express de l’achat fonctionne pour vos clients.",
+          "button": "D’accord"
+        },
+        "simulated_checkout": "L’aperçu sera bientôt disponible",
+        "purchase_options_and_vaulting_agreement_label": "Au moins un article de votre panier est un achat différé ou un abonnement. En poursuivant le paiement, vous acceptez que des prélèvements automatiques soient effectués selon le mode de paiement choisi, au prix et à la fréquence indiqués sur cette page, jusqu’à la résiliation ou l’annulation. Toute annulation est soumise à %{cancellation_policy_label}.",
+        "purchase_options_cancellation_policy_label": "politique d’annulation",
+        "use_different_credit_card_label": "Utilisez une autre carte",
+        "saved_credit_card": "La carte de crédit a été enregistrée.",
+        "saved_credit_card_info": "Les quatre derniers chiffres",
+        "saved_credit_cards_modal": {
+          "view_all_label": "Afficher toutes les cartes enregistrées",
+          "done": "Terminé"
+        },
+        "purchase_order_number": {
+          "title": "Numéro de commande",
+          "label": "Numéro de commande (facultatif)"
+        },
+        "shop_pay_installments_label": "Payez en plusieurs fois avec Shop",
+        "use_order_billing_address_label": "Utilisez l’adresse de facturation de la commande",
+        "use_location_billing_address_label": "Utilisez l’adresse de facturation de l’emplacement",
+        "use_location_shipping_address_label": "Utilisez l’adresse d’expédition du lieu",
+        "purchase_options_agreement_label_wallets": "En poursuivant le paiement, vous acceptez les frais futurs indiqués sur cette page ainsi que %{cancellation_policy_label}.",
+        "saved_credit_card_cvv_verification": "Pour vérification, veuillez saisir le code de vérification de votre carte.",
+        "proposed_gateway_unavailable": "La passerelle de paiement proposée est indisponible",
+        "shop_pay_ideal_unavailable_error": "iDEAL | Wero n’est pas disponible pour cette commande. Veuillez choisir un autre mode de paiement.",
+        "simulated_express_checkout": "Les portefeuilles ne sont pas disponibles dans l’aperçu de l’éditeur en raison de la région ou du navigateur.",
+        "usdc_cashback_additional_info": "Payez en USDC sur le réseau Base et recevez un remboursement de %{incentive_percentage}% dans votre portefeuille numérique sous 30 jours.",
+        "usdc_cashback_terms": "Des conditions et des limites s’appliquent.",
+        "separate_payments_label": "Vos articles proviennent de plusieurs boutiques. Le paiement sera effectué sous la forme de %{separate_payments_link}.",
+        "separate_payments_text": "paiements personnels",
+        "purchase_options_subscription_confirmation_title": "Confirmer l’abonnement",
+        "purchase_options_subscription_agreement_label": "Votre panier contient un abonnement renouvelé automatiquement. En cliquant sur « %{button_label} », %{consent_text} %{cancellation_instructions}",
+        "purchase_options_subscription_consent_text": "vous donnez votre consentement explicite et sans équivoque au prélèvement automatique du ou des montants récurrents affichés dans le panier (plus les frais d’expédition et les taxes) jusqu’à la fin ou à l’annulation de l’abonnement.",
+        "purchase_options_subscription_cancellation_instructions": "%{cancel_text} Voir : %{cancellation_policy_label}.",
+        "purchase_options_subscription_cancel_text": "Vous pouvez annuler à tout moment depuis votre compte ou en contactant la boutique.",
+        "shop_pay_hsa": {
+          "label": "Je souhaite utiliser mes fonds HSA/FSA pour cet achat.",
+          "description": "Payez directement avec votre carte de prestations ou utilisez une carte personnelle et demandez le remboursement du montant admissible.",
+          "pay_button_label": "Accéder au questionnaire de santé",
+          "eligibility_disclaimer_html": "Truemed détermine l’éligibilité au HSA/FSA. %{terms_link}",
+          "login_message": "Connectez-vous à l’application Shop pour utiliser vos fonds HSA/FSA",
+          "eligible_product": "Admissible au HSA/FSA",
+          "mixed_cart_description": "Le panier ne peut contenir que des produits admissibles au HSA/FSA."
+        }
       }
     },
     "attributes": {
