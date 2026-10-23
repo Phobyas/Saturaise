@@ -1838,7 +1838,10 @@
         "lpm": {
           "oxxo": {
             "voucher": {
-              "barcode_alt": "Code-barres du coupon OXXO pour le numéro de référence %{reference_number}"
+              "barcode_alt": "Code-barres du coupon OXXO pour le numéro de référence %{reference_number}",
+              "steps": {
+                "scan_barcode_at_oxxo": "Scannez le code-barres dans le magasin OXXO le plus proche."
+              }
             }
           },
           "multibanco": {
@@ -1892,7 +1895,96 @@
             }
           }
         },
-        "konbini_label": "Supérette"
+        "konbini_label": "Supérette",
+        "pay_with_payment_method": "Payez avec %{payment_method}",
+        "offsite_gateway_redirect_hint": "Vous allez être redirigé vers le service %{gateway_label} pour finaliser votre achat.",
+        "offsite_gateway_redirect_hint_multi_currency_html": "%{gateway_label} – montant – %{total_shop_price}",
+        "no_js_credit_card_fields_redirect_hint": "Vous allez être redirigé pour ajouter les informations de paiement.",
+        "missing_credit_card_error": "Saisissez les informations de votre carte pour effectuer le paiement.",
+        "no_real_orders_dev_store": "Cette boutique ne peut pas accepter de vraies commandes ni de vrais paiements.",
+        "order_covered_by_gift_cards_notice": {
+          "one": "La commande est réglée avec une carte cadeau.",
+          "other": "Les cartes-cadeaux couvrent la commande.",
+          "few": "Les cartes-cadeaux couvrent la commande.",
+          "many": "Les cartes-cadeaux couvrent la commande."
+        },
+        "no_taxes_banner_content": "Aucune taxe ne sera prélevée sur cette commande. Une fois le paiement effectué, il ne sera plus possible d’ajouter des taxes.",
+        "mor_disclaimer_html": "En cliquant ci-dessous et en passant commande, vous acceptez d’acheter des marchandises auprès de Global-e, en tant que vendeur officiel, dans le cadre de cette transaction, conformément aux <a class=\"link--small\" data-modal=\"true\" data-title-text=\"%{mor_terms}\" href=\"%{terms_href}\">Conditions générales</a> et à la <a class=\"link--small\" data-modal=\"true\" data-title-text=\"%{privacy_policy}\" href=\"%{policy_href}\">Politique de confidentialité</a> de Global-e. Global-e est un prestataire international de services de traitement des commandes pour %{shop_name}\n",
+        "pending_payment": {
+          "due_notice": "Votre paiement de %{amount_due} est dû le %{due_date}.",
+          "multibanco": {
+            "instruction_html": "Effectuez le paiement par Multibanco ou en ligne à l’aide des informations ci-dessous. Pour toute question ou mise à jour des informations de paiement, %{contact_us}.",
+            "entity": "Unité",
+            "find_nearest_atm": "Trouvez le distributeur automatique le plus proche.",
+            "buyer_action_info": "Le paiement de %{amount_due} est exigible.",
+            "expiry_date_time": "%{date} ou %{time}",
+            "expired": "Expiré %{date}",
+            "expired_title": "Le numéro de référence du paiement a expiré."
+          },
+          "apple_wallet": {
+            "pass": {
+              "logo_text": "Coupon de paiement",
+              "payment_due_label": "À payer",
+              "ordered_on_label": "Date de commande"
+            }
+          }
+        },
+        "paypal_modal": {
+          "order_contains_fixed_selling_plans": "Le montant peut ne pas inclure les taxes, les frais de livraison, les frais différés et certaines remises. Passez à la caisse pour afficher le montant dû aujourd’hui."
+        },
+        "payment_method_saved": "Le mode de paiement a été enregistré.",
+        "order_covered_by_store_credit_notice": "La commande est payée avec un crédit en magasin.",
+        "order_covered_by_redeemables_notice": "La commande est couverte.",
+        "no_working_method_error": "Cette boutique ne peut pas accepter de paiements pour le moment. Actualisez la page ou revenez plus tard.",
+        "order_edit_banner_title": "Le paiement de {{amount_owed}} est requis.",
+        "order_edit_banner_subtitle": "Votre commande {{order_number}} a été mise à jour. Vérifiez les modifications, puis payez pour confirmer votre commande.",
+        "order_edit_banner_multiple_items_added": "{{amount}} ajouté",
+        "order_edit_banner_multiple_items_removed": "{{amount}} supprimé",
+        "markets_pro_disclaimer_label": "En passant commande, vous acceptez d’acheter les produits auprès de la société Global-e, en tant que vendeur officiel, conformément aux dispositions des documents %{markets_pro_terms} et %{privacy_policy}, ainsi que de communiquer vos données à la boutique %{shop_name}.",
+        "markets_pro_disclaimer_terms_and_conditions": "Conditions générales",
+        "markets_pro_disclaimer_terms_and_conditions_title": "Conditions générales du revendeur officiel",
+        "markets_pro_disclaimer_privacy_policy_title": "Politique de confidentialité du vendeur officiel",
+        "order_edit_banner_single_item_returned": "Retourné",
+        "order_edit_banner_multiple_items_returned": "{{amount}} remboursé",
+        "order_edit_banner_items_added": {
+          "other": "%{count} ajouté",
+          "few": "%{count} ajouté",
+          "many": "%{count} ajouté"
+        },
+        "order_edit_banner_items_removed": {
+          "in_full": "Supprimé",
+          "with_quantities": "{{delta}} a été supprimé de {{quantity}}"
+        },
+        "order_edit_banner_items_returned": {
+          "in_full": "{{quantity}} retourné",
+          "with_quantities": "{{delta}} sur {{quantity}} ont été retournés."
+        },
+        "payment_method": "Mode de paiement",
+        "order_edit_banner_items_return_line_item_removed": {
+          "in_full": "Supprimé du remboursement",
+          "with_quantities": "{{delta}} a été supprimé du remboursement"
+        },
+        "order_edit_banner_single_item_return_line_item_removed": "Supprimé du remboursement",
+        "order_edit_banner_multiple_items_return_line_item_removed": "{{amount}} a été retiré du remboursement",
+        "pay_in_installments_split_pay_short": "4 paiements de %{amount}",
+        "payment_method_not_available_for_shipping_address_error": "Mode de paiement indisponible pour l’adresse de livraison sélectionnée. Choisissez un autre mode de paiement.",
+        "paypal_disconnect": "Débranchez",
+        "paypal_wallet_label": "Portefeuille PayPal",
+        "payment_method_update_failed": "La mise à jour du mode de paiement a échoué.",
+        "network_card_payment_options": "Choisissez le réseau de la carte",
+        "payment_flexibility_terms_id_mismatch": "Incompatibilité de l’ID des conditions de paiement flexibles",
+        "offsite_gateway_review_page_redirect_hint": "Après vérification de la commande, vous serez redirigé vers le service %{gateway_label} afin de finaliser votre achat.",
+        "offsite_gateway_redirect_hint_no_button_label": "Vous allez être redirigé vers le service %{gateway_label} pour finaliser votre achat.",
+        "network_card_persistence_description": "Le réseau sélectionné sera enregistré avec le moyen de paiement pour les transactions futures.",
+        "payment_method_incompatible_with_payment_terms": "Le mode de paiement n’est pas conforme aux conditions de paiement.",
+        "payment_method_rollup_accessibility_label": "Options de mode de paiement",
+        "new_bank_account_disclaimer": "En passant la commande, vous autorisez %{shop_name} à débiter le compte ci-dessous via le service ACH du montant indiqué et à la date précisée.",
+        "multiple_primary_payment_not_allowed": "Modes de paiement incorrects",
+        "pay_with_credit_card": "Payez par carte de crédit",
+        "pay_with_debit_card": "Payez par carte de débit",
+        "order_edit_banner_no_taxes_label": "Manque",
+        "payment_method_unavailable_error": "Ce mode de paiement est actuellement indisponible. Choisissez un autre mode de paiement.",
+        "payment_method_loading_error": "Ce mode de paiement est toujours en cours de chargement. Réessayez dans quelques secondes."
       }
     },
     "attributes": {
