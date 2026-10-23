@@ -2079,6 +2079,115 @@
           "eligible_product": "Admissible au HSA/FSA",
           "mixed_cart_description": "Le panier ne peut contenir que des produits admissibles au HSA/FSA."
         }
+      },
+      "payment_summary": {
+        "gift_card_current_balance_notice": "Solde actuel : %{amount}",
+        "express_payment_gateway_label": "En un clin d’œil",
+        "manual_payment_gateway_label": "À la main"
+      },
+      "processing": {
+        "redirecting_page_title": "Redirection...",
+        "redirecting_title": "Redirection...",
+        "redirecting_notice": "Attendez la redirection.",
+        "complete_your_purchase_title": "Effectuer un achat",
+        "continue_to_payment_gateway_notice": "Passez au paiement pour ajouter les informations de paiement.",
+        "continue_to_payment_gateway_button_label": "Passer au paiement",
+        "complete_your_purchase_title_error": "Corrigez les informations de paiement",
+        "continue_to_payment_gateway_notice_error": "Impossible de vérifier vos informations de paiement.",
+        "continue_to_payment_gateway_button_label_error": "Mettez à jour les informations de paiement",
+        "redirecting_to_bank": "Redirection vers {{bank}}",
+        "modal_notice": "Nous vous contactons au sujet de {{paymentMethod}}.",
+        "remote_shops_payments_processing": "Traitement des paiements"
+      },
+      "payment_gateway": {
+        "bank_deposit_label": "Versement sur le compte",
+        "money_order_label": "Transfert d’argent",
+        "deferred_payment_label": "Choisissez un mode de paiement plus tard",
+        "generic_payment_terms": "Vous êtes soumis aux conditions de {{translatedName}}. Le paiement sera exigible le {{dueDate}}.",
+        "login_prompt": {
+          "no_access": {
+            "message": "{{logIn}} à un compte ayant accès à cet emplacement pour ajouter des modes de paiement enregistrés ou les utiliser."
+          }
+        },
+        "direct_payment_terms": "Vous êtes soumis aux conditions de {{translatedName}}. Votre carte sera débitée le {{dueDate}}.",
+        "order_due_on_fulfillment_choose_later": "Votre paiement sera exigible une fois la commande exécutée.",
+        "order_due_on_fulfillment_payment": "Votre carte sera débitée après l’expédition de votre commande.",
+        "draft_order_payment_due_later_no_terms": "Votre paiement sera exigible après la confirmation de la commande.",
+        "draft_order_payment_due_later_no_terms_payment_selected": "Votre carte sera débitée après la confirmation de la commande.",
+        "draft_order_payment_due_later_terms": "Après la confirmation de la commande, les conditions de {{translatedName}} s’appliquent à vous.",
+        "draft_order_payment_due_on_fulfillment": "Votre paiement sera dû après la confirmation et le traitement de la commande.",
+        "fixed_payment_label": "La date d’échéance est le {{dueDate}}.",
+        "fixed_direct_payment_terms": "Votre carte sera débitée le {{dueDate}}.",
+        "order_deposit_due_now": "{{depositAmount}} est payable aujourd’hui. Le solde est soumis aux conditions de '{{translatedName}}' et est payable le {{dueDate}}.",
+        "order_deposit_due_on_fulfillment": "{{depositAmount}} est payable aujourd’hui. Le solde sera payable une fois la commande exécutée.",
+        "order_due_on_receipt_choose_later": "Le paiement sera exigible après réception.",
+        "draft_order_deposit_due_later": "{{depositAmount}} sera exigé après la confirmation de la commande. Le solde sera soumis aux conditions de {{translatedName}}.",
+        "draft_order_deposit_due_on_fulfillment": "{{depositAmount}} sera dû après la confirmation de la commande. Le solde sera dû une fois la commande exécutée.",
+        "order_deposit_due_on_receipt": "{{depositAmount}} est payable aujourd’hui. Le solde restant sera payable plus tard.",
+        "order_deposit_due_on_fixed_date": "{{depositAmount}} est payable aujourd’hui. Le solde restant sera payable le {{dueDate}}.",
+        "credit_or_debit_card_label": "Carte de crédit/débit"
+      },
+      "post_purchase": {
+        "escape_confirmation": "Vous avez payé votre commande.",
+        "components": {
+          "processing": "Traitement…",
+          "submit": "Envoyer"
+        }
+      },
+      "pickup_point": {
+        "business_hours": "Horaires d’ouverture",
+        "title": "Point de retrait",
+        "or": "lub",
+        "search_button": "Recherche",
+        "selector_tabs": "Sélecteur de point de retrait",
+        "could_not_resolve_address": "Impossible de trouver votre adresse. Réessayez ou utilisez une autre adresse.",
+        "no_pickup_points_near_you": "Aucun point de retrait n’a été trouvé à proximité de l’adresse sélectionnée.",
+        "no_pickup_points_near_location": "Aucun point de retrait n’a été trouvé près de votre emplacement.",
+        "no_pickup_points_found": "Aucun point de retrait trouvé",
+        "paginator": {
+          "header": {
+            "one": "Affichage de %{first} à %{last} sur %{count} points",
+            "other": "Affichage de %{first} - %{last} sur %{count} points",
+            "few": "Affichage de %{first} - %{last} sur %{count} points",
+            "many": "Affichage de %{first} - %{last} sur %{count} points"
+          },
+          "selected_pickup_point_label": {
+            "one": "%{pickup_point_index} sur %{count} points",
+            "other": "%{pickup_point_index} sur %{count} points",
+            "few": "%{pickup_point_index} sur %{count} points",
+            "many": "%{pickup_point_index} sur %{count} points"
+          },
+          "selected_page": {
+            "one": "%{first} - %{last} sur %{count} points",
+            "other": "%{first} - %{last} sur %{count} points",
+            "few": "%{first} - %{last} sur %{count} points",
+            "many": "%{first} - %{last} sur %{count} points"
+          }
+        },
+        "number_of_pickup_points_near_location": {
+          "one": "%{count} point de retrait près de chez vous",
+          "other": "%{count} points de retrait près de chez vous",
+          "few": "%{count} points de retrait près de chez vous",
+          "many": "%{count} points de retrait près de chez vous"
+        },
+        "change": "Changer de lieu",
+        "waiting_on_pickup_point_location_notice": "Recherche des points de retrait...",
+        "geolocation": {
+          "shared_location_button": "Utiliser ma position",
+          "errors": {
+            "unsuported_by_browser": "Votre navigateur ne permet pas de déterminer votre géolocalisation. Réessayez ou utilisez un autre navigateur.",
+            "permission_not_allowed": "Autorisez le partage de votre position.",
+            "permission_denied": "Impossible de déterminer votre emplacement. Veuillez réessayer."
+          }
+        },
+        "no_business_hours": "Aucun horaire d’ouverture disponible",
+        "open_twenty_four_hours": "Ouvert 24 h/24 et 7 j/7",
+        "pickup_unavailable_banner_title": {
+          "one": "Aucun point de retrait n’est disponible pour ce produit.",
+          "other": "Aucun point de retrait n’est disponible pour ces produits.",
+          "few": "Aucun point de retrait n’est disponible pour ces produits.",
+          "many": "Aucun point de retrait n’est disponible pour ces produits."
+        }
       }
     },
     "attributes": {
