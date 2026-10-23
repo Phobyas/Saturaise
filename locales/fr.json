@@ -450,7 +450,47 @@
         "company_attention_label": "Entreprise/Destinataire",
         "colony_label": "Cologne",
         "commune_label": "Commune rurale",
-        "block_label": "Bloc"
+        "block_label": "Bloc",
+        "title": "Information",
+        "email_label": "Courriel",
+        "email_placeholder": "Courriel",
+        "email_or_phone_label": "Adresse e-mail ou numéro de téléphone portable",
+        "email_or_phone_placeholder": "Adresse e-mail ou numéro de téléphone portable",
+        "new_address_label": "Utilisez la nouvelle adresse",
+        "optional_first_name_label": "Prénom (facultatif)",
+        "last_name_label": "Nom de famille",
+        "optional_company_label": "Entreprise (facultatif)",
+        "optional_address2_label": "Logement, appartement, etc. (facultatif)",
+        "province_label": "Voïvodie",
+        "province_placeholder": "Voïvodie",
+        "state_label": "Étalon",
+        "state_placeholder": "Étalon",
+        "state_and_territory_label": "Pays / territoire",
+        "state_and_territory_placeholder": "Pays / territoire",
+        "optional_phone_label": "Téléphone (facultatif)",
+        "phone_tooltip": "En cas de besoin, contactez-nous au sujet de votre commande.",
+        "zip_code_label": "Code postal",
+        "zip_code_placeholder": "Code postal",
+        "pincode_label": "Code PIN",
+        "pincode_placeholder": "Code PIN",
+        "region_none": "Aucun sélectionné",
+        "optional_last_name_label": "Nom de famille (facultatif)",
+        "different_shipping_address_label": "Envoyer à une autre adresse",
+        "different_shipping_address_text": "Utilisez une adresse à usage unique pour cette commande.",
+        "ship_to_company": "Envoyez à {{companyName}}",
+        "shipping_used_as_billing_notice": "Il sera également utilisé comme adresse de facturation pour cette commande.",
+        "optional_company_attention_label": "Société/remarque (facultatif)",
+        "street_number_label": "Numéro du bâtiment",
+        "optional_street_number_label": "Numéro du bâtiment (facultatif)",
+        "ward_label": "Cercle",
+        "optional_ward_label": "Région (facultatif)",
+        "optional_block_label": "Bloc (facultatif)",
+        "email_rollup_accessibility_label": "Options d’adresse e-mail",
+        "phone_country_code_label": "Code pays du numéro de téléphone",
+        "storefront_link": "site web du vendeur",
+        "suburb_label": "Quartier",
+        "field_tooltip_helper_text": "Sert à envoyer les confirmations de commande et les rappels de panier abandonné",
+        "field_tooltip_accessibility_label": "Plus d’informations sur l’utilisation des coordonnées de contact"
       },
       "alternative_payment_method_banner": {
         "express_checkout": "Traitement express de l’achat",
@@ -508,6 +548,37 @@
       },
       "address_management": {
         "saved_with_store": "Enregistré dans cette boutique"
+      },
+      "customer_account": {
+        "not_user_label": "N’est-ce pas %{first_name} ?",
+        "have_an_account_label": "Vous avez déjà un compte ?",
+        "save_my_information_label": "Enregistrez ces informations pour les utiliser la prochaine fois.",
+        "invalid_address": "L’adresse sélectionnée est incorrecte. %{update_address_link} ou choisissez une autre adresse.",
+        "incomplete_address": "L’adresse sélectionnée est incomplète. %{update_address_link} ou choisissez une autre adresse.",
+        "invalid_shipping_method_summary": "Sélectionnez une adresse de livraison valide pour voir les modes de livraison disponibles.",
+        "saved_address_modal_title": "Utilisez mon adresse enregistrée",
+        "saved_address_option_description": {
+          "few": "Nombre d’adresses que vous avez enregistrées : {{count}}.",
+          "many": "Nombre d’adresses que vous avez enregistrées : {{count}}."
+        }
+      },
+      "contextual_availability": {
+        "title": {
+          "one": "Produit indisponible",
+          "other": "Produits indisponibles",
+          "few": "Produits indisponibles",
+          "many": "Produits indisponibles"
+        },
+        "products_not_available": {
+          "one": "Ce produit sera retiré du panier, car il n’est pas disponible dans votre pays/région.",
+          "other": "Ces produits seront retirés du panier, car ils ne sont pas disponibles dans votre pays/région.",
+          "few": "Ces produits seront retirés du panier, car ils ne sont pas disponibles dans votre pays/région.",
+          "many": "Ces produits seront retirés du panier, car ils ne sont pas disponibles dans votre pays/région."
+        },
+        "all_products_in_cart_unavailable": {
+          "few": "Ces produits ne sont pas disponibles dans votre pays/région."
+        },
+        "unavailable_label": "Indisponible"
       }
     },
     "attributes": {
