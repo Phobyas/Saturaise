@@ -3374,7 +3374,95 @@
         "digital_product_not_available_for_company_locations": "Cet article ne peut pas être ajouté à une commande B2B.",
         "bundle_requires_components": "Le produit du pack « %{name} » ne peut pas être ajouté au panier.",
         "buyer_cannot_purchase_for_company_locations": "L’achat n’est pas possible à cet emplacement.",
-        "cart_attributes_error": "Les attributs du panier contiennent des données invalides."
+        "cart_attributes_error": "Les attributs du panier contiennent des données invalides.",
+        "only_n_items_available": "Vous ne pouvez ajouter au panier que %{count} %{name}.",
+        "too_many_items_in_cart": "Vous ne pouvez pas ajouter davantage de %{name} au panier.",
+        "missing_parameters": "ID ou paramètre de ligne invalide",
+        "too_many_line_items_error": "Le panier ne peut pas contenir plus de %{max} articles.",
+        "link_expired": "Le lien a expiré.",
+        "link_no_longer_exists": "Le lien n’existe plus.",
+        "stock_problems_html": "Un ou plusieurs articles ne sont plus disponibles. Nous avons mis à votre disposition un <a href='%{link}'>panier mis à jour</a>.",
+        "items_changed": "Un ou plusieurs éléments ont été modifiés.",
+        "product_sold_out": "Le produit « %{name} » est déjà épuisé.",
+        "variant_not_found": "Variante introuvable",
+        "variant_requires_selling_plan": "La variante peut être achetée uniquement avec un forfait de vente.",
+        "shipping_address_not_required": "Ce panier ne nécessite pas d’expédition.",
+        "shipping_address_invalid": "Un problème est survenu lors du calcul des frais d’expédition. Passez à la commande pour choisir un tarif de livraison avant de finaliser votre achat.",
+        "selling_plan_not_applicable": "Impossible d’appliquer le plan de vente à la variante",
+        "selling_plan_not_available_for_company_locations": "Pour les commandes B2B, seul un achat unique est possible.",
+        "product_not_available": "Le produit n’est pas disponible",
+        "less_than_minimum": "La position a une limite minimale de %{min}.",
+        "more_than_maximum": "La position a une limite maximale de %{max}.",
+        "not_respect_step": "Vous pouvez ajouter cet article uniquement par incréments de %{step}.",
+        "gift_card_with_components_not_supported": "Le produit du pack « %{name} » ne peut pas être ajouté au panier.",
+        "view_lines_limit_reached": "Le nombre de lignes autorisé est de %{limit} ou moins.",
+        "merchandise_line_transformers": {
+          "run_error": "Une erreur est survenue dans le panier."
+        },
+        "gift_card_price_must_be_greater_than_zero": "Le produit du pack « %{name} » ne peut pas être ajouté au panier.",
+        "gift_card_recipient_validation_error": "Le destinataire indiqué de la carte cadeau n’est pas le bon.",
+        "invalid_input": "Le paramètre %{parameter} est incorrect.",
+        "only_one_added_to_cart": "Seul 1 article a été ajouté au panier en raison de la disponibilité.",
+        "only_n_added_to_cart": "Seuls %{quantity} articles ont été ajoutés au panier en raison de leur disponibilité.",
+        "maximum_available_quantity_reached": "Votre panier contient déjà la quantité maximale de ce produit.",
+        "merchandise_not_applicable": "Conformément à la configuration, cet article ne peut pas être acheté."
+      },
+      "customer": {
+        "password_reset_error": "Erreur de réinitialisation du mot de passe",
+        "no_account_found": "Aucun compte n’a été trouvé avec cette adresse e-mail.",
+        "invalid_credentials": "Adresse e-mail ou mot de passe incorrect.",
+        "denylisted_reset_password": "Vous ne pouvez pas accéder à votre compte, car votre mot de passe actuel n’est pas sécurisé. Vous recevrez un e-mail vous demandant de le mettre à jour.",
+        "signup_disabled": "La création de comptes clients a été désactivée.",
+        "unsubscribe_error": "Erreur lors de l’annulation de l’abonnement"
+      },
+      "order": {
+        "not_available": "Cette commande est indisponible.",
+        "financial_status": {
+          "authorized": "Autorisé",
+          "pending": "En attente",
+          "paid": "Payé",
+          "unpaid": "Impayé",
+          "voided": "Annulées",
+          "partially_paid": "Partiellement payé",
+          "partially_refunded": "Frais partiellement remboursés",
+          "refunded": "Frais remboursés",
+          "expired": "La validité a expiré."
+        },
+        "fulfillment_status": {
+          "fulfilled": "Réalisé",
+          "complete": "Terminer",
+          "partial": "Partiel",
+          "unfulfilled": "Non réalisées",
+          "restocked": "Retourné à l’entrepôt"
+        },
+        "transaction_status": {
+          "success": "Réussi",
+          "pending": "En attente"
+        },
+        "cancel_reason": {
+          "inventory": "Articles indisponibles",
+          "fraud": "Fausse commande",
+          "few": "Autre",
+          "staff": "Erreur de l’employé"
+        }
+      },
+      "storefront": {
+        "invalid_password": "Mot de passe incorrect, veuillez réessayer."
+      },
+      "tags": {
+        "add_articles": "Affinez la recherche aux articles qui portent également le tag %{tag}",
+        "add_products": "Affinez votre sélection aux produits correspondant au tag %{tag}",
+        "remove_articles": "Élargissez la recherche aux articles qui ne sont pas étiquetés %{tag}",
+        "remove_products": "Supprimer le tag %{tag}"
+      },
+      "line_item": {
+        "item_status": {
+          "add_variant": "Ajouté : %{delta}",
+          "increment_item": "Ajouté : %{delta}",
+          "decrement_item": "%{delta} supprimé sur %{total}",
+          "decrement_fulfilled_line_item": "%{delta} sur %{total} retournés",
+          "decrement_return_line_item": "%{delta} a été retiré du remboursement"
+        }
       }
     },
     "filters": {
@@ -3387,6 +3475,48 @@
     "managed_markets": {
       "buyer_consent": "En passant commande, vous acceptez d’acheter auprès de Global-e, revendeur officiel, conformément aux documents suivants : %{termsAndConditionsLink} et %{privacyPolicyLink} de Global-e. Vous acceptez également que vos données soient communiquées à la boutique %{shopName}.",
       "terms_and_conditions": "Conditions générales"
+    },
+    "sentence": {
+      "last_word_connector": ", i",
+      "two_words_connector": "je"
+    },
+    "page_titles": {
+      "shopping_cart": "Votre panier d’achat",
+      "create_account": "Créez un compte",
+      "not_found": "404 introuvable",
+      "search_results": {
+        "one": "Recherche : %{count} résultat trouvé pour « %{terms} »",
+        "other": "Recherche : %{count} résultats trouvés pour « %{terms} »",
+        "few": "Recherche : %{count} résultats trouvés pour « %{terms} »",
+        "many": "Recherche : %{count} résultats trouvés pour « %{terms} »"
+      },
+      "blog_or_article_with_error": "Erreur - %{title}"
+    },
+    "search": {
+      "sorting": {
+        "price_ascending": "Prix, du moins cher au plus cher",
+        "price_descending": "Prix, du plus élevé au plus bas"
+      },
+      "error": "Un problème est survenu lors du chargement des résultats de recherche. Actualisez la page ou réessayez plus tard."
+    },
+    "store_availability": {
+      "pick_up_time": {
+        "one_hour": "Généralement prêt en moins d’une heure",
+        "two_hours": "Généralement prêt en 2 heures",
+        "four_hours": "Généralement prêt en 4 heures",
+        "twenty_four_hours": "Généralement prêt sous 24 heures",
+        "two_to_four_days": "Généralement prêt sous 2-4 jours",
+        "five_or_more_days": "Généralement prêt en plus de 5 jours",
+        "zero_to_two_hours": "Généralement prêt en 2 heures",
+        "two_to_four_hours": "Généralement prêt en 4 heures",
+        "immediately": "Prêt à être récupéré maintenant",
+        "next_day": "Prêtes à être récupérées dès le lendemain"
+      }
+    },
+    "subscriptions": {
+      "buyer_consent_product": "Cet article fait l’objet d’un achat récurrent ou d’un achat avec paiement différé. En continuant, j’accepte la %{cancellationPolicyLink} et vous autorise à me facturer automatiquement selon mon mode de paiement, ainsi qu’aux prix, à la fréquence et aux dates indiqués sur cette page, jusqu’à ce que la commande soit exécutée ou que je l’annule, si cela est autorisé.",
+      "buyer_consent_cart": "Un ou plusieurs articles de votre panier correspondent à un achat à paiement différé ou à un achat récurrent. En continuant, j’accepte %{cancellationPolicyLink} et vous autorise à me facturer automatiquement selon mon mode de paiement, aux prix, à la fréquence et aux dates indiqués sur cette page, jusqu’à ce que la commande soit exécutée ou que je l’annule, si cela est autorisé.",
+      "cancellation_policy": "politique d’annulation"
     }
   }
 }
