@@ -1074,7 +1074,10 @@
         "google_map_title": "Google Maps",
         "processing": "Traitement…",
         "stepper": {
-          "decrease": "Réduisez {{type}}"
+          "decrease": "Réduisez {{type}}",
+          "increase": "Augmenter {{type}}",
+          "minimum_reached": "Le minimum de {{value}} a été atteint.",
+          "maximum_reached": "Le maximum de {{value}} a été atteint."
         },
         "remove_tag": "Supprimer le tag",
         "map": {
@@ -1088,7 +1091,137 @@
         "sheet": {
           "expand": "Élargir"
         },
-        "loading": "Chargement…"
+        "loading": "Chargement…",
+        "tooltip_accessibility_label": "Plus d’informations",
+        "title": "Finalisation de l’achat - {{shopName}}",
+        "submit_order_button_label": "Passez commande",
+        "submit_for_review_button_label": "Envoyer pour vérification",
+        "submit_for_review_notice_label": "Le paiement ne sera exigé qu’après vérification de la commande."
+      },
+      "local_pickup": {
+        "location_information": {
+          "one": "Il existe %{count} emplacement avec des stocks à proximité.",
+          "other": "Nombre de sites disposant de stocks à proximité : %{count}",
+          "few": "Nombre de sites disposant de stocks à proximité : %{count}",
+          "many": "Nombre de sites disposant de stocks à proximité : %{count}"
+        },
+        "or": "LUB",
+        "no_stores_found": "Aucun magasin trouvé",
+        "could_not_resolve_address": "Impossible de trouver votre adresse. Réessayez ou utilisez une autre adresse.",
+        "paginator": {
+          "accessibility_label": "Pagination pour le retrait local",
+          "label": {
+            "one": "%{first} - %{last} sur %{count} boutiques",
+            "other": "%{first} - %{last} sur %{count} magasins",
+            "few": "%{first} - %{last} sur %{count} magasins",
+            "many": "%{first} - %{last} sur %{count} magasins"
+          }
+        },
+        "all_stores_far_away": {
+          "title": "Les emplacements les plus proches se trouvent à une distance supérieure à %{distance}",
+          "description": "Choisissez un emplacement ou %{ship_to_address_link}",
+          "ship_to_address_link": "adresse de livraison",
+          "title_with_location": "L’emplacement le plus proche se trouve à plus de %{distance} de : %{location}",
+          "change_location_link": "Changer de lieu",
+          "title_with_specific_location": "L’emplacement le plus proche proposant l’article se trouve à plus de %{distance} de %{location}",
+          "title_with_item": {
+            "one": "L’emplacement le plus proche proposant le produit se trouve à plus de %{distance} de : %{location}",
+            "other": "L’emplacement proposant des produits le plus proche se trouve à plus de %{distance} de : %{location}",
+            "few": "L’emplacement proposant des produits le plus proche se trouve à plus de %{distance} de : %{location}",
+            "many": "L’emplacement proposant des produits le plus proche se trouve à plus de %{distance} de : %{location}"
+          }
+        },
+        "pick_up_location": "Lieu de retrait",
+        "no_pickup_locations_found": "Aucun lieu de retrait trouvé",
+        "pickup_unavailable_banner_body": {
+          "ship_to_address": "adresse de livraison",
+          "ship_items": "Envoyer les produits",
+          "search_elsewhere": "cherchez ailleurs",
+          "search_elsewhere_standalone": "Cherche ailleurs"
+        },
+        "geolocation": {
+          "permission_not_allowed": "Autorisez le partage de votre position ou effectuez une recherche."
+        },
+        "location_closest": "Emplacement le plus proche avec l’article disponible",
+        "location_information_far_away": {
+          "one": "Le produit se trouve dans %{count} emplacements.",
+          "other": "Le produit est disponible dans %{count} emplacements.",
+          "few": "Le produit est disponible dans %{count} emplacements.",
+          "many": "Le produit est disponible dans %{count} emplacements."
+        },
+        "location_nearby": {
+          "one": "L’article se trouve dans %{count} point de vente à proximité",
+          "other": "L’article se trouve dans %{count} magasins à proximité.",
+          "few": "L’article se trouve dans %{count} magasins à proximité.",
+          "many": "L’article se trouve dans %{count} magasins à proximité."
+        },
+        "location_nearby_short": {
+          "one": "Article disponible dans %{count} emplacement à proximité.",
+          "other": "Article disponible dans %{count} points de vente à proximité",
+          "few": "Article disponible dans %{count} points de vente à proximité",
+          "many": "Article disponible dans %{count} points de vente à proximité"
+        },
+        "location_far_away": {
+          "one": "Article proposé dans %{count} emplacements",
+          "other": "Article proposé dans %{count} emplacements",
+          "few": "Article proposé dans %{count} emplacements",
+          "many": "Article proposé dans %{count} emplacements"
+        },
+        "location_closest_one_item": "Emplacement le plus proche de votre position",
+        "location_closest_other_items": "Le lieu le plus proche avec vos articles",
+        "location_information_far_away_one_item": {
+          "one": "Votre position est disponible dans %{count} emplacements",
+          "other": "Votre poste est disponible dans %{count} emplacements",
+          "few": "Votre poste est disponible dans %{count} emplacements",
+          "many": "Votre poste est disponible dans %{count} emplacements"
+        },
+        "location_information_far_away_other_items": {
+          "one": "Vos articles sont disponibles dans %{count} emplacements.",
+          "other": "Vos articles sont disponibles dans %{count} emplacements.",
+          "few": "Vos articles sont disponibles dans %{count} emplacements.",
+          "many": "Vos articles sont disponibles dans %{count} emplacements."
+        },
+        "location_nearby_one_item": {
+          "one": "Votre article est disponible dans %{count} magasin proche.",
+          "other": "Votre article est disponible dans %{count} points de vente à proximité.",
+          "few": "Votre article est disponible dans %{count} points de vente à proximité.",
+          "many": "Votre article est disponible dans %{count} points de vente à proximité."
+        },
+        "location_nearby_other_items": {
+          "one": "Vos articles sont disponibles dans %{count} points de vente à proximité.",
+          "other": "Vos articles sont disponibles dans %{count} points de vente à proximité.",
+          "few": "Vos articles sont disponibles dans %{count} points de vente à proximité.",
+          "many": "Vos articles sont disponibles dans %{count} points de vente à proximité."
+        },
+        "location_nearby_short_one_item": {
+          "one": "%{count} emplacement proche de votre position",
+          "other": "Emplacements à proximité de votre position : %{count}",
+          "few": "Emplacements à proximité de votre position : %{count}",
+          "many": "Emplacements à proximité de votre position : %{count}"
+        },
+        "location_nearby_short_other_items": {
+          "one": "%{count} localisation à proximité de vos articles",
+          "other": "Emplacements à proximité avec vos articles : %{count}",
+          "few": "Emplacements à proximité avec vos articles : %{count}",
+          "many": "Emplacements à proximité avec vos articles : %{count}"
+        },
+        "location_far_away_one_item": {
+          "one": "%{count} emplacements par rapport à votre position",
+          "other": "Emplacements avec votre position : %{count}",
+          "few": "Emplacements avec votre position : %{count}",
+          "many": "Emplacements avec votre position : %{count}"
+        },
+        "location_far_away_other_items": {
+          "one": "%{count} emplacement avec vos articles",
+          "other": "Emplacements avec vos articles : %{count}",
+          "few": "Emplacements avec vos articles : %{count}",
+          "many": "Emplacements avec vos articles : %{count}"
+        },
+        "location_selected": "Emplacement sélectionné"
+      },
+      "hsa_qualification_errors": {
+        "processing_error": "Un problème est survenu lors du traitement de la demande HSA/FSA. Réessayez ou effectuez vos achats sans HSA/FSA.",
+        "unsupported_checkout": "Le paiement HSA/FSA n’est pas disponible pour cette commande."
       }
     },
     "attributes": {
